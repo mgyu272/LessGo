@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import email.utils
+import datetime as dt
 import time
 from pathlib import Path
 from typing import Any
@@ -14,14 +16,49 @@ from xyzservices import providers
 
 ORS_DIRECTIONS_URL = "https://api.heigit.org/openrouteservice/v2/directions/foot-walking/geojson"
 ELEVATION_NOISE_FILTER_M = 0.5
+MIN_ORS_REQUEST_INTERVAL_S = 1.0
+_last_ors_request_monotonic: float | None = None
+
+
+def _pace_ors_request() -> None:
+    """Keep uncached route calls at or below one request per second."""
+    global _last_ors_request_monotonic
+    now = time.monotonic()
+    if _last_ors_request_monotonic is not None:
+        wait_s = MIN_ORS_REQUEST_INTERVAL_S - (now - _last_ors_request_monotonic)
+        if wait_s > 0:
+            time.sleep(wait_s)
+    _last_ors_request_monotonic = time.monotonic()
 
 
 class RouteError(RuntimeError):
     """A safe-to-display ORS or response validation error."""
 
-    def __init__(self, message: str, request_attempts: int = 0):
+    def __init__(
+        self, message: str, request_attempts: int = 0, *,
+        error_category: str = "routing_error", http_status: int | None = None,
+        retry_after_seconds: float | None = None,
+    ):
         super().__init__(message)
         self.request_attempts = request_attempts
+        self.error_category = error_category
+        self.http_status = http_status
+        self.retry_after_seconds = retry_after_seconds
+
+
+def _retry_after_seconds(value: str | None) -> float | None:
+    if not value:
+        return None
+    try:
+        return max(0.0, float(value.strip()))
+    except (TypeError, ValueError):
+        try:
+            retry_at = email.utils.parsedate_to_datetime(value)
+            if retry_at.tzinfo is None:
+                retry_at = retry_at.replace(tzinfo=dt.timezone.utc)
+            return max(0.0, (retry_at - dt.datetime.now(dt.timezone.utc)).total_seconds())
+        except (TypeError, ValueError, OverflowError):
+            return None
 
 
 def fetch_walking_route(start: dict[str, Any], destination: dict[str, Any], api_key: str) -> dict[str, Any]:
@@ -51,37 +88,63 @@ def fetch_walking_route_points(
     }
     response = None
     attempts = 0
-    retryable_statuses = {429, 500, 502, 503, 504}
+    retryable_statuses = {500, 502, 503, 504}
     for attempt in range(max(0, int(max_retries)) + 1):
         attempts += 1
         try:
+            _pace_ors_request()
             response = requests.post(
                 ORS_DIRECTIONS_URL,
                 json=body,
                 headers={"Authorization": api_key, "Content-Type": "application/json", "Accept": "application/geo+json"},
                 timeout=30,
             )
+        except requests.Timeout as exc:
+            if attempt < max_retries:
+                time.sleep(1.0 * (2 ** attempt))
+                continue
+            raise RouteError("ORS request timed out after a limited retry.", attempts,
+                             error_category="timeout") from exc
+        except requests.ConnectionError as exc:
+            chain_text = " ".join(str(item).lower() for item in (exc, exc.__cause__, exc.__context__) if item)
+            category = "dns_error" if any(token in chain_text for token in ("name resolution", "getaddrinfo", "nodename")) else "network_error"
+            if attempt < max_retries:
+                time.sleep(1.0 * (2 ** attempt))
+                continue
+            raise RouteError(f"ORS network request failed ({category}) after a limited retry.", attempts,
+                             error_category=category) from exc
         except requests.RequestException as exc:
             if attempt < max_retries:
-                time.sleep(0.5 * (2 ** attempt))
+                time.sleep(1.0 * (2 ** attempt))
                 continue
-            raise RouteError(f"ORS에 연결하지 못했습니다 ({exc.__class__.__name__}). 네트워크를 확인하세요.", attempts) from exc
+            raise RouteError(f"ORS request failed ({exc.__class__.__name__}) after a limited retry.", attempts,
+                             error_category="network_error") from exc
+        if response.status_code in {401, 403}:
+            raise RouteError(f"ORS HTTP {response.status_code}: authentication or access configuration error.",
+                             attempts, error_category="authentication", http_status=response.status_code)
+        if response.status_code == 429:
+            retry_after = _retry_after_seconds(response.headers.get("Retry-After"))
+            # Honor a short server-specified delay once. If it is absent or long,
+            # stop this run instead of retrying early or hammering more candidates.
+            if attempt < max_retries and retry_after is not None and retry_after <= 30:
+                time.sleep(retry_after)
+                continue
+            raise RouteError("ORS HTTP 429: rate limit reached; stop requests for this run.", attempts,
+                             error_category="rate_limit", http_status=429,
+                             retry_after_seconds=retry_after)
         if response.status_code in retryable_statuses and attempt < max_retries:
-            time.sleep(0.5 * (2 ** attempt))
+            time.sleep(1.0 * (2 ** attempt))
             continue
         break
 
     assert response is not None
 
     if not response.ok:
-        try:
-            payload = response.json()
-            detail = payload.get("error", {}).get("message") or payload.get("message") or payload.get("error")
-            if isinstance(detail, dict):
-                detail = detail.get("message") or json.dumps(detail, ensure_ascii=False)
-        except (ValueError, AttributeError):
-            detail = response.text[:400]
-        raise RouteError(f"ORS HTTP {response.status_code}: {detail or response.reason}", attempts)
+        status = int(response.status_code)
+        category = "server_error" if status >= 500 else "routing_error"
+        raise RouteError(f"ORS HTTP {status}: {'server error' if status >= 500 else 'request or route rejected'}.",
+                         attempts, error_category=category, http_status=status,
+                         retry_after_seconds=_retry_after_seconds(response.headers.get("Retry-After")))
 
     try:
         data = response.json()
@@ -92,7 +155,8 @@ def fetch_walking_route_points(
         if geometry.get("type") != "LineString" or len(geometry.get("coordinates", [])) < 2:
             raise KeyError("geometry.coordinates")
     except (ValueError, KeyError, IndexError, TypeError) as exc:
-        raise RouteError("ORS 응답에 경로 또는 요약 정보가 없습니다. API 응답 형식을 확인하세요.", attempts) from exc
+        raise RouteError("ORS response did not contain usable route geometry or summary.", attempts,
+                         error_category="invalid_response") from exc
 
     segments = properties.get("segments", [])
     steps = []

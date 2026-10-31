@@ -71,6 +71,7 @@
   <script src="/english_voice_navigation.js"></script>
   <script>
     const kakaoJsKey = __KAKAO_JS_KEY_JSON__;
+    const selectedDataset = __DATASET_JSON__;
     const params = new URLSearchParams(location.search);
     const allowedDistances = new Set(["3", "5", "10"]);
     const destinationSelect = document.getElementById("destinationSelect");
@@ -85,6 +86,11 @@
     const requestedStrategy = params.get("strategy");
     strategySelect.value = ["baseline", "running_focused", "access_focused"].includes(requestedStrategy)
       ? requestedStrategy : "running_focused";
+    if (selectedDataset === "final_routes") {
+      strategySelect.value = "running_focused";
+      strategySelect.disabled = true;
+      document.querySelector(".sub").textContent = "최종 검증용 실험 데이터 · 파랑은 경사 싫어요, 주황은 경사 괜찮아요입니다. 기존 ORS 보행 경로 좌표를 표시합니다. 현장 출입 여부는 별도 확인이 필요합니다.";
+    }
     const message = document.getElementById("message");
     const validationNotice = document.getElementById("validationNotice");
     const validationDetails = document.getElementById("validationDetails");
@@ -132,7 +138,7 @@
     }
     async function loadModeRoute(distance, preference, strategy) {
       const destination = encodeURIComponent(destinationSelect.value);
-      const query = `destination=${destination}&distance=${distance}&slope=${preference}&strategy=${strategy}&_=${Date.now()}`;
+      const query = `destination=${destination}&distance=${distance}&slope=${preference}&strategy=${strategy}&dataset=${encodeURIComponent(selectedDataset)}&_=${Date.now()}`;
       const [routeResponse, geoResponse] = await Promise.all([
         fetch(`/route.json?${query}`, { cache: "no-store" }),
         fetch(`/route.geojson?${query}`, { cache: "no-store" })
@@ -269,7 +275,7 @@
         const navigationChoice = selectedMode === "any" ? any : selectedMode === "low" ? low : (low || any);
         const navigationPreference = navigationChoice === any ? "any" : "low";
         const navigationRouteId = navigationChoice.route.route_id;
-        const navResponse = await fetch(`/navigation-route.json?destination_id=${encodeURIComponent(destinationSelect.value)}&route_id=${encodeURIComponent(navigationRouteId)}&_=${Date.now()}`, { cache: "no-store" });
+        const navResponse = await fetch(`/navigation-route.json?destination_id=${encodeURIComponent(destinationSelect.value)}&route_id=${encodeURIComponent(navigationRouteId)}&dataset=${encodeURIComponent(selectedDataset)}&_=${Date.now()}`, { cache: "no-store" });
         const navData = navResponse.ok ? await navResponse.json() : { supported: false, reason: await navResponse.text() };
         navigation.setRoute(navData);
         navigationModeKey = `${destinationSelect.value}:${distance}:${strategy}:${navigationPreference}:${navigationRouteId}`;
@@ -337,6 +343,7 @@
         next.searchParams.set("distance", String(distance));
         next.searchParams.set("slope", selectedMode);
         next.searchParams.set("strategy", strategy);
+        next.searchParams.set("dataset", selectedDataset);
         history.replaceState(null, "", next);
       } catch (error) {
         const isNoRoute = String(error.message || "").includes("경로 없음");

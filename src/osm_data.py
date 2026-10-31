@@ -16,6 +16,7 @@ from src.running_metrics import classify_running_way
 
 
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
+OVERPASS_FALLBACK_URLS = ["https://overpass.private.coffee/api/interpreter"]
 OSM_ATTRIBUTION = "© OpenStreetMap contributors (ODbL)"
 OSM_COPYRIGHT_URL = "https://www.openstreetmap.org/copyright"
 CACHE_TTL_SECONDS = 24 * 60 * 60
@@ -28,6 +29,71 @@ STATION_EXIT_PATTERN_EN = re.compile(r"(.+?Station)\s+gate\s*(\d+)", re.IGNORECA
 
 class OSMDataError(RuntimeError):
     """OSM Overpass data could not be fetched or parsed."""
+
+    def __init__(self, message: str, *, error_category: str = "osm_error", http_status: int | None = None,
+                 request_attempts: int = 0):
+        super().__init__(message)
+        self.error_category = error_category
+        self.http_status = http_status
+        self.request_attempts = request_attempts
+
+
+def _post_overpass_query(query: str, timeout_s: int) -> tuple[requests.Response, str, int]:
+    """Try the primary Overpass instance and one documented public fallback.
+
+    Do not rotate endpoints on 429, authentication, or other client errors; that
+    would evade an operator policy. A network failure or 5xx gets one alternate.
+    """
+    endpoints = [OVERPASS_URL, *OVERPASS_FALLBACK_URLS]
+    failures: list[str] = []
+    attempts = 0
+    for index, endpoint in enumerate(endpoints):
+        attempts += 1
+        try:
+            response = requests.post(
+                endpoint,
+                data={"data": query},
+                headers={"User-Agent": "LessGO-local-course-search/1.0", "Accept": "application/json"},
+                timeout=timeout_s,
+            )
+        except requests.Timeout:
+            failures.append("timeout")
+            if index + 1 < len(endpoints):
+                continue
+            raise OSMDataError("Overpass request timed out on the primary and fallback endpoints.",
+                               error_category="timeout", request_attempts=attempts)
+        except requests.ConnectionError as exc:
+            text = str(exc).lower()
+            category = "dns_error" if any(t in text for t in ("name resolution", "getaddrinfo", "nodename")) else "connection_error"
+            failures.append(category)
+            if index + 1 < len(endpoints):
+                continue
+            raise OSMDataError("Overpass network connection failed on the primary and fallback endpoints.",
+                               error_category=category, request_attempts=attempts) from exc
+        except requests.RequestException as exc:
+            failures.append(type(exc).__name__)
+            if index + 1 < len(endpoints):
+                continue
+            raise OSMDataError("Overpass request failed on the primary and fallback endpoints.",
+                               error_category="network_error", request_attempts=attempts) from exc
+
+        if response.status_code == 429:
+            raise OSMDataError("Overpass HTTP 429; request was stopped without endpoint rotation.",
+                               error_category="rate_limit", http_status=429, request_attempts=attempts)
+        if response.status_code in {401, 403}:
+            raise OSMDataError(f"Overpass HTTP {response.status_code}; access was denied.",
+                               error_category="authentication", http_status=response.status_code,
+                               request_attempts=attempts)
+        if response.status_code >= 500 and index + 1 < len(endpoints):
+            failures.append(f"http_{response.status_code}")
+            continue
+        if not response.ok:
+            raise OSMDataError(f"Overpass HTTP {response.status_code}.",
+                               error_category="http_error", http_status=response.status_code,
+                               request_attempts=attempts)
+        return response, endpoint, attempts
+    raise OSMDataError("Overpass primary and fallback requests failed: " + ",".join(failures),
+                       error_category="network_or_server_error", request_attempts=attempts)
 
 
 def _access_way_is_walkable(tags: dict[str, Any]) -> bool:
@@ -329,33 +395,16 @@ def fetch_restricted_area_elements(
         selectors.extend([f'relation["name"~"{name_pattern}"]({south},{west},{north},{east});',
                           f'relation["name:ko"~"{name_pattern}"]({south},{west},{north},{east});'])
     query = "[out:json][timeout:60];\n(\n" + "\n".join(selectors) + "\n);\nout body geom;"
-    response = None
-    for attempt in range(2):
-        try:
-            response = requests.post(
-                OVERPASS_URL,
-                data={"data": query},
-                headers={"User-Agent": "LessGO-local-course-search/1.0", "Accept": "application/json"},
-                timeout=90,
-            )
-        except requests.RequestException as exc:
-            if attempt == 0:
-                time.sleep(1)
-                continue
-            raise OSMDataError(f"출입 제한 구역 OSM 데이터 요청 실패 ({exc.__class__.__name__}).") from exc
-        if response.status_code in {429, 500, 502, 503, 504} and attempt == 0:
-            time.sleep(1)
-            continue
-        break
-    assert response is not None
-    if not response.ok:
-        raise OSMDataError(f"출입 제한 구역 OSM HTTP {response.status_code}.")
+    response, source_endpoint, request_attempts = _post_overpass_query(query, timeout_s=90)
     try:
-        elements = response.json().get("elements", [])
+        payload = response.json()
+        elements = payload.get("elements", [])
     except ValueError as exc:
         raise OSMDataError("출입 제한 구역 OSM 응답을 JSON으로 읽지 못했습니다.") from exc
-    result = {"schema_version": 3, "source": OVERPASS_URL, "destination_coordinates": [lat, lon],
-              "query_radius_m": radius_m, "fetched_at_epoch": time.time(), "elements": elements}
+    result = {"schema_version": 3, "source": source_endpoint, "request_attempts": request_attempts,
+              "destination_coordinates": [lat, lon], "query_radius_m": radius_m,
+              "fetched_at_epoch": time.time(), "element_count": len(elements),
+              "osm_base_timestamp": (payload.get("osm3s") or {}).get("timestamp_osm_base"), "elements": elements}
     cache_dir.mkdir(parents=True, exist_ok=True)
     cache_path.write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
     return result
@@ -522,6 +571,7 @@ def _query_for(destination: dict[str, Any], radius_m: int) -> str:
   way[\"leisure\"~\"^(park|garden)$\"]({south},{west},{north},{east});
   way[\"highway\"~\"^(footway|path|pedestrian|steps)$\"]({south},{west},{north},{east});
   way[\"highway\"~\"^(residential|living_street|service|unclassified|tertiary|secondary|primary|cycleway|track)$\"]({south},{west},{north},{east});
+  way[\"waterway\"~\"^(river|stream|canal|tidal_channel)$\"]({south},{west},{north},{east});
 );
 out body geom;"""
 
@@ -581,29 +631,10 @@ def fetch_osm_elements(
             except (OSError, ValueError, TypeError, KeyError):
                 continue
 
-    response = None
-    for attempt in range(2):
-        try:
-            response = requests.post(
-                OVERPASS_URL,
-                data={"data": _query_for(destination, radius_m)},
-                headers={"User-Agent": "LessGO-local-course-search/1.0", "Accept": "application/json"},
-                timeout=90,
-            )
-        except requests.RequestException as exc:
-            if attempt == 0:
-                time.sleep(1)
-                continue
-            raise OSMDataError(f"OSM Overpass에 연결하지 못했습니다 ({exc.__class__.__name__}).") from exc
-        if response.status_code in {429, 500, 502, 503, 504} and attempt == 0:
-            time.sleep(1)
-            continue
-        break
-    assert response is not None
-    if not response.ok:
-        raise OSMDataError(f"OSM Overpass HTTP {response.status_code}: {response.text[:250]}")
+    response, source_endpoint, request_attempts = _post_overpass_query(_query_for(destination, radius_m), timeout_s=90)
     try:
-        elements = response.json().get("elements", [])
+        payload = response.json()
+        elements = payload.get("elements", [])
     except ValueError as exc:
         raise OSMDataError("OSM Overpass가 JSON 응답을 반환하지 않았습니다.") from exc
     if not elements:
@@ -611,10 +642,14 @@ def fetch_osm_elements(
 
     result = {
         "schema_version": OSM_SCHEMA_VERSION,
-        "source": OVERPASS_URL,
+        "optional_layers": {"waterway_lines_requested": True},
+        "source": source_endpoint,
+        "request_attempts": request_attempts,
         "destination_coordinates": [float(destination["latitude"]), float(destination["longitude"])],
         "query_radius_m": radius_m,
         "fetched_at_epoch": time.time(),
+        "element_count": len(elements),
+        "osm_base_timestamp": (payload.get("osm3s") or {}).get("timestamp_osm_base"),
         "attribution": OSM_ATTRIBUTION,
         "license_url": OSM_COPYRIGHT_URL,
         "elements": elements,

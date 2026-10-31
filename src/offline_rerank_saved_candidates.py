@@ -349,19 +349,25 @@ def collect_candidates(destination_id: str, distance: int, destination: dict[str
         "unique_saved_route_geometries_all_destination_coordinates": len(candidates),
         "unique_saved_route_geometries_current_destination": sum(c["current_destination_match"] for c in candidates),
         "missing_route_json_references": missing_files,
-        "unique_geometries_within_100m": sum(c["current_destination_match"] and c["distance_error_m"] <= 100.0001 for c in candidates),
-        "unique_geometries_within_200m": sum(c["current_destination_match"] and c["distance_error_m"] <= 200.0001 for c in candidates),
+        "distance_tolerance_m": float(defaults.get("distance_tolerance_min_m", 300)),
+        "preferred_distance_error_m": float(defaults.get("preferred_distance_error_m", 50)),
+        "unique_geometries_within_tolerance": sum(
+            c["current_destination_match"]
+            and c["distance_error_m"] <= float(defaults.get("distance_tolerance_min_m", 300)) + 1e-4
+            for c in candidates
+        ),
     }
     return candidates, count
 
 
-def candidate_public(candidate: dict[str, Any], mode: str, rank: int | None = None) -> dict[str, Any]:
+def candidate_public(candidate: dict[str, Any], mode: str, rank: int | None = None,
+                     tolerance_m: float = 300) -> dict[str, Any]:
     grade = candidate["grade"]
     fitness = candidate.get("fitness") or {}
     return {
         "rank": rank, "route_id": candidate["route_id"], "distance_km": round(candidate["distance_km"], 4),
         "distance_error_m": round(candidate["distance_error_m"], 1),
-        "distance_status": "within_100m" if candidate["distance_error_m"] <= 100.0001 else "alternative_within_200m",
+        "distance_status": "within_tolerance" if candidate["distance_error_m"] <= tolerance_m + 1e-4 else "alternative",
         "start": {k: candidate["start"].get(k) for k in ("id", "name", "latitude", "longitude", "access_type", "station_access")},
         "ascent_m": candidate["ascent_m"],
         "uphill_8_percent_share": grade.get("share8"), "uphill_10_percent_share": grade.get("share10"),
@@ -380,16 +386,17 @@ def candidate_public(candidate: dict[str, Any], mode: str, rank: int | None = No
     }
 
 
-def rank_for_mode(candidates: list[dict[str, Any]], mode: str) -> list[dict[str, Any]]:
+def rank_for_mode(candidates: list[dict[str, Any]], mode: str, tolerance_m: float = 300,
+                  preferred_error_m: float = 50) -> list[dict[str, Any]]:
     # Goal distance is a hard first band, followed by the mode-specific score.
     key = "low_score" if mode == "low" else "any_score"
     eligible = [c for c in candidates if c.get("current_destination_match")
-                and c["distance_error_m"] <= 200.0001 and c["access_restriction_m"] <= 0
+                and c["distance_error_m"] <= tolerance_m + 1e-4 and c["access_restriction_m"] <= 0
                 and bool(c.get("files", {}).get("geojson"))
                 and c.get("restriction_check_available")
                 and c.get(key) is not None]
     eligible = [c for c in eligible if c["grade"].get("share8") is not None]
-    preferred = [c for c in eligible if c["distance_error_m"] <= 100.0001]
+    preferred = [c for c in eligible if c["distance_error_m"] <= preferred_error_m + 1e-4]
     pool = preferred or eligible
     return sorted(pool, key=lambda c: (
         -(c.get(key) if c.get(key) is not None else -1),
@@ -398,8 +405,8 @@ def rank_for_mode(candidates: list[dict[str, Any]], mode: str) -> list[dict[str,
     ))
 
 
-def status_for_candidate(candidate: dict[str, Any], previous: dict[str, Any]) -> str:
-    if candidate["distance_error_m"] > 100.0001:
+def status_for_candidate(candidate: dict[str, Any], previous: dict[str, Any], tolerance_m: float = 300) -> str:
+    if candidate["distance_error_m"] > tolerance_m + 1e-4:
         return "alternative"
     # Never upgrade an old, explicitly unresolved route solely from the re-rank.
     if str(previous.get("route_id")) == str(candidate["route_id"]):
@@ -407,7 +414,8 @@ def status_for_candidate(candidate: dict[str, Any], previous: dict[str, Any]) ->
     return "needs_verification"
 
 
-def update_index(index: dict[str, Any], report: dict[str, Any], backup_path: Path) -> None:
+def update_index(index: dict[str, Any], report: dict[str, Any], backup_path: Path,
+                 tolerance_m: float = 300) -> None:
     for destination_id in DEST_IDS:
         for distance in DISTANCES:
             key = f"{distance}km"
@@ -456,7 +464,7 @@ def update_index(index: dict[str, Any], report: dict[str, Any], backup_path: Pat
                     **(route.get("final_grade_review") or {}),
                     "model": "offline_saved_candidate_rerank_v1",
                     "slope_preference_diagnostic_scores": all_mode_scores,
-                    "terrain_metrics": candidate_public(best, mode),
+                    "terrain_metrics": candidate_public(best, mode, tolerance_m=tolerance_m),
                     "note": "Re-scored from saved ORS route geometry/elevation and saved OSM metrics; no ORS request or OSM data fetch was made.",
                 }
                 route_analysis["grade_metrics"] = best["grade"]["metrics"]
@@ -466,7 +474,7 @@ def update_index(index: dict[str, Any], report: dict[str, Any], backup_path: Pat
                                            "candidate_geometry_fingerprint": best["fingerprint"]}
                 best["route_path"].write_text(json.dumps(route, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
                 # Preserve old status for the same candidate; newly selected files remain review-needed.
-                status = status_for_candidate(best, old)
+                status = status_for_candidate(best, old, tolerance_m=tolerance_m)
                 if status == "needs_verification":
                     # If this exact saved candidate already carried a verified
                     # status in the other preference before re-ranking, retain
@@ -486,7 +494,7 @@ def update_index(index: dict[str, Any], report: dict[str, Any], backup_path: Pat
                     "duration_minutes": round(best["duration_minutes"], 2),
                     "ascent_m": best["ascent_m"], "descent_m": best["descent_m"],
                     "start": best["start"], "destination": best["destination"], "files": file_paths,
-                    "grade_metrics": candidate_public(best, mode),
+                    "grade_metrics": candidate_public(best, mode, tolerance_m=tolerance_m),
                     "slope_diagnostic_score": new_score,
                     "selection_score": new_score,
                     "selection_model": "offline_saved_candidate_rerank_v1",
@@ -496,7 +504,7 @@ def update_index(index: dict[str, Any], report: dict[str, Any], backup_path: Pat
                     ],
                 })
                 if status == "alternative":
-                    selected["notes"] = list(selected["notes"]) + ["목표 거리 ±100m 밖이지만 ±200m 이내인 대안 경로입니다."]
+                    selected["notes"] = list(selected["notes"]) + [f"목표 거리 허용 오차 ±{tolerance_m:.0f}m를 벗어난 대안 경로입니다."]
                 chosen[mode] = selected
                 group["selection_outcomes"][mode] = {
                     "previous_route_id": old.get("route_id"), "selected_route_id": best["route_id"],
@@ -563,6 +571,8 @@ def main() -> None:
     index = load_json(INDEX_PATH)
     destination_data = load_json(DESTINATIONS_PATH)
     defaults = load_json(DEFAULTS_PATH)
+    distance_tolerance_m = float(defaults.get("distance_tolerance_min_m", 300))
+    preferred_distance_error_m = float(defaults.get("preferred_distance_error_m", 50))
     destinations = {item["id"]: item for item in destination_data.get("destinations", [])}
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     backup_dir = ROOT / "outputs/app/backups"
@@ -575,7 +585,7 @@ def main() -> None:
         "scoring": {
             "low": "100 - (1.60*10% uphill share pp + 0.80*8% uphill share pp + 0.60*max(0,max 100m sustained grade-8) + 1.50*longest 8% climb/100m + 0.02*ascent per km), clipped 0..100; grade exposure dominates cumulative ascent; distance band first.",
             "any": "0.72*saved running_fitness score + 0.28*continuity/backtracking score; elevation is not part of the score; distance band first.",
-            "eligibility": "current destination endpoint within 25m; no saved explicit access restriction; ±100m preferred, otherwise ±200m alternative; no new status upgraded to verified.",
+            "eligibility": f"current destination endpoint within 25m; no saved explicit access restriction; ±{preferred_distance_error_m:.0f}m preferred within the configured ±{distance_tolerance_m:.0f}m tolerance; no new status upgraded to verified.",
         },
         "backup_file": relative_path(backup_path), "combinations": {},
     }
@@ -586,23 +596,23 @@ def main() -> None:
             candidates, count = collect_candidates(destination_id, distance, destination, defaults, index)
             entry = index.get("destinations", {}).get(destination_id, {}).get(f"{distance}km", {})
             old_modes = entry.get("modes", {})
-            ranked_low = rank_for_mode(candidates, "low")
-            ranked_any = rank_for_mode(candidates, "any")
+            ranked_low = rank_for_mode(candidates, "low", distance_tolerance_m, preferred_distance_error_m)
+            ranked_any = rank_for_mode(candidates, "any", distance_tolerance_m, preferred_distance_error_m)
             report_group: dict[str, Any] = {
-                "candidate_count": count, "eligible_unique_geometry_count": len(set(c["fingerprint"] for c in candidates if c.get("current_destination_match") and c.get("restriction_check_available") and c["distance_error_m"] <= 200.0001 and c["access_restriction_m"] <= 0 and c.get("files", {}).get("geojson") and c["grade"].get("share8") is not None)),
+                "candidate_count": count, "eligible_unique_geometry_count": len(set(c["fingerprint"] for c in candidates if c.get("current_destination_match") and c.get("restriction_check_available") and c["distance_error_m"] <= distance_tolerance_m + 1e-4 and c["access_restriction_m"] <= 0 and c.get("files", {}).get("geojson") and c["grade"].get("share8") is not None)),
                 "mode_eligible_unique_geometry_count": {
-                    "low": len(set(c["fingerprint"] for c in candidates if c.get("current_destination_match") and c.get("restriction_check_available") and c["distance_error_m"] <= 200.0001 and c["access_restriction_m"] <= 0 and c.get("files", {}).get("geojson") and c.get("low_score") is not None)),
-                    "any": len(set(c["fingerprint"] for c in candidates if c.get("current_destination_match") and c.get("restriction_check_available") and c["distance_error_m"] <= 200.0001 and c["access_restriction_m"] <= 0 and c.get("files", {}).get("geojson") and c.get("any_score") is not None)),
+                    "low": len(set(c["fingerprint"] for c in candidates if c.get("current_destination_match") and c.get("restriction_check_available") and c["distance_error_m"] <= distance_tolerance_m + 1e-4 and c["access_restriction_m"] <= 0 and c.get("files", {}).get("geojson") and c.get("low_score") is not None)),
+                    "any": len(set(c["fingerprint"] for c in candidates if c.get("current_destination_match") and c.get("restriction_check_available") and c["distance_error_m"] <= distance_tolerance_m + 1e-4 and c["access_restriction_m"] <= 0 and c.get("files", {}).get("geojson") and c.get("any_score") is not None)),
                 },
-                "rankings": {"low": [candidate_public(c, "low", i) for i, c in enumerate(ranked_low[:3], 1)],
-                             "any": [candidate_public(c, "any", i) for i, c in enumerate(ranked_any[:3], 1)]},
+                "rankings": {"low": [candidate_public(c, "low", i, distance_tolerance_m) for i, c in enumerate(ranked_low[:3], 1)],
+                             "any": [candidate_public(c, "any", i, distance_tolerance_m) for i, c in enumerate(ranked_any[:3], 1)]},
                 "ranked_candidates_internal": {"low": ranked_low, "any": ranked_any},
                 "selection_outcomes": {},
                 "old_representatives": {mode: {"route_id": r.get("route_id"), "distance_km": r.get("distance_km"), "status": r.get("status"), "start": r.get("start", {}).get("name")} for mode, r in old_modes.items()},
                 "same_old_route": old_modes.get("low", {}).get("route_id") == old_modes.get("any", {}).get("route_id"),
                 "ranking_unavailable_reason": {
-                    "low": None if ranked_low else "현재 목적지 좌표 기준 ±200m 이내, 지도 파일이 있는 고도 경로 후보가 없습니다.",
-                    "any": None if ranked_any else "현재 목적지 좌표·거리 조건을 만족하는 저장 경로에 러닝 점수 또는 저장 OSM 지표가 없어 새 순위를 산출하지 못했습니다. 기존 대표 경로를 유지합니다.",
+                    "low": None if ranked_low else f"현재 목적지 좌표 기준 ±{distance_tolerance_m:.0f}m 이내, 지도 파일이 있는 고도 경로 후보가 없습니다.",
+                    "any": None if ranked_any else f"현재 목적지 좌표 기준 ±{distance_tolerance_m:.0f}m 이내 저장 경로에 러닝 점수 또는 OSM 지표가 없어 새 순위를 산출하지 못했습니다. 기존 대표 경로를 유지합니다.",
                 },
                 "candidates_internal": candidates,
             }
@@ -623,7 +633,7 @@ def main() -> None:
             else:
                 report_group["shared_route_fraction_between_modes"] = None
             report["combinations"][destination_id][f"{distance}km"] = report_group
-    update_index(index, report, backup_path)
+    update_index(index, report, backup_path, distance_tolerance_m)
     INDEX_PATH.write_text(json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     # Convert report internals to JSON-safe summary once index mutation has finished.
     REPORT_PATH.write_text(json.dumps(report, ensure_ascii=False, indent=2, default=str) + "\n", encoding="utf-8")

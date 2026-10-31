@@ -21,26 +21,38 @@ HOST = "127.0.0.1"
 PORT = 8000
 SUPPORTED_DISTANCES_KM = {3, 5, 10}
 REPRESENTATIVE_ROUTES_PATH = ROOT / "outputs" / "app" / "representative_routes.json"
+FINAL_ROUTES_PATH = ROOT / "analysis" / "experiments" / "final_routes_20261101" / "outputs" / "app" / "representative_routes.json"
+
+
+def representative_index_path(dataset: str = "app") -> Path:
+    """Resolve only the built-in app index or the reviewed final experiment index."""
+    if dataset == "app":
+        return REPRESENTATIVE_ROUTES_PATH
+    if dataset == "final_routes":
+        return FINAL_ROUTES_PATH
+    raise ValueError("dataset must be 'app' or 'final_routes'")
 
 
 class NoRouteError(FileNotFoundError):
     """A valid, explicit no-route result rather than a missing server file."""
 
 
-def get_representative_entry(destination_id: str, target_distance_km: int, slope_preference: str) -> dict | None:
+def get_representative_entry(destination_id: str, target_distance_km: int, slope_preference: str, dataset: str = "app") -> dict | None:
     """Read an app-facing route/status entry when one has been prepared."""
-    if not REPRESENTATIVE_ROUTES_PATH.exists():
+    index_path = representative_index_path(dataset)
+    if not index_path.exists():
         return None
-    data = json.loads(REPRESENTATIVE_ROUTES_PATH.read_text(encoding="utf-8"))
+    data = json.loads(index_path.read_text(encoding="utf-8"))
     distance = data.get("destinations", {}).get(destination_id, {}).get(f"{target_distance_km}km", {})
     return distance.get("modes", {}).get(slope_preference)
 
 
-def get_representative_comparison(destination_id: str, target_distance_km: int) -> dict | None:
+def get_representative_comparison(destination_id: str, target_distance_km: int, dataset: str = "app") -> dict | None:
     """Read the stored low-vs-any edge overlap for an app-facing representative route."""
-    if not REPRESENTATIVE_ROUTES_PATH.exists():
+    index_path = representative_index_path(dataset)
+    if not index_path.exists():
         return None
-    data = json.loads(REPRESENTATIVE_ROUTES_PATH.read_text(encoding="utf-8"))
+    data = json.loads(index_path.read_text(encoding="utf-8"))
     distance = data.get("destinations", {}).get(destination_id, {}).get(f"{target_distance_km}km", {})
     representative = distance.get("representative", {})
     fraction = representative.get("shared_route_fraction_between_modes")
@@ -52,7 +64,7 @@ def get_representative_comparison(destination_id: str, target_distance_km: int) 
 
 def get_rank_one_files(
     target_distance_km: int = 3, slope_preference: str = "low", strategy: str = "baseline",
-    destination_id: str = "simujang",
+    destination_id: str = "simujang", dataset: str = "app",
 ) -> tuple[Path, Path, Path]:
     if target_distance_km not in SUPPORTED_DISTANCES_KM:
         raise ValueError("distance must be 3, 5, or 10")
@@ -65,7 +77,8 @@ def get_rank_one_files(
     destination = next((item for item in destinations if item.get("id") == destination_id), None)
     if destination is None:
         raise ValueError("unknown destination")
-    representative = get_representative_entry(destination_id, target_distance_km, slope_preference)
+    index_path = representative_index_path(dataset)
+    representative = get_representative_entry(destination_id, target_distance_km, slope_preference, dataset)
     if representative is not None and strategy in {"running_focused", "access_focused"}:
         if representative.get("status") == "no_route" or not representative.get("files", {}).get("json"):
             raise NoRouteError(representative.get("message") or "경로 없음 · 이 거리 조건을 만족하는 경로가 없습니다.")
@@ -73,7 +86,7 @@ def get_rank_one_files(
         route_geojson = (ROOT / representative["files"]["geojson"]).resolve()
         route_json.relative_to(ROOT)
         route_geojson.relative_to(ROOT)
-        summary_path = (ROOT / "outputs" / "app" / "representative_routes.json").resolve()
+        summary_path = index_path.resolve()
         return summary_path, route_json, route_geojson
     destination_dir = RECOMMENDATIONS_DIR / destination_id
     results_dir = (destination_dir / strategy / target_label if strategy in {"running_focused", "access_focused"}
@@ -143,6 +156,7 @@ class KakaoRouteHandler(BaseHTTPRequestHandler):
         slope_preference = query.get("slope", ["compare"])[0]
         strategy = query.get("strategy", ["baseline"])[0]
         destination_id = query.get("destination", ["simujang"])[0]
+        dataset = query.get("dataset", ["app"])[0]
         try:
             target_distance_km = int(query.get("distance", ["3"])[0])
         except ValueError:
@@ -156,6 +170,7 @@ class KakaoRouteHandler(BaseHTTPRequestHandler):
                 kakao_key = os.getenv("KAKAO_JS_KEY", "").strip()
                 key_value = json.dumps(kakao_key) if kakao_key else "null"
                 page = template.replace("__KAKAO_JS_KEY_JSON__", key_value)
+                page = page.replace("__DATASET_JSON__", json.dumps(dataset if dataset in {"app", "final_routes"} else "app"))
                 destinations = json.loads((ROOT / "data" / "destinations.json").read_text(encoding="utf-8")).get("destinations", [])
                 destination_ids = {item["id"] for item in destinations}
                 initial_destination_id = destination_id if destination_id in destination_ids else destinations[0]["id"]
@@ -169,19 +184,19 @@ class KakaoRouteHandler(BaseHTTPRequestHandler):
                 return
             if route_path == "/route.json" or route_path == "/route.geojson":
                 summary_path, route_json, route_geojson = get_rank_one_files(
-                    target_distance_km, slope_preference, strategy, destination_id
+                    target_distance_km, slope_preference, strategy, destination_id, dataset
                 )
                 if route_path == "/route.json":
                     route_data = json.loads(route_json.read_text(encoding="utf-8"))
                     route_data["requested_slope_preference"] = slope_preference
-                    representative = get_representative_entry(destination_id, target_distance_km, slope_preference)
+                    representative = get_representative_entry(destination_id, target_distance_km, slope_preference, dataset)
                     if representative is not None:
                         route_data["validation_status"] = representative.get("status", "needs_verification")
                         route_data["validation_notes"] = representative.get("notes", [])
                         route_data["distance_error_m"] = representative.get("distance_error_m")
                         if representative.get("start", {}).get("station_access"):
                             route_data.setdefault("start", {})["station_access"] = representative["start"]["station_access"]
-                    comparison = get_representative_comparison(destination_id, target_distance_km)
+                    comparison = get_representative_comparison(destination_id, target_distance_km, dataset)
                     if comparison is not None:
                         route_data["cross_preference_comparison"] = comparison
                     overlap_path = summary_path.parent / "preference-route-overlap.json"
@@ -199,7 +214,7 @@ class KakaoRouteHandler(BaseHTTPRequestHandler):
                     self._send(200, body, "application/json; charset=utf-8")
                     return
                 geojson_data = json.loads(route_geojson.read_text(encoding="utf-8"))
-                representative = get_representative_entry(destination_id, target_distance_km, slope_preference)
+                representative = get_representative_entry(destination_id, target_distance_km, slope_preference, dataset)
                 if representative is not None:
                     for feature in geojson_data.get("features", []):
                         feature.setdefault("properties", {})["validation_status"] = representative.get("status", "needs_verification")
@@ -210,7 +225,7 @@ class KakaoRouteHandler(BaseHTTPRequestHandler):
                 return
             if route_path == "/route-summary.json":
                 summary_path, _, _ = get_rank_one_files(
-                    target_distance_km, slope_preference, strategy, destination_id
+                    target_distance_km, slope_preference, strategy, destination_id, dataset
                 )
                 self._send(200, summary_path.read_bytes(), "application/json; charset=utf-8")
                 return
@@ -220,7 +235,8 @@ class KakaoRouteHandler(BaseHTTPRequestHandler):
                 if not selected_destination or not route_id:
                     self._send(400, b"destination_id and route_id are required", "text/plain; charset=utf-8")
                     return
-                payload = load_navigation_route(ROOT, selected_destination, route_id)
+                selected_dataset = query.get("dataset", [dataset])[0]
+                payload = load_navigation_route(ROOT, selected_destination, route_id, representative_index_path(selected_dataset))
                 body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
                 self._send(200, body, "application/json; charset=utf-8")
                 return

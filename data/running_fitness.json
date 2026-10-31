@@ -62,6 +62,25 @@
     "surface_and_width_quality": 0.10,
     "naturalness": 0.05
   },
+  "score_component_sources": {
+    "mapped_running_friendly_share": "running_friendly_share",
+    "vehicle_separation_proxy_share": "vehicle_separation_proxy_share",
+    "continuous_run_estimate": "continuous_running_estimate_score",
+    "surface_and_width_quality": "surface_width_quality_score",
+    "naturalness": "naturalness_score"
+  },
+  "score_component_value_range": [0, 100],
+  "missing_score_component_policy": "renormalize_available",
+  "riverside_bonus": {
+    "enabled": true,
+    "waterway_values": ["river", "stream", "canal", "tidal_channel"],
+    "max_route_walkway_snap_m": 12,
+    "max_walkway_to_waterway_distance_m": 30,
+    "minimum_running_way_score": 55,
+    "share_for_full_bonus": 0.5,
+    "max_bonus_points": 4,
+    "absolute_max_points": 5
+  },
   "notes": [
     "OSM tags may be missing or outdated; mapped suitability is an estimate, not a safety finding.",
     "highway=cycleway is not considered walkable unless foot=yes, designated, or permissive is mapped.",

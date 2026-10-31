@@ -51,9 +51,12 @@ def _find_route(index: dict[str, Any], destination_id: str, route_id: str) -> tu
     return None
 
 
-def load_navigation_route(root: Path, destination_id: str, route_id: str) -> dict[str, Any]:
+def load_navigation_route(
+    root: Path, destination_id: str, route_id: str,
+    index_path: Path | None = None,
+) -> dict[str, Any]:
     """Resolve an indexed route ID and expose its saved GeoJSON plus real ORS steps."""
-    index_path = root / "outputs" / "app" / "representative_routes.json"
+    index_path = index_path or root / "outputs" / "app" / "representative_routes.json"
     if not index_path.is_file():
         raise FileNotFoundError("앱 대표 경로 인덱스를 찾지 못했습니다.")
     index = json.loads(index_path.read_text(encoding="utf-8"))

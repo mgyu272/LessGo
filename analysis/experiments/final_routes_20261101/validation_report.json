@@ -1,0 +1,199 @@
+{
+  "experiment": "final_routes_20261101",
+  "network_access": "disabled",
+  "ors_api_calls": 0,
+  "overpass_api_calls": 0,
+  "reused_phase7_2_combinations": 16,
+  "rechecked_combinations": [
+    "jeongneung/10km/low",
+    "jeongneung/10km/any"
+  ],
+  "results": {
+    "simujang/3km/low": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "3km-osm-node-3401490130-via-osm-node-11204519566-osm-node-5194568312-simujang-low",
+      "distance_km": 3.0799000000000003,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "simujang/3km/any": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "3km-osm-node-3401490118-via-osm-way-277257904-node-2035-simujang-any",
+      "distance_km": 3.0253,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "simujang/5km/low": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "5km-osm-node-3401296577-via-osm-node-14148561608-osm-node-5194568320-simujang-low",
+      "distance_km": 5.1532,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "simujang/5km/any": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "5km-osm-park-edge-2135148753-via-osm-way-1125784543-node-7026-simujang-any",
+      "distance_km": 4.870100000000001,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "simujang/10km/low": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "10km-osm-park-edge-1981019398-via-osm-node-3401296564-osm-node-3401490122-simujang-low",
+      "distance_km": 9.9502,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "simujang/10km/any": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "10km-osm-park-edge-1981019398-via-osm-node-3401296564-osm-node-3401490122-simujang-any",
+      "distance_km": 9.9502,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "jeongneung/3km/low": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "3km-hansung-exit-5-via-osm-way-708475244-node-18024-sungshin-exit-1-jeongneung-low",
+      "distance_km": 2.9495,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "jeongneung/3km/any": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-any",
+      "distance_km": 2.9888000000000003,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "jeongneung/5km/low": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "5km-osm-node-5087059947-via-osm-way-380312394-node-16566-osm-way-810683850-node-18480-jeongneung-low",
+      "distance_km": 5.1945,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "jeongneung/5km/any": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "5km-osm-node-3401490099-via-osm-way-810358805-node-18448-osm-way-910329317-node-18932-jeongneung-any",
+      "distance_km": 4.862,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "uiryeong/3km/low": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "3km-osm-node-3401296533-via-osm-way-810680645-node-18465-uiryeong-low",
+      "distance_km": 2.9485,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "uiryeong/3km/any": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "3km-osm-node-3401296534-via-osm-way-1417439451-node-21535-osm-way-1433190685-node-21592-uiryeong-any",
+      "distance_km": 2.9735,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "uiryeong/5km/low": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "5km-osm-running-node-3849370191-uiryeong-low",
+      "distance_km": 4.7993999999999994,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "uiryeong/5km/any": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "5km-osm-running-node-3849370191-uiryeong-any",
+      "distance_km": 4.7993999999999994,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "uiryeong/10km/low": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "10km-sungshin-exit-5-via-osm-way-925780061-node-19157-osm-way-925881935-node-19163-uiryeong-low",
+      "distance_km": 10.125,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "uiryeong/10km/any": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "10km-osm-node-3401383831-via-osm-way-1035116325-node-19345-osm-way-546646377-node-17304-uiryeong-any",
+      "distance_km": 10.1355,
+      "source": "phase7_2 validated output, copied without recalculation"
+    },
+    "jeongneung/10km/low": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "10km-osm-running-node-287298483-via-osm-way-536184662-node-16842-osm-way-801008452-node-17986-jeongneung-low",
+      "distance_km": 9.9385,
+      "ascent_m": 177.3,
+      "uphill_8_share": 0.0503,
+      "uphill_10_share": 0.0262,
+      "running_fitness_score": 79.55,
+      "candidate_count": 13,
+      "rejected_by_reason": {
+        "explicit_access_restriction": 1
+      },
+      "source_osm_cache": "analysis\\experiments\\phase6_retry_20261101\\outputs\\cache\\osm_network_827579b651821ff0.json",
+      "source_restriction_cache": "analysis\\experiments\\phase6_retry_20261101\\outputs\\cache\\osm_restricted_areas_7099eb8558713d7c.json",
+      "osm_base_timestamp": "2026-10-31T16:53:06Z",
+      "osm_elements": 171889,
+      "restriction_elements": 3994,
+      "route_corridor": {
+        "full_snapshot_elements": 171889,
+        "route_corridor_elements": 11930,
+        "route_corridor_ways": 10465,
+        "route_corridor_crossing_signal_nodes": 1465,
+        "buffer_cells": 2,
+        "cell_size_degrees": 0.001
+      },
+      "score": 72.53128,
+      "selection": {
+        "valid_candidate_count": 13,
+        "in_range_candidate_count": 13,
+        "naturalness_pool_count": 11,
+        "top3_count": 3,
+        "selected_diversity_threshold": 0.7
+      }
+    },
+    "jeongneung/10km/any": {
+      "status": "success",
+      "verification_status": "needs_verification",
+      "route_id": "10km-osm-running-node-287298483-via-osm-way-536184662-node-16842-osm-way-801008452-node-17986-jeongneung-any",
+      "distance_km": 9.9385,
+      "ascent_m": 177.3,
+      "uphill_8_share": 0.0503,
+      "uphill_10_share": 0.0262,
+      "running_fitness_score": 79.55,
+      "candidate_count": 13,
+      "rejected_by_reason": {
+        "explicit_access_restriction": 1
+      },
+      "source_osm_cache": "analysis\\experiments\\phase6_retry_20261101\\outputs\\cache\\osm_network_827579b651821ff0.json",
+      "source_restriction_cache": "analysis\\experiments\\phase6_retry_20261101\\outputs\\cache\\osm_restricted_areas_7099eb8558713d7c.json",
+      "osm_base_timestamp": "2026-10-31T16:53:06Z",
+      "osm_elements": 171889,
+      "restriction_elements": 3994,
+      "route_corridor": {
+        "full_snapshot_elements": 171889,
+        "route_corridor_elements": 11930,
+        "route_corridor_ways": 10465,
+        "route_corridor_crossing_signal_nodes": 1465,
+        "buffer_cells": 2,
+        "cell_size_degrees": 0.001
+      },
+      "score": 74.32913599999999,
+      "selection": {
+        "valid_candidate_count": 13,
+        "in_range_candidate_count": 13,
+        "naturalness_pool_count": 11,
+        "top3_count": 3,
+        "selected_diversity_threshold": 0.7
+      }
+    }
+  },
+  "known_limitations": [
+    "Station-to-start access and heritage-site entrance access are not field verified.",
+    "OSM checks represent cached data and do not establish current opening/access conditions."
+  ]
+}
