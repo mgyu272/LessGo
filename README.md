@@ -50,9 +50,42 @@ python serve_kakao_map.py
 
 GeoJSON 좌표 순서는 `[longitude, latitude, elevation?]`입니다. API 키나 인증 정보는 앱 데이터에 넣지 마세요.
 
+## 영어 음성 내비게이션
+
+카카오 지도 화면에서 목적지·거리·경사 모드를 선택한 뒤 **English Voice Navigation** 패널을 사용합니다. `시뮬레이션`은 저장 경로를 따라 이동하며 실제 브라우저 영어 음성을 재생합니다. 실제 러닝에서는 `GPS`를 선택하고 위치 권한을 허용하세요. GPS는 `localhost` 또는 HTTPS 환경이 필요합니다. 음성은 브라우저 Web Speech API의 `en-US` 설정을 사용합니다.
+
+지도 서버가 실행 중이면 현재 선택된 대표 경로의 저장된 ORS 방향 단계를 다음 주소로 제공합니다.
+
+```text
+/navigation-route.json?destination_id=simujang&route_id=<representative_routes.json의 route_id>
+```
+
+목적지와 코스의 `route_id`는 `outputs/app/representative_routes.json`에서 확인합니다. 응답은 인덱스가 참조하는 경로 JSON의 ORS `steps`와 GeoJSON 좌표를 묶어 제공합니다. 브라우저 엔진은 다음과 같이 사용할 수 있습니다.
+
+```javascript
+const destinationId = "simujang";
+const routeId = "<representative_routes.json의 route_id>";
+const response = await fetch(
+  `/navigation-route.json?destination_id=${destinationId}&route_id=${routeId}`
+);
+if (!response.ok) throw new Error(await response.text());
+const routeData = await response.json();
+const nav = new window.LessGoEnglishNavigation.EnglishVoiceNavigation();
+nav.setRoute(routeData);
+nav.start({ mode: "gps", voiceEnabled: true });
+// 시뮬레이션: nav.start({ mode: "simulation", speedMultiplier: 15, voiceEnabled: true });
+// 정지: nav.stop();
+```
+
+경로 변경 시 `setRoute()`를 다시 호출하면 이전 진행 위치와 안내 기록이 초기화됩니다. 대표 경로가 없거나 저장된 ORS 방향 안내 단계가 없으면 안내를 지원하지 않습니다. 내비게이션 로직 자동 테스트는 다음 명령으로 실행합니다.
+
+```powershell
+node --test tests/english_voice_navigation.test.cjs
+```
+
 ## 아직 구현하지 않은 기능과 한계
 
-- GPS 실시간 위치 추적과 음성 내비게이션
+- 실제 GPS 기기에서의 위치 추적·음성 안내 현장 테스트
 - 역사 해설 및 장소별 콘텐츠
 - 모든 목적지·거리 조합의 경로 확보와 현장 출입구·보행 연결 확인
 - 안전성, 통행 개방 여부, 노면 상태의 현장 검증
