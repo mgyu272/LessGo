@@ -21,6 +21,12 @@
     #overlapInfo { color: #465268; }
     #startRun { padding: 10px 14px; border: 0; border-radius: 9px; background: #9aa3b2; color: #fff; font-weight: 700; }
     #startRun:disabled { cursor: not-allowed; opacity: .78; }
+    .nav-panel { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 9px; padding: 8px 10px; border: 1px solid #e7ebf1; border-radius: 10px; background: #f9fbfe; font-size: 12px; }
+    .nav-panel button { padding: 8px 12px; border: 0; border-radius: 8px; background: #1262ca; color: white; font-weight: 700; cursor: pointer; }
+    .nav-panel button.secondary { background: #596273; }
+    .nav-panel select { padding: 5px; border: 1px solid #d9e0ea; border-radius: 6px; background: white; }
+    #navStatus { color: #26354d; font-weight: 700; }
+    #navPosition, #navTurn { color: #596273; }
     #map { width: 100%; height: calc(100vh - 146px); min-height: 420px; background: #e9edf2; }
     #message { display: none; position: fixed; z-index: 10; left: 50%; top: 145px; transform: translateX(-50%); max-width: min(620px, calc(100vw - 32px)); padding: 14px 18px; border: 1px solid #f1c8a5; border-radius: 10px; background: #fff8f1; color: #763d13; box-shadow: 0 4px 18px #17203324; line-height: 1.5; }
     #validationNotice { margin: 7px 0 0; color: #76521b; font-size: 12px; }
@@ -42,7 +48,18 @@
       <div class="summary-item"><div class="label">파랑 · 경사 싫어요</div><div class="value" id="lowRouteInfo">불러오는 중</div></div>
       <div class="summary-item"><div class="label">주황 · 경사 괜찮아요</div><div class="value" id="anyRouteInfo">불러오는 중</div></div>
       <div class="summary-item"><div class="label">두 1순위 경로 중복</div><div class="value" id="overlapInfo">불러오는 중</div></div>
-      <button id="startRun" type="button" disabled aria-disabled="true" title="GPS 러닝 기록은 추후 구현 예정입니다">러닝 시작 · 준비 중</button>
+    </div>
+    <div class="nav-panel" aria-label="영어 음성 내비게이션">
+      <strong>English Voice Navigation</strong>
+      <label>실행 <select id="navMode"><option value="gps">GPS</option><option value="simulation">시뮬레이션</option></select></label>
+      <label>시뮬레이션 속도 <select id="simSpeed"><option value="5">5x</option><option value="15" selected>15x</option><option value="30">30x</option></select></label>
+      <label><input id="voiceEnabled" type="checkbox" checked> English voice on</label>
+      <button id="startRun" type="button">러닝 시작</button>
+      <button id="stopRun" class="secondary" type="button" disabled>중지</button>
+      <span id="navStatus" role="status">경로 안내 데이터를 확인하는 중</span>
+      <span id="navPosition">현재 위치: 대기</span>
+      <span id="navTurn">다음 안내: 대기</span>
+      <span id="navInstruction">Last English instruction: —</span>
     </div>
     <details id="validationNotice" hidden>
       <summary>ⓘ 일부 접근·출입 정보 확인 필요 · 세부사항</summary>
@@ -51,6 +68,7 @@
   </header>
   <div id="map" role="application" aria-label="ORS 경로가 표시된 카카오 지도"></div>
   <div id="message" role="status"></div>
+  <script src="/english_voice_navigation.js"></script>
   <script>
     const kakaoJsKey = __KAKAO_JS_KEY_JSON__;
     const params = new URLSearchParams(location.search);
@@ -72,6 +90,39 @@
     const validationDetails = document.getElementById("validationDetails");
     let map = null;
     let overlays = [];
+    let navigationMarker = null;
+    let navigationModeKey = null;
+    const navStatus = document.getElementById("navStatus");
+    const navPosition = document.getElementById("navPosition");
+    const navTurn = document.getElementById("navTurn");
+    const navInstruction = document.getElementById("navInstruction");
+    const navModeSelect = document.getElementById("navMode");
+    const voiceEnabled = document.getElementById("voiceEnabled");
+    const navigation = new LessGoEnglishNavigation.EnglishVoiceNavigation({
+      onUpdate(state) {
+        if (state.status) navStatus.textContent = state.status;
+        if (state.events?.length) navInstruction.textContent = `Last English instruction: ${state.events.map(event => event.text).join(" · ")}`;
+        if (state.position) {
+          navPosition.textContent = `현재 위치: ${state.position.latitude.toFixed(6)}, ${state.position.longitude.toFixed(6)} · 정확도 ±${Math.round(state.accuracyM)}m`;
+          if (map && window.kakao?.maps) {
+            const position = new kakao.maps.LatLng(state.position.latitude, state.position.longitude);
+            if (!navigationMarker) navigationMarker = new kakao.maps.Marker({ map, position, title: "현재 위치" });
+            else navigationMarker.setPosition(position);
+          }
+        } else if (state.stopped || state.reset) {
+          navPosition.textContent = "현재 위치: 대기";
+          navTurn.textContent = "다음 안내: 대기";
+          navInstruction.textContent = "Last English instruction: —";
+          if (navigationMarker) { navigationMarker.setMap(null); navigationMarker = null; }
+        }
+        if (state.nextManeuver && state.remainingToManeuverM != null) {
+          navTurn.textContent = `다음 안내: ${state.nextManeuver.turn.replaceAll("_", " ")} · 약 ${state.remainingToManeuverM}m`;
+        } else if (state.position && state.status !== "Destination reached.") navTurn.textContent = "다음 안내: 방향 전환 없음";
+        if (state.running !== undefined) document.getElementById("stopRun").disabled = !state.running;
+        if (state.supported === false) document.getElementById("startRun").disabled = true;
+      },
+      onError(text) { navStatus.textContent = text; }
+    });
     function showMessage(text) {
       message.textContent = text;
       message.style.display = "block";
@@ -110,6 +161,7 @@
       overlays.push(marker, overlay);
     }
     function clearMap() {
+      if (navigationMarker) { navigationMarker.setMap(null); navigationMarker = null; }
       for (const overlay of overlays) overlay.setMap(null);
       overlays = [];
       map = null;
@@ -164,6 +216,12 @@
       validationDetails.textContent = notes.length ? notes.join("\n") : "OSM/ORS에 기록된 경로입니다. 현장 출입 상태는 확인이 필요합니다.";
     }
     async function renderRoutes() {
+      navigation.stop();
+      navigation.setRoute(null);
+      navigationModeKey = null;
+      document.getElementById("startRun").disabled = true;
+      navPosition.textContent = "현재 위치: 대기";
+      navTurn.textContent = "다음 안내: 대기";
       message.style.display = "none";
       const distance = Number(distanceSelect.value);
       const selectedMode = modeSelect.value;
@@ -208,6 +266,18 @@
           showMessage("경로 없음 · 요청한 거리 조건을 충족하는 경로가 없습니다.");
           return;
         }
+        const navigationChoice = selectedMode === "any" ? any : selectedMode === "low" ? low : (low || any);
+        const navigationPreference = navigationChoice === any ? "any" : "low";
+        const navigationRouteId = navigationChoice.route.route_id;
+        const navResponse = await fetch(`/navigation-route.json?destination_id=${encodeURIComponent(destinationSelect.value)}&route_id=${encodeURIComponent(navigationRouteId)}&_=${Date.now()}`, { cache: "no-store" });
+        const navData = navResponse.ok ? await navResponse.json() : { supported: false, reason: await navResponse.text() };
+        navigation.setRoute(navData);
+        navigationModeKey = `${destinationSelect.value}:${distance}:${strategy}:${navigationPreference}:${navigationRouteId}`;
+        document.getElementById("startRun").disabled = !navData.supported;
+        navStatus.textContent = navData.supported
+          ? `${navData.support_level === "partial" ? "일부 방향 안내 생략" : "안내 준비 완료"} · ${navigationChoice.route.start.name} → ${navigationChoice.route.destination.name} · ${navData.ors_steps_count} ORS steps${navData.reason ? ` · ${navData.reason}` : ""}`
+          : `안내 미지원 · ${navData.reason || "저장된 ORS 방향 안내가 없습니다."}`;
+        navTurn.textContent = navData.supported ? "다음 안내: 러닝 시작 후 표시" : "다음 안내: 사용할 수 없음";
         const overlap = low && any ? low.route.cross_preference_comparison?.shared_fraction_of_shorter_mapped_route : null;
         overlapInfo.textContent = overlap == null ? "비교 불가" : `${(Number(overlap) * 100).toFixed(1)}%`;
         clearMap();
@@ -283,6 +353,20 @@
     distanceSelect.addEventListener("change", renderRoutes);
     modeSelect.addEventListener("change", renderRoutes);
     strategySelect.addEventListener("change", renderRoutes);
+    document.getElementById("startRun").addEventListener("click", () => {
+      if (!navigationModeKey) return;
+      navigation.setVoiceEnabled(voiceEnabled.checked);
+      const started = navigation.start({
+        mode: navModeSelect.value,
+        speedMultiplier: Number(document.getElementById("simSpeed").value),
+        voiceEnabled: voiceEnabled.checked
+      });
+      if (started && navModeSelect.value === "gps" && !window.isSecureContext) {
+        navStatus.textContent = "GPS는 HTTPS 또는 localhost 보안 연결이 필요합니다.";
+      }
+    });
+    document.getElementById("stopRun").addEventListener("click", () => navigation.stop());
+    voiceEnabled.addEventListener("change", () => navigation.setVoiceEnabled(voiceEnabled.checked));
     function start() {
       if (!kakaoJsKey) {
         showMessage("카카오 JavaScript 키가 설정되지 않았습니다. 프로젝트 .env의 KAKAO_JS_KEY를 확인하세요.");

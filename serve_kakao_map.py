@@ -10,11 +10,13 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 from dotenv import load_dotenv
+from src.navigation_data import load_navigation_route
 
 
 ROOT = Path(__file__).resolve().parent
 RECOMMENDATIONS_DIR = ROOT / "outputs" / "recommendations"
 TEMPLATE_PATH = ROOT / "web" / "kakao_route_map.html"
+NAVIGATION_SCRIPT_PATH = ROOT / "web" / "english_voice_navigation.js"
 HOST = "127.0.0.1"
 PORT = 8000
 SUPPORTED_DISTANCES_KM = {3, 5, 10}
@@ -146,6 +148,9 @@ class KakaoRouteHandler(BaseHTTPRequestHandler):
         except ValueError:
             target_distance_km = 0
         try:
+            if route_path == "/english_voice_navigation.js":
+                self._send(200, NAVIGATION_SCRIPT_PATH.read_bytes(), "application/javascript; charset=utf-8")
+                return
             if route_path in {"/", "/index.html"}:
                 template = TEMPLATE_PATH.read_text(encoding="utf-8")
                 kakao_key = os.getenv("KAKAO_JS_KEY", "").strip()
@@ -209,9 +214,21 @@ class KakaoRouteHandler(BaseHTTPRequestHandler):
                 )
                 self._send(200, summary_path.read_bytes(), "application/json; charset=utf-8")
                 return
+            if route_path == "/navigation-route.json":
+                selected_destination = query.get("destination_id", query.get("destination", [""]))[0]
+                route_id = query.get("route_id", [""])[0]
+                if not selected_destination or not route_id:
+                    self._send(400, b"destination_id and route_id are required", "text/plain; charset=utf-8")
+                    return
+                payload = load_navigation_route(ROOT, selected_destination, route_id)
+                body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+                self._send(200, body, "application/json; charset=utf-8")
+                return
             self._send(404, b"Not found", "text/plain; charset=utf-8")
         except NoRouteError as exc:
             self._send(404, str(exc).encode("utf-8"), "text/plain; charset=utf-8")
+        except FileNotFoundError as exc:
+            self._send(404, str(exc).encode("utf-8", errors="replace"), "text/plain; charset=utf-8")
         except (OSError, ValueError, KeyError) as exc:
             self._send(500, str(exc).encode("utf-8", errors="replace"), "text/plain; charset=utf-8")
 
