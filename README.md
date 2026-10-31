@@ -1,117 +1,116 @@
 # Less GO
 
-Less GO는 역사 유적지를 목적지로 삼아 실제 보행 경로를 탐색하고 러닝 코스를 추천하는 Python 프로젝트입니다. ORS(OpenRouteService)에서 경로를 계산하고 OSM(OpenStreetMap) 데이터를 후보 탐색과 경로 평가에 사용합니다.
+Less GO는 역사문화 장소를 목적지로 삼아 러닝 코스를 추천하는 서비스입니다. 사용자는 목적지, 목표 거리, 경사 선호를 선택하고 저장된 경로와 안내 데이터를 이용할 수 있습니다.
 
-## 실행 준비
+- 목적지: 심우장 (`simujang`), 정릉 (`jeongneung`), 의릉 (`uiryeong`)
+- 거리: 3km, 5km, 10km
+- 경사 선호: `low`(완만한 길 선호), `any`(언덕 허용)
+- 러닝 완료 후 한국어·영어 역사 해설을 제공하는 것을 목표로 합니다. 현재 준비된 것은 해설 데이터이며, 앱 화면과 해설 TTS는 별도 구현이 필요합니다.
 
-Python 3.10 이상과 프로젝트 폴더가 필요합니다.
+## 1. 핵심 기능 및 구현 상태
 
-```powershell
+| 기능 | 상태 | 설명 |
+|---|---|---|
+| ORS 보행 경로 추천 | 구현됨 | `foot-walking` 경로 계산과 저장된 추천 데이터를 사용합니다. 새 경로 탐색에는 ORS 키와 외부 네트워크가 필요합니다. |
+| 거리·경사별 코스 선택 | 일부 구현 | 대표 인덱스에 거리·경사별 경로 상태가 있습니다. 모든 조합에 별도 경로가 있지는 않습니다. |
+| Kakao 지도 경로 표시 | 구현됨 | 로컬 Python 서버와 Kakao Maps JavaScript SDK로 저장 경로를 표시합니다. |
+| 영어 음성 내비게이션 | 구현됨, 기기 검증 미완료 | 저장된 ORS 안내 단계, GPS 또는 시뮬레이션, 브라우저 Web Speech API(`en-US`)를 사용합니다. 실제 GPS 기기 현장 검증은 하지 않았습니다. |
+| 한국어·영어 역사 해설 데이터 | 구현됨 | 세 유적지의 6개 대본이 `data/narrations.json`에 있습니다. |
+| 역사 해설 화면·TTS | 미구현 | 앱 완주 이벤트 연결, 해설 화면, 언어 선택, 해설 음성은 앱에서 추가해야 합니다. |
+| 실제 출입구·안전·노면 확인 | 미완료 | ORS·OSM 데이터만으로 현장 개방 여부나 안전을 보증하지 않습니다. |
+
+## 2. 현재 코스 지원 현황
+
+18개 목적지·거리·경사 조합 중 16개에 경로 파일이 있습니다. 의릉 10km의 두 모드는 `no_route`입니다.
+
+| 목적지 | 3km (`low` / `any`) | 5km (`low` / `any`) | 10km (`low` / `any`) |
+|---|---|---|---|
+| 심우장 | 검증 완료 / 검증 필요 | 검증 완료 / 검증 완료 | 검증 필요 / 검증 필요 |
+| 정릉 | 검증 완료 / 검증 완료 | 검증 완료 / 검증 완료 | 검증 필요 / 검증 필요 |
+| 의릉 | 검증 완료 / 검증 완료 | 검증 완료 / 검증 완료 | 경로 없음 / 경로 없음 |
+
+최신 상태와 실제 파일 경로는 [대표 경로 인덱스](outputs/app/representative_routes.json)의 각 `modes` 항목을 확인하세요. 일부 `low`와 `any`는 같은 route ID 또는 좌표를 공유합니다. 경사 모드가 항상 다른 코스를 뜻하지는 않습니다.
+
+## 3. 앱 개발자 빠른 시작
+
+| 용도 | 파일 |
+|---|---|
+| 목적지·거리·경사 인덱스 | [outputs/app/representative_routes.json](outputs/app/representative_routes.json) |
+| 상세 코스 JSON·GeoJSON | 인덱스 항목의 `files.json`, `files.geojson` |
+| 영어 음성 내비게이션 | [web/english_voice_navigation.js](web/english_voice_navigation.js), [src/navigation_data.py](src/navigation_data.py) |
+| 한국어·영어 해설 원문 | [data/narrations.json](data/narrations.json) |
+| 앱 연동 상세 안내 | [docs/APP_INTEGRATION.md](docs/APP_INTEGRATION.md) |
+
+앱에는 대표 경로 인덱스와 참조된 경로 데이터를 함께 제공하세요. 현재 Python 서버에는 역사 해설 JSON 전용 API가 없으므로 앱 리소스로 번들하거나 배포 백엔드에서 제공해야 합니다.
+
+## 4. 프로젝트 폴더 구조
+
+~~~text
+.
+├── data/                       # 목적지, 탐색 설정, 해설 및 후보 입력
+├── docs/                       # 앱 연동 가이드
+├── outputs/
+│   ├── app/                    # 대표 경로 인덱스와 설명
+│   ├── recommendations/        # 앱에서 쓰는 경로 JSON·GeoJSON·HTML
+│   └── cache/                  # 로컬 ORS·OSM 캐시 (Git 제외)
+├── src/                        # 경로 계산·평가·내비게이션 데이터 로더
+├── tests/                      # 영어 내비게이션 자동 테스트
+├── web/                        # Kakao 지도 화면과 음성 안내 모듈
+├── main.py                     # 추천 실행 진입점
+├── serve_kakao_map.py          # 로컬 지도/API 서버
+└── requirements.txt
+~~~
+
+주요 설정 파일은 `data/destinations.json`, `data/route_defaults.json`, `data/route_exclusions.json`, `data/running_fitness.json`입니다.
+
+## 5. 로컬 실행 방법
+
+PowerShell에서 프로젝트 폴더를 열어 실행 환경을 준비합니다.
+
+~~~powershell
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 Copy-Item .env.example .env
-```
+~~~
 
-`.env`에 발급받은 `ORS_API_KEY`를 입력하세요. Kakao 지도를 사용할 때는 `KAKAO_JS_KEY`도 입력합니다. `.env`는 Git에서 제외됩니다. JavaScript 키는 브라우저에 전달되므로 Kakao Developers에서 허용 도메인을 `http://localhost:8000`으로 제한하세요.
+`.env`에 본인이 발급한 `ORS_API_KEY`를 입력하세요. Kakao 지도에는 `KAKAO_JS_KEY`도 필요합니다. `.env`는 Git에서 제외됩니다. Kakao JavaScript 키는 브라우저에 전달되므로 Kakao Developers의 허용 도메인을 제한하세요.
 
-## 현재 구현된 기능
+저장된 지도와 로컬 API 서버:
 
-- ORS `foot-walking` 기반 실제 경로 계산과 로컬 경로 캐시
-- OSM 출발지·경유지 후보 탐색 및 거리·고도·경사·러닝 친화도 평가
-- 저경사(`low`)와 언덕 허용(`any`) 추천 모드
-- Kakao Maps 로컬 미리보기
-- 앱 연동용 대표 경로 인덱스와 JSON·GeoJSON 데이터
-
-현재 결과 상태는 [`outputs/app/representative_routes.json`](outputs/app/representative_routes.json)에서 확인할 수 있습니다. `verified`, `alternative`, `needs_verification`, `no_route` 상태를 구분하며, 현장 출입 가능성이나 안전을 보증하지 않습니다. 아직 모든 목적지·거리 조합에 추천 경로가 있는 것은 아닙니다.
-
-## 경로 계산
-
-예를 들어 의릉 3km 저경사 코스를 탐색하려면 다음을 실행합니다.
-
-```powershell
-python main.py --recommend --destination-id uiryeong --target-distance-km 3 --slope-preference low --running-focused
-```
-
-`--slope-preference`에는 `low` 또는 `any`를 지정할 수 있습니다. 목적지와 거리 설정은 `data/destinations.json`과 `data/route_defaults.json`에서 관리합니다. 결과 요약 JSON, 경로 GeoJSON, HTML 지도는 `outputs/recommendations/` 아래에 저장됩니다.
-
-## Kakao 지도 미리보기
-
-```powershell
+~~~powershell
 python serve_kakao_map.py
-```
+~~~
 
-브라우저에서 `http://localhost:8000`을 엽니다. 앱 연동 시 대표 경로 인덱스와 대표 경로 파일을 함께 배포하세요.
+브라우저에서 [http://localhost:8000](http://localhost:8000)을 엽니다. 새 추천 경로 계산 예시는 ORS API를 호출할 수 있습니다.
 
-- 인덱스: `outputs/app/representative_routes.json`
-- 설명: `outputs/app/README.md`
-- 각 인덱스 항목의 `files.json`, `files.geojson`, `files.html`: 프로젝트 루트 기준 상대 경로
-- 지도 API: `/route.json?destination=simujang&distance=3&slope=low` 및 `/route.geojson` (거리·목적지·경사 모드는 쿼리 파라미터로 선택)
+~~~powershell
+python main.py --recommend --destination-id uiryeong --target-distance-km 3 --slope-preference low --running-focused
+~~~
 
-GeoJSON 좌표 순서는 `[longitude, latitude, elevation?]`입니다. API 키나 인증 정보는 앱 데이터에 넣지 마세요.
+음성 안내 로직 테스트:
 
-## 영어 음성 내비게이션
-
-카카오 지도 화면에서 목적지·거리·경사 모드를 선택한 뒤 **English Voice Navigation** 패널을 사용합니다. `시뮬레이션`은 저장 경로를 따라 이동하며 실제 브라우저 영어 음성을 재생합니다. 실제 러닝에서는 `GPS`를 선택하고 위치 권한을 허용하세요. GPS는 `localhost` 또는 HTTPS 환경이 필요합니다. 음성은 브라우저 Web Speech API의 `en-US` 설정을 사용합니다.
-
-지도 서버가 실행 중이면 현재 선택된 대표 경로의 저장된 ORS 방향 단계를 다음 주소로 제공합니다.
-
-```text
-/navigation-route.json?destination_id=simujang&route_id=<representative_routes.json의 route_id>
-```
-
-목적지와 코스의 `route_id`는 `outputs/app/representative_routes.json`에서 확인합니다. 응답은 인덱스가 참조하는 경로 JSON의 ORS `steps`와 GeoJSON 좌표를 묶어 제공합니다. 브라우저 엔진은 다음과 같이 사용할 수 있습니다.
-
-```javascript
-const destinationId = "simujang";
-const routeId = "<representative_routes.json의 route_id>";
-const response = await fetch(
-  `/navigation-route.json?destination_id=${destinationId}&route_id=${routeId}`
-);
-if (!response.ok) throw new Error(await response.text());
-const routeData = await response.json();
-const nav = new window.LessGoEnglishNavigation.EnglishVoiceNavigation();
-nav.setRoute(routeData);
-nav.onUpdate = state => {
-  if (state.events?.some(event => event.id === "arrived")) {
-    onRouteArrived(routeData, selectedLanguage);
-  }
-};
-nav.start({ mode: "gps", voiceEnabled: true });
-// 시뮬레이션: nav.start({ mode: "simulation", speedMultiplier: 15, voiceEnabled: true });
-// 정지: nav.stop();
-```
-
-경로 변경 시 `setRoute()`를 다시 호출하면 이전 진행 위치와 안내 기록이 초기화됩니다. 대표 경로가 없거나 저장된 ORS 방향 안내 단계가 없으면 안내를 지원하지 않습니다. 내비게이션 로직 자동 테스트는 다음 명령으로 실행합니다.
-
-```powershell
+~~~powershell
 node --test tests/english_voice_navigation.test.cjs
-```
+~~~
 
-## 역사문화 해설 대본
+## 6. 사용 기술
 
-한국어·영어 해설 원문은 [`data/narrations.json`](data/narrations.json)에 목적지 ID별로 저장되어 있습니다. 러닝 완료 이벤트를 받으면 현재 활성 코스의 `destination_id`와 사용자가 고른 언어 코드(`ko` 또는 `en`)로 대본을 찾아 화면에 표시할 수 있습니다. `arrived` 이벤트 자체가 목적지 이름을 판별하는 구조는 아니므로, 앱은 현재 선택된 코스의 목적지 ID를 사용하세요.
+- Python: 경로 추천, 데이터 조회, 로컬 HTTP 서버
+- OpenRouteService: `foot-walking` 경로 및 방향 안내 단계
+- OpenStreetMap: 보행 네트워크·장소·도로 정보
+- Folium: 결과 HTML 지도 생성
+- Kakao Maps JavaScript SDK: 지도 시각화
+- Browser Geolocation API 및 Web Speech API: 영어 GPS 안내와 브라우저 음성
+- JSON·GeoJSON: 코스와 역사 해설 데이터
 
-```javascript
-// 앱 번들/리소스에서 data/narrations.json을 로드해 둡니다.
-const allNarrations = narrationData;
+## 7. 현재 한계 및 주의사항
 
-function onRouteArrived(activeRoute, selectedLanguage) {
-  const destinationId = activeRoute.destination_id;
-  const language = selectedLanguage === "en" ? "en" : "ko";
-  const script = allNarrations[destinationId]?.narration[language];
-  if (!script) return;
-  showNarration(script);
-}
-```
-
-앱에서 **역사 해설 듣기**를 누르면 선택된 `script`를 앱의 TTS로 읽으면 됩니다. 이 프로젝트에는 해설 표시 화면과 역사 해설 음성 재생 기능은 포함되어 있지 않습니다.
-
-## 아직 구현하지 않은 기능과 한계
-
-- 실제 GPS 기기에서의 위치 추적·음성 안내 현장 테스트
-- 역사 해설 화면과 앱 TTS 재생 연동
-- 모든 목적지·거리 조합의 경로 확보와 현장 출입구·보행 연결 확인
-- 안전성, 통행 개방 여부, 노면 상태의 현장 검증
-
-ORS 경로와 OSM 태그는 참고 데이터입니다. 실제 출입구와 통행 가능 여부는 출발 전에 별도로 확인해야 합니다.
+- 18개 조합 중 16개만 경로가 있으며, 의릉 10km는 경로가 없습니다. 일부 경로는 `needs_verification`입니다.
+- 저경사와 언덕 허용 모드가 동일한 도로를 반환할 수 있습니다. 실제 `route_id`와 좌표를 비교하세요.
+- 영어 음성 내비게이션은 구현됐지만 실제 GPS 기기·야외 테스트가 필요합니다. GPS는 위치 권한과 HTTPS 또는 `localhost` 보안 컨텍스트가 필요합니다.
+- 역사 해설은 JSON 데이터만 있습니다. 완주 이벤트 연결, 해설 UI, 앱 TTS는 미구현입니다.
+- `serve_kakao_map.py`는 `127.0.0.1:8000`에 바인딩하는 개발용 서버로 인터넷 배포용이 아닙니다.
+- 대표 경로 인덱스의 `files.*`는 프로젝트 루트 기준 상대 경로입니다. Windows 백슬래시는 웹 경로로 사용할 때 슬래시로 정규화하세요.
+- 경로 데이터는 출입 개방, 안전 또는 노면 상태를 보증하지 않습니다.
+- `outputs/cache/`, 로그, 백업은 로컬 개발 자료입니다. 앱용 추천 JSON·GeoJSON과 혼동하거나 저장소에 추가하지 마세요.
