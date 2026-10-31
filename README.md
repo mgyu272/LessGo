@@ -72,6 +72,11 @@ if (!response.ok) throw new Error(await response.text());
 const routeData = await response.json();
 const nav = new window.LessGoEnglishNavigation.EnglishVoiceNavigation();
 nav.setRoute(routeData);
+nav.onUpdate = state => {
+  if (state.events?.some(event => event.id === "arrived")) {
+    onRouteArrived(routeData, selectedLanguage);
+  }
+};
 nav.start({ mode: "gps", voiceEnabled: true });
 // 시뮬레이션: nav.start({ mode: "simulation", speedMultiplier: 15, voiceEnabled: true });
 // 정지: nav.stop();
@@ -83,10 +88,29 @@ nav.start({ mode: "gps", voiceEnabled: true });
 node --test tests/english_voice_navigation.test.cjs
 ```
 
+## 역사문화 해설 대본
+
+한국어·영어 해설 원문은 [`data/narrations.json`](data/narrations.json)에 목적지 ID별로 저장되어 있습니다. 러닝 완료 이벤트를 받으면 현재 활성 코스의 `destination_id`와 사용자가 고른 언어 코드(`ko` 또는 `en`)로 대본을 찾아 화면에 표시할 수 있습니다. `arrived` 이벤트 자체가 목적지 이름을 판별하는 구조는 아니므로, 앱은 현재 선택된 코스의 목적지 ID를 사용하세요.
+
+```javascript
+// 앱 번들/리소스에서 data/narrations.json을 로드해 둡니다.
+const allNarrations = narrationData;
+
+function onRouteArrived(activeRoute, selectedLanguage) {
+  const destinationId = activeRoute.destination_id;
+  const language = selectedLanguage === "en" ? "en" : "ko";
+  const script = allNarrations[destinationId]?.narration[language];
+  if (!script) return;
+  showNarration(script);
+}
+```
+
+앱에서 **역사 해설 듣기**를 누르면 선택된 `script`를 앱의 TTS로 읽으면 됩니다. 이 프로젝트에는 해설 표시 화면과 역사 해설 음성 재생 기능은 포함되어 있지 않습니다.
+
 ## 아직 구현하지 않은 기능과 한계
 
 - 실제 GPS 기기에서의 위치 추적·음성 안내 현장 테스트
-- 역사 해설 및 장소별 콘텐츠
+- 역사 해설 화면과 앱 TTS 재생 연동
 - 모든 목적지·거리 조합의 경로 확보와 현장 출입구·보행 연결 확인
 - 안전성, 통행 개방 여부, 노면 상태의 현장 검증
 
