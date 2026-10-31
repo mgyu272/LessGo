@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_a440b5a19c528baa5f5c8e3de9bedbbd {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_a440b5a19c528baa5f5c8e3de9bedbbd" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_a440b5a19c528baa5f5c8e3de9bedbbd = L.map(
+                "map_a440b5a19c528baa5f5c8e3de9bedbbd",
+                {
+                    center: [37.606818179107506, 127.0187894417605],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 16,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_a440b5a19c528baa5f5c8e3de9bedbbd);
+
+            
+
+        
+    
+            var tile_layer_0de839ca8b72f77f4859a4e77b4216bf = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri \u0026mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_0de839ca8b72f77f4859a4e77b4216bf.addTo(map_a440b5a19c528baa5f5c8e3de9bedbbd);
+        
+    
+            var tile_layer_1b56783717ab07bc20d43becd36f1868 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri \u0026mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            var tile_layer_a0d34a47df5ceb5be0a912abd64acd67 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri \u0026mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+
+        function geo_json_e2a25fc69552425d51bb6b3bf01769d4_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_e2a25fc69552425d51bb6b3bf01769d4 = L.geoJson(null, {
+                onEachFeature: geo_json_e2a25fc69552425d51bb6b3bf01769d4_onEachFeature,
+            
+            ...{
+}
+        });
+
+        function geo_json_e2a25fc69552425d51bb6b3bf01769d4_add (data) {
+            geo_json_e2a25fc69552425d51bb6b3bf01769d4
+                .addData(data);
+        }
+            geo_json_e2a25fc69552425d51bb6b3bf01769d4_add({"geometry": {"coordinates": [[127.030011, 37.612461, 38.0], [127.030016, 37.612413, 38.0], [127.030033, 37.61234, 38.0], [127.030048, 37.612276, 38.0], [127.030156, 37.611563, 41.0], [127.030161, 37.611508, 41.0], [127.030169, 37.611432, 41.0], [127.030169, 37.611111, 42.0], [127.030131, 37.610464, 44.0], [127.030119, 37.610395, 44.0], [127.030111, 37.61035, 44.0], [127.030076, 37.61012, 44.0], [127.03006, 37.610034, 44.0], [127.030064, 37.609969, 38.0], [127.029974, 37.609592, 39.0], [127.029913, 37.609253, 39.0], [127.029562, 37.608581, 38.3], [127.029505, 37.608533, 38.0], [127.029461, 37.608509, 38.0], [127.02942, 37.608487, 38.0], [127.028969, 37.607917, 41.0], [127.028935, 37.607851, 41.0], [127.028921, 37.607821, 41.0], [127.028897, 37.607792, 41.0], [127.02839, 37.607206, 40.0], [127.027598, 37.606466, 40.0], [127.027556, 37.606426, 40.0], [127.027531, 37.606397, 40.0], [127.027463, 37.606334, 38.0], [127.02752, 37.606284, 40.0], [127.027659, 37.606192, 40.0], [127.027706, 37.606161, 40.0], [127.027222, 37.605708, 42.3], [127.026353, 37.605018, 44.0], [127.025735, 37.6045, 41.0], [127.025668, 37.604416, 41.8], [127.025599, 37.604277, 41.9], [127.025516, 37.604181, 42.1], [127.02539, 37.604115, 45.0], [127.025357, 37.604098, 45.0], [127.025315, 37.604078, 45.0], [127.025155, 37.603984, 45.0], [127.025113, 37.603938, 45.0], [127.025263, 37.603737, 45.0], [127.024834, 37.602912, 47.0], [127.024271, 37.603157, 47.0], [127.024226, 37.603176, 46.7], [127.024044, 37.603337, 46.0], [127.024003, 37.603395, 46.0], [127.023874, 37.60331, 52.0], [127.023757, 37.603437, 46.0], [127.023562, 37.603297, 49.3], [127.022812, 37.602915, 50.0], [127.022507, 37.602678, 46.8], [127.022395, 37.602569, 46.3], [127.022319, 37.60247, 46.4], [127.02221, 37.602253, 45.0], [127.022097, 37.602304, 45.0], [127.021118, 37.602415, 45.0], [127.021026, 37.60248, 45.0], [127.019327, 37.602753, 46.0], [127.019296, 37.602602, 46.0], [127.019165, 37.602639, 45.0], [127.019119, 37.602519, 45.0], [127.019048, 37.602344, 43.0], [127.018868, 37.602392, 43.0], [127.018615, 37.602313, 43.7], [127.017613, 37.602337, 45.0], [127.017319, 37.602334, 49.0], [127.01699, 37.60233, 49.0], [127.016665, 37.602326, 50.0], [127.015828, 37.602317, 55.0], [127.014656, 37.602359, 64.0], [127.013813, 37.602392, 70.9], [127.013633, 37.60234, 74.0], [127.013498, 37.602291, 66.6], [127.013337, 37.602375, 67.8], [127.013087, 37.60258, 52.0], [127.012169, 37.602476, 57.4], [127.011656, 37.602474, 59.0], [127.011484, 37.602508, 53.0], [127.011284, 37.602573, 53.0], [127.011097, 37.602601, 53.0], [127.010924, 37.602568, 53.0], [127.010892, 37.602548, 53.0], [127.010324, 37.602175, 62.0], [127.010282, 37.602148, 68.9], [127.009912, 37.601741, 70.1], [127.009607, 37.601459, 79.0], [127.00945, 37.601339, 78.7], [127.00917, 37.601239, 78.8], [127.00896, 37.601237, 78.0], [127.008588, 37.601234, 80.0], [127.008209, 37.601206, 84.0], [127.007709, 37.601175, 84.0], [127.007637, 37.60114, 84.0], [127.007603, 37.601183, 90.5]], "type": "LineString"}, "properties": {"ascent_field": "properties.ascent", "ascent_m": 110.8, "descent_field": "properties.descent", "descent_m": 58.3, "destination": {"entrance_verified": false, "id": "jeongneung", "name": "\uc815\ub989"}, "distance_m": 2988.8, "duration_seconds": 2151.8999999999996, "elevation_is_estimate": false, "elevation_source": "ors_response", "profile": "foot-walking", "route_id": "3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low", "running_analysis": {"access_connections": {"all_stops_connected": true, "max_stop_snap_m": 50.0, "status": "ORS route geometry snap distance; confirms routing-network attachment only, not a physical open entrance.", "stops": [{"connected_within_tolerance": true, "distance_to_ors_geometry_m": 2.1, "id": "osm-node-3401490102", "name": "\ubbf8\uc544\uc0ac\uac70\ub9ac 4\ubc88 \ucd9c\uad6c", "route_chainage_m": 0.0}, {"connected_within_tolerance": true, "distance_to_ors_geometry_m": 0.0, "id": "osm-way-810683850-node-18470", "name": "OSM footway \ub124\ud2b8\uc6cc\ud06c \uc9c0\uc810", "route_chainage_m": 1075.4}, {"connected_within_tolerance": true, "distance_to_ors_geometry_m": 1.2, "id": "jeongneung", "name": "\uc815\ub989", "route_chainage_m": 2985.4}]}, "cross_mode_selection": {"applied": false, "initial_route_id": "3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low", "initial_shared_fraction": 0.7383030749648286, "max_shared_fraction": 0.7, "peer_preference": "any", "peer_route_id": "3km-osm-node-3401490103-jeongneung-any", "quality_score_drop_limit": 10.0, "reason": "\ub2e4\ub978 \ubaa8\ub4dc 1\uc21c\uc704\uc640 70% \ubbf8\ub9cc \uacb9\uce58\uace0 \uac70\ub9ac \uc870\uac74\uc744 \uc9c0\ud0a4\uba70 \uc810\uc218 \ucc28\uac00 10\uc810 \uc774\ub0b4\uc778 \ub300\uc548\uc744 \ucc3e\uc9c0 \ubabb\ud574 \ud604\uc7ac 1\uc21c\uc704\ub97c \uc720\uc9c0\ud588\uc2b5\ub2c8\ub2e4.", "selected_route_id": "3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low", "selected_shared_fraction": 0.7383030749648286}, "crossing_metrics": {"crossing_score": 0.0, "data_status": "OSM mapped records only; missing or unmapped crossings are unknown, not absent.", "early_window_m": 300, "mapped_crossings_first_300m": 4, "mapped_crossings_total": 25, "mapped_events": [{"chainage_m": 13.6, "distance_to_ors_route_m": 0.0, "id": 7576453418, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 106.8, "distance_to_ors_route_m": 0.0, "id": 7106150355, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 230.8, "distance_to_ors_route_m": 0.0, "id": 7576453424, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 271.3, "distance_to_ors_route_m": 0.0, "id": 7576453426, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 321.2, "distance_to_ors_route_m": 0.0, "id": 7106150486, "tags": {}, "type": "type_unknown"}, {"chainage_m": 359.2, "distance_to_ors_route_m": 4.2, "id": 5198121852, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 452.1, "distance_to_ors_route_m": 0.0, "id": 7106150483, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 542.8, "distance_to_ors_route_m": 0.0, "id": 7579710724, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 625.8, "distance_to_ors_route_m": 5.4, "id": 5177735580, "tags": {"crossing": "traffic_signals"}, "type": "signalized"}, {"chainage_m": 739.2, "distance_to_ors_route_m": 0.0, "id": 3838817014, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 759.9, "distance_to_ors_route_m": 0.0, "id": 5177735579, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 775.8, "distance_to_ors_route_m": 0.0, "id": 9816184592, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 1034.9, "distance_to_ors_route_m": 0.0, "id": 5321149135, "tags": {}, "type": "type_unknown"}, {"chainage_m": 1092.3, "distance_to_ors_route_m": 0.0, "id": 9816196947, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 1245.6, "distance_to_ors_route_m": 0.1, "id": 5210130825, "tags": {}, "type": "type_unknown"}, {"chainage_m": 1330.7, "distance_to_ors_route_m": 0.0, "id": 9816196932, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 1352.9, "distance_to_ors_route_m": 0.0, "id": 9816196961, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 1360.9, "distance_to_ors_route_m": 0.2, "id": 9816196965, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 1370.4, "distance_to_ors_route_m": 0.0, "id": 5115197830, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 1855.7, "distance_to_ors_route_m": 0.0, "id": 5210130831, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 1869.6, "distance_to_ors_route_m": 0.0, "id": 5177735567, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 1890.1, "distance_to_ors_route_m": 0.0, "id": 5209070014, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 2357.7, "distance_to_ors_route_m": 0.0, "id": 9034971863, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 2575.2, "distance_to_ors_route_m": 7.8, "id": 9034971864, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}, {"chainage_m": 2626.6, "distance_to_ors_route_m": 10.6, "id": 9034971861, "tags": {"crossing": "marked"}, "type": "unsignalized_or_marked"}], "mapped_signalized_crossings_first_300m": 0, "mapped_signalized_crossings_total": 1, "mapped_unknown_type_crossings_total": 3, "mapped_unsignalized_or_marked_crossings_total": 21, "match_distance_m": 15, "traffic_signal_nodes_near_route_not_confirmed_crossings": 3}, "detour_ratio": 0.967, "distance_error_m": 11.2, "distance_score": 100.0, "grade_metrics": {"elevation_smoothing": "5-point median filter over ORS elevation coordinates", "grade_segment_min_m": 20.0, "grade_segments": [{"distance_m": 20.85, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 79.85, "elevation_change_m": 3.0, "grade_percent": 3.76}, {"distance_m": 50.31, "elevation_change_m": 1.0, "grade_percent": 1.99}, {"distance_m": 72.02, "elevation_change_m": 2.0, "grade_percent": 2.78}, {"distance_m": 38.56, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 59.57, "elevation_change_m": -5.0, "grade_percent": -8.39}, {"distance_m": 38.08, "elevation_change_m": -0.7, "grade_percent": -1.84}, {"distance_m": 80.87, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 91.2, "elevation_change_m": 2.7, "grade_percent": 2.96}, {"distance_m": 94.34, "elevation_change_m": -1.0, "grade_percent": -1.06}, {"distance_m": 107.88, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 26.4, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 21.34, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 65.99, "elevation_change_m": 1.0, "grade_percent": 1.52}, {"distance_m": 108.38, "elevation_change_m": 0.8, "grade_percent": 0.74}, {"distance_m": 79.26, "elevation_change_m": 0.1, "grade_percent": 0.13}, {"distance_m": 27.66, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 26.25, "elevation_change_m": 3.1, "grade_percent": 11.81}, {"distance_m": 25.33, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 32.28, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 99.22, "elevation_change_m": 1.7, "grade_percent": 1.71}, {"distance_m": 56.59, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 28.52, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 22.17, "elevation_change_m": -0.7, "grade_percent": -3.16}, {"distance_m": 40.67, "elevation_change_m": 3.3, "grade_percent": 8.11}, {"distance_m": 78.55, "elevation_change_m": -2.5, "grade_percent": -3.18}, {"distance_m": 37.64, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 28.51, "elevation_change_m": -0.5, "grade_percent": -1.75}, {"distance_m": 25.97, "elevation_change_m": -1.3, "grade_percent": -5.01}, {"distance_m": 98.58, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 163.58, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 29.26, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 34.38, "elevation_change_m": -1.3, "grade_percent": -3.78}, {"distance_m": 40.69, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 88.31, "elevation_change_m": 1.3, "grade_percent": 1.47}, {"distance_m": 25.9, "elevation_change_m": 4.0, "grade_percent": 15.44}, {"distance_m": 28.99, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 28.63, "elevation_change_m": 1.0, "grade_percent": 3.49}, {"distance_m": 73.74, "elevation_change_m": 5.0, "grade_percent": 6.78}, {"distance_m": 103.35, "elevation_change_m": 9.0, "grade_percent": 8.71}, {"distance_m": 74.36, "elevation_change_m": 2.6, "grade_percent": 3.5}, {"distance_m": 29.96, "elevation_change_m": 1.2, "grade_percent": 4.01}, {"distance_m": 48.68, "elevation_change_m": -8.8, "grade_percent": -18.08}, {"distance_m": 81.69, "elevation_change_m": -1.6, "grade_percent": -1.96}, {"distance_m": 45.19, "elevation_change_m": -4.4, "grade_percent": -9.74}, {"distance_m": 34.66, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 32.44, "elevation_change_m": 0.0, "grade_percent": 0.0}, {"distance_m": 68.58, "elevation_change_m": 9.0, "grade_percent": 13.12}, {"distance_m": 60.54, "elevation_change_m": 8.1, "grade_percent": 13.38}, {"distance_m": 41.29, "elevation_change_m": 8.6, "grade_percent": 20.83}, {"distance_m": 46.28, "elevation_change_m": 0.1, "grade_percent": 0.22}, {"distance_m": 51.28, "elevation_change_m": 1.2, "grade_percent": 2.34}, {"distance_m": 33.53, "elevation_change_m": 4.0, "grade_percent": 11.93}, {"distance_m": 57.27, "elevation_change_m": 0.0, "grade_percent": 0.0}], "steep_distance_m": 627.2983290093921, "steep_grade_threshold_percent": 6.0, "steep_segment_ratio": 0.2101213623793314}, "low_terrain_burden_index": 173.84, "meets_gentle_thresholds": false, "network_metrics": {"dedicated_pedestrian_way_share_of_route": 0.436, "explicitly_no_sidewalk_share_of_route": 0.0, "mapped_edge_count": 95, "mapped_edge_ids": ["1069458447:1", "1209313353:8", "1389567234:19", "183521063:2", "183521063:3", "345464887:0", "345476691:7", "345476691:8", "345476691:10", "345476691:11", "345476691:12", "345476691:13", "345476691:14", "345476691:16", "345476691:17", "345476691:18", "345476691:19", "379537207:0", "379537207:2", "379537207:4", "379537207:6", "415667224:0", "415667224:1", "518705504:0", "518705504:1", "518705504:2", "518705504:3", "518705504:5", "518705504:6", "518705504:9", "518780122:0", "518780122:1", "518780122:2", "518780122:3", "538081758:0", "538081758:1", "538081763:0", "538081763:1", "538081763:2", "538081763:3", "538081763:4", "538210510:0", "538210510:1", "538210510:2", "538210510:3", "550972306:0", "550972306:1", "550972306:2", "550972307:0", "550972307:1", "617286973:0", "625176072:1", "625176072:2", "760686294:0", "760686294:3", "760686294:6", "760686294:7", "760686295:0", "760686295:1", "810358807:6", "810358812:0", "810358812:1", "810358813:0", "810358814:0", "810358814:1", "810358815:0", "810358815:1", "810358816:0", "810358816:1", "810358817:0", "810358818:0", "810358818:1", "810358820:0", "810358822:0", "810683844:0", "810683844:1", "810683845:0", "810683845:1", "810683850:1", "810683850:2", "810683850:5", "810683850:8", "810683850:9", "810683850:10", "810683850:11", "810683851:0", "810683851:1", "810683852:0", "810683853:0", "877381482:0", "877699916:0", "877699916:1", "976309328:1", "976309328:2", "976309328:3"], "mapped_edge_lengths_m": {"1069458447:1": 17.48, "1209313353:8": 14.78, "1389567234:19": 16.73, "183521063:2": 23.18, "183521063:3": 78.55, "345464887:0": 5.64, "345476691:10": 33.53, "345476691:11": 32.77, "345476691:12": 18.5, "345476691:13": 27.06, "345476691:14": 19.22, "345476691:16": 41.29, "345476691:17": 55.77, "345476691:18": 4.76, "345476691:19": 64.99, "345476691:7": 7.44, "345476691:8": 44.18, "379537207:0": 16.88, "379537207:2": 74.36, "379537207:4": 103.35, "379537207:6": 73.74, "415667224:0": 87.12, "415667224:1": 11.46, "518705504:0": 3.59, "518705504:1": 15.68, "518705504:2": 16.77, "518705504:3": 19.04, "518705504:5": 15.62, "518705504:6": 45.19, "518705504:9": 81.69, "518780122:0": 37.64, "518780122:1": 15.63, "518780122:2": 12.88, "518780122:3": 25.97, "538081758:0": 20.44, "538081758:1": 13.95, "538081763:0": 28.63, "538081763:1": 28.99, "538081763:2": 25.9, "538081763:3": 88.31, "538081763:4": 23.96, "538210510:0": 7.39, "538210510:1": 24.03, "538210510:2": 4.49, "538210510:3": 56.59, "550972306:0": 3.47, "550972306:1": 4.32, "550972306:2": 17.55, "550972307:0": 6.31, "550972307:1": 25.96, "617286973:0": 99.22, "625176072:1": 15.96, "625176072:2": 5.39, "760686294:0": 42.66, "760686294:3": 38.08, "760686294:6": 80.87, "760686294:7": 7.33, "760686295:0": 4.71, "760686295:1": 4.36, "810358807:6": 5.36, "810358812:0": 8.25, "810358812:1": 7.24, "810358813:0": 79.85, "810358814:0": 6.13, "810358814:1": 8.48, "810358815:0": 35.69, "810358815:1": 72.02, "810358816:0": 7.74, "810358816:1": 5.05, "810358817:0": 25.76, "810358818:0": 9.67, "810358818:1": 7.24, "810358820:0": 74.8, "810358822:0": 7.93, "810683844:0": 79.0, "810683844:1": 107.88, "810683845:0": 3.56, "810683845:1": 3.86, "810683850:1": 65.99, "810683850:10": 12.94, "810683850:11": 13.31, "810683850:2": 108.38, "810683850:5": 79.26, "810683850:8": 11.05, "810683850:9": 16.61, "810683851:0": 5.79, "810683851:1": 3.9, "810683852:0": 9.22, "810683853:0": 7.49, "877381482:0": 29.26, "877699916:0": 152.72, "877699916:1": 10.86, "976309328:1": 31.7, "976309328:2": 16.98, "976309328:3": 13.08}, "mapped_motor_road_share_of_route": 0.5629, "mapped_sidewalk_share_of_route": 0.0, "matched_osm_network_share": 0.9989, "repeated_mapped_network_edge_m": 0.0, "repeated_mapped_network_edge_share": 0.0, "snap_threshold_m": 12.0, "steps_share_of_route": 0.0, "walkability_score": 43.65, "walkability_score_note": "Only mapped OSM ways are classified; unmatched portions remain unknown and are not treated as unsafe."}, "overlap_with_higher_ranked": [], "reason": "\uac70\ub9ac \uc624\ucc28 11m; \ucd9c\ubc1c 300m \ub0b4 OSM \ub9e4\ud551 \ud6a1\ub2e8 4\ud68c, \uc804\uccb4 \ub9e4\ud551 \ud6a1\ub2e8 25\ud68c; \uacbd\uc0ac \uc810\uc218 53.5/100, \uc0c1\uc2b9 110.8m; \uae09\uacbd\uc0ac \uad6c\uac04 21.0%; \ubc18\ubcf5 \uad6c\uac04 0.0%, \uae09\ud68c\uc804 \ucd94\uc815 13\ud68c, U\ud134 \ucd94\uc815 0\ud68c", "repeated_segment_m": 0.0, "repeated_segment_share": 0.0, "running_fitness": {"classification_status": "OSM tag estimate only; not field-verified running quality or safety.", "components": {"continuous_running_estimate_score": 14.98, "naturalness_score": 74.0, "running_friendly_share": 43.6001, "surface_width_quality_score": 60.85, "vehicle_separation_proxy_share": 43.6001}, "continuous_running_note": "Longest mapped running-friendly stretch between OSM-mapped crossing/signal interruptions; unmapped interruptions may be missing.", "cycleway_note": "Cycleways without foot=yes/designated/permissive are excluded from walkable running share and reported as uncertain.", "estimated_longest_continuous_run_m": 179.8, "low_quality_surface_or_way_share_of_route": 0.1709, "matched_osm_route_share": 0.9989, "matched_way_class_lengths_m": {"footway": 1203.9, "other_motor_road": 510.7, "pedestrian": 99.2, "residential_unknown_sidewalk": 1171.6}, "matching_threshold_m": 12.0, "max_route_to_osm_match_distance_m": 6.1, "running_friendly_share_of_route": 0.436, "score": 43.6, "steps_share_of_route": 0.0, "uncertain_cycleway_share_of_route": 0.0, "unknown_or_unmatched_share_of_route": 0.0011, "vehicle_separation_note": "OSM highway class is a separation proxy; physical barriers, traffic conditions and actual use were not verified.", "vehicle_separation_proxy_share_of_route": 0.436}, "score_components": {"access": 50.0, "continuity": 74.0, "crossings": 0.0, "distance": 100.0, "running_fitness": 43.6, "slope": 53.46, "walkability": 43.65}, "score_weights": {"access": 0.128, "continuity": 0.08000000000000002, "crossings": 0.08000000000000002, "distance": 0.144, "running_fitness": 0.2, "slope": 0.30400000000000005, "walkability": 0.064}, "slope_preference": "low", "slope_score": 53.46, "start_accessibility_score": 50.0, "station_access": null, "steep_distance_m": 627.3, "steep_segment_ratio": 0.2101213623793314, "target_distance_km": 3.0, "total_score": 54.49, "turn_metrics": {"sharp_turn_count_estimate": 13, "turn_measurement_note": "ORS geometry heading changes over adjacent segments \u003e=5m; mapped road junction identity is not available.", "turn_thresholds_degrees": {"sharp": 65, "u_turn": 150}, "u_turn_count_estimate": 0}}, "start": {"entrance_verified": false, "id": "osm-node-3401490102", "name": "\ubbf8\uc544\uc0ac\uac70\ub9ac 4\ubc88 \ucd9c\uad6c", "station_access": null}, "waypoints": [{"entrance_verified": false, "id": "osm-way-810683850-node-18470", "name": "OSM footway \ub124\ud2b8\uc6cc\ud06c \uc9c0\uc810"}]}, "type": "Feature"});
+        geo_json_e2a25fc69552425d51bb6b3bf01769d4.setStyle(function(feature) {return feature.properties.style;});
+
+        
+    
+            geo_json_e2a25fc69552425d51bb6b3bf01769d4.bindTooltip(
+                `<div>
+                     실제 ORS 보행 경로
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_e2a25fc69552425d51bb6b3bf01769d4.addTo(map_a440b5a19c528baa5f5c8e3de9bedbbd);
+        
+    
+            var marker_49d65811217aec3ddbffdaa8654b3015 = L.marker(
+                [37.6124592, 127.0299871],
+                {
+}
+            ).addTo(map_a440b5a19c528baa5f5c8e3de9bedbbd);
+        
+    
+            var icon_e18b33e79b94131a7c45a18e6aad5fe4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "play",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_70c16204e01589bb300373699d023702 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_daeeebcda56323cdfad4126a528bf139 = $(`<div id="html_daeeebcda56323cdfad4126a528bf139" style="width: 100.0%; height: 100.0%;">출발: 미아사거리 4번 출구<br>출입구와 보행 가능 여부 추가 확인 필요</div>`)[0];
+                popup_70c16204e01589bb300373699d023702.setContent(html_daeeebcda56323cdfad4126a528bf139);
+            
+        
+
+        marker_49d65811217aec3ddbffdaa8654b3015.bindPopup(popup_70c16204e01589bb300373699d023702)
+        ;
+
+        
+    
+    
+            marker_49d65811217aec3ddbffdaa8654b3015.bindTooltip(
+                `<div>
+                     미아사거리 4번 출구
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_49d65811217aec3ddbffdaa8654b3015.setIcon(icon_e18b33e79b94131a7c45a18e6aad5fe4);
+            
+    
+            var marker_6af2e2cb0609b83dcbe89e1ceeda98c4 = L.marker(
+                [37.6041814, 127.0255162],
+                {
+}
+            ).addTo(map_a440b5a19c528baa5f5c8e3de9bedbbd);
+        
+    
+            var icon_09e689269752cd68b33450e087518385 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0960359c665b8cbbf8c9fd035b8e7e35 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_89a77d3d2e26ea29e2f37964678ac747 = $(`<div id="html_89a77d3d2e26ea29e2f37964678ac747" style="width: 100.0%; height: 100.0%;">경유: OSM footway 네트워크 지점<br>정확한 진입 위치와 보행 가능 여부 추가 확인 필요</div>`)[0];
+                popup_0960359c665b8cbbf8c9fd035b8e7e35.setContent(html_89a77d3d2e26ea29e2f37964678ac747);
+            
+        
+
+        marker_6af2e2cb0609b83dcbe89e1ceeda98c4.bindPopup(popup_0960359c665b8cbbf8c9fd035b8e7e35)
+        ;
+
+        
+    
+    
+            marker_6af2e2cb0609b83dcbe89e1ceeda98c4.bindTooltip(
+                `<div>
+                     경유 1: OSM footway 네트워크 지점
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_6af2e2cb0609b83dcbe89e1ceeda98c4.setIcon(icon_09e689269752cd68b33450e087518385);
+            
+    
+            var marker_e152cab1c4460313772268b65a9484cf = L.marker(
+                [37.601177158215, 127.007591783521],
+                {
+}
+            ).addTo(map_a440b5a19c528baa5f5c8e3de9bedbbd);
+        
+    
+            var icon_3728af90bf9c2f869375c2244273a524 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flag",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f3a6290a9c58e50641f864cdec6a4543 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6e94c63a84848ddc200154f1a68c3d85 = $(`<div id="html_6e94c63a84848ddc200154f1a68c3d85" style="width: 100.0%; height: 100.0%;">도착: 정릉<br>출입구와 보행 가능 여부 추가 확인 필요</div>`)[0];
+                popup_f3a6290a9c58e50641f864cdec6a4543.setContent(html_6e94c63a84848ddc200154f1a68c3d85);
+            
+        
+
+        marker_e152cab1c4460313772268b65a9484cf.bindPopup(popup_f3a6290a9c58e50641f864cdec6a4543)
+        ;
+
+        
+    
+    
+            marker_e152cab1c4460313772268b65a9484cf.bindTooltip(
+                `<div>
+                     정릉
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e152cab1c4460313772268b65a9484cf.setIcon(icon_3728af90bf9c2f869375c2244273a524);
+            
+    
+            map_a440b5a19c528baa5f5c8e3de9bedbbd.fitBounds(
+                [[37.612461, 127.030011], [37.612413, 127.030016], [37.61234, 127.030033], [37.612276, 127.030048], [37.611563, 127.030156], [37.611508, 127.030161], [37.611432, 127.030169], [37.611111, 127.030169], [37.610464, 127.030131], [37.610395, 127.030119], [37.61035, 127.030111], [37.61012, 127.030076], [37.610034, 127.03006], [37.609969, 127.030064], [37.609592, 127.029974], [37.609253, 127.029913], [37.608581, 127.029562], [37.608533, 127.029505], [37.608509, 127.029461], [37.608487, 127.02942], [37.607917, 127.028969], [37.607851, 127.028935], [37.607821, 127.028921], [37.607792, 127.028897], [37.607206, 127.02839], [37.606466, 127.027598], [37.606426, 127.027556], [37.606397, 127.027531], [37.606334, 127.027463], [37.606284, 127.02752], [37.606192, 127.027659], [37.606161, 127.027706], [37.605708, 127.027222], [37.605018, 127.026353], [37.6045, 127.025735], [37.604416, 127.025668], [37.604277, 127.025599], [37.604181, 127.025516], [37.604115, 127.02539], [37.604098, 127.025357], [37.604078, 127.025315], [37.603984, 127.025155], [37.603938, 127.025113], [37.603737, 127.025263], [37.602912, 127.024834], [37.603157, 127.024271], [37.603176, 127.024226], [37.603337, 127.024044], [37.603395, 127.024003], [37.60331, 127.023874], [37.603437, 127.023757], [37.603297, 127.023562], [37.602915, 127.022812], [37.602678, 127.022507], [37.602569, 127.022395], [37.60247, 127.022319], [37.602253, 127.02221], [37.602304, 127.022097], [37.602415, 127.021118], [37.60248, 127.021026], [37.602753, 127.019327], [37.602602, 127.019296], [37.602639, 127.019165], [37.602519, 127.019119], [37.602344, 127.019048], [37.602392, 127.018868], [37.602313, 127.018615], [37.602337, 127.017613], [37.602334, 127.017319], [37.60233, 127.01699], [37.602326, 127.016665], [37.602317, 127.015828], [37.602359, 127.014656], [37.602392, 127.013813], [37.60234, 127.013633], [37.602291, 127.013498], [37.602375, 127.013337], [37.60258, 127.013087], [37.602476, 127.012169], [37.602474, 127.011656], [37.602508, 127.011484], [37.602573, 127.011284], [37.602601, 127.011097], [37.602568, 127.010924], [37.602548, 127.010892], [37.602175, 127.010324], [37.602148, 127.010282], [37.601741, 127.009912], [37.601459, 127.009607], [37.601339, 127.00945], [37.601239, 127.00917], [37.601237, 127.00896], [37.601234, 127.008588], [37.601206, 127.008209], [37.601175, 127.007709], [37.60114, 127.007637], [37.601183, 127.007603]],
+                {"maxZoom": 16}
+            );
+        
+    
+            var layer_control_578571ba768a8180cb1e1a822f021b04_layers = {
+                base_layers : {
+                    "Esri \uc0c1\uc138 \ub3c4\ub85c\u00b7\uc9c0\ud615" : tile_layer_0de839ca8b72f77f4859a4e77b4216bf,
+                    "Esri \ub3c4\ub85c \uc9c0\ub3c4" : tile_layer_1b56783717ab07bc20d43becd36f1868,
+                    "Esri \ud56d\uacf5\uc0ac\uc9c4" : tile_layer_a0d34a47df5ceb5be0a912abd64acd67,
+                },
+                overlays :  {
+                    "ORS foot-walking \uacbd\ub85c" : geo_json_e2a25fc69552425d51bb6b3bf01769d4,
+                },
+            };
+            let layer_control_578571ba768a8180cb1e1a822f021b04 = L.control.layers(
+                layer_control_578571ba768a8180cb1e1a822f021b04_layers.base_layers,
+                layer_control_578571ba768a8180cb1e1a822f021b04_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_a440b5a19c528baa5f5c8e3de9bedbbd);
+
+        
+</script>
+</html>

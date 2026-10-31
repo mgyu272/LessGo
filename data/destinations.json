@@ -1,0 +1,32 @@
+{
+  "destinations": [
+    {
+      "id": "simujang",
+      "name": "심우장",
+      "latitude": 37.5936268,
+      "longitude": 126.9916662,
+      "entrance_verified": false,
+      "coordinate_source": "project default; entrance not field-verified"
+    },
+    {
+      "id": "jeongneung",
+      "name": "정릉",
+      "address": "서울 성북구 아리랑로19길 116",
+      "category": "왕릉·역사유적",
+      "latitude": 37.601177158215,
+      "longitude": 127.007591783521,
+      "entrance_verified": false,
+      "coordinate_source": "사용자 제공 정릉 매표소 좌표; 현장 입구 검증은 별도 필요"
+    },
+    {
+      "id": "uiryeong",
+      "name": "의릉",
+      "address": "서울 성북구 화랑로32길 146-20",
+      "category": "왕릉·역사유적",
+      "latitude": 37.6044099656019,
+      "longitude": 127.058716558469,
+      "entrance_verified": false,
+      "coordinate_source": "사용자 제공 의릉 매표소 좌표; 현장 입구 검증은 별도 필요"
+    }
+  ]
+}

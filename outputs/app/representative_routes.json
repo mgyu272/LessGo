@@ -1,0 +1,1904 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-31T09:17:51.454102+00:00",
+  "destination_coordinates_source": "data/destinations.json",
+  "status_legend": {
+    "verified": "ORS 거리와 OSM 경로 연결을 확인했고, 경로상 명시적 보행 금지 태그가 없음(현장 운영은 별도 확인)",
+    "alternative": "목표 거리 ±100m 초과, ±200m 이내의 검증된 대안",
+    "needs_verification": "경로는 있지만 출발 접근/현장 통행 연결 중 확인이 남음",
+    "no_route": "표시 기준을 만족하는 경로 없음"
+  },
+  "destinations": {
+    "simujang": {
+      "3km": {
+        "representative": {
+          "status": "verified",
+          "route_id": "3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any",
+          "target_distance_km": 3,
+          "distance_km": 3.0613,
+          "distance_error_m": 61.3,
+          "duration_minutes": 36.74,
+          "ascent_m": 121.3,
+          "descent_m": 34.3,
+          "start": {
+            "id": "sungshin-exit-1",
+            "name": "성신여대입구역 1번 출구",
+            "latitude": 37.5926517,
+            "longitude": 127.0168732,
+            "access_type": "subway_exit",
+            "running_way_class": null,
+            "running_fitness_access_score": null,
+            "coordinate_source": "OpenStreetMap node/3401490117",
+            "coordinate_verified": true,
+            "entrance_verified": false,
+            "station_access": null
+          },
+          "destination": {
+            "id": "simujang",
+            "name": "심우장",
+            "latitude": 37.5936268,
+            "longitude": 126.9916662,
+            "coordinate_source": "project default; entrance not field-verified",
+            "coordinate_verified": null,
+            "entrance_verified": false
+          },
+          "files": {
+            "json": "outputs/recommendations/simujang/running_focused/3km/3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any.json",
+            "geojson": "outputs\\recommendations\\simujang\\running_focused\\3km\\3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any.geojson",
+            "html": "outputs\\recommendations\\simujang\\running_focused\\3km\\3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any.html"
+          },
+          "notes": [
+            "저장된 ORS 경로·고도·OSM 지표를 새 선호도 점수로 오프라인 재평가해 선정했습니다.",
+            "출입구 위치·현장 통행 상태는 별도 확인이 필요합니다."
+          ],
+          "grade_metrics": {
+            "rank": null,
+            "route_id": "3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any",
+            "distance_km": 3.0613,
+            "distance_error_m": 61.3,
+            "distance_status": "within_100m",
+            "start": {
+              "id": "sungshin-exit-1",
+              "name": "성신여대입구역 1번 출구",
+              "latitude": 37.5926517,
+              "longitude": 127.0168732,
+              "access_type": "subway_exit",
+              "station_access": null
+            },
+            "ascent_m": 121.3,
+            "uphill_8_percent_share": 0.1111,
+            "uphill_10_percent_share": 0.085,
+            "max_sustained_uphill_grade_percent": 15.0,
+            "longest_continuous_8_percent_uphill_m": 80.0,
+            "running_fitness_score": 25.12,
+            "running_friendly_share": 0.2512,
+            "longest_continuous_run_m": 293.5,
+            "repeated_network_edge_share": 0.0,
+            "u_turn_count_estimate": 1,
+            "final_score": 71.32,
+            "score_source": "grade_profile",
+            "explicit_access_restricted_m": 0.0,
+            "restriction_check_available": true,
+            "route_json": "outputs/recommendations/simujang/running_focused/3km/3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any.json"
+          },
+          "slope_diagnostic_score": 71.32,
+          "shared_route_fraction_with_other_mode": 0.6333,
+          "selection_score": 71.32,
+          "selection_model": "offline_saved_candidate_rerank_v1",
+          "shared_route_fraction_between_modes": 0.6818
+        },
+        "modes": {
+          "low": {
+            "status": "verified",
+            "route_id": "3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any",
+            "target_distance_km": 3,
+            "distance_km": 3.0613,
+            "distance_error_m": 61.3,
+            "duration_minutes": 36.74,
+            "ascent_m": 121.3,
+            "descent_m": 34.3,
+            "start": {
+              "id": "sungshin-exit-1",
+              "name": "성신여대입구역 1번 출구",
+              "latitude": 37.5926517,
+              "longitude": 127.0168732,
+              "access_type": "subway_exit",
+              "running_way_class": null,
+              "running_fitness_access_score": null,
+              "coordinate_source": "OpenStreetMap node/3401490117",
+              "coordinate_verified": true,
+              "entrance_verified": false,
+              "station_access": null
+            },
+            "destination": {
+              "id": "simujang",
+              "name": "심우장",
+              "latitude": 37.5936268,
+              "longitude": 126.9916662,
+              "coordinate_source": "project default; entrance not field-verified",
+              "coordinate_verified": null,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/simujang/running_focused/3km/3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any.json",
+              "geojson": "outputs\\recommendations\\simujang\\running_focused\\3km\\3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any.geojson",
+              "html": "outputs\\recommendations\\simujang\\running_focused\\3km\\3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any.html"
+            },
+            "notes": [
+              "저장된 ORS 경로·고도·OSM 지표를 새 선호도 점수로 오프라인 재평가해 선정했습니다.",
+              "출입구 위치·현장 통행 상태는 별도 확인이 필요합니다."
+            ],
+            "grade_metrics": {
+              "rank": null,
+              "route_id": "3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any",
+              "distance_km": 3.0613,
+              "distance_error_m": 61.3,
+              "distance_status": "within_100m",
+              "start": {
+                "id": "sungshin-exit-1",
+                "name": "성신여대입구역 1번 출구",
+                "latitude": 37.5926517,
+                "longitude": 127.0168732,
+                "access_type": "subway_exit",
+                "station_access": null
+              },
+              "ascent_m": 121.3,
+              "uphill_8_percent_share": 0.1111,
+              "uphill_10_percent_share": 0.085,
+              "max_sustained_uphill_grade_percent": 15.0,
+              "longest_continuous_8_percent_uphill_m": 80.0,
+              "running_fitness_score": 25.12,
+              "running_friendly_share": 0.2512,
+              "longest_continuous_run_m": 293.5,
+              "repeated_network_edge_share": 0.0,
+              "u_turn_count_estimate": 1,
+              "final_score": 71.32,
+              "score_source": "grade_profile",
+              "explicit_access_restricted_m": 0.0,
+              "restriction_check_available": true,
+              "route_json": "outputs/recommendations/simujang/running_focused/3km/3km-sungshin-exit-1-via-osm-way-1555076925-node-2747-osm-way-1555076925-node-2748-simujang-any.json"
+            },
+            "slope_diagnostic_score": 71.32,
+            "shared_route_fraction_with_other_mode": 0.6333,
+            "selection_score": 71.32,
+            "selection_model": "offline_saved_candidate_rerank_v1"
+          },
+          "any": {
+            "status": "needs_verification",
+            "route_id": "3km-osm-node-3401490118-via-osm-way-708475244-node-2366-simujang-low",
+            "target_distance_km": 3,
+            "distance_km": 2.9663,
+            "distance_error_m": 33.7,
+            "duration_minutes": 35.6,
+            "ascent_m": 122.9,
+            "descent_m": 35.4,
+            "start": {
+              "id": "osm-node-3401490118",
+              "name": "성신여대입구 2번 출구",
+              "latitude": 37.5924117,
+              "longitude": 127.0166394,
+              "access_type": "subway_entrance",
+              "running_way_class": null,
+              "running_fitness_access_score": null,
+              "coordinate_source": "OpenStreetMap via Overpass API",
+              "coordinate_verified": true,
+              "entrance_verified": false,
+              "station_access": null
+            },
+            "destination": {
+              "id": "simujang",
+              "name": "심우장",
+              "latitude": 37.5936268,
+              "longitude": 126.9916662,
+              "coordinate_source": "project default; entrance not field-verified",
+              "coordinate_verified": null,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/simujang/running_focused/3km/3km-osm-node-3401490118-via-osm-way-708475244-node-2366-simujang-low.json",
+              "geojson": "outputs\\recommendations\\simujang\\running_focused\\3km\\3km-osm-node-3401490118-via-osm-way-708475244-node-2366-simujang-low.geojson",
+              "html": "outputs\\recommendations\\simujang\\running_focused\\3km\\3km-osm-node-3401490118-via-osm-way-708475244-node-2366-simujang-low.html"
+            },
+            "notes": [
+              "저장된 ORS 경로·고도·OSM 지표를 새 선호도 점수로 오프라인 재평가해 선정했습니다.",
+              "출입구 위치·현장 통행 상태는 별도 확인이 필요합니다."
+            ],
+            "grade_metrics": {
+              "rank": null,
+              "route_id": "3km-osm-node-3401490118-via-osm-way-708475244-node-2366-simujang-low",
+              "distance_km": 2.9663,
+              "distance_error_m": 33.7,
+              "distance_status": "within_100m",
+              "start": {
+                "id": "osm-node-3401490118",
+                "name": "성신여대입구 2번 출구",
+                "latitude": 37.5924117,
+                "longitude": 127.0166394,
+                "access_type": "subway_entrance",
+                "station_access": null
+              },
+              "ascent_m": 122.9,
+              "uphill_8_percent_share": 0.1504,
+              "uphill_10_percent_share": 0.1235,
+              "max_sustained_uphill_grade_percent": 15.7,
+              "longest_continuous_8_percent_uphill_m": 60.0,
+              "running_fitness_score": 51.66,
+              "running_friendly_share": 0.5142,
+              "longest_continuous_run_m": 799.1,
+              "repeated_network_edge_share": 0.0,
+              "u_turn_count_estimate": 0,
+              "final_score": 61.16,
+              "score_source": "saved_running_fitness",
+              "explicit_access_restricted_m": 0.0,
+              "restriction_check_available": true,
+              "route_json": "outputs/recommendations/simujang/running_focused/3km/3km-osm-node-3401490118-via-osm-way-708475244-node-2366-simujang-low.json"
+            },
+            "slope_diagnostic_score": 61.16,
+            "shared_route_fraction_with_other_mode": 0.6333,
+            "selection_score": 61.16,
+            "selection_model": "offline_saved_candidate_rerank_v1"
+          }
+        },
+        "mode_routes_may_differ": true
+      },
+      "5km": {
+        "representative": {
+          "status": "verified",
+          "route_id": "5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any",
+          "target_distance_km": 5,
+          "distance_km": 4.9972,
+          "distance_error_m": 2.8,
+          "duration_minutes": 59.97,
+          "ascent_m": 181.4,
+          "descent_m": 83.9,
+          "start": {
+            "id": "osm-running-node-2135148779",
+            "name": "OSM footway 보행로 접근 지점",
+            "latitude": 37.5704002,
+            "longitude": 127.0174831,
+            "access_type": "running_network_access",
+            "running_way_class": "footway",
+            "running_fitness_access_score": 88.0,
+            "coordinate_source": "OpenStreetMap mapped running/walking way vertex",
+            "coordinate_verified": true,
+            "entrance_verified": false,
+            "station_access": null
+          },
+          "destination": {
+            "id": "simujang",
+            "name": "심우장",
+            "latitude": 37.5936268,
+            "longitude": 126.9916662,
+            "coordinate_source": "project default; entrance not field-verified",
+            "coordinate_verified": null,
+            "entrance_verified": false
+          },
+          "files": {
+            "json": "outputs/recommendations/simujang/running_focused/5km/5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.json",
+            "geojson": "outputs\\recommendations\\simujang\\running_focused\\5km\\5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.geojson",
+            "html": "outputs\\recommendations\\simujang\\running_focused\\5km\\5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.html"
+          },
+          "notes": [
+            "저장된 ORS 경로·고도·OSM 지표를 새 선호도 점수로 오프라인 재평가해 선정했습니다.",
+            "출입구 위치·현장 통행 상태는 별도 확인이 필요합니다."
+          ],
+          "grade_metrics": {
+            "rank": null,
+            "route_id": "5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any",
+            "distance_km": 4.9972,
+            "distance_error_m": 2.8,
+            "distance_status": "within_100m",
+            "start": {
+              "id": "osm-running-node-2135148779",
+              "name": "OSM footway 보행로 접근 지점",
+              "latitude": 37.5704002,
+              "longitude": 127.0174831,
+              "access_type": "running_network_access",
+              "station_access": null
+            },
+            "ascent_m": 181.4,
+            "uphill_8_percent_share": 0.1036,
+            "uphill_10_percent_share": 0.0916,
+            "max_sustained_uphill_grade_percent": 25.25,
+            "longest_continuous_8_percent_uphill_m": 80.0,
+            "running_fitness_score": 43.08,
+            "running_friendly_share": 0.4299,
+            "longest_continuous_run_m": 570.0,
+            "repeated_network_edge_share": 0.0158,
+            "u_turn_count_estimate": 2,
+            "final_score": 64.78,
+            "score_source": "grade_profile",
+            "explicit_access_restricted_m": 0.0,
+            "restriction_check_available": true,
+            "route_json": "outputs/recommendations/simujang/running_focused/5km/5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.json"
+          },
+          "slope_diagnostic_score": 64.78,
+          "shared_route_fraction_with_other_mode": 0.8674,
+          "selection_score": 64.78,
+          "selection_model": "offline_saved_candidate_rerank_v1",
+          "shared_route_fraction_between_modes": 1.0
+        },
+        "modes": {
+          "low": {
+            "status": "verified",
+            "route_id": "5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any",
+            "target_distance_km": 5,
+            "distance_km": 4.9972,
+            "distance_error_m": 2.8,
+            "duration_minutes": 59.97,
+            "ascent_m": 181.4,
+            "descent_m": 83.9,
+            "start": {
+              "id": "osm-running-node-2135148779",
+              "name": "OSM footway 보행로 접근 지점",
+              "latitude": 37.5704002,
+              "longitude": 127.0174831,
+              "access_type": "running_network_access",
+              "running_way_class": "footway",
+              "running_fitness_access_score": 88.0,
+              "coordinate_source": "OpenStreetMap mapped running/walking way vertex",
+              "coordinate_verified": true,
+              "entrance_verified": false,
+              "station_access": null
+            },
+            "destination": {
+              "id": "simujang",
+              "name": "심우장",
+              "latitude": 37.5936268,
+              "longitude": 126.9916662,
+              "coordinate_source": "project default; entrance not field-verified",
+              "coordinate_verified": null,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/simujang/running_focused/5km/5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.json",
+              "geojson": "outputs\\recommendations\\simujang\\running_focused\\5km\\5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.geojson",
+              "html": "outputs\\recommendations\\simujang\\running_focused\\5km\\5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.html"
+            },
+            "notes": [
+              "저장된 ORS 경로·고도·OSM 지표를 새 선호도 점수로 오프라인 재평가해 선정했습니다.",
+              "출입구 위치·현장 통행 상태는 별도 확인이 필요합니다."
+            ],
+            "grade_metrics": {
+              "rank": null,
+              "route_id": "5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any",
+              "distance_km": 4.9972,
+              "distance_error_m": 2.8,
+              "distance_status": "within_100m",
+              "start": {
+                "id": "osm-running-node-2135148779",
+                "name": "OSM footway 보행로 접근 지점",
+                "latitude": 37.5704002,
+                "longitude": 127.0174831,
+                "access_type": "running_network_access",
+                "station_access": null
+              },
+              "ascent_m": 181.4,
+              "uphill_8_percent_share": 0.1036,
+              "uphill_10_percent_share": 0.0916,
+              "max_sustained_uphill_grade_percent": 25.25,
+              "longest_continuous_8_percent_uphill_m": 80.0,
+              "running_fitness_score": 43.08,
+              "running_friendly_share": 0.4299,
+              "longest_continuous_run_m": 570.0,
+              "repeated_network_edge_share": 0.0158,
+              "u_turn_count_estimate": 2,
+              "final_score": 64.78,
+              "score_source": "grade_profile",
+              "explicit_access_restricted_m": 0.0,
+              "restriction_check_available": true,
+              "route_json": "outputs/recommendations/simujang/running_focused/5km/5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.json"
+            },
+            "slope_diagnostic_score": 64.78,
+            "shared_route_fraction_with_other_mode": 0.8674,
+            "selection_score": 64.78,
+            "selection_model": "offline_saved_candidate_rerank_v1"
+          },
+          "any": {
+            "status": "verified",
+            "route_id": "5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any",
+            "target_distance_km": 5,
+            "distance_km": 4.9972,
+            "distance_error_m": 2.8,
+            "duration_minutes": 59.97,
+            "ascent_m": 181.4,
+            "descent_m": 83.9,
+            "start": {
+              "id": "osm-running-node-2135148779",
+              "name": "OSM footway 보행로 접근 지점",
+              "latitude": 37.5704002,
+              "longitude": 127.0174831,
+              "access_type": "running_network_access",
+              "running_way_class": "footway",
+              "running_fitness_access_score": 88.0,
+              "coordinate_source": "OpenStreetMap mapped running/walking way vertex",
+              "coordinate_verified": true,
+              "entrance_verified": false,
+              "station_access": null
+            },
+            "destination": {
+              "id": "simujang",
+              "name": "심우장",
+              "latitude": 37.5936268,
+              "longitude": 126.9916662,
+              "coordinate_source": "project default; entrance not field-verified",
+              "coordinate_verified": null,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/simujang/running_focused/5km/5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.json",
+              "geojson": "outputs\\recommendations\\simujang\\running_focused\\5km\\5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.geojson",
+              "html": "outputs\\recommendations\\simujang\\running_focused\\5km\\5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.html"
+            },
+            "notes": [
+              "ORS 경로와 OSM 보행망 매칭을 확인했고, 매칭 구간에 명시적 통행 금지 태그가 없습니다.",
+              "가까운 동대문역 1번 출구까지 직선 약 35m입니다. 실제 보행 접근선은 계산되지 않아 지도에는 역 출구와 러닝 시작만 별도로 표시합니다."
+            ],
+            "grade_metrics": {
+              "rank": null,
+              "route_id": "5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any",
+              "distance_km": 4.9972,
+              "distance_error_m": 2.8,
+              "distance_status": "within_100m",
+              "start": {
+                "id": "osm-running-node-2135148779",
+                "name": "OSM footway 보행로 접근 지점",
+                "latitude": 37.5704002,
+                "longitude": 127.0174831,
+                "access_type": "running_network_access",
+                "station_access": null
+              },
+              "ascent_m": 181.4,
+              "uphill_8_percent_share": 0.1036,
+              "uphill_10_percent_share": 0.0916,
+              "max_sustained_uphill_grade_percent": 25.25,
+              "longest_continuous_8_percent_uphill_m": 80.0,
+              "running_fitness_score": 43.08,
+              "running_friendly_share": 0.4299,
+              "longest_continuous_run_m": 570.0,
+              "repeated_network_edge_share": 0.0158,
+              "u_turn_count_estimate": 2,
+              "final_score": 39.82,
+              "score_source": "saved_running_fitness",
+              "explicit_access_restricted_m": 0.0,
+              "restriction_check_available": true,
+              "route_json": "outputs/recommendations/simujang/running_focused/5km/5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.json"
+            },
+            "slope_diagnostic_score": 39.82,
+            "shared_route_fraction_with_other_mode": 0.8674,
+            "selection_score": 39.82,
+            "selection_model": "offline_saved_candidate_rerank_v1"
+          }
+        },
+        "mode_routes_may_differ": false
+      },
+      "10km": {
+        "representative": {
+          "status": "needs_verification",
+          "route_id": "10km-osm-running-node-2135082041-simujang-low",
+          "target_distance_km": 10,
+          "distance_km": 9.9939,
+          "distance_error_m": 6.1,
+          "duration_minutes": 119.9,
+          "ascent_m": 264.4,
+          "descent_m": 151.4,
+          "start": {
+            "id": "osm-running-node-2135082041",
+            "name": "중랑천동자전거길 보행로 접근 지점",
+            "latitude": 37.5750255,
+            "longitude": 127.0787633,
+            "access_type": "riverside_path",
+            "station_access": {
+              "station_name": "용마산역",
+              "exit_number": "3",
+              "station_exit_coordinates": [
+                37.5736565,
+                127.0865151
+              ],
+              "route_verified": false,
+              "entrance_verified": false,
+              "estimated_walking_time_seconds": null,
+              "walking_distance_m": null,
+              "straight_line_distance_m": 699.9,
+              "distance_method": "straight-line proximity only; pedestrian approach route not verified",
+              "route_coordinates": []
+            },
+            "entrance_verified": false
+          },
+          "destination": {
+            "id": "simujang",
+            "name": "심우장",
+            "latitude": 37.5936268,
+            "longitude": 126.9916662,
+            "entrance_verified": false
+          },
+          "files": {
+            "json": "outputs/recommendations/simujang/running_focused/10km/10km-osm-running-node-2135082041-simujang-low.json",
+            "geojson": "outputs/recommendations/simujang/running_focused/10km/10km-osm-running-node-2135082041-simujang-low.geojson",
+            "html": "outputs/recommendations/simujang/running_focused/10km/10km-osm-running-node-2135082041-simujang-low.html"
+          },
+          "notes": [
+            "기존 ORS 경로와 목적지 좌표는 보존했습니다.",
+            "학교·궁궐 등 제한 구역 통과 감사가 완료되지 않았습니다.",
+            "역 출구에서 러닝 시작점까지 5분 이내 보행 연결은 저장 자료로 확인되지 않아 출발 접근 검증이 필요합니다."
+          ],
+          "grade_metrics": {
+            "thresholds": {
+              "8_percent": {
+                "distance_m": 940.0,
+                "share": 0.0941,
+                "longest_continuous_m": 140.0
+              },
+              "10_percent": {
+                "distance_m": 620.0,
+                "share": 0.062,
+                "longest_continuous_m": 80.0
+              }
+            },
+            "max_sustained_uphill_grade_percent": 19.0,
+            "sustained_window_m": 100.0,
+            "profile_sample_m": 20.0,
+            "smoothing_window_m": 60.0,
+            "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+          },
+          "slope_diagnostic_score": 67.18,
+          "shared_route_fraction_with_other_mode": 1.0,
+          "shared_route_fraction_between_modes": 1.0
+        },
+        "modes": {
+          "low": {
+            "status": "needs_verification",
+            "route_id": "10km-osm-running-node-2135082041-simujang-low",
+            "target_distance_km": 10,
+            "distance_km": 9.9939,
+            "distance_error_m": 6.1,
+            "duration_minutes": 119.9,
+            "ascent_m": 264.4,
+            "descent_m": 151.4,
+            "start": {
+              "id": "osm-running-node-2135082041",
+              "name": "중랑천동자전거길 보행로 접근 지점",
+              "latitude": 37.5750255,
+              "longitude": 127.0787633,
+              "access_type": "riverside_path",
+              "station_access": {
+                "station_name": "용마산역",
+                "exit_number": "3",
+                "station_exit_coordinates": [
+                  37.5736565,
+                  127.0865151
+                ],
+                "route_verified": false,
+                "entrance_verified": false,
+                "estimated_walking_time_seconds": null,
+                "walking_distance_m": null,
+                "straight_line_distance_m": 699.9,
+                "distance_method": "straight-line proximity only; pedestrian approach route not verified",
+                "route_coordinates": []
+              },
+              "entrance_verified": false
+            },
+            "destination": {
+              "id": "simujang",
+              "name": "심우장",
+              "latitude": 37.5936268,
+              "longitude": 126.9916662,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/simujang/running_focused/10km/10km-osm-running-node-2135082041-simujang-low.json",
+              "geojson": "outputs/recommendations/simujang/running_focused/10km/10km-osm-running-node-2135082041-simujang-low.geojson",
+              "html": "outputs/recommendations/simujang/running_focused/10km/10km-osm-running-node-2135082041-simujang-low.html"
+            },
+            "notes": [
+              "기존 ORS 경로와 목적지 좌표는 보존했습니다.",
+              "학교·궁궐 등 제한 구역 통과 감사가 완료되지 않았습니다.",
+              "역 출구에서 러닝 시작점까지 5분 이내 보행 연결은 저장 자료로 확인되지 않아 출발 접근 검증이 필요합니다."
+            ],
+            "grade_metrics": {
+              "thresholds": {
+                "8_percent": {
+                  "distance_m": 940.0,
+                  "share": 0.0941,
+                  "longest_continuous_m": 140.0
+                },
+                "10_percent": {
+                  "distance_m": 620.0,
+                  "share": 0.062,
+                  "longest_continuous_m": 80.0
+                }
+              },
+              "max_sustained_uphill_grade_percent": 19.0,
+              "sustained_window_m": 100.0,
+              "profile_sample_m": 20.0,
+              "smoothing_window_m": 60.0,
+              "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+            },
+            "slope_diagnostic_score": 67.18,
+            "shared_route_fraction_with_other_mode": 1.0
+          },
+          "any": {
+            "status": "needs_verification",
+            "route_id": "10km-osm-running-node-2135082041-simujang-any",
+            "target_distance_km": 10,
+            "distance_km": 9.9939,
+            "distance_error_m": 6.1,
+            "duration_minutes": 119.9,
+            "ascent_m": 264.4,
+            "descent_m": 151.4,
+            "start": {
+              "id": "osm-running-node-2135082041",
+              "name": "중랑천동자전거길 보행로 접근 지점",
+              "latitude": 37.5750255,
+              "longitude": 127.0787633,
+              "access_type": "riverside_path",
+              "station_access": {
+                "station_name": "용마산역",
+                "exit_number": "3",
+                "station_exit_coordinates": [
+                  37.5736565,
+                  127.0865151
+                ],
+                "route_verified": false,
+                "entrance_verified": false,
+                "estimated_walking_time_seconds": null,
+                "walking_distance_m": null,
+                "straight_line_distance_m": 699.9,
+                "distance_method": "straight-line proximity only; pedestrian approach route not verified",
+                "route_coordinates": []
+              },
+              "entrance_verified": false
+            },
+            "destination": {
+              "id": "simujang",
+              "name": "심우장",
+              "latitude": 37.5936268,
+              "longitude": 126.9916662,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/simujang/running_focused/10km/10km-osm-running-node-2135082041-simujang-any.json",
+              "geojson": "outputs/recommendations/simujang/running_focused/10km/10km-osm-running-node-2135082041-simujang-any.geojson",
+              "html": "outputs/recommendations/simujang/running_focused/10km/10km-osm-running-node-2135082041-simujang-any.html"
+            },
+            "notes": [
+              "기존 ORS 경로와 목적지 좌표는 보존했습니다.",
+              "학교·궁궐 등 제한 구역 통과 감사가 완료되지 않았습니다.",
+              "역 출구에서 러닝 시작점까지 5분 이내 보행 연결은 저장 자료로 확인되지 않아 출발 접근 검증이 필요합니다."
+            ],
+            "grade_metrics": {
+              "thresholds": {
+                "8_percent": {
+                  "distance_m": 940.0,
+                  "share": 0.0941,
+                  "longest_continuous_m": 140.0
+                },
+                "10_percent": {
+                  "distance_m": 620.0,
+                  "share": 0.062,
+                  "longest_continuous_m": 80.0
+                }
+              },
+              "max_sustained_uphill_grade_percent": 19.0,
+              "sustained_window_m": 100.0,
+              "profile_sample_m": 20.0,
+              "smoothing_window_m": 60.0,
+              "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+            },
+            "slope_diagnostic_score": 85.86,
+            "shared_route_fraction_with_other_mode": 1.0
+          }
+        },
+        "mode_routes_may_differ": false
+      }
+    },
+    "jeongneung": {
+      "3km": {
+        "representative": {
+          "status": "verified",
+          "route_id": "3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low",
+          "target_distance_km": 3,
+          "distance_km": 2.9888,
+          "distance_error_m": 11.2,
+          "duration_minutes": 35.86,
+          "ascent_m": 110.8,
+          "descent_m": 58.3,
+          "start": {
+            "id": "osm-node-3401490102",
+            "name": "미아사거리 4번 출구",
+            "latitude": 37.6124592,
+            "longitude": 127.0299871,
+            "access_type": "subway_entrance",
+            "running_way_class": null,
+            "running_fitness_access_score": null,
+            "coordinate_source": "OpenStreetMap via Overpass API",
+            "coordinate_verified": true,
+            "entrance_verified": false,
+            "station_access": null
+          },
+          "destination": {
+            "id": "jeongneung",
+            "name": "정릉",
+            "latitude": 37.601177158215,
+            "longitude": 127.007591783521,
+            "coordinate_source": "사용자 제공 정릉 매표소 좌표; 현장 입구 검증은 별도 필요",
+            "coordinate_verified": null,
+            "entrance_verified": false
+          },
+          "files": {
+            "json": "outputs/recommendations/jeongneung/running_focused/3km/3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.json",
+            "geojson": "outputs\\recommendations\\jeongneung\\running_focused\\3km\\3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.geojson",
+            "html": "outputs\\recommendations\\jeongneung\\running_focused\\3km\\3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.html"
+          },
+          "notes": [
+            "기존에 확인된 3km 코스를 그대로 보존했습니다. ORS 실제 경로와 거리 조건이 기존 결과에서 검증됐습니다.",
+            "출입구 개방 여부는 현장 확인 대상입니다."
+          ],
+          "grade_metrics": {
+            "rank": null,
+            "route_id": "3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low",
+            "distance_km": 2.9888,
+            "distance_error_m": 11.2,
+            "distance_status": "within_100m",
+            "start": {
+              "id": "osm-node-3401490102",
+              "name": "미아사거리 4번 출구",
+              "latitude": 37.6124592,
+              "longitude": 127.0299871,
+              "access_type": "subway_entrance",
+              "station_access": null
+            },
+            "ascent_m": 110.8,
+            "uphill_8_percent_share": 0.1139,
+            "uphill_10_percent_share": 0.0603,
+            "max_sustained_uphill_grade_percent": 16.76,
+            "longest_continuous_8_percent_uphill_m": 160.0,
+            "running_fitness_score": 43.6,
+            "running_friendly_share": 0.436,
+            "longest_continuous_run_m": 179.8,
+            "repeated_network_edge_share": 0.0,
+            "u_turn_count_estimate": 0,
+            "final_score": 72.84,
+            "score_source": "grade_profile",
+            "explicit_access_restricted_m": 0.0,
+            "restriction_check_available": true,
+            "route_json": "outputs/recommendations/jeongneung/running_focused/3km/3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.json"
+          },
+          "slope_diagnostic_score": 72.84,
+          "shared_route_fraction_with_other_mode": 0.0019,
+          "selection_score": 72.84,
+          "selection_model": "offline_saved_candidate_rerank_v1",
+          "shared_route_fraction_between_modes": 1.0
+        },
+        "modes": {
+          "low": {
+            "status": "verified",
+            "route_id": "3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low",
+            "target_distance_km": 3,
+            "distance_km": 2.9888,
+            "distance_error_m": 11.2,
+            "duration_minutes": 35.86,
+            "ascent_m": 110.8,
+            "descent_m": 58.3,
+            "start": {
+              "id": "osm-node-3401490102",
+              "name": "미아사거리 4번 출구",
+              "latitude": 37.6124592,
+              "longitude": 127.0299871,
+              "access_type": "subway_entrance",
+              "running_way_class": null,
+              "running_fitness_access_score": null,
+              "coordinate_source": "OpenStreetMap via Overpass API",
+              "coordinate_verified": true,
+              "entrance_verified": false,
+              "station_access": null
+            },
+            "destination": {
+              "id": "jeongneung",
+              "name": "정릉",
+              "latitude": 37.601177158215,
+              "longitude": 127.007591783521,
+              "coordinate_source": "사용자 제공 정릉 매표소 좌표; 현장 입구 검증은 별도 필요",
+              "coordinate_verified": null,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/jeongneung/running_focused/3km/3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.json",
+              "geojson": "outputs\\recommendations\\jeongneung\\running_focused\\3km\\3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.geojson",
+              "html": "outputs\\recommendations\\jeongneung\\running_focused\\3km\\3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.html"
+            },
+            "notes": [
+              "기존에 확인된 3km 코스를 그대로 보존했습니다. ORS 실제 경로와 거리 조건이 기존 결과에서 검증됐습니다.",
+              "출입구 개방 여부는 현장 확인 대상입니다."
+            ],
+            "grade_metrics": {
+              "rank": null,
+              "route_id": "3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low",
+              "distance_km": 2.9888,
+              "distance_error_m": 11.2,
+              "distance_status": "within_100m",
+              "start": {
+                "id": "osm-node-3401490102",
+                "name": "미아사거리 4번 출구",
+                "latitude": 37.6124592,
+                "longitude": 127.0299871,
+                "access_type": "subway_entrance",
+                "station_access": null
+              },
+              "ascent_m": 110.8,
+              "uphill_8_percent_share": 0.1139,
+              "uphill_10_percent_share": 0.0603,
+              "max_sustained_uphill_grade_percent": 16.76,
+              "longest_continuous_8_percent_uphill_m": 160.0,
+              "running_fitness_score": 43.6,
+              "running_friendly_share": 0.436,
+              "longest_continuous_run_m": 179.8,
+              "repeated_network_edge_share": 0.0,
+              "u_turn_count_estimate": 0,
+              "final_score": 72.84,
+              "score_source": "grade_profile",
+              "explicit_access_restricted_m": 0.0,
+              "restriction_check_available": true,
+              "route_json": "outputs/recommendations/jeongneung/running_focused/3km/3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.json"
+            },
+            "slope_diagnostic_score": 72.84,
+            "shared_route_fraction_with_other_mode": 0.0019,
+            "selection_score": 72.84,
+            "selection_model": "offline_saved_candidate_rerank_v1"
+          },
+          "any": {
+            "status": "verified",
+            "route_id": "3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low",
+            "target_distance_km": 3,
+            "distance_km": 2.9888,
+            "distance_error_m": 11.2,
+            "duration_minutes": 35.86,
+            "ascent_m": 110.8,
+            "descent_m": 58.3,
+            "start": {
+              "id": "osm-node-3401490102",
+              "name": "미아사거리 4번 출구",
+              "latitude": 37.6124592,
+              "longitude": 127.0299871,
+              "access_type": "subway_entrance",
+              "running_way_class": null,
+              "running_fitness_access_score": null,
+              "coordinate_source": "OpenStreetMap via Overpass API",
+              "coordinate_verified": true,
+              "entrance_verified": false,
+              "station_access": null
+            },
+            "destination": {
+              "id": "jeongneung",
+              "name": "정릉",
+              "latitude": 37.601177158215,
+              "longitude": 127.007591783521,
+              "coordinate_source": "사용자 제공 정릉 매표소 좌표; 현장 입구 검증은 별도 필요",
+              "coordinate_verified": null,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/jeongneung/running_focused/3km/3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.json",
+              "geojson": "outputs\\recommendations\\jeongneung\\running_focused\\3km\\3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.geojson",
+              "html": "outputs\\recommendations\\jeongneung\\running_focused\\3km\\3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.html"
+            },
+            "notes": [
+              "저장된 ORS 경로·고도·OSM 지표를 새 선호도 점수로 오프라인 재평가해 선정했습니다.",
+              "출입구 위치·현장 통행 상태는 별도 확인이 필요합니다."
+            ],
+            "grade_metrics": {
+              "rank": null,
+              "route_id": "3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low",
+              "distance_km": 2.9888,
+              "distance_error_m": 11.2,
+              "distance_status": "within_100m",
+              "start": {
+                "id": "osm-node-3401490102",
+                "name": "미아사거리 4번 출구",
+                "latitude": 37.6124592,
+                "longitude": 127.0299871,
+                "access_type": "subway_entrance",
+                "station_access": null
+              },
+              "ascent_m": 110.8,
+              "uphill_8_percent_share": 0.1139,
+              "uphill_10_percent_share": 0.0603,
+              "max_sustained_uphill_grade_percent": 16.76,
+              "longest_continuous_8_percent_uphill_m": 160.0,
+              "running_fitness_score": 43.6,
+              "running_friendly_share": 0.436,
+              "longest_continuous_run_m": 179.8,
+              "repeated_network_edge_share": 0.0,
+              "u_turn_count_estimate": 0,
+              "final_score": 55.78,
+              "score_source": "saved_running_fitness",
+              "explicit_access_restricted_m": 0.0,
+              "restriction_check_available": true,
+              "route_json": "outputs/recommendations/jeongneung/running_focused/3km/3km-osm-node-3401490102-via-osm-way-810683850-node-18470-jeongneung-low.json"
+            },
+            "slope_diagnostic_score": 55.78,
+            "shared_route_fraction_with_other_mode": 0.0019,
+            "selection_score": 55.78,
+            "selection_model": "offline_saved_candidate_rerank_v1"
+          }
+        },
+        "mode_routes_may_differ": false
+      },
+      "5km": {
+        "representative": {
+          "status": "verified",
+          "route_id": "recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any",
+          "target_distance_km": 5,
+          "distance_km": 4.9955,
+          "distance_error_m": 4.5,
+          "duration_minutes": 59.9,
+          "ascent_m": 270.2,
+          "descent_m": 212.2,
+          "start": {
+            "id": "osm-running-node-7841880192",
+            "name": "OSM footway 보행로 접근 지점",
+            "latitude": 37.5698474,
+            "longitude": 127.0137428,
+            "access_type": "running_network_access",
+            "station_access": {
+              "station_name": "동대문역",
+              "exit_number": "4",
+              "station_exit_coordinates": [
+                37.5718563,
+                127.0121232
+              ],
+              "route_verified": false,
+              "entrance_verified": false,
+              "estimated_walking_time_seconds": null,
+              "walking_distance_m": null,
+              "straight_line_distance_m": 265.1,
+              "distance_method": "straight-line proximity only; pedestrian approach route not verified",
+              "route_coordinates": []
+            },
+            "entrance_verified": false
+          },
+          "destination": {
+            "id": "jeongneung",
+            "name": "정릉",
+            "latitude": 37.601177158215,
+            "longitude": 127.007591783521,
+            "entrance_verified": false
+          },
+          "files": {
+            "json": "outputs/recommendations/jeongneung/running_focused/5km/recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any.json",
+            "geojson": "outputs/recommendations/jeongneung/running_focused/5km/recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any.geojson",
+            "html": "outputs/recommendations/jeongneung/running_focused/5km/recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any.html"
+          },
+          "notes": [
+            "새 매표소 좌표까지 ORS 전체 경로를 재계산했습니다. 거리 4.996km(오차 -5m)이며 OSM 경로 매칭 구간에서 명시적 통행 금지 태그가 확인되지 않았습니다.",
+            "가까운 동대문역 4번 출구까지 직선 약 265m입니다. 5분은 필수 조건으로 사용하지 않았으며, 실제 보행 접근선은 별도로 확인되지 않았습니다."
+          ],
+          "grade_metrics": {
+            "thresholds": {
+              "8_percent": {
+                "distance_m": 800.0,
+                "share": 0.1603,
+                "longest_continuous_m": 100.0
+              },
+              "10_percent": {
+                "distance_m": 720.0,
+                "share": 0.1443,
+                "longest_continuous_m": 100.0
+              }
+            },
+            "max_sustained_uphill_grade_percent": 32.62,
+            "sustained_window_m": 100.0,
+            "profile_sample_m": 20.0,
+            "smoothing_window_m": 60.0,
+            "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+          },
+          "slope_diagnostic_score": 60.69,
+          "shared_route_fraction_with_other_mode": 1.0,
+          "shared_route_fraction_between_modes": 1.0
+        },
+        "modes": {
+          "low": {
+            "status": "verified",
+            "route_id": "recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any",
+            "target_distance_km": 5,
+            "distance_km": 4.9955,
+            "distance_error_m": 4.5,
+            "duration_minutes": 59.9,
+            "ascent_m": 270.2,
+            "descent_m": 212.2,
+            "start": {
+              "id": "osm-running-node-7841880192",
+              "name": "OSM footway 보행로 접근 지점",
+              "latitude": 37.5698474,
+              "longitude": 127.0137428,
+              "access_type": "running_network_access",
+              "station_access": {
+                "station_name": "동대문역",
+                "exit_number": "4",
+                "station_exit_coordinates": [
+                  37.5718563,
+                  127.0121232
+                ],
+                "route_verified": false,
+                "entrance_verified": false,
+                "estimated_walking_time_seconds": null,
+                "walking_distance_m": null,
+                "straight_line_distance_m": 265.1,
+                "distance_method": "straight-line proximity only; pedestrian approach route not verified",
+                "route_coordinates": []
+              },
+              "entrance_verified": false
+            },
+            "destination": {
+              "id": "jeongneung",
+              "name": "정릉",
+              "latitude": 37.601177158215,
+              "longitude": 127.007591783521,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/jeongneung/running_focused/5km/recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any.json",
+              "geojson": "outputs/recommendations/jeongneung/running_focused/5km/recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any.geojson",
+              "html": "outputs/recommendations/jeongneung/running_focused/5km/recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any.html"
+            },
+            "notes": [
+              "새 매표소 좌표까지 ORS 전체 경로를 재계산했습니다. 거리 4.996km(오차 -5m)이며 OSM 경로 매칭 구간에서 명시적 통행 금지 태그가 확인되지 않았습니다.",
+              "가까운 동대문역 4번 출구까지 직선 약 265m입니다. 5분은 필수 조건으로 사용하지 않았으며, 실제 보행 접근선은 별도로 확인되지 않았습니다."
+            ],
+            "grade_metrics": {
+              "thresholds": {
+                "8_percent": {
+                  "distance_m": 800.0,
+                  "share": 0.1603,
+                  "longest_continuous_m": 100.0
+                },
+                "10_percent": {
+                  "distance_m": 720.0,
+                  "share": 0.1443,
+                  "longest_continuous_m": 100.0
+                }
+              },
+              "max_sustained_uphill_grade_percent": 32.62,
+              "sustained_window_m": 100.0,
+              "profile_sample_m": 20.0,
+              "smoothing_window_m": 60.0,
+              "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+            },
+            "slope_diagnostic_score": 60.69,
+            "shared_route_fraction_with_other_mode": 1.0
+          },
+          "any": {
+            "status": "verified",
+            "route_id": "recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any",
+            "target_distance_km": 5,
+            "distance_km": 4.9955,
+            "distance_error_m": 4.5,
+            "duration_minutes": 59.9,
+            "ascent_m": 270.2,
+            "descent_m": 212.2,
+            "start": {
+              "id": "osm-running-node-7841880192",
+              "name": "OSM footway 보행로 접근 지점",
+              "latitude": 37.5698474,
+              "longitude": 127.0137428,
+              "access_type": "running_network_access",
+              "station_access": {
+                "station_name": "동대문역",
+                "exit_number": "4",
+                "station_exit_coordinates": [
+                  37.5718563,
+                  127.0121232
+                ],
+                "route_verified": false,
+                "entrance_verified": false,
+                "estimated_walking_time_seconds": null,
+                "walking_distance_m": null,
+                "straight_line_distance_m": 265.1,
+                "distance_method": "straight-line proximity only; pedestrian approach route not verified",
+                "route_coordinates": []
+              },
+              "entrance_verified": false
+            },
+            "destination": {
+              "id": "jeongneung",
+              "name": "정릉",
+              "latitude": 37.601177158215,
+              "longitude": 127.007591783521,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/jeongneung/running_focused/5km/recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any.json",
+              "geojson": "outputs/recommendations/jeongneung/running_focused/5km/recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any.geojson",
+              "html": "outputs/recommendations/jeongneung/running_focused/5km/recovery-jeongneung-5km-5km-osm-running-node-7841880192-via-osm-way-1301333349-node-7387-osm-way-760259688-node-6556-jeongneung-any.html"
+            },
+            "notes": [
+              "새 매표소 좌표까지 ORS 전체 경로를 재계산했습니다. 거리 4.996km(오차 -5m)이며 OSM 경로 매칭 구간에서 명시적 통행 금지 태그가 확인되지 않았습니다.",
+              "가까운 동대문역 4번 출구까지 직선 약 265m입니다. 5분은 필수 조건으로 사용하지 않았으며, 실제 보행 접근선은 별도로 확인되지 않았습니다."
+            ],
+            "same_route_as": "low",
+            "grade_metrics": {
+              "thresholds": {
+                "8_percent": {
+                  "distance_m": 800.0,
+                  "share": 0.1603,
+                  "longest_continuous_m": 100.0
+                },
+                "10_percent": {
+                  "distance_m": 720.0,
+                  "share": 0.1443,
+                  "longest_continuous_m": 100.0
+                }
+              },
+              "max_sustained_uphill_grade_percent": 32.62,
+              "sustained_window_m": 100.0,
+              "profile_sample_m": 20.0,
+              "smoothing_window_m": 60.0,
+              "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+            },
+            "slope_diagnostic_score": 82.18,
+            "shared_route_fraction_with_other_mode": 1.0
+          }
+        },
+        "mode_routes_may_differ": false
+      },
+      "10km": {
+        "representative": {
+          "status": "needs_verification",
+          "route_id": "recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any",
+          "target_distance_km": 10,
+          "distance_km": 9.9238,
+          "distance_error_m": 76.2,
+          "duration_minutes": 119.1,
+          "ascent_m": 353.5,
+          "descent_m": 275.0,
+          "start": {
+            "id": "osm-running-node-8064151669",
+            "name": "중랑천서자전거길 보행로 접근 지점",
+            "latitude": 37.5536277,
+            "longitude": 127.0503144,
+            "access_type": "riverside_path",
+            "station_access": {
+              "station_name": "한양대역",
+              "exit_number": "3",
+              "station_exit_coordinates": [
+                37.5546083,
+                127.0437197
+              ],
+              "route_verified": false,
+              "entrance_verified": false,
+              "estimated_walking_time_seconds": null,
+              "walking_distance_m": null,
+              "straight_line_distance_m": 591.5,
+              "distance_method": "straight-line proximity only; pedestrian approach route not verified",
+              "route_coordinates": []
+            },
+            "entrance_verified": false
+          },
+          "destination": {
+            "id": "jeongneung",
+            "name": "정릉",
+            "latitude": 37.601177158215,
+            "longitude": 127.007591783521,
+            "entrance_verified": false
+          },
+          "files": {
+            "json": "outputs/recommendations/jeongneung/running_focused/10km/recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any.json",
+            "geojson": "outputs/recommendations/jeongneung/running_focused/10km/recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any.geojson",
+            "html": "outputs/recommendations/jeongneung/running_focused/10km/recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any.html"
+          },
+          "notes": [
+            "새 매표소 좌표까지 ORS 전체 경로를 재계산했습니다. 거리 9.924km(오차 -76m)이며 OSM 경로 매칭 구간에서 명시적 통행 금지 태그가 확인되지 않았습니다.",
+            "도선고등학교 경계 중첩은 안내 대상으로만 처리했습니다. 다만 출발지는 중랑천 접근 지점이며, 가장 가까운 한양대역 3번 출구는 직선 약 592m입니다. 실제 보행 진입 연결은 확인되지 않았습니다."
+          ],
+          "grade_metrics": {
+            "thresholds": {
+              "8_percent": {
+                "distance_m": 1100.0,
+                "share": 0.1109,
+                "longest_continuous_m": 120.0
+              },
+              "10_percent": {
+                "distance_m": 820.0,
+                "share": 0.0827,
+                "longest_continuous_m": 120.0
+              }
+            },
+            "max_sustained_uphill_grade_percent": 33.07,
+            "sustained_window_m": 100.0,
+            "profile_sample_m": 20.0,
+            "smoothing_window_m": 60.0,
+            "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+          },
+          "slope_diagnostic_score": 65.63,
+          "shared_route_fraction_with_other_mode": 1.0,
+          "shared_route_fraction_between_modes": 1.0
+        },
+        "modes": {
+          "low": {
+            "status": "needs_verification",
+            "route_id": "recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any",
+            "target_distance_km": 10,
+            "distance_km": 9.9238,
+            "distance_error_m": 76.2,
+            "duration_minutes": 119.1,
+            "ascent_m": 353.5,
+            "descent_m": 275.0,
+            "start": {
+              "id": "osm-running-node-8064151669",
+              "name": "중랑천서자전거길 보행로 접근 지점",
+              "latitude": 37.5536277,
+              "longitude": 127.0503144,
+              "access_type": "riverside_path",
+              "station_access": {
+                "station_name": "한양대역",
+                "exit_number": "3",
+                "station_exit_coordinates": [
+                  37.5546083,
+                  127.0437197
+                ],
+                "route_verified": false,
+                "entrance_verified": false,
+                "estimated_walking_time_seconds": null,
+                "walking_distance_m": null,
+                "straight_line_distance_m": 591.5,
+                "distance_method": "straight-line proximity only; pedestrian approach route not verified",
+                "route_coordinates": []
+              },
+              "entrance_verified": false
+            },
+            "destination": {
+              "id": "jeongneung",
+              "name": "정릉",
+              "latitude": 37.601177158215,
+              "longitude": 127.007591783521,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/jeongneung/running_focused/10km/recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any.json",
+              "geojson": "outputs/recommendations/jeongneung/running_focused/10km/recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any.geojson",
+              "html": "outputs/recommendations/jeongneung/running_focused/10km/recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any.html"
+            },
+            "notes": [
+              "새 매표소 좌표까지 ORS 전체 경로를 재계산했습니다. 거리 9.924km(오차 -76m)이며 OSM 경로 매칭 구간에서 명시적 통행 금지 태그가 확인되지 않았습니다.",
+              "도선고등학교 경계 중첩은 안내 대상으로만 처리했습니다. 다만 출발지는 중랑천 접근 지점이며, 가장 가까운 한양대역 3번 출구는 직선 약 592m입니다. 실제 보행 진입 연결은 확인되지 않았습니다."
+            ],
+            "grade_metrics": {
+              "thresholds": {
+                "8_percent": {
+                  "distance_m": 1100.0,
+                  "share": 0.1109,
+                  "longest_continuous_m": 120.0
+                },
+                "10_percent": {
+                  "distance_m": 820.0,
+                  "share": 0.0827,
+                  "longest_continuous_m": 120.0
+                }
+              },
+              "max_sustained_uphill_grade_percent": 33.07,
+              "sustained_window_m": 100.0,
+              "profile_sample_m": 20.0,
+              "smoothing_window_m": 60.0,
+              "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+            },
+            "slope_diagnostic_score": 65.63,
+            "shared_route_fraction_with_other_mode": 1.0
+          },
+          "any": {
+            "status": "needs_verification",
+            "route_id": "recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any",
+            "target_distance_km": 10,
+            "distance_km": 9.9238,
+            "distance_error_m": 76.2,
+            "duration_minutes": 119.1,
+            "ascent_m": 353.5,
+            "descent_m": 275.0,
+            "start": {
+              "id": "osm-running-node-8064151669",
+              "name": "중랑천서자전거길 보행로 접근 지점",
+              "latitude": 37.5536277,
+              "longitude": 127.0503144,
+              "access_type": "riverside_path",
+              "station_access": {
+                "station_name": "한양대역",
+                "exit_number": "3",
+                "station_exit_coordinates": [
+                  37.5546083,
+                  127.0437197
+                ],
+                "route_verified": false,
+                "entrance_verified": false,
+                "estimated_walking_time_seconds": null,
+                "walking_distance_m": null,
+                "straight_line_distance_m": 591.5,
+                "distance_method": "straight-line proximity only; pedestrian approach route not verified",
+                "route_coordinates": []
+              },
+              "entrance_verified": false
+            },
+            "destination": {
+              "id": "jeongneung",
+              "name": "정릉",
+              "latitude": 37.601177158215,
+              "longitude": 127.007591783521,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/jeongneung/running_focused/10km/recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any.json",
+              "geojson": "outputs/recommendations/jeongneung/running_focused/10km/recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any.geojson",
+              "html": "outputs/recommendations/jeongneung/running_focused/10km/recovery-jeongneung-10km-10km-osm-running-node-8064151669-via-osm-way-1068555363-node-18842-osm-way-759418321-node-17741-jeongneung-any.html"
+            },
+            "notes": [
+              "새 매표소 좌표까지 ORS 전체 경로를 재계산했습니다. 거리 9.924km(오차 -76m)이며 OSM 경로 매칭 구간에서 명시적 통행 금지 태그가 확인되지 않았습니다.",
+              "도선고등학교 경계 중첩은 안내 대상으로만 처리했습니다. 다만 출발지는 중랑천 접근 지점이며, 가장 가까운 한양대역 3번 출구는 직선 약 592m입니다. 실제 보행 진입 연결은 확인되지 않았습니다."
+            ],
+            "same_route_as": "low",
+            "grade_metrics": {
+              "thresholds": {
+                "8_percent": {
+                  "distance_m": 1100.0,
+                  "share": 0.1109,
+                  "longest_continuous_m": 120.0
+                },
+                "10_percent": {
+                  "distance_m": 820.0,
+                  "share": 0.0827,
+                  "longest_continuous_m": 120.0
+                }
+              },
+              "max_sustained_uphill_grade_percent": 33.07,
+              "sustained_window_m": 100.0,
+              "profile_sample_m": 20.0,
+              "smoothing_window_m": 60.0,
+              "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+            },
+            "slope_diagnostic_score": 84.87,
+            "shared_route_fraction_with_other_mode": 1.0
+          }
+        },
+        "mode_routes_may_differ": false
+      }
+    },
+    "uiryeong": {
+      "3km": {
+        "representative": {
+          "status": "verified",
+          "route_id": "recovered-3km-uiryeong-cached-ors",
+          "target_distance_km": 3,
+          "distance_km": 3.0048,
+          "distance_error_m": 4.8,
+          "duration_minutes": 36.1,
+          "ascent_m": 31.6,
+          "descent_m": 32.5,
+          "start": {
+            "id": "osm-node-3401296534",
+            "name": "태릉입구 4번 출구",
+            "latitude": 37.6190486,
+            "longitude": 127.0753066,
+            "access_type": "subway_entrance",
+            "station_access": {
+              "station_name": "태릉입구역",
+              "exit_number": "4",
+              "station_exit_coordinates": [
+                37.6190486,
+                127.0753066
+              ],
+              "route_verified": true,
+              "entrance_verified": false,
+              "estimated_walking_time_seconds": 0,
+              "walking_distance_m": 0,
+              "distance_method": "running start is the same OSM-mapped station-exit node",
+              "route_coordinates": [
+                [
+                  37.6190486,
+                  127.0753066
+                ]
+              ]
+            },
+            "entrance_verified": false
+          },
+          "destination": {
+            "id": "uiryeong",
+            "name": "의릉",
+            "latitude": 37.6044099656019,
+            "longitude": 127.058716558469,
+            "entrance_verified": false
+          },
+          "files": {
+            "json": "outputs/recommendations/uiryeong/running_focused/3km/recovered-3km-uiryeong-cached-ors.json",
+            "geojson": "outputs/recommendations/uiryeong/running_focused/3km/recovered-3km-uiryeong-cached-ors.geojson",
+            "html": "outputs/recommendations/uiryeong/running_focused/3km/recovered-3km-uiryeong-cached-ors.html"
+          },
+          "notes": [
+            "ORS 실제 경로이며 새 매표소까지 연결됩니다. 거리 3.005km(오차 +5m)입니다.",
+            "한국예술종합학교·석관고 경계와 겹치는 구간은 OSM 보행망에 매칭되고 명시적 통행 금지 태그가 없어 경로를 제외하지 않았습니다. 실제 운영상 개방 여부는 이용 전 확인을 권장합니다."
+          ],
+          "grade_metrics": {
+            "thresholds": {
+              "8_percent": {
+                "distance_m": 40.0,
+                "share": 0.0133,
+                "longest_continuous_m": 20.0
+              },
+              "10_percent": {
+                "distance_m": 20.0,
+                "share": 0.0067,
+                "longest_continuous_m": 20.0
+              }
+            },
+            "max_sustained_uphill_grade_percent": 5.64,
+            "sustained_window_m": 100.0,
+            "profile_sample_m": 20.0,
+            "smoothing_window_m": 60.0,
+            "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+          },
+          "slope_diagnostic_score": 87.98,
+          "shared_route_fraction_with_other_mode": 1.0,
+          "shared_route_fraction_between_modes": 1.0
+        },
+        "modes": {
+          "low": {
+            "status": "verified",
+            "route_id": "recovered-3km-uiryeong-cached-ors",
+            "target_distance_km": 3,
+            "distance_km": 3.0048,
+            "distance_error_m": 4.8,
+            "duration_minutes": 36.1,
+            "ascent_m": 31.6,
+            "descent_m": 32.5,
+            "start": {
+              "id": "osm-node-3401296534",
+              "name": "태릉입구 4번 출구",
+              "latitude": 37.6190486,
+              "longitude": 127.0753066,
+              "access_type": "subway_entrance",
+              "station_access": {
+                "station_name": "태릉입구역",
+                "exit_number": "4",
+                "station_exit_coordinates": [
+                  37.6190486,
+                  127.0753066
+                ],
+                "route_verified": true,
+                "entrance_verified": false,
+                "estimated_walking_time_seconds": 0,
+                "walking_distance_m": 0,
+                "distance_method": "running start is the same OSM-mapped station-exit node",
+                "route_coordinates": [
+                  [
+                    37.6190486,
+                    127.0753066
+                  ]
+                ]
+              },
+              "entrance_verified": false
+            },
+            "destination": {
+              "id": "uiryeong",
+              "name": "의릉",
+              "latitude": 37.6044099656019,
+              "longitude": 127.058716558469,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/uiryeong/running_focused/3km/recovered-3km-uiryeong-cached-ors.json",
+              "geojson": "outputs/recommendations/uiryeong/running_focused/3km/recovered-3km-uiryeong-cached-ors.geojson",
+              "html": "outputs/recommendations/uiryeong/running_focused/3km/recovered-3km-uiryeong-cached-ors.html"
+            },
+            "notes": [
+              "ORS 실제 경로이며 새 매표소까지 연결됩니다. 거리 3.005km(오차 +5m)입니다.",
+              "한국예술종합학교·석관고 경계와 겹치는 구간은 OSM 보행망에 매칭되고 명시적 통행 금지 태그가 없어 경로를 제외하지 않았습니다. 실제 운영상 개방 여부는 이용 전 확인을 권장합니다."
+            ],
+            "grade_metrics": {
+              "thresholds": {
+                "8_percent": {
+                  "distance_m": 40.0,
+                  "share": 0.0133,
+                  "longest_continuous_m": 20.0
+                },
+                "10_percent": {
+                  "distance_m": 20.0,
+                  "share": 0.0067,
+                  "longest_continuous_m": 20.0
+                }
+              },
+              "max_sustained_uphill_grade_percent": 5.64,
+              "sustained_window_m": 100.0,
+              "profile_sample_m": 20.0,
+              "smoothing_window_m": 60.0,
+              "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+            },
+            "slope_diagnostic_score": 87.98,
+            "shared_route_fraction_with_other_mode": 1.0
+          },
+          "any": {
+            "status": "verified",
+            "route_id": "recovered-3km-uiryeong-cached-ors",
+            "target_distance_km": 3,
+            "distance_km": 3.0048,
+            "distance_error_m": 4.8,
+            "duration_minutes": 36.1,
+            "ascent_m": 31.6,
+            "descent_m": 32.5,
+            "start": {
+              "id": "osm-node-3401296534",
+              "name": "태릉입구 4번 출구",
+              "latitude": 37.6190486,
+              "longitude": 127.0753066,
+              "access_type": "subway_entrance",
+              "station_access": {
+                "station_name": "태릉입구역",
+                "exit_number": "4",
+                "station_exit_coordinates": [
+                  37.6190486,
+                  127.0753066
+                ],
+                "route_verified": true,
+                "entrance_verified": false,
+                "estimated_walking_time_seconds": 0,
+                "walking_distance_m": 0,
+                "distance_method": "running start is the same OSM-mapped station-exit node",
+                "route_coordinates": [
+                  [
+                    37.6190486,
+                    127.0753066
+                  ]
+                ]
+              },
+              "entrance_verified": false
+            },
+            "destination": {
+              "id": "uiryeong",
+              "name": "의릉",
+              "latitude": 37.6044099656019,
+              "longitude": 127.058716558469,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/uiryeong/running_focused/3km/recovered-3km-uiryeong-cached-ors.json",
+              "geojson": "outputs/recommendations/uiryeong/running_focused/3km/recovered-3km-uiryeong-cached-ors.geojson",
+              "html": "outputs/recommendations/uiryeong/running_focused/3km/recovered-3km-uiryeong-cached-ors.html"
+            },
+            "notes": [
+              "ORS 실제 경로이며 새 매표소까지 연결됩니다. 거리 3.005km(오차 +5m)입니다.",
+              "한국예술종합학교·석관고 경계와 겹치는 구간은 OSM 보행망에 매칭되고 명시적 통행 금지 태그가 없어 경로를 제외하지 않았습니다. 실제 운영상 개방 여부는 이용 전 확인을 권장합니다."
+            ],
+            "same_route_as": "low",
+            "grade_metrics": {
+              "thresholds": {
+                "8_percent": {
+                  "distance_m": 40.0,
+                  "share": 0.0133,
+                  "longest_continuous_m": 20.0
+                },
+                "10_percent": {
+                  "distance_m": 20.0,
+                  "share": 0.0067,
+                  "longest_continuous_m": 20.0
+                }
+              },
+              "max_sustained_uphill_grade_percent": 5.64,
+              "sustained_window_m": 100.0,
+              "profile_sample_m": 20.0,
+              "smoothing_window_m": 60.0,
+              "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+            },
+            "slope_diagnostic_score": 94.71,
+            "shared_route_fraction_with_other_mode": 1.0
+          }
+        },
+        "mode_routes_may_differ": false
+      },
+      "5km": {
+        "representative": {
+          "status": "verified",
+          "route_id": "recovered-5km-uiryeong-taereung-exit-2-cached-ors",
+          "target_distance_km": 5,
+          "distance_km": 5.0309,
+          "distance_error_m": 30.9,
+          "duration_minutes": 60.4,
+          "ascent_m": 53.0,
+          "descent_m": 51.4,
+          "start": {
+            "id": "osm-node-3401296536",
+            "name": "태릉입구 2번 출구",
+            "latitude": 37.6183921,
+            "longitude": 127.0752142,
+            "access_type": "subway_entrance",
+            "station_access": {
+              "station_name": "태릉입구역",
+              "exit_number": "2",
+              "station_exit_coordinates": [
+                37.6183921,
+                127.0752142
+              ],
+              "route_verified": true,
+              "entrance_verified": false,
+              "estimated_walking_time_seconds": 0,
+              "walking_distance_m": 0,
+              "distance_method": "running start is the same OSM-mapped station-exit node",
+              "route_coordinates": [
+                [
+                  37.6183921,
+                  127.0752142
+                ]
+              ]
+            },
+            "entrance_verified": false
+          },
+          "destination": {
+            "id": "uiryeong",
+            "name": "의릉",
+            "latitude": 37.6044099656019,
+            "longitude": 127.058716558469,
+            "entrance_verified": false
+          },
+          "files": {
+            "json": "outputs/recommendations/uiryeong/running_focused/5km/recovered-5km-uiryeong-taereung-exit-2-cached-ors.json",
+            "geojson": "outputs/recommendations/uiryeong/running_focused/5km/recovered-5km-uiryeong-taereung-exit-2-cached-ors.geojson",
+            "html": "outputs/recommendations/uiryeong/running_focused/5km/recovered-5km-uiryeong-taereung-exit-2-cached-ors.html"
+          },
+          "notes": [
+            "ORS 캐시에서 태릉입구역 2번 출구를 출발지로 하는 전체 보행 경로를 재사용했습니다. 실제 거리 5.031km(목표 대비 +31m)입니다.",
+            "출발지는 OSM에 매핑된 태릉입구역 2번 출구 노드와 같습니다. 대학 부지 경계와의 중첩은 통행 금지를 의미하지 않으며, OSM 매칭 도로에 명시적인 보행 제한 태그는 확인되지 않았습니다. 현장 출입 상태는 별도 확인이 필요합니다."
+          ],
+          "osm_access_review": {
+            "matched_osm_route_share": 0.987,
+            "explicit_access_restricted_m": 0,
+            "area_advisory": [
+              "한국예술종합학교 석관동캠퍼스"
+            ]
+          },
+          "grade_metrics": {
+            "thresholds": {
+              "8_percent": {
+                "distance_m": 80.0,
+                "share": 0.0159,
+                "longest_continuous_m": 60.0
+              },
+              "10_percent": {
+                "distance_m": 80.0,
+                "share": 0.0159,
+                "longest_continuous_m": 60.0
+              }
+            },
+            "max_sustained_uphill_grade_percent": 10.2,
+            "sustained_window_m": 100.0,
+            "profile_sample_m": 20.0,
+            "smoothing_window_m": 60.0,
+            "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+          },
+          "slope_diagnostic_score": 78.72,
+          "shared_route_fraction_with_other_mode": 1.0,
+          "shared_route_fraction_between_modes": 1.0
+        },
+        "modes": {
+          "low": {
+            "status": "verified",
+            "route_id": "recovered-5km-uiryeong-taereung-exit-2-cached-ors",
+            "target_distance_km": 5,
+            "distance_km": 5.0309,
+            "distance_error_m": 30.9,
+            "duration_minutes": 60.4,
+            "ascent_m": 53.0,
+            "descent_m": 51.4,
+            "start": {
+              "id": "osm-node-3401296536",
+              "name": "태릉입구 2번 출구",
+              "latitude": 37.6183921,
+              "longitude": 127.0752142,
+              "access_type": "subway_entrance",
+              "station_access": {
+                "station_name": "태릉입구역",
+                "exit_number": "2",
+                "station_exit_coordinates": [
+                  37.6183921,
+                  127.0752142
+                ],
+                "route_verified": true,
+                "entrance_verified": false,
+                "estimated_walking_time_seconds": 0,
+                "walking_distance_m": 0,
+                "distance_method": "running start is the same OSM-mapped station-exit node",
+                "route_coordinates": [
+                  [
+                    37.6183921,
+                    127.0752142
+                  ]
+                ]
+              },
+              "entrance_verified": false
+            },
+            "destination": {
+              "id": "uiryeong",
+              "name": "의릉",
+              "latitude": 37.6044099656019,
+              "longitude": 127.058716558469,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/uiryeong/running_focused/5km/recovered-5km-uiryeong-taereung-exit-2-cached-ors.json",
+              "geojson": "outputs/recommendations/uiryeong/running_focused/5km/recovered-5km-uiryeong-taereung-exit-2-cached-ors.geojson",
+              "html": "outputs/recommendations/uiryeong/running_focused/5km/recovered-5km-uiryeong-taereung-exit-2-cached-ors.html"
+            },
+            "notes": [
+              "ORS 캐시에서 태릉입구역 2번 출구를 출발지로 하는 전체 보행 경로를 재사용했습니다. 실제 거리 5.031km(목표 대비 +31m)입니다.",
+              "출발지는 OSM에 매핑된 태릉입구역 2번 출구 노드와 같습니다. 대학 부지 경계와의 중첩은 통행 금지를 의미하지 않으며, OSM 매칭 도로에 명시적인 보행 제한 태그는 확인되지 않았습니다. 현장 출입 상태는 별도 확인이 필요합니다."
+            ],
+            "osm_access_review": {
+              "matched_osm_route_share": 0.987,
+              "explicit_access_restricted_m": 0,
+              "area_advisory": [
+                "한국예술종합학교 석관동캠퍼스"
+              ]
+            },
+            "grade_metrics": {
+              "thresholds": {
+                "8_percent": {
+                  "distance_m": 80.0,
+                  "share": 0.0159,
+                  "longest_continuous_m": 60.0
+                },
+                "10_percent": {
+                  "distance_m": 80.0,
+                  "share": 0.0159,
+                  "longest_continuous_m": 60.0
+                }
+              },
+              "max_sustained_uphill_grade_percent": 10.2,
+              "sustained_window_m": 100.0,
+              "profile_sample_m": 20.0,
+              "smoothing_window_m": 60.0,
+              "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+            },
+            "slope_diagnostic_score": 78.72,
+            "shared_route_fraction_with_other_mode": 1.0
+          },
+          "any": {
+            "status": "verified",
+            "route_id": "recovered-5km-uiryeong-taereung-exit-2-cached-ors",
+            "target_distance_km": 5,
+            "distance_km": 5.0309,
+            "distance_error_m": 30.9,
+            "duration_minutes": 60.4,
+            "ascent_m": 53.0,
+            "descent_m": 51.4,
+            "start": {
+              "id": "osm-node-3401296536",
+              "name": "태릉입구 2번 출구",
+              "latitude": 37.6183921,
+              "longitude": 127.0752142,
+              "access_type": "subway_entrance",
+              "station_access": {
+                "station_name": "태릉입구역",
+                "exit_number": "2",
+                "station_exit_coordinates": [
+                  37.6183921,
+                  127.0752142
+                ],
+                "route_verified": true,
+                "entrance_verified": false,
+                "estimated_walking_time_seconds": 0,
+                "walking_distance_m": 0,
+                "distance_method": "running start is the same OSM-mapped station-exit node",
+                "route_coordinates": [
+                  [
+                    37.6183921,
+                    127.0752142
+                  ]
+                ]
+              },
+              "entrance_verified": false
+            },
+            "destination": {
+              "id": "uiryeong",
+              "name": "의릉",
+              "latitude": 37.6044099656019,
+              "longitude": 127.058716558469,
+              "entrance_verified": false
+            },
+            "files": {
+              "json": "outputs/recommendations/uiryeong/running_focused/5km/recovered-5km-uiryeong-taereung-exit-2-cached-ors.json",
+              "geojson": "outputs/recommendations/uiryeong/running_focused/5km/recovered-5km-uiryeong-taereung-exit-2-cached-ors.geojson",
+              "html": "outputs/recommendations/uiryeong/running_focused/5km/recovered-5km-uiryeong-taereung-exit-2-cached-ors.html"
+            },
+            "notes": [
+              "ORS 캐시에서 태릉입구역 2번 출구를 출발지로 하는 전체 보행 경로를 재사용했습니다. 실제 거리 5.031km(목표 대비 +31m)입니다.",
+              "출발지는 OSM에 매핑된 태릉입구역 2번 출구 노드와 같습니다. 대학 부지 경계와의 중첩은 통행 금지를 의미하지 않으며, OSM 매칭 도로에 명시적인 보행 제한 태그는 확인되지 않았습니다. 현장 출입 상태는 별도 확인이 필요합니다."
+            ],
+            "osm_access_review": {
+              "matched_osm_route_share": 0.987,
+              "explicit_access_restricted_m": 0,
+              "area_advisory": [
+                "한국예술종합학교 석관동캠퍼스"
+              ]
+            },
+            "same_route_as": "low",
+            "grade_metrics": {
+              "thresholds": {
+                "8_percent": {
+                  "distance_m": 80.0,
+                  "share": 0.0159,
+                  "longest_continuous_m": 60.0
+                },
+                "10_percent": {
+                  "distance_m": 80.0,
+                  "share": 0.0159,
+                  "longest_continuous_m": 60.0
+                }
+              },
+              "max_sustained_uphill_grade_percent": 10.2,
+              "sustained_window_m": 100.0,
+              "profile_sample_m": 20.0,
+              "smoothing_window_m": 60.0,
+              "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+            },
+            "slope_diagnostic_score": 91.02,
+            "shared_route_fraction_with_other_mode": 1.0
+          }
+        },
+        "mode_routes_may_differ": false
+      },
+      "10km": {
+        "representative": {
+          "status": "no_route",
+          "target_distance_km": 10,
+          "distance_km": null,
+          "distance_error_m": null,
+          "closest_computed_km": 9.742,
+          "closest_computed_error_m": 258.0,
+          "files": {},
+          "notes": [
+            "새 매표소 좌표까지 전체 ORS 재계산한 기존 후보가 9.7366km와 9.7420km였습니다. 가장 가까운 것도 목표보다 258m 짧아 ±200m 대안 범위 밖입니다.",
+            "조건을 만족하는 출발지·경유 조합이 없어 경로를 표시하지 않습니다. 추가 후보 탐색이 필요합니다."
+          ],
+          "message": "경로 없음 · 표시할 경로가 없습니다. 가장 가까운 새 좌표 기준 ORS 경로는 9.742km(258m 짧음)로 ±200m 대안 범위를 벗어납니다."
+        },
+        "modes": {
+          "low": {
+            "status": "no_route",
+            "target_distance_km": 10,
+            "distance_km": null,
+            "distance_error_m": null,
+            "closest_computed_km": 9.742,
+            "closest_computed_error_m": 258.0,
+            "files": {},
+            "notes": [
+              "새 매표소 좌표까지 전체 ORS 재계산한 기존 후보가 9.7366km와 9.7420km였습니다. 가장 가까운 것도 목표보다 258m 짧아 ±200m 대안 범위 밖입니다.",
+              "조건을 만족하는 출발지·경유 조합이 없어 경로를 표시하지 않습니다. 추가 후보 탐색이 필요합니다."
+            ],
+            "message": "경로 없음 · 표시할 경로가 없습니다. 가장 가까운 새 좌표 기준 ORS 경로는 9.742km(258m 짧음)로 ±200m 대안 범위를 벗어납니다."
+          },
+          "any": {
+            "status": "no_route",
+            "target_distance_km": 10,
+            "distance_km": null,
+            "distance_error_m": null,
+            "closest_computed_km": 9.742,
+            "closest_computed_error_m": 258.0,
+            "files": {},
+            "notes": [
+              "새 매표소 좌표까지 전체 ORS 재계산한 기존 후보가 9.7366km와 9.7420km였습니다. 가장 가까운 것도 목표보다 258m 짧아 ±200m 대안 범위 밖입니다.",
+              "조건을 만족하는 출발지·경유 조합이 없어 경로를 표시하지 않습니다. 추가 후보 탐색이 필요합니다."
+            ],
+            "message": "경로 없음 · 표시할 경로가 없습니다. 가장 가까운 새 좌표 기준 ORS 경로는 9.742km(258m 짧음)로 ±200m 대안 범위를 벗어납니다."
+          }
+        },
+        "mode_routes_may_differ": false
+      }
+    }
+  },
+  "recovery_audit": {
+    "new_coordinate_full_route_ors_calls": 5,
+    "cached_exact_destination_routes_reused": 2,
+    "note": "4 calls produced the selected Jeongneung 5/10 km and Uiryeong 5 km candidates; one extra Uiryeong 10 km candidate was rejected for distance. No calls were made for the preserved 3 km routes."
+  },
+  "offline_rerank": {
+    "model": "offline_saved_candidate_rerank_v1",
+    "generated_at": "2026-10-31T09:17:51.454102+00:00",
+    "backup_file": "outputs/app/backups/representative_routes_before_offline_rerank_20261031-181739.json",
+    "ors_requests": 0,
+    "osm_network_fetch_or_rebuild": 0,
+    "note": "Only saved route JSON geometry/elevation and saved OSM metrics were used. New picks without a prior verified status are marked needs_verification."
+  }
+}

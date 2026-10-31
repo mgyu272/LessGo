@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Less GO · 역사 유적지 러닝 코스</title>
+  <style>
+    :root { font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif; color: #172033; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f4f7fb; }
+    header { padding: 13px 22px; background: #fff; box-shadow: 0 2px 12px #17203314; }
+    h1 { margin: 0; font-size: 18px; }
+    .sub { margin-top: 4px; color: #697386; font-size: 12px; }
+    .route-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .summary-item { min-width: 130px; padding: 8px 11px; border: 1px solid #e7ebf1; border-radius: 10px; background: #fff; }
+    .label { color: #737e90; font-size: 11px; }
+    .value { margin-top: 3px; font-size: 14px; font-weight: 700; }
+    .value select { border: 0; background: transparent; color: #172033; font: inherit; font-weight: 700; }
+    #lowRouteInfo { color: #1262ca; }
+    #anyRouteInfo { color: #c55a0b; }
+    #overlapInfo { color: #465268; }
+    #startRun { padding: 10px 14px; border: 0; border-radius: 9px; background: #9aa3b2; color: #fff; font-weight: 700; }
+    #startRun:disabled { cursor: not-allowed; opacity: .78; }
+    #map { width: 100%; height: calc(100vh - 146px); min-height: 420px; background: #e9edf2; }
+    #message { display: none; position: fixed; z-index: 10; left: 50%; top: 145px; transform: translateX(-50%); max-width: min(620px, calc(100vw - 32px)); padding: 14px 18px; border: 1px solid #f1c8a5; border-radius: 10px; background: #fff8f1; color: #763d13; box-shadow: 0 4px 18px #17203324; line-height: 1.5; }
+    #validationNotice { margin: 7px 0 0; color: #76521b; font-size: 12px; }
+    #validationNotice summary { cursor: pointer; width: fit-content; color: #76521b; }
+    #validationDetails { max-width: 760px; margin: 5px 0 0 18px; color: #596273; line-height: 1.5; white-space: pre-line; }
+    .map-label { padding: 5px 9px; border: 1px solid #dce3ee; border-radius: 8px; background: #fff; color: #172033; box-shadow: 0 2px 8px #1720332b; white-space: nowrap; font-size: 12px; font-weight: 700; }
+    @media (max-width: 680px) { header { padding: 12px; } #map { height: calc(100vh - 250px); } .route-summary { align-items: stretch; } .summary-item { flex: 1; min-width: 135px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="pageTitle">Less GO · 역사 유적지 러닝 코스</h1>
+    <div class="sub">파랑은 경사 싫어요, 주황은 경사 괜찮아요 코스입니다. 점선은 역 출구→러닝 시작 접근 구간, 실선은 목표 러닝 경로입니다. 실제 출입구 개방 여부는 현장 확인이 필요합니다.</div>
+    <div class="route-summary" aria-label="거리, 경사, 추천 기준 설정">
+      <div class="summary-item"><div class="label">목적지</div><div class="value"><select id="destinationSelect" aria-label="역사 유적지">__DESTINATION_OPTIONS__</select></div></div>
+      <div class="summary-item"><div class="label">목표 거리</div><div class="value"><select id="distanceSelect" aria-label="목표 거리"><option value="3">3km</option><option value="5">5km</option><option value="10">10km</option></select></div></div>
+      <div class="summary-item"><div class="label">지도 경로</div><div class="value"><select id="modeSelect" aria-label="경사 선호"><option value="compare">두 모드 비교</option><option value="low">경사 싫어요</option><option value="any">경사 괜찮아요</option></select></div></div>
+      <div class="summary-item"><div class="label">추천 기준</div><div class="value"><select id="strategySelect" aria-label="추천 기준"><option value="baseline">기존 후보 기준</option><option value="running_focused">러닝 친화 도로 중심</option><option value="access_focused">역 접근성 선호</option></select></div></div>
+      <div class="summary-item"><div class="label">파랑 · 경사 싫어요</div><div class="value" id="lowRouteInfo">불러오는 중</div></div>
+      <div class="summary-item"><div class="label">주황 · 경사 괜찮아요</div><div class="value" id="anyRouteInfo">불러오는 중</div></div>
+      <div class="summary-item"><div class="label">두 1순위 경로 중복</div><div class="value" id="overlapInfo">불러오는 중</div></div>
+      <button id="startRun" type="button" disabled aria-disabled="true" title="GPS 러닝 기록은 추후 구현 예정입니다">러닝 시작 · 준비 중</button>
+    </div>
+    <details id="validationNotice" hidden>
+      <summary>ⓘ 일부 접근·출입 정보 확인 필요 · 세부사항</summary>
+      <div id="validationDetails"></div>
+    </details>
+  </header>
+  <div id="map" role="application" aria-label="ORS 경로가 표시된 카카오 지도"></div>
+  <div id="message" role="status"></div>
+  <script>
+    const kakaoJsKey = __KAKAO_JS_KEY_JSON__;
+    const params = new URLSearchParams(location.search);
+    const allowedDistances = new Set(["3", "5", "10"]);
+    const destinationSelect = document.getElementById("destinationSelect");
+    const distanceSelect = document.getElementById("distanceSelect");
+    const modeSelect = document.getElementById("modeSelect");
+    const strategySelect = document.getElementById("strategySelect");
+    const allowedDestinations = new Set(Array.from(destinationSelect.options, option => option.value));
+    const requestedDestination = params.get("destination") || __DESTINATION_ID_JSON__;
+    destinationSelect.value = allowedDestinations.has(requestedDestination) ? requestedDestination : destinationSelect.options[0]?.value;
+    distanceSelect.value = allowedDistances.has(params.get("distance")) ? params.get("distance") : "3";
+    modeSelect.value = ["low", "any", "compare"].includes(params.get("slope")) ? params.get("slope") : "compare";
+    const requestedStrategy = params.get("strategy");
+    strategySelect.value = ["baseline", "running_focused", "access_focused"].includes(requestedStrategy)
+      ? requestedStrategy : "running_focused";
+    const message = document.getElementById("message");
+    const validationNotice = document.getElementById("validationNotice");
+    const validationDetails = document.getElementById("validationDetails");
+    let map = null;
+    let overlays = [];
+    function showMessage(text) {
+      message.textContent = text;
+      message.style.display = "block";
+    }
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[char]));
+    }
+    async function loadModeRoute(distance, preference, strategy) {
+      const destination = encodeURIComponent(destinationSelect.value);
+      const query = `destination=${destination}&distance=${distance}&slope=${preference}&strategy=${strategy}&_=${Date.now()}`;
+      const [routeResponse, geoResponse] = await Promise.all([
+        fetch(`/route.json?${query}`, { cache: "no-store" }),
+        fetch(`/route.geojson?${query}`, { cache: "no-store" })
+      ]);
+      if (!routeResponse.ok || !geoResponse.ok) {
+        const detail = !routeResponse.ok ? await routeResponse.text() : await geoResponse.text();
+        throw new Error(detail || "추천 결과 파일이 없습니다.");
+      }
+      const route = await routeResponse.json();
+      const collection = await geoResponse.json();
+      const feature = collection.features?.[0];
+      if (!feature?.geometry?.coordinates || feature.properties?.route_id !== route.route_id) {
+        throw new Error(`${distance}km ${preference} JSON과 GeoJSON 경로 ID가 서로 다릅니다.`);
+      }
+      return { route, feature };
+    }
+    function addLabeledMarker(position, label, color) {
+      const marker = new kakao.maps.Marker({ map, position, title: label });
+      const overlay = new kakao.maps.CustomOverlay({
+        map,
+        position,
+        content: `<div class="map-label" style="border-left:4px solid ${color}">${escapeHtml(label)}</div>`,
+        yAnchor: 1.9,
+        zIndex: 5
+      });
+      overlays.push(marker, overlay);
+    }
+    function clearMap() {
+      for (const overlay of overlays) overlay.setMap(null);
+      overlays = [];
+      map = null;
+      document.getElementById("map").replaceChildren();
+    }
+    function routeInfo(data) {
+      if (!data) return "경로 없음";
+      const route = data.route;
+      const statusLabels = { verified: "검증 완료", alternative: "대안 경로", needs_verification: "검증 필요", no_route: "경로 없음" };
+      const statusText = statusLabels[route.validation_status] || "상태 미기록";
+      const ascent = route.summary.ascent_m == null ? "고도 없음" : `상승 ${Number(route.summary.ascent_m).toFixed(0)}m`;
+      const fitness = route.running_analysis?.running_fitness;
+      const terrain = route.final_grade_review?.terrain_metrics;
+      const fitnessScore = fitness?.score ?? terrain?.running_fitness_score;
+      const fitnessShare = fitness?.running_friendly_share_of_route ?? terrain?.running_friendly_share;
+      const fitnessSourceNote = !fitness && terrain?.score_source === "saved_osm_network_metrics_proxy" ? " (저장 OSM 지표 추정)" : "";
+      const fitnessText = fitness || fitnessScore != null ? ` · 러닝 ${fitnessScore ?? "자료 부족"}점${fitnessSourceNote} · 친화 ${fitnessShare == null ? "정보 부족" : `${(fitnessShare * 100).toFixed(0)}%`}` : "";
+      const slopeScores = route.final_grade_review?.slope_preference_diagnostic_scores || {};
+      const slopeScore = slopeScores[route.requested_slope_preference || route.running_analysis?.slope_preference];
+      const slopeScoreText = slopeScore == null ? "" : ` · 경사 지표 ${Number(slopeScore).toFixed(0)}점`;
+      const access = route.start.station_access;
+      const accessDuration = access ? (Number(access.estimated_walking_time_seconds) >= 60
+        ? `${Math.round(Number(access.estimated_walking_time_seconds) / 60)}분`
+        : `${Number(access.estimated_walking_time_seconds)}초`) : "";
+      const accessText = access?.route_verified && access.walking_distance_m != null
+        ? `${access.station_name} ${access.exit_number}번 출구 → 러닝 시작 ${access.walking_distance_m}m · 약 ${accessDuration} 도보 · `
+        : access?.straight_line_distance_m != null
+          ? `가까운 역 ${access.station_name} ${access.exit_number}번 출구 · 직선 약 ${Math.round(Number(access.straight_line_distance_m))}m · 도보 연결 미확인 · `
+          : "";
+      const error = route.distance_error_m == null ? "" : ` · 오차 ${Math.round(Number(route.distance_error_m))}m`;
+      const grades = route.running_analysis?.grade_metrics?.uphill_grade_metrics?.thresholds;
+      const gradeText = grades ? ` · 8%↑ ${(Number(grades["8_percent"]?.share || 0) * 100).toFixed(1)}% · 10%↑ ${(Number(grades["10_percent"]?.share || 0) * 100).toFixed(1)}%` : "";
+      return `${statusText} · ${accessText}${route.start.name} · 러닝 ${Number(route.summary.distance_km).toFixed(3)}km${error} · ${ascent}${gradeText}${slopeScoreText}${fitnessText}`;
+    }
+    function updateValidationNotice(routes) {
+      const available = routes.filter(Boolean).map(({route}) => route);
+      const needsReview = available.filter(route =>
+        route.validation_status === "needs_verification" ||
+        route.start.station_access?.route_verified === false
+      );
+      if (!needsReview.length) {
+        validationNotice.hidden = true;
+        validationDetails.textContent = "";
+        return;
+      }
+      const notes = [...new Set(needsReview.flatMap(route => [
+        ...(route.validation_notes || []),
+        ...(route.start.station_access?.route_verified === false ? ["역 출구에서 러닝 시작점까지의 보행 경로는 검증되지 않았습니다."] : []),
+        ...(route.destination?.entrance_verified === false && route.validation_status === "needs_verification" ? ["목적지 매표소·출입구의 현장 위치와 개방 여부는 확인되지 않았습니다."] : [])
+      ]).filter(Boolean))];
+      validationNotice.hidden = false;
+      validationDetails.textContent = notes.length ? notes.join("\n") : "OSM/ORS에 기록된 경로입니다. 현장 출입 상태는 확인이 필요합니다.";
+    }
+    async function renderRoutes() {
+      message.style.display = "none";
+      const distance = Number(distanceSelect.value);
+      const selectedMode = modeSelect.value;
+      const destinationOption = destinationSelect.selectedOptions[0];
+      document.getElementById("pageTitle").textContent = `Less GO · ${destinationOption.textContent} 거리·경사별 러닝 코스`;
+      document.title = `Less GO · ${destinationOption.textContent} 러닝 코스`;
+      const baselineOption = strategySelect.querySelector('option[value="baseline"]');
+      baselineOption.disabled = destinationSelect.value !== "simujang";
+      if (baselineOption.disabled && strategySelect.value === "baseline") strategySelect.value = "access_focused";
+      let strategy = strategySelect.value;
+      const lowInfo = document.getElementById("lowRouteInfo");
+      const anyInfo = document.getElementById("anyRouteInfo");
+      const overlapInfo = document.getElementById("overlapInfo");
+      lowInfo.textContent = anyInfo.textContent = overlapInfo.textContent = "불러오는 중";
+      try {
+        let low, any;
+        try {
+          const results = await Promise.allSettled([
+            loadModeRoute(distance, "low", strategy),
+            loadModeRoute(distance, "any", strategy)
+          ]);
+          low = results[0].status === "fulfilled" ? results[0].value : null;
+          any = results[1].status === "fulfilled" ? results[1].value : null;
+        } catch (error) {
+          if (strategy !== "access_focused") throw error;
+          strategy = "running_focused";
+          strategySelect.value = strategy;
+          const results = await Promise.allSettled([
+            loadModeRoute(distance, "low", strategy),
+            loadModeRoute(distance, "any", strategy)
+          ]);
+          low = results[0].status === "fulfilled" ? results[0].value : null;
+          any = results[1].status === "fulfilled" ? results[1].value : null;
+        }
+        lowInfo.textContent = routeInfo(low) || "경로 없음";
+        anyInfo.textContent = routeInfo(any) || "경로 없음";
+        const availableModes = [low, any].filter(Boolean);
+        updateValidationNotice(availableModes);
+        if (!availableModes.length) {
+          overlapInfo.textContent = "비교 불가";
+          clearMap();
+          showMessage("경로 없음 · 요청한 거리 조건을 충족하는 경로가 없습니다.");
+          return;
+        }
+        const overlap = low && any ? low.route.cross_preference_comparison?.shared_fraction_of_shorter_mapped_route : null;
+        overlapInfo.textContent = overlap == null ? "비교 불가" : `${(Number(overlap) * 100).toFixed(1)}%`;
+        clearMap();
+        const modes = [
+          { key: "low", data: low, color: "#1677ff", label: "경사 싫어요" },
+          { key: "any", data: any, color: "#ef7d22", label: "경사 괜찮아요" }
+        ].filter(mode => mode.data && (selectedMode === "compare" || mode.key === selectedMode));
+        const firstCoordinates = modes[0].data.feature.geometry.coordinates;
+        map = new kakao.maps.Map(document.getElementById("map"), {
+          center: new kakao.maps.LatLng(firstCoordinates[0][1], firstCoordinates[0][0]), level: 5
+        });
+        map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
+        const bounds = new kakao.maps.LatLngBounds();
+        for (const mode of modes) {
+          const route = mode.data.route;
+          const coordinates = mode.data.feature.geometry.coordinates;
+          const access = route.start.station_access;
+          if (access?.route_verified && Array.isArray(access.route_coordinates) && access.route_coordinates.length > 1) {
+            const approachPath = access.route_coordinates.map(([latitude, longitude]) => {
+              const point = new kakao.maps.LatLng(latitude, longitude);
+              bounds.extend(point);
+              return point;
+            });
+            const approachLine = new kakao.maps.Polyline({
+              map, path: approachPath, strokeWeight: 5, strokeColor: mode.color,
+              strokeOpacity: 0.8, strokeStyle: "shortdash", zIndex: 2
+            });
+            overlays.push(approachLine);
+          }
+          if (access?.station_exit_coordinates) {
+            const exit = access.station_exit_coordinates;
+            const exitPosition = new kakao.maps.LatLng(exit[0], exit[1]);
+            bounds.extend(exitPosition);
+            addLabeledMarker(exitPosition, `${access.station_name} ${access.exit_number}번 출구`, "#14804a");
+          }
+          const path = coordinates.map(([longitude, latitude]) => {
+            const point = new kakao.maps.LatLng(latitude, longitude);
+            bounds.extend(point);
+            return point;
+          });
+          const polyline = new kakao.maps.Polyline({
+            map, path, strokeWeight: 6, strokeColor: mode.color, strokeOpacity: 0.9,
+            strokeStyle: "solid", zIndex: mode.key === "any" ? 4 : 3
+          });
+          overlays.push(polyline);
+          const start = new kakao.maps.LatLng(route.start.latitude, route.start.longitude);
+          bounds.extend(start);
+          addLabeledMarker(start, `${mode.label} 러닝 시작 · ${route.start.name}`, mode.color);
+        }
+        const end = modes[0].data.route.destination;
+        const endPosition = new kakao.maps.LatLng(end.latitude, end.longitude);
+        bounds.extend(endPosition);
+        addLabeledMarker(endPosition, `도착 · ${end.name}`, "#e94b4b");
+        map.setBounds(bounds, 48, 48, 48, 48);
+        const next = new URL(location.href);
+        next.searchParams.set("destination", destinationSelect.value);
+        next.searchParams.set("distance", String(distance));
+        next.searchParams.set("slope", selectedMode);
+        next.searchParams.set("strategy", strategy);
+        history.replaceState(null, "", next);
+      } catch (error) {
+        const isNoRoute = String(error.message || "").includes("경로 없음");
+        lowInfo.textContent = anyInfo.textContent = isNoRoute ? "경로 없음" : "결과 없음";
+        overlapInfo.textContent = "비교 불가";
+        updateValidationNotice([]);
+        showMessage(error.message);
+      }
+    }
+    destinationSelect.addEventListener("change", () => {
+      strategySelect.value = "running_focused";
+      renderRoutes();
+    });
+    distanceSelect.addEventListener("change", renderRoutes);
+    modeSelect.addEventListener("change", renderRoutes);
+    strategySelect.addEventListener("change", renderRoutes);
+    function start() {
+      if (!kakaoJsKey) {
+        showMessage("카카오 JavaScript 키가 설정되지 않았습니다. 프로젝트 .env의 KAKAO_JS_KEY를 확인하세요.");
+        return;
+      }
+      renderRoutes();
+    }
+    if (!kakaoJsKey) {
+      start();
+    } else {
+      const sdk = document.createElement("script");
+      sdk.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${encodeURIComponent(kakaoJsKey)}&autoload=false`;
+      sdk.onload = () => kakao.maps.load(start);
+      sdk.onerror = () => showMessage("카카오 지도 SDK를 불러오지 못했습니다. 키와 등록 도메인(http://localhost:8000)을 확인하세요.");
+      document.head.appendChild(sdk);
+    }
+  </script>
+</body>
+</html>

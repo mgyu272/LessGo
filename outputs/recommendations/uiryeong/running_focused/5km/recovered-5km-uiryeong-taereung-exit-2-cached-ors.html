@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_376c56ff1978dbef4ba89709d52efa5a {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_376c56ff1978dbef4ba89709d52efa5a" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_376c56ff1978dbef4ba89709d52efa5a = L.map(
+                "map_376c56ff1978dbef4ba89709d52efa5a",
+                {
+                    center: [37.611401032800956, 127.0669653792345],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 16,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_376c56ff1978dbef4ba89709d52efa5a);
+
+            
+
+        
+    
+            var tile_layer_9cfce8059267c563ea383c1b49d89f34 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri \u0026mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_9cfce8059267c563ea383c1b49d89f34.addTo(map_376c56ff1978dbef4ba89709d52efa5a);
+        
+    
+            var tile_layer_5676371262d80eef93a124600c033b53 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri \u0026mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            var tile_layer_e863a5af63d9b177ffb78c6c889e7371 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri \u0026mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+
+        function geo_json_1370d308fdc2df96fe59ed00098e8c6e_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_1370d308fdc2df96fe59ed00098e8c6e = L.geoJson(null, {
+                onEachFeature: geo_json_1370d308fdc2df96fe59ed00098e8c6e_onEachFeature,
+            
+            ...{
+}
+        });
+
+        function geo_json_1370d308fdc2df96fe59ed00098e8c6e_add (data) {
+            geo_json_1370d308fdc2df96fe59ed00098e8c6e
+                .addData(data);
+        }
+            geo_json_1370d308fdc2df96fe59ed00098e8c6e_add({"geometry": {"coordinates": [[127.075245, 37.618398, 23.0], [127.075306, 37.618209, 21.0], [127.075428, 37.617818, 21.0], [127.075422, 37.617782, 21.0], [127.075379, 37.617731, 21.0], [127.075258, 37.617686, 21.0], [127.074869, 37.617557, 21.0], [127.074118, 37.617306, 17.0], [127.073629, 37.617137, 17.0], [127.073043, 37.616939, 21.0], [127.073043, 37.616807, 21.0], [127.073016, 37.616674, 21.0], [127.072994, 37.616575, 15.0], [127.072916, 37.616567, 15.0], [127.072873, 37.616565, 15.0], [127.072843, 37.61657, 14.0], [127.072328, 37.616376, 10.0], [127.072405, 37.616218, 10.0], [127.072497, 37.616185, 11.6], [127.072676, 37.616201, 12.5], [127.072786, 37.616142, 15.0], [127.072809, 37.615837, 15.0], [127.072789, 37.615707, 21.0], [127.072745, 37.615465, 21.0], [127.072735, 37.615418, 21.0], [127.07271, 37.615304, 21.0], [127.072704, 37.615279, 21.0], [127.072496, 37.615104, 21.6], [127.072189, 37.614948, 21.6], [127.072083, 37.614931, 20.0], [127.072047, 37.614895, 20.0], [127.071979, 37.614499, 20.2], [127.071969, 37.61428, 20.1], [127.072032, 37.613654, 20.6], [127.072059, 37.613049, 19.8], [127.072099, 37.612619, 19.1], [127.072112, 37.611886, 20.3], [127.072157, 37.611379, 20.6], [127.072197, 37.610187, 16.5], [127.072294, 37.608311, 16.6], [127.072328, 37.608071, 15.0], [127.071961, 37.608048, 15.0], [127.071204, 37.608023, 15.0], [127.071128, 37.60803, 15.0], [127.071092, 37.608083, 15.0], [127.070994, 37.607966, 15.0], [127.070967, 37.608604, 15.0], [127.070995, 37.608677, 15.0], [127.07095, 37.608805, 15.0], [127.070873, 37.610956, 20.0], [127.070892, 37.612566, 23.7], [127.070873, 37.610956, 20.0], [127.07095, 37.608805, 15.0], [127.070995, 37.608677, 15.0], [127.070967, 37.608604, 15.0], [127.070994, 37.607966, 15.0], [127.071092, 37.608083, 15.0], [127.071128, 37.60803, 15.0], [127.071204, 37.608023, 15.0], [127.071961, 37.608048, 15.0], [127.072328, 37.608071, 15.0], [127.072294, 37.608311, 16.6], [127.072197, 37.610187, 16.5], [127.072157, 37.611379, 20.6], [127.072197, 37.610187, 16.5], [127.072294, 37.608311, 16.6], [127.072328, 37.608071, 15.0], [127.071961, 37.608048, 15.0], [127.071204, 37.608023, 15.0], [127.071128, 37.60803, 15.0], [127.071092, 37.608083, 15.0], [127.070994, 37.607966, 15.0], [127.070956, 37.607913, 15.0], [127.070978, 37.607519, 15.0], [127.071036, 37.607516, 15.2], [127.071022, 37.607875, 15.9], [127.071038, 37.607923, 15.9], [127.07107, 37.607909, 15.9], [127.071103, 37.607477, 15.4], [127.070266, 37.607447, 18.0], [127.070267, 37.607336, 18.0], [127.069431, 37.607314, 18.0], [127.067709, 37.607274, 20.0], [127.067672, 37.607238, 21.2], [127.067567, 37.607199, 21.0], [127.067505, 37.607133, 20.9], [127.067475, 37.606964, 21.2], [127.067499, 37.606746, 21.5], [127.067485, 37.606613, 21.6], [127.067431, 37.606496, 21.7], [127.067338, 37.606404, 23.0], [127.067276, 37.606381, 23.0], [127.067151, 37.606335, 23.0], [127.067073, 37.606362, 23.0], [127.066874, 37.606288, 23.0], [127.066621, 37.606192, 24.0], [127.066491, 37.606143, 24.0], [127.066576, 37.605967, 24.0], [127.066414, 37.605924, 23.8], [127.066319, 37.605863, 23.8], [127.066275, 37.605808, 23.0], [127.066156, 37.6055, 23.0], [127.066022, 37.605512, 22.7], [127.065562, 37.605489, 22.0], [127.065429, 37.605482, 22.0], [127.065288, 37.605562, 22.0], [127.065019, 37.605782, 22.0], [127.064837, 37.605768, 21.3], [127.064725, 37.60572, 21.0], [127.064206, 37.605477, 21.2], [127.063999, 37.605349, 22.0], [127.063915, 37.605298, 23.2], [127.063676, 37.605203, 23.0], [127.06352, 37.605193, 22.8], [127.063082, 37.605202, 26.0], [127.062999, 37.605204, 26.0], [127.062847, 37.605168, 26.0], [127.062631, 37.605116, 26.0], [127.06204, 37.605024, 25.0], [127.062034, 37.605134, 25.0], [127.061385, 37.605009, 22.6], [127.061006, 37.604966, 21.0], [127.060517, 37.604831, 23.3], [127.060146, 37.604698, 24.0], [127.060197, 37.604597, 24.0], [127.059416, 37.60424, 26.0], [127.058864, 37.604497, 24.0], [127.058755, 37.604437, 24.0], [127.058717, 37.604409, 24.6]], "type": "LineString"}, "properties": {"ascent_field": "properties.ascent", "ascent_m": 53.0, "descent_field": "properties.descent", "descent_m": 51.4, "destination": {"entrance_verified": false, "id": "uiryeong", "name": "\uc758\ub989"}, "distance_m": 5030.9, "duration_seconds": 3622.2, "elevation_is_estimate": false, "elevation_source": "ors_response", "profile": "foot-walking", "route_id": "recovered-5km-uiryeong-taereung-exit-2-cached-ors", "running_analysis": null, "start": {"entrance_verified": false, "id": "osm-node-3401296536", "name": "\ud0dc\ub989\uc785\uad6c 2\ubc88 \ucd9c\uad6c", "station_access": {"distance_method": "running start is the same OSM-mapped station-exit node", "entrance_verified": false, "estimated_walking_time_seconds": 0, "exit_number": "2", "route_coordinates": [[37.6192012, 127.0750206]], "route_verified": true, "station_exit_coordinates": [37.6192012, 127.0750206], "station_name": "\ud0dc\ub989\uc785\uad6c\uc5ed", "walking_distance_m": 0}}, "waypoints": [{"entrance_verified": false, "id": "osm-way-1097751892-node-19415", "name": "OSM footway \ub124\ud2b8\uc6cc\ud06c \uc9c0\uc810"}, {"entrance_verified": false, "id": "osm-way-925881935-node-18997", "name": "OSM footway \ub124\ud2b8\uc6cc\ud06c \uc9c0\uc810"}]}, "type": "Feature"});
+        geo_json_1370d308fdc2df96fe59ed00098e8c6e.setStyle(function(feature) {return feature.properties.style;});
+
+        
+    
+            geo_json_1370d308fdc2df96fe59ed00098e8c6e.bindTooltip(
+                `<div>
+                     실제 ORS 보행 경로
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_1370d308fdc2df96fe59ed00098e8c6e.addTo(map_376c56ff1978dbef4ba89709d52efa5a);
+        
+    
+            var marker_abf503b3951dc58637165ba3970fb00b = L.marker(
+                [37.6183921, 127.0752142],
+                {
+}
+            ).addTo(map_376c56ff1978dbef4ba89709d52efa5a);
+        
+    
+            var icon_2a4f99f6f5afc5793e0b300f55f8e432 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "play",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_87c66cbda5acbfce2dde670bbee79ee6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_110ac14ce229b7fcd2159928b32e48f1 = $(`<div id="html_110ac14ce229b7fcd2159928b32e48f1" style="width: 100.0%; height: 100.0%;">출발: 태릉입구 2번 출구<br>출입구와 보행 가능 여부 추가 확인 필요</div>`)[0];
+                popup_87c66cbda5acbfce2dde670bbee79ee6.setContent(html_110ac14ce229b7fcd2159928b32e48f1);
+            
+        
+
+        marker_abf503b3951dc58637165ba3970fb00b.bindPopup(popup_87c66cbda5acbfce2dde670bbee79ee6)
+        ;
+
+        
+    
+    
+            marker_abf503b3951dc58637165ba3970fb00b.bindTooltip(
+                `<div>
+                     태릉입구 2번 출구
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_abf503b3951dc58637165ba3970fb00b.setIcon(icon_2a4f99f6f5afc5793e0b300f55f8e432);
+            
+    
+            var marker_ff7c8d7cf6a61a1bdaad4a8f16ab0459 = L.marker(
+                [37.6125658, 127.0708917],
+                {
+}
+            ).addTo(map_376c56ff1978dbef4ba89709d52efa5a);
+        
+    
+            var icon_75551438350457ea373305fcd26ae5be = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_95470b4550c9dfe3299bf0d0c4be63e8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d34b8a0bbed107dfd82275caaf409ef1 = $(`<div id="html_d34b8a0bbed107dfd82275caaf409ef1" style="width: 100.0%; height: 100.0%;">경유: OSM footway 네트워크 지점<br>정확한 진입 위치와 보행 가능 여부 추가 확인 필요</div>`)[0];
+                popup_95470b4550c9dfe3299bf0d0c4be63e8.setContent(html_d34b8a0bbed107dfd82275caaf409ef1);
+            
+        
+
+        marker_ff7c8d7cf6a61a1bdaad4a8f16ab0459.bindPopup(popup_95470b4550c9dfe3299bf0d0c4be63e8)
+        ;
+
+        
+    
+    
+            marker_ff7c8d7cf6a61a1bdaad4a8f16ab0459.bindTooltip(
+                `<div>
+                     경유 1: OSM footway 네트워크 지점
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ff7c8d7cf6a61a1bdaad4a8f16ab0459.setIcon(icon_75551438350457ea373305fcd26ae5be);
+            
+    
+            var marker_219132ad109e020b0b94f3c57d2d9a46 = L.marker(
+                [37.6113785, 127.0721567],
+                {
+}
+            ).addTo(map_376c56ff1978dbef4ba89709d52efa5a);
+        
+    
+            var icon_90d693f3f2ed1731c8808e6ca1ccef03 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b5ff4644d1daa264b5603de8ac702d76 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9aff9d2f5fad9936b8b09e0f0c6d1afa = $(`<div id="html_9aff9d2f5fad9936b8b09e0f0c6d1afa" style="width: 100.0%; height: 100.0%;">경유: OSM footway 네트워크 지점<br>정확한 진입 위치와 보행 가능 여부 추가 확인 필요</div>`)[0];
+                popup_b5ff4644d1daa264b5603de8ac702d76.setContent(html_9aff9d2f5fad9936b8b09e0f0c6d1afa);
+            
+        
+
+        marker_219132ad109e020b0b94f3c57d2d9a46.bindPopup(popup_b5ff4644d1daa264b5603de8ac702d76)
+        ;
+
+        
+    
+    
+            marker_219132ad109e020b0b94f3c57d2d9a46.bindTooltip(
+                `<div>
+                     경유 2: OSM footway 네트워크 지점
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_219132ad109e020b0b94f3c57d2d9a46.setIcon(icon_90d693f3f2ed1731c8808e6ca1ccef03);
+            
+    
+            var marker_d25ab0467cfc15b59076fa4e771aed4e = L.marker(
+                [37.6044099656019, 127.058716558469],
+                {
+}
+            ).addTo(map_376c56ff1978dbef4ba89709d52efa5a);
+        
+    
+            var icon_41bd6081a9e29703008d0543857fa3d4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "flag",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4c184edda3e54525973ac312c01080a5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ff51763b8a4a8c138d38199b4c02f3e3 = $(`<div id="html_ff51763b8a4a8c138d38199b4c02f3e3" style="width: 100.0%; height: 100.0%;">도착: 의릉<br>출입구와 보행 가능 여부 추가 확인 필요</div>`)[0];
+                popup_4c184edda3e54525973ac312c01080a5.setContent(html_ff51763b8a4a8c138d38199b4c02f3e3);
+            
+        
+
+        marker_d25ab0467cfc15b59076fa4e771aed4e.bindPopup(popup_4c184edda3e54525973ac312c01080a5)
+        ;
+
+        
+    
+    
+            marker_d25ab0467cfc15b59076fa4e771aed4e.bindTooltip(
+                `<div>
+                     의릉
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_d25ab0467cfc15b59076fa4e771aed4e.setIcon(icon_41bd6081a9e29703008d0543857fa3d4);
+            
+    
+            map_376c56ff1978dbef4ba89709d52efa5a.fitBounds(
+                [[37.618398, 127.075245], [37.618209, 127.075306], [37.617818, 127.075428], [37.617782, 127.075422], [37.617731, 127.075379], [37.617686, 127.075258], [37.617557, 127.074869], [37.617306, 127.074118], [37.617137, 127.073629], [37.616939, 127.073043], [37.616807, 127.073043], [37.616674, 127.073016], [37.616575, 127.072994], [37.616567, 127.072916], [37.616565, 127.072873], [37.61657, 127.072843], [37.616376, 127.072328], [37.616218, 127.072405], [37.616185, 127.072497], [37.616201, 127.072676], [37.616142, 127.072786], [37.615837, 127.072809], [37.615707, 127.072789], [37.615465, 127.072745], [37.615418, 127.072735], [37.615304, 127.07271], [37.615279, 127.072704], [37.615104, 127.072496], [37.614948, 127.072189], [37.614931, 127.072083], [37.614895, 127.072047], [37.614499, 127.071979], [37.61428, 127.071969], [37.613654, 127.072032], [37.613049, 127.072059], [37.612619, 127.072099], [37.611886, 127.072112], [37.611379, 127.072157], [37.610187, 127.072197], [37.608311, 127.072294], [37.608071, 127.072328], [37.608048, 127.071961], [37.608023, 127.071204], [37.60803, 127.071128], [37.608083, 127.071092], [37.607966, 127.070994], [37.608604, 127.070967], [37.608677, 127.070995], [37.608805, 127.07095], [37.610956, 127.070873], [37.612566, 127.070892], [37.610956, 127.070873], [37.608805, 127.07095], [37.608677, 127.070995], [37.608604, 127.070967], [37.607966, 127.070994], [37.608083, 127.071092], [37.60803, 127.071128], [37.608023, 127.071204], [37.608048, 127.071961], [37.608071, 127.072328], [37.608311, 127.072294], [37.610187, 127.072197], [37.611379, 127.072157], [37.610187, 127.072197], [37.608311, 127.072294], [37.608071, 127.072328], [37.608048, 127.071961], [37.608023, 127.071204], [37.60803, 127.071128], [37.608083, 127.071092], [37.607966, 127.070994], [37.607913, 127.070956], [37.607519, 127.070978], [37.607516, 127.071036], [37.607875, 127.071022], [37.607923, 127.071038], [37.607909, 127.07107], [37.607477, 127.071103], [37.607447, 127.070266], [37.607336, 127.070267], [37.607314, 127.069431], [37.607274, 127.067709], [37.607238, 127.067672], [37.607199, 127.067567], [37.607133, 127.067505], [37.606964, 127.067475], [37.606746, 127.067499], [37.606613, 127.067485], [37.606496, 127.067431], [37.606404, 127.067338], [37.606381, 127.067276], [37.606335, 127.067151], [37.606362, 127.067073], [37.606288, 127.066874], [37.606192, 127.066621], [37.606143, 127.066491], [37.605967, 127.066576], [37.605924, 127.066414], [37.605863, 127.066319], [37.605808, 127.066275], [37.6055, 127.066156], [37.605512, 127.066022], [37.605489, 127.065562], [37.605482, 127.065429], [37.605562, 127.065288], [37.605782, 127.065019], [37.605768, 127.064837], [37.60572, 127.064725], [37.605477, 127.064206], [37.605349, 127.063999], [37.605298, 127.063915], [37.605203, 127.063676], [37.605193, 127.06352], [37.605202, 127.063082], [37.605204, 127.062999], [37.605168, 127.062847], [37.605116, 127.062631], [37.605024, 127.06204], [37.605134, 127.062034], [37.605009, 127.061385], [37.604966, 127.061006], [37.604831, 127.060517], [37.604698, 127.060146], [37.604597, 127.060197], [37.60424, 127.059416], [37.604497, 127.058864], [37.604437, 127.058755], [37.604409, 127.058717]],
+                {"maxZoom": 16}
+            );
+        
+    
+            var layer_control_57d68b092cf3302fa4074efbf508c922_layers = {
+                base_layers : {
+                    "Esri \uc0c1\uc138 \ub3c4\ub85c\u00b7\uc9c0\ud615" : tile_layer_9cfce8059267c563ea383c1b49d89f34,
+                    "Esri \ub3c4\ub85c \uc9c0\ub3c4" : tile_layer_5676371262d80eef93a124600c033b53,
+                    "Esri \ud56d\uacf5\uc0ac\uc9c4" : tile_layer_e863a5af63d9b177ffb78c6c889e7371,
+                },
+                overlays :  {
+                    "ORS foot-walking \uacbd\ub85c" : geo_json_1370d308fdc2df96fe59ed00098e8c6e,
+                },
+            };
+            let layer_control_57d68b092cf3302fa4074efbf508c922 = L.control.layers(
+                layer_control_57d68b092cf3302fa4074efbf508c922_layers.base_layers,
+                layer_control_57d68b092cf3302fa4074efbf508c922_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_376c56ff1978dbef4ba89709d52efa5a);
+
+        
+</script>
+</html>

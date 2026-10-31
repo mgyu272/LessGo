@@ -1,0 +1,4 @@
+id,name,latitude,longitude,category,coordinate_source,coordinate_confidence,entrance_verified,notes
+naksan-park,낙산공원,37.580877,127.007451,park,ORS Pelias geocoder: 낙산공원 서울,1.0,false,서울시 소개 공원; 지오코더 좌표이며 공원 진입점과 실제 보행 가능 여부 확인 필요
+hyehwa-exit-4,혜화역 4번 출구,37.583569,127.001350,transit,ORS Pelias geocoder: 혜화역 4번 출구 서울,1.0,false,교통 접근 지점; 실제 출구 위치 확인 필요
+sungshin-exit-1,성신여대입구역 1번 출구,37.592652,127.016873,transit,ORS Pelias geocoder: 성신여대입구역 1번 출구 서울,1.0,false,교통 접근 지점; 실제 출구 위치 확인 필요

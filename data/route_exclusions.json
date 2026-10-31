@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "description": "Use polygon boundaries as hard restrictions only for configured historic sites; school and park boundaries are advisories unless the matched OSM way has an explicit access restriction.",
+  "excluded_area_tags": {
+    "amenity": ["university", "college", "school"],
+    "landuse": ["education"],
+    "leisure": ["park"],
+    "historic": ["palace"]
+  },
+  "hard_excluded_area_tags": {
+    "historic": ["palace"]
+  },
+  "advisory_area_tags": {
+    "amenity": ["university", "college", "school"],
+    "landuse": ["education"],
+    "leisure": ["park"]
+  },
+  "hard_excluded_name_terms": ["창경궁", "종묘"],
+  "advisory_name_terms": ["대학교", "대학", "고등학교", "중학교", "초등학교"],
+  "excluded_name_terms": [
+    "창경궁",
+    "종묘",
+    "한양여자대학교",
+    "한양여대"
+  ],
+  "blocked_access_values": ["no", "private", "customers", "permit"],
+  "blocked_foot_values": ["no", "private", "use_sidepath"],
+  "route_intersection_sample_spacing_m": 10,
+  "note": "School and park boundaries are advisories, not route blockers. Hard rejection requires a mapped palace boundary or an OSM way matched to the route with an explicit no/private/customers/permit or foot=no/private/use_sidepath restriction. Missing access tags are not proof of physical public access."
+}

@@ -1,0 +1,4025 @@
+{
+  "route_id": "5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any",
+  "profile": "foot-walking",
+  "stops": [
+    {
+      "id": "osm-running-node-2135148779",
+      "name": "OSM footway 보행로 접근 지점",
+      "latitude": 37.5704002,
+      "longitude": 127.0174831,
+      "access_type": "running_network_access",
+      "accessibility_score": 0.78,
+      "running_fitness_access_score": 88.0,
+      "running_way_class": "footway",
+      "osm_element": "way/64986818",
+      "coordinate_source": "OpenStreetMap mapped running/walking way vertex",
+      "candidate_origin": "automatic_running_network_vertex",
+      "coordinate_verified": true,
+      "entrance_verified": false,
+      "notes": "태그가 있는 OSM 보행 네트워크의 실제 정점. 접근성, 현장 노면 및 실제 러닝 적합성은 미검증이며 ORS 연결을 확인해야 함."
+    },
+    {
+      "id": "osm-way-156922849-node-5521",
+      "name": "OSM footway 네트워크 지점",
+      "latitude": 37.5695929,
+      "longitude": 127.0062693,
+      "candidate_type": "foot_network_footway",
+      "running_way_class": "footway",
+      "running_way_score": 91.0,
+      "osm_element": "way/156922849",
+      "coordinate_source": "OpenStreetMap footway geometry via Overpass API",
+      "coordinate_verified": true,
+      "entrance_verified": false,
+      "notes": "실제 OSM 보행 네트워크 정점; 보행 가능 여부는 ORS 경로 응답으로 확인"
+    },
+    {
+      "id": "simujang",
+      "name": "심우장",
+      "latitude": 37.5936268,
+      "longitude": 126.9916662,
+      "entrance_verified": false,
+      "coordinate_source": "project default; entrance not field-verified"
+    }
+  ],
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        127.017483,
+        37.5704,
+        28.6
+      ],
+      [
+        127.017208,
+        37.570271,
+        28.5
+      ],
+      [
+        127.016758,
+        37.570091,
+        29.0
+      ],
+      [
+        127.016095,
+        37.569914,
+        30.8
+      ],
+      [
+        127.015781,
+        37.569875,
+        31.2
+      ],
+      [
+        127.015337,
+        37.56985,
+        32.0
+      ],
+      [
+        127.013743,
+        37.569847,
+        32.5
+      ],
+      [
+        127.010859,
+        37.569812,
+        31.0
+      ],
+      [
+        127.010522,
+        37.569812,
+        29.0
+      ],
+      [
+        127.010017,
+        37.56981,
+        29.0
+      ],
+      [
+        127.010018,
+        37.569709,
+        29.0
+      ],
+      [
+        127.009925,
+        37.569712,
+        36.0
+      ],
+      [
+        127.009452,
+        37.569729,
+        36.0
+      ],
+      [
+        127.009321,
+        37.569733,
+        36.0
+      ],
+      [
+        127.009164,
+        37.569728,
+        38.0
+      ],
+      [
+        127.008425,
+        37.569692,
+        38.0
+      ],
+      [
+        127.006269,
+        37.569593,
+        34.0
+      ],
+      [
+        127.008425,
+        37.569692,
+        38.0
+      ],
+      [
+        127.009164,
+        37.569728,
+        38.0
+      ],
+      [
+        127.009321,
+        37.569733,
+        36.0
+      ],
+      [
+        127.009316,
+        37.569781,
+        36.0
+      ],
+      [
+        127.009329,
+        37.56987,
+        36.0
+      ],
+      [
+        127.00936,
+        37.569871,
+        36.0
+      ],
+      [
+        127.009361,
+        37.569885,
+        36.0
+      ],
+      [
+        127.009364,
+        37.569949,
+        36.0
+      ],
+      [
+        127.009357,
+        37.569972,
+        36.0
+      ],
+      [
+        127.009357,
+        37.569983,
+        36.0
+      ],
+      [
+        127.009305,
+        37.570033,
+        31.9
+      ],
+      [
+        127.009298,
+        37.570102,
+        31.5
+      ],
+      [
+        127.009279,
+        37.570128,
+        30.0
+      ],
+      [
+        127.009221,
+        37.570205,
+        34.7
+      ],
+      [
+        127.008998,
+        37.570318,
+        35.5
+      ],
+      [
+        127.008974,
+        37.570523,
+        36.1
+      ],
+      [
+        127.009022,
+        37.570626,
+        36.7
+      ],
+      [
+        127.009023,
+        37.570807,
+        40.0
+      ],
+      [
+        127.009023,
+        37.570879,
+        36.6
+      ],
+      [
+        127.008923,
+        37.570948,
+        35.0
+      ],
+      [
+        127.008857,
+        37.57098,
+        35.0
+      ],
+      [
+        127.008887,
+        37.571069,
+        35.0
+      ],
+      [
+        127.008896,
+        37.571104,
+        35.0
+      ],
+      [
+        127.008905,
+        37.571128,
+        35.0
+      ],
+      [
+        127.008808,
+        37.571143,
+        35.0
+      ],
+      [
+        127.008789,
+        37.571169,
+        35.0
+      ],
+      [
+        127.008733,
+        37.571271,
+        35.0
+      ],
+      [
+        127.008686,
+        37.571355,
+        35.0
+      ],
+      [
+        127.008737,
+        37.571377,
+        35.0
+      ],
+      [
+        127.008753,
+        37.571414,
+        35.0
+      ],
+      [
+        127.008865,
+        37.571473,
+        35.0
+      ],
+      [
+        127.009,
+        37.571543,
+        35.0
+      ],
+      [
+        127.009042,
+        37.571565,
+        35.0
+      ],
+      [
+        127.009063,
+        37.571594,
+        35.0
+      ],
+      [
+        127.008967,
+        37.571589,
+        34.6
+      ],
+      [
+        127.008761,
+        37.571789,
+        34.0
+      ],
+      [
+        127.008688,
+        37.571902,
+        34.0
+      ],
+      [
+        127.008436,
+        37.572185,
+        34.0
+      ],
+      [
+        127.008214,
+        37.572433,
+        32.1
+      ],
+      [
+        127.008122,
+        37.572492,
+        31.0
+      ],
+      [
+        127.008054,
+        37.572612,
+        31.0
+      ],
+      [
+        127.007943,
+        37.572737,
+        31.0
+      ],
+      [
+        127.007894,
+        37.572745,
+        31.0
+      ],
+      [
+        127.007769,
+        37.572862,
+        31.0
+      ],
+      [
+        127.007649,
+        37.572974,
+        31.0
+      ],
+      [
+        127.007617,
+        37.573014,
+        31.0
+      ],
+      [
+        127.007555,
+        37.573091,
+        31.0
+      ],
+      [
+        127.007525,
+        37.573129,
+        31.0
+      ],
+      [
+        127.007449,
+        37.573207,
+        30.0
+      ],
+      [
+        127.007372,
+        37.573296,
+        30.0
+      ],
+      [
+        127.007328,
+        37.573346,
+        33.0
+      ],
+      [
+        127.007238,
+        37.57345,
+        33.0
+      ],
+      [
+        127.007102,
+        37.573607,
+        33.0
+      ],
+      [
+        127.006825,
+        37.57389,
+        33.0
+      ],
+      [
+        127.006791,
+        37.573921,
+        33.0
+      ],
+      [
+        127.006783,
+        37.573929,
+        33.0
+      ],
+      [
+        127.006653,
+        37.574073,
+        30.0
+      ],
+      [
+        127.006519,
+        37.574214,
+        34.0
+      ],
+      [
+        127.006494,
+        37.57424,
+        34.0
+      ],
+      [
+        127.006451,
+        37.574216,
+        34.0
+      ],
+      [
+        127.006366,
+        37.574168,
+        34.0
+      ],
+      [
+        127.006065,
+        37.574517,
+        34.0
+      ],
+      [
+        127.005924,
+        37.574681,
+        34.0
+      ],
+      [
+        127.005713,
+        37.574903,
+        31.0
+      ],
+      [
+        127.00551,
+        37.575099,
+        33.0
+      ],
+      [
+        127.005222,
+        37.575377,
+        33.0
+      ],
+      [
+        127.00498,
+        37.57561,
+        35.0
+      ],
+      [
+        127.004823,
+        37.575709,
+        35.0
+      ],
+      [
+        127.004934,
+        37.575839,
+        33.0
+      ],
+      [
+        127.004959,
+        37.57597,
+        32.0
+      ],
+      [
+        127.004988,
+        37.576189,
+        32.0
+      ],
+      [
+        127.005018,
+        37.576418,
+        31.6
+      ],
+      [
+        127.005007,
+        37.576552,
+        31.5
+      ],
+      [
+        127.004976,
+        37.576636,
+        31.6
+      ],
+      [
+        127.0048,
+        37.576837,
+        32.0
+      ],
+      [
+        127.004604,
+        37.576839,
+        32.0
+      ],
+      [
+        127.004586,
+        37.577035,
+        32.0
+      ],
+      [
+        127.004527,
+        37.578033,
+        32.0
+      ],
+      [
+        127.004502,
+        37.578385,
+        36.0
+      ],
+      [
+        127.004483,
+        37.57883,
+        36.0
+      ],
+      [
+        127.00447,
+        37.579126,
+        36.0
+      ],
+      [
+        127.004464,
+        37.579691,
+        38.0
+      ],
+      [
+        127.004452,
+        37.579953,
+        38.0
+      ],
+      [
+        127.00443,
+        37.580483,
+        37.0
+      ],
+      [
+        127.004361,
+        37.580549,
+        37.0
+      ],
+      [
+        127.004312,
+        37.580743,
+        37.0
+      ],
+      [
+        127.004268,
+        37.580917,
+        35.0
+      ],
+      [
+        127.004227,
+        37.58119,
+        35.0
+      ],
+      [
+        127.004153,
+        37.581458,
+        38.5
+      ],
+      [
+        127.004112,
+        37.581829,
+        38.6
+      ],
+      [
+        127.004212,
+        37.582664,
+        43.0
+      ],
+      [
+        127.003952,
+        37.582709,
+        39.6
+      ],
+      [
+        127.003896,
+        37.582769,
+        38.0
+      ],
+      [
+        127.003855,
+        37.582849,
+        38.0
+      ],
+      [
+        127.003749,
+        37.583052,
+        38.0
+      ],
+      [
+        127.003706,
+        37.583138,
+        39.3
+      ],
+      [
+        127.003546,
+        37.583349,
+        42.0
+      ],
+      [
+        127.003523,
+        37.583371,
+        42.0
+      ],
+      [
+        127.00336,
+        37.583462,
+        40.3
+      ],
+      [
+        127.003164,
+        37.583518,
+        40.0
+      ],
+      [
+        127.002597,
+        37.583587,
+        39.0
+      ],
+      [
+        127.002694,
+        37.583699,
+        39.0
+      ],
+      [
+        127.002481,
+        37.583852,
+        38.0
+      ],
+      [
+        127.001578,
+        37.583835,
+        40.0
+      ],
+      [
+        127.001601,
+        37.58375,
+        40.0
+      ],
+      [
+        127.001321,
+        37.583721,
+        40.0
+      ],
+      [
+        127.001185,
+        37.584026,
+        40.0
+      ],
+      [
+        127.001092,
+        37.584262,
+        41.0
+      ],
+      [
+        127.001067,
+        37.584416,
+        41.0
+      ],
+      [
+        127.000847,
+        37.585023,
+        40.0
+      ],
+      [
+        127.000968,
+        37.585168,
+        40.0
+      ],
+      [
+        127.000857,
+        37.585224,
+        40.0
+      ],
+      [
+        127.000775,
+        37.585262,
+        44.0
+      ],
+      [
+        127.000647,
+        37.585108,
+        44.0
+      ],
+      [
+        127.000552,
+        37.585155,
+        45.1
+      ],
+      [
+        127.000509,
+        37.585216,
+        45.0
+      ],
+      [
+        127.000423,
+        37.585865,
+        45.0
+      ],
+      [
+        127.000446,
+        37.58603,
+        45.2
+      ],
+      [
+        127.000344,
+        37.586191,
+        45.3
+      ],
+      [
+        127.000216,
+        37.586348,
+        47.0
+      ],
+      [
+        126.999904,
+        37.586202,
+        45.0
+      ],
+      [
+        126.999822,
+        37.586183,
+        45.0
+      ],
+      [
+        126.999704,
+        37.586179,
+        45.0
+      ],
+      [
+        126.999576,
+        37.586204,
+        45.0
+      ],
+      [
+        126.999361,
+        37.58628,
+        45.0
+      ],
+      [
+        126.99924,
+        37.586326,
+        46.1
+      ],
+      [
+        126.999038,
+        37.586372,
+        46.5
+      ],
+      [
+        126.998966,
+        37.586372,
+        48.0
+      ],
+      [
+        126.99894,
+        37.586421,
+        49.7
+      ],
+      [
+        126.998716,
+        37.586641,
+        50.0
+      ],
+      [
+        126.998522,
+        37.586747,
+        50.2
+      ],
+      [
+        126.998366,
+        37.586876,
+        50.3
+      ],
+      [
+        126.998172,
+        37.587082,
+        50.3
+      ],
+      [
+        126.998033,
+        37.587177,
+        52.0
+      ],
+      [
+        126.997874,
+        37.587325,
+        52.0
+      ],
+      [
+        126.997623,
+        37.587243,
+        52.0
+      ],
+      [
+        126.997606,
+        37.587396,
+        52.0
+      ],
+      [
+        126.997626,
+        37.587729,
+        55.0
+      ],
+      [
+        126.996684,
+        37.587789,
+        52.0
+      ],
+      [
+        126.996563,
+        37.587801,
+        54.3
+      ],
+      [
+        126.996292,
+        37.587973,
+        54.7
+      ],
+      [
+        126.99595,
+        37.588138,
+        55.2
+      ],
+      [
+        126.995718,
+        37.588268,
+        59.0
+      ],
+      [
+        126.995445,
+        37.588428,
+        64.0
+      ],
+      [
+        126.995356,
+        37.588528,
+        66.0
+      ],
+      [
+        126.995297,
+        37.588621,
+        66.0
+      ],
+      [
+        126.995125,
+        37.588777,
+        66.0
+      ],
+      [
+        126.994782,
+        37.58906,
+        75.0
+      ],
+      [
+        126.994646,
+        37.589177,
+        63.0
+      ],
+      [
+        126.994492,
+        37.589286,
+        70.8
+      ],
+      [
+        126.994123,
+        37.589423,
+        72.0
+      ],
+      [
+        126.994023,
+        37.58949,
+        71.5
+      ],
+      [
+        126.993743,
+        37.589726,
+        71.0
+      ],
+      [
+        126.993704,
+        37.589782,
+        75.0
+      ],
+      [
+        126.993761,
+        37.589857,
+        75.4
+      ],
+      [
+        126.993773,
+        37.589925,
+        75.3
+      ],
+      [
+        126.993765,
+        37.590051,
+        75.4
+      ],
+      [
+        126.993726,
+        37.590147,
+        75.5
+      ],
+      [
+        126.99369,
+        37.590189,
+        76.0
+      ],
+      [
+        126.993707,
+        37.590221,
+        76.0
+      ],
+      [
+        126.993706,
+        37.590282,
+        81.9
+      ],
+      [
+        126.993518,
+        37.590582,
+        84.1
+      ],
+      [
+        126.993433,
+        37.590756,
+        85.0
+      ],
+      [
+        126.993333,
+        37.591065,
+        101.0
+      ],
+      [
+        126.99312,
+        37.591106,
+        101.0
+      ],
+      [
+        126.99307,
+        37.59133,
+        104.4
+      ],
+      [
+        126.993105,
+        37.591478,
+        103.8
+      ],
+      [
+        126.992953,
+        37.591578,
+        103.5
+      ],
+      [
+        126.992841,
+        37.591844,
+        105.7
+      ],
+      [
+        126.992747,
+        37.591903,
+        115.0
+      ],
+      [
+        126.992706,
+        37.591918,
+        115.0
+      ],
+      [
+        126.992714,
+        37.591978,
+        115.0
+      ],
+      [
+        126.992679,
+        37.592063,
+        115.0
+      ],
+      [
+        126.992592,
+        37.592222,
+        115.0
+      ],
+      [
+        126.992453,
+        37.592334,
+        123.2
+      ],
+      [
+        126.992213,
+        37.592386,
+        125.0
+      ],
+      [
+        126.992157,
+        37.592415,
+        130.0
+      ],
+      [
+        126.992464,
+        37.592537,
+        124.0
+      ],
+      [
+        126.992455,
+        37.592607,
+        124.0
+      ],
+      [
+        126.992333,
+        37.592754,
+        124.0
+      ],
+      [
+        126.992317,
+        37.592917,
+        124.0
+      ],
+      [
+        126.992333,
+        37.59298,
+        124.0
+      ],
+      [
+        126.992323,
+        37.593038,
+        124.0
+      ],
+      [
+        126.992343,
+        37.593091,
+        124.0
+      ],
+      [
+        126.992361,
+        37.593144,
+        120.4
+      ],
+      [
+        126.992306,
+        37.593229,
+        120.8
+      ],
+      [
+        126.992087,
+        37.593289,
+        121.3
+      ],
+      [
+        126.992086,
+        37.593345,
+        120.7
+      ],
+      [
+        126.992041,
+        37.593398,
+        120.1
+      ],
+      [
+        126.992032,
+        37.593449,
+        119.5
+      ],
+      [
+        126.99199,
+        37.593475,
+        119.0
+      ],
+      [
+        126.99184,
+        37.593479,
+        114.0
+      ],
+      [
+        126.991678,
+        37.59349,
+        114.0
+      ],
+      [
+        126.991611,
+        37.593498,
+        126.0
+      ],
+      [
+        126.991603,
+        37.593556,
+        126.0
+      ],
+      [
+        126.991581,
+        37.593597,
+        126.0
+      ]
+    ]
+  },
+  "summary": {
+    "distance_m": 4997.2,
+    "distance_km": 4.997199999999999,
+    "duration_seconds": 3598.0,
+    "duration_minutes": 59.96666666666667,
+    "ascent_m": 181.4,
+    "descent_m": 83.9,
+    "elevation_source": "ors_response",
+    "elevation_is_estimate": false,
+    "elevation_noise_filter_m": null,
+    "ascent_field": "properties.ascent",
+    "descent_field": "properties.descent"
+  },
+  "steps": [
+    {
+      "instruction": "Head southwest",
+      "distance_m": 596.2,
+      "duration_seconds": 429.2,
+      "type": 11,
+      "way_points": [
+        0,
+        7
+      ]
+    },
+    {
+      "instruction": "Keep left",
+      "distance_m": 74.3,
+      "duration_seconds": 53.5,
+      "type": 12,
+      "way_points": [
+        7,
+        9
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 11.3,
+      "duration_seconds": 8.1,
+      "type": 0,
+      "way_points": [
+        9,
+        10
+      ]
+    },
+    {
+      "instruction": "Turn right",
+      "distance_m": 330.9,
+      "duration_seconds": 238.3,
+      "type": 1,
+      "way_points": [
+        10,
+        16
+      ]
+    },
+    {
+      "instruction": "Arrive at your destination, on the right",
+      "distance_m": 0.0,
+      "duration_seconds": 0.0,
+      "type": 10,
+      "way_points": [
+        16,
+        16
+      ]
+    },
+    {
+      "instruction": "Head east",
+      "distance_m": 269.4,
+      "duration_seconds": 194.0,
+      "type": 11,
+      "way_points": [
+        16,
+        19
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 17.9,
+      "duration_seconds": 12.9,
+      "type": 0,
+      "way_points": [
+        19,
+        22
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 12.6,
+      "duration_seconds": 9.1,
+      "type": 0,
+      "way_points": [
+        22,
+        26
+      ]
+    },
+    {
+      "instruction": "Turn slight left",
+      "distance_m": 133.3,
+      "duration_seconds": 96.0,
+      "type": 4,
+      "way_points": [
+        26,
+        37
+      ]
+    },
+    {
+      "instruction": "Turn right",
+      "distance_m": 17.0,
+      "duration_seconds": 12.3,
+      "type": 1,
+      "way_points": [
+        37,
+        40
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 8.7,
+      "duration_seconds": 6.2,
+      "type": 0,
+      "way_points": [
+        40,
+        41
+      ]
+    },
+    {
+      "instruction": "Turn right",
+      "distance_m": 69.7,
+      "duration_seconds": 50.2,
+      "type": 1,
+      "way_points": [
+        41,
+        50
+      ]
+    },
+    {
+      "instruction": "Turn sharp left",
+      "distance_m": 170.1,
+      "duration_seconds": 122.5,
+      "type": 2,
+      "way_points": [
+        50,
+        59
+      ]
+    },
+    {
+      "instruction": "Turn slight right",
+      "distance_m": 33.4,
+      "duration_seconds": 24.0,
+      "type": 5,
+      "way_points": [
+        59,
+        61
+      ]
+    },
+    {
+      "instruction": "Continue straight",
+      "distance_m": 130.9,
+      "duration_seconds": 94.2,
+      "type": 6,
+      "way_points": [
+        61,
+        72
+      ]
+    },
+    {
+      "instruction": "Keep right",
+      "distance_m": 42.9,
+      "duration_seconds": 30.9,
+      "type": 13,
+      "way_points": [
+        72,
+        75
+      ]
+    },
+    {
+      "instruction": "Turn left onto 율곡로27길",
+      "distance_m": 13.9,
+      "duration_seconds": 10.0,
+      "type": 0,
+      "way_points": [
+        75,
+        77
+      ]
+    },
+    {
+      "instruction": "Turn right onto 율곡로, 50",
+      "distance_m": 219.5,
+      "duration_seconds": 158.0,
+      "type": 1,
+      "way_points": [
+        77,
+        84
+      ]
+    },
+    {
+      "instruction": "Turn right onto 율곡로17길",
+      "distance_m": 134.1,
+      "duration_seconds": 96.5,
+      "type": 1,
+      "way_points": [
+        84,
+        91
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 17.3,
+      "duration_seconds": 12.4,
+      "type": 0,
+      "way_points": [
+        91,
+        92
+      ]
+    },
+    {
+      "instruction": "Turn right onto 이화장길",
+      "distance_m": 346.6,
+      "duration_seconds": 249.5,
+      "type": 1,
+      "way_points": [
+        92,
+        99
+      ]
+    },
+    {
+      "instruction": "Continue straight onto 동숭길",
+      "distance_m": 59.0,
+      "duration_seconds": 42.5,
+      "type": 6,
+      "way_points": [
+        99,
+        100
+      ]
+    },
+    {
+      "instruction": "Turn slight left onto 동숭길",
+      "distance_m": 247.0,
+      "duration_seconds": 177.8,
+      "type": 4,
+      "way_points": [
+        100,
+        107
+      ]
+    },
+    {
+      "instruction": "Turn left onto 동숭길",
+      "distance_m": 193.1,
+      "duration_seconds": 139.0,
+      "type": 0,
+      "way_points": [
+        107,
+        117
+      ]
+    },
+    {
+      "instruction": "Turn sharp right onto 대학로14길",
+      "distance_m": 15.1,
+      "duration_seconds": 10.9,
+      "type": 3,
+      "way_points": [
+        117,
+        118
+      ]
+    },
+    {
+      "instruction": "Turn left onto 대학로14길",
+      "distance_m": 25.4,
+      "duration_seconds": 18.3,
+      "type": 0,
+      "way_points": [
+        118,
+        119
+      ]
+    },
+    {
+      "instruction": "Turn slight left onto 대학로14길",
+      "distance_m": 79.6,
+      "duration_seconds": 57.3,
+      "type": 4,
+      "way_points": [
+        119,
+        120
+      ]
+    },
+    {
+      "instruction": "Turn left onto 대학로, 41",
+      "distance_m": 9.6,
+      "duration_seconds": 6.9,
+      "type": 0,
+      "way_points": [
+        120,
+        121
+      ]
+    },
+    {
+      "instruction": "Turn right onto 대명길",
+      "distance_m": 24.9,
+      "duration_seconds": 17.9,
+      "type": 1,
+      "way_points": [
+        121,
+        122
+      ]
+    },
+    {
+      "instruction": "Turn right onto 창경궁로34길",
+      "distance_m": 80.6,
+      "duration_seconds": 58.1,
+      "type": 1,
+      "way_points": [
+        122,
+        125
+      ]
+    },
+    {
+      "instruction": "Keep right onto 창경궁로34길",
+      "distance_m": 70.3,
+      "duration_seconds": 50.6,
+      "type": 13,
+      "way_points": [
+        125,
+        126
+      ]
+    },
+    {
+      "instruction": "Turn right onto 창경궁로",
+      "distance_m": 19.3,
+      "duration_seconds": 13.9,
+      "type": 1,
+      "way_points": [
+        126,
+        127
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 19.9,
+      "duration_seconds": 14.3,
+      "type": 0,
+      "way_points": [
+        127,
+        129
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 20.5,
+      "duration_seconds": 14.7,
+      "type": 0,
+      "way_points": [
+        129,
+        130
+      ]
+    },
+    {
+      "instruction": "Turn right",
+      "distance_m": 149.4,
+      "duration_seconds": 107.6,
+      "type": 1,
+      "way_points": [
+        130,
+        136
+      ]
+    },
+    {
+      "instruction": "Turn left onto 혜화로3길",
+      "distance_m": 118.9,
+      "duration_seconds": 85.6,
+      "type": 0,
+      "way_points": [
+        136,
+        144
+      ]
+    },
+    {
+      "instruction": "Turn right onto 혜화로3가길",
+      "distance_m": 168.2,
+      "duration_seconds": 121.1,
+      "type": 1,
+      "way_points": [
+        144,
+        152
+      ]
+    },
+    {
+      "instruction": "Turn sharp right onto 성균관로14길",
+      "distance_m": 54.1,
+      "duration_seconds": 38.9,
+      "type": 3,
+      "way_points": [
+        152,
+        154
+      ]
+    },
+    {
+      "instruction": "Turn left onto 명륜길",
+      "distance_m": 433.1,
+      "duration_seconds": 311.8,
+      "type": 0,
+      "way_points": [
+        154,
+        170
+      ]
+    },
+    {
+      "instruction": "Turn right onto 명륜5길",
+      "distance_m": 48.3,
+      "duration_seconds": 34.8,
+      "type": 1,
+      "way_points": [
+        170,
+        175
+      ]
+    },
+    {
+      "instruction": "Turn right onto 명륜5길",
+      "distance_m": 3.9,
+      "duration_seconds": 2.8,
+      "type": 1,
+      "way_points": [
+        175,
+        176
+      ]
+    },
+    {
+      "instruction": "Keep left onto 명륜5길",
+      "distance_m": 100.2,
+      "duration_seconds": 72.2,
+      "type": 12,
+      "way_points": [
+        176,
+        180
+      ]
+    },
+    {
+      "instruction": "Turn left onto 명륜9길",
+      "distance_m": 19.3,
+      "duration_seconds": 13.9,
+      "type": 0,
+      "way_points": [
+        180,
+        181
+      ]
+    },
+    {
+      "instruction": "Turn right onto 명륜9길",
+      "distance_m": 101.2,
+      "duration_seconds": 72.8,
+      "type": 1,
+      "way_points": [
+        181,
+        186
+      ]
+    },
+    {
+      "instruction": "Turn slight left onto 와룡공원길(한양도성 순성길)",
+      "distance_m": 3.9,
+      "duration_seconds": 2.8,
+      "type": 4,
+      "way_points": [
+        186,
+        187
+      ]
+    },
+    {
+      "instruction": "Turn right onto 북정마을 암문",
+      "distance_m": 81.3,
+      "duration_seconds": 58.5,
+      "type": 1,
+      "way_points": [
+        187,
+        193
+      ]
+    },
+    {
+      "instruction": "Turn sharp right onto 성북로23길",
+      "distance_m": 30.3,
+      "duration_seconds": 21.8,
+      "type": 3,
+      "way_points": [
+        193,
+        194
+      ]
+    },
+    {
+      "instruction": "Turn left onto 성북로23길",
+      "distance_m": 139.4,
+      "duration_seconds": 100.4,
+      "type": 0,
+      "way_points": [
+        194,
+        208
+      ]
+    },
+    {
+      "instruction": "Continue straight onto 성북로29길",
+      "distance_m": 20.3,
+      "duration_seconds": 14.6,
+      "type": 6,
+      "way_points": [
+        208,
+        210
+      ]
+    },
+    {
+      "instruction": "Turn right onto 성북로29길",
+      "distance_m": 11.5,
+      "duration_seconds": 8.3,
+      "type": 1,
+      "way_points": [
+        210,
+        212
+      ]
+    },
+    {
+      "instruction": "Arrive at 성북로29길, on the right",
+      "distance_m": 0.0,
+      "duration_seconds": 0.0,
+      "type": 10,
+      "way_points": [
+        212,
+        212
+      ]
+    }
+  ],
+  "steepness": {
+    "values": [
+      [
+        0,
+        145,
+        0
+      ],
+      [
+        145,
+        164,
+        1
+      ],
+      [
+        164,
+        179,
+        3
+      ],
+      [
+        179,
+        185,
+        4
+      ],
+      [
+        185,
+        192,
+        5
+      ],
+      [
+        192,
+        212,
+        2
+      ]
+    ],
+    "summary": [
+      {
+        "value": 0.0,
+        "distance": 3764.4,
+        "amount": 75.33
+      },
+      {
+        "value": 1.0,
+        "distance": 483.2,
+        "amount": 9.67
+      },
+      {
+        "value": 3.0,
+        "distance": 273.8,
+        "amount": 5.48
+      },
+      {
+        "value": 2.0,
+        "distance": 234.6,
+        "amount": 4.69
+      },
+      {
+        "value": 4.0,
+        "distance": 137.6,
+        "amount": 2.75
+      },
+      {
+        "value": 5.0,
+        "distance": 103.7,
+        "amount": 2.07
+      }
+    ]
+  },
+  "elevation_available": true,
+  "data_notes": [
+    "장소 좌표는 사용자 제공 또는 지오코더 결과이며 실제 출입구와 일치하는지 검증되지 않았습니다.",
+    "장소 내부 보행 가능 여부는 확인하지 않았으며 목적지 좌표까지의 경로입니다.",
+    "고도와 경사도는 ORS 응답에 제공된 경우에만 기록했습니다.",
+    "상승·하강고도는 ORS 응답 필드에서 추출했습니다."
+  ],
+  "ors": {
+    "source": "OpenRouteService Directions API",
+    "profile": "foot-walking"
+  },
+  "ors_request_attempts": 1,
+  "running_analysis": {
+    "target_distance_km": 5.0,
+    "distance_error_m": 2.8,
+    "distance_score": 100.0,
+    "slope_preference": "any",
+    "score_components": {
+      "distance": 100.0,
+      "crossings": 0.0,
+      "continuity": 2.42,
+      "slope": 56.2,
+      "walkability": 42.89,
+      "running_fitness": 43.08,
+      "access": 78.0
+    },
+    "score_weights": {
+      "distance": 0.15839999999999999,
+      "crossings": 0.108,
+      "continuity": 0.17279999999999998,
+      "slope": 0.021599999999999998,
+      "walkability": 0.18,
+      "access": 0.07919999999999999,
+      "running_fitness": 0.28
+    },
+    "slope_score": 56.2,
+    "low_terrain_burden_index": 253.37,
+    "total_score": 43.43,
+    "steep_segment_ratio": 0.14393504222347422,
+    "steep_distance_m": 719.3,
+    "grade_metrics": {
+      "grade_segments": [
+        {
+          "start_m": 0.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.07,
+          "grade_percent": -0.36
+        },
+        {
+          "start_m": 20.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.1,
+          "grade_percent": 0.52
+        },
+        {
+          "start_m": 40.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.23,
+          "grade_percent": 1.13
+        },
+        {
+          "start_m": 60.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.36,
+          "grade_percent": 1.79
+        },
+        {
+          "start_m": 80.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.58,
+          "grade_percent": 2.92
+        },
+        {
+          "start_m": 100.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.58,
+          "grade_percent": 2.92
+        },
+        {
+          "start_m": 120.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.5,
+          "grade_percent": 2.49
+        },
+        {
+          "start_m": 140.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.29,
+          "grade_percent": 1.43
+        },
+        {
+          "start_m": 160.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.39,
+          "grade_percent": 1.97
+        },
+        {
+          "start_m": 180.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.41,
+          "grade_percent": 2.04
+        },
+        {
+          "start_m": 200.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.1,
+          "grade_percent": 0.48
+        },
+        {
+          "start_m": 220.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.07,
+          "grade_percent": 0.36
+        },
+        {
+          "start_m": 240.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.07,
+          "grade_percent": 0.36
+        },
+        {
+          "start_m": 260.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.07,
+          "grade_percent": 0.36
+        },
+        {
+          "start_m": 280.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.07,
+          "grade_percent": 0.36
+        },
+        {
+          "start_m": 300.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.07,
+          "grade_percent": 0.36
+        },
+        {
+          "start_m": 320.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.07,
+          "grade_percent": 0.36
+        },
+        {
+          "start_m": 340.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.1,
+          "grade_percent": -0.5
+        },
+        {
+          "start_m": 360.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.12,
+          "grade_percent": -0.59
+        },
+        {
+          "start_m": 380.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.12,
+          "grade_percent": -0.59
+        },
+        {
+          "start_m": 400.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.12,
+          "grade_percent": -0.59
+        },
+        {
+          "start_m": 420.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.12,
+          "grade_percent": -0.59
+        },
+        {
+          "start_m": 440.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.12,
+          "grade_percent": -0.59
+        },
+        {
+          "start_m": 460.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.12,
+          "grade_percent": -0.59
+        },
+        {
+          "start_m": 480.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.12,
+          "grade_percent": -0.59
+        },
+        {
+          "start_m": 500.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.12,
+          "grade_percent": -0.59
+        },
+        {
+          "start_m": 520.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.12,
+          "grade_percent": -0.59
+        },
+        {
+          "start_m": 540.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.12,
+          "grade_percent": -0.59
+        },
+        {
+          "start_m": 560.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.12,
+          "grade_percent": -0.59
+        },
+        {
+          "start_m": 580.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.35,
+          "grade_percent": -1.76
+        },
+        {
+          "start_m": 600.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -1.35,
+          "grade_percent": -6.73
+        },
+        {
+          "start_m": 620.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.4,
+          "grade_percent": -1.98
+        },
+        {
+          "start_m": 640.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 660.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 680.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 700.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 7.0,
+          "grade_percent": 35.0
+        },
+        {
+          "start_m": 720.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 740.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 760.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.0,
+          "grade_percent": 10.0
+        },
+        {
+          "start_m": 780.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 800.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 820.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.37,
+          "grade_percent": -1.87
+        },
+        {
+          "start_m": 840.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.42,
+          "grade_percent": -2.1
+        },
+        {
+          "start_m": 860.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.42,
+          "grade_percent": -2.1
+        },
+        {
+          "start_m": 880.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.42,
+          "grade_percent": -2.1
+        },
+        {
+          "start_m": 900.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.42,
+          "grade_percent": -2.1
+        },
+        {
+          "start_m": 920.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.42,
+          "grade_percent": -2.1
+        },
+        {
+          "start_m": 940.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.42,
+          "grade_percent": -2.1
+        },
+        {
+          "start_m": 960.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.42,
+          "grade_percent": -2.1
+        },
+        {
+          "start_m": 980.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.42,
+          "grade_percent": -2.1
+        },
+        {
+          "start_m": 1000.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.11,
+          "grade_percent": -0.54
+        },
+        {
+          "start_m": 1020.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.42,
+          "grade_percent": 2.1
+        },
+        {
+          "start_m": 1040.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.42,
+          "grade_percent": 2.1
+        },
+        {
+          "start_m": 1060.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.42,
+          "grade_percent": 2.1
+        },
+        {
+          "start_m": 1080.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.42,
+          "grade_percent": 2.1
+        },
+        {
+          "start_m": 1100.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.42,
+          "grade_percent": 2.1
+        },
+        {
+          "start_m": 1120.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.42,
+          "grade_percent": 2.1
+        },
+        {
+          "start_m": 1140.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.42,
+          "grade_percent": 2.1
+        },
+        {
+          "start_m": 1160.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.42,
+          "grade_percent": 2.1
+        },
+        {
+          "start_m": 1180.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.42,
+          "grade_percent": 2.1
+        },
+        {
+          "start_m": 1200.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.06,
+          "grade_percent": 0.3
+        },
+        {
+          "start_m": 1220.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1240.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -2.0,
+          "grade_percent": -10.0
+        },
+        {
+          "start_m": 1260.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1280.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1300.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1320.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -1.3,
+          "grade_percent": -6.5
+        },
+        {
+          "start_m": 1340.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.4,
+          "grade_percent": 2.0
+        },
+        {
+          "start_m": 1360.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.0,
+          "grade_percent": 5.0
+        },
+        {
+          "start_m": 1380.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.55,
+          "grade_percent": 2.75
+        },
+        {
+          "start_m": 1400.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.05,
+          "grade_percent": -0.25
+        },
+        {
+          "start_m": 1420.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -1.6,
+          "grade_percent": -8.0
+        },
+        {
+          "start_m": 1440.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1460.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1480.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1500.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1520.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1540.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1560.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -1.0,
+          "grade_percent": -5.0
+        },
+        {
+          "start_m": 1580.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1600.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1620.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.51,
+          "grade_percent": -2.53
+        },
+        {
+          "start_m": 1640.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -1.94,
+          "grade_percent": -9.72
+        },
+        {
+          "start_m": 1660.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.55,
+          "grade_percent": -2.75
+        },
+        {
+          "start_m": 1680.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1700.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1720.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1740.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1760.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1780.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.5,
+          "grade_percent": 2.5
+        },
+        {
+          "start_m": 1800.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.5,
+          "grade_percent": 7.5
+        },
+        {
+          "start_m": 1820.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1840.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1860.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1880.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.5,
+          "grade_percent": 2.5
+        },
+        {
+          "start_m": 1900.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.5,
+          "grade_percent": 2.5
+        },
+        {
+          "start_m": 1920.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1940.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1960.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 1980.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2000.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -1.81,
+          "grade_percent": -9.03
+        },
+        {
+          "start_m": 2020.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.65,
+          "grade_percent": -3.24
+        },
+        {
+          "start_m": 2040.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.42,
+          "grade_percent": 7.09
+        },
+        {
+          "start_m": 2060.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.04,
+          "grade_percent": 0.18
+        },
+        {
+          "start_m": 2080.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2100.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.16,
+          "grade_percent": 5.81
+        },
+        {
+          "start_m": 2120.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.84,
+          "grade_percent": 4.19
+        },
+        {
+          "start_m": 2140.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -1.0,
+          "grade_percent": -5.0
+        },
+        {
+          "start_m": 2160.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -1.5,
+          "grade_percent": -7.5
+        },
+        {
+          "start_m": 2180.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.5,
+          "grade_percent": -2.5
+        },
+        {
+          "start_m": 2200.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.4,
+          "grade_percent": -2.0
+        },
+        {
+          "start_m": 2220.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2240.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2260.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.4,
+          "grade_percent": 2.0
+        },
+        {
+          "start_m": 2280.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2300.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2320.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2340.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2360.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2380.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2400.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2420.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.4,
+          "grade_percent": 1.99
+        },
+        {
+          "start_m": 2440.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.04,
+          "grade_percent": 10.2
+        },
+        {
+          "start_m": 2460.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.56,
+          "grade_percent": 7.81
+        },
+        {
+          "start_m": 2480.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2500.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2520.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2540.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.07,
+          "grade_percent": 0.36
+        },
+        {
+          "start_m": 2560.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.64,
+          "grade_percent": 3.18
+        },
+        {
+          "start_m": 2580.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.64,
+          "grade_percent": 3.18
+        },
+        {
+          "start_m": 2600.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.64,
+          "grade_percent": 3.18
+        },
+        {
+          "start_m": 2620.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.02,
+          "grade_percent": 0.09
+        },
+        {
+          "start_m": 2640.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.17,
+          "grade_percent": -0.87
+        },
+        {
+          "start_m": 2660.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.34,
+          "grade_percent": -1.7
+        },
+        {
+          "start_m": 2680.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.34,
+          "grade_percent": -1.7
+        },
+        {
+          "start_m": 2700.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.15,
+          "grade_percent": -0.74
+        },
+        {
+          "start_m": 2720.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2740.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -2.0,
+          "grade_percent": -10.0
+        },
+        {
+          "start_m": 2760.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 2780.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.09,
+          "grade_percent": 5.44
+        },
+        {
+          "start_m": 2800.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.29,
+          "grade_percent": 11.47
+        },
+        {
+          "start_m": 2820.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.16,
+          "grade_percent": 0.82
+        },
+        {
+          "start_m": 2840.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.05,
+          "grade_percent": 0.24
+        },
+        {
+          "start_m": 2860.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.83,
+          "grade_percent": 4.17
+        },
+        {
+          "start_m": 2880.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.94,
+          "grade_percent": 4.72
+        },
+        {
+          "start_m": 2900.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.94,
+          "grade_percent": 4.72
+        },
+        {
+          "start_m": 2920.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.94,
+          "grade_percent": 4.72
+        },
+        {
+          "start_m": 2940.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -2.66,
+          "grade_percent": -13.3
+        },
+        {
+          "start_m": 2960.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.8,
+          "grade_percent": -4.0
+        },
+        {
+          "start_m": 2980.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.8,
+          "grade_percent": -4.0
+        },
+        {
+          "start_m": 3000.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3020.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.65,
+          "grade_percent": 13.25
+        },
+        {
+          "start_m": 3040.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.5,
+          "grade_percent": 2.5
+        },
+        {
+          "start_m": 3060.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3080.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -1.18,
+          "grade_percent": -5.92
+        },
+        {
+          "start_m": 3100.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.4,
+          "grade_percent": -1.98
+        },
+        {
+          "start_m": 3120.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.4,
+          "grade_percent": -1.98
+        },
+        {
+          "start_m": 3140.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.17,
+          "grade_percent": -0.87
+        },
+        {
+          "start_m": 3160.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.64,
+          "grade_percent": -3.18
+        },
+        {
+          "start_m": 3180.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.09,
+          "grade_percent": -0.47
+        },
+        {
+          "start_m": 3200.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.5,
+          "grade_percent": 2.51
+        },
+        {
+          "start_m": 3220.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.5,
+          "grade_percent": 2.51
+        },
+        {
+          "start_m": 3240.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.5,
+          "grade_percent": 2.51
+        },
+        {
+          "start_m": 3260.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.22,
+          "grade_percent": 1.11
+        },
+        {
+          "start_m": 3280.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3300.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3320.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.02,
+          "grade_percent": 0.12
+        },
+        {
+          "start_m": 3340.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.98,
+          "grade_percent": 4.88
+        },
+        {
+          "start_m": 3360.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3380.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.23,
+          "grade_percent": -1.13
+        },
+        {
+          "start_m": 3400.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.28,
+          "grade_percent": -1.42
+        },
+        {
+          "start_m": 3420.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.28,
+          "grade_percent": -1.42
+        },
+        {
+          "start_m": 3440.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.2,
+          "grade_percent": -1.02
+        },
+        {
+          "start_m": 3460.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3480.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 4.0,
+          "grade_percent": 20.0
+        },
+        {
+          "start_m": 3500.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.5,
+          "grade_percent": 2.5
+        },
+        {
+          "start_m": 3520.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.5,
+          "grade_percent": 2.5
+        },
+        {
+          "start_m": 3540.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3560.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3580.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3600.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.2,
+          "grade_percent": 1.0
+        },
+        {
+          "start_m": 3620.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.1,
+          "grade_percent": 0.5
+        },
+        {
+          "start_m": 3640.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.41,
+          "grade_percent": 7.03
+        },
+        {
+          "start_m": 3660.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -1.71,
+          "grade_percent": -8.53
+        },
+        {
+          "start_m": 3680.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3700.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3720.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3740.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.5,
+          "grade_percent": 7.5
+        },
+        {
+          "start_m": 3760.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.75,
+          "grade_percent": 3.75
+        },
+        {
+          "start_m": 3780.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.6,
+          "grade_percent": 8.0
+        },
+        {
+          "start_m": 3800.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.15,
+          "grade_percent": 5.76
+        },
+        {
+          "start_m": 3820.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.2,
+          "grade_percent": 0.99
+        },
+        {
+          "start_m": 3840.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.1,
+          "grade_percent": 0.5
+        },
+        {
+          "start_m": 3860.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3880.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.7,
+          "grade_percent": 8.5
+        },
+        {
+          "start_m": 3900.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3920.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3940.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3960.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 3980.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.6,
+          "grade_percent": 13.01
+        },
+        {
+          "start_m": 4000.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.14,
+          "grade_percent": -0.72
+        },
+        {
+          "start_m": 4020.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.72,
+          "grade_percent": -3.6
+        },
+        {
+          "start_m": 4040.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.72,
+          "grade_percent": -3.6
+        },
+        {
+          "start_m": 4060.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.72,
+          "grade_percent": -3.6
+        },
+        {
+          "start_m": 4080.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.0,
+          "grade_percent": 10.02
+        },
+        {
+          "start_m": 4100.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.28,
+          "grade_percent": 1.38
+        },
+        {
+          "start_m": 4120.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.27,
+          "grade_percent": 1.36
+        },
+        {
+          "start_m": 4140.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.28,
+          "grade_percent": 1.42
+        },
+        {
+          "start_m": 4160.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.37,
+          "grade_percent": 11.87
+        },
+        {
+          "start_m": 4180.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 3.19,
+          "grade_percent": 15.96
+        },
+        {
+          "start_m": 4200.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 5.3,
+          "grade_percent": 26.52
+        },
+        {
+          "start_m": 4220.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4240.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4260.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.48,
+          "grade_percent": 12.39
+        },
+        {
+          "start_m": 4280.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 4.13,
+          "grade_percent": 20.63
+        },
+        {
+          "start_m": 4300.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -1.8,
+          "grade_percent": -9.02
+        },
+        {
+          "start_m": 4320.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4340.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.42,
+          "grade_percent": 2.09
+        },
+        {
+          "start_m": 4360.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.67,
+          "grade_percent": 3.34
+        },
+        {
+          "start_m": 4380.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.46,
+          "grade_percent": -2.28
+        },
+        {
+          "start_m": 4400.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 1.82,
+          "grade_percent": 9.1
+        },
+        {
+          "start_m": 4420.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.05,
+          "grade_percent": 10.25
+        },
+        {
+          "start_m": 4440.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.1,
+          "grade_percent": 0.5
+        },
+        {
+          "start_m": 4460.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.35,
+          "grade_percent": 1.75
+        },
+        {
+          "start_m": 4480.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.25,
+          "grade_percent": 1.25
+        },
+        {
+          "start_m": 4500.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 5.9,
+          "grade_percent": 29.5
+        },
+        {
+          "start_m": 4520.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.45,
+          "grade_percent": 12.25
+        },
+        {
+          "start_m": 4540.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.92,
+          "grade_percent": 14.6
+        },
+        {
+          "start_m": 4560.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 13.73,
+          "grade_percent": 68.64
+        },
+        {
+          "start_m": 4580.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4600.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4620.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 2.8,
+          "grade_percent": 14.0
+        },
+        {
+          "start_m": 4640.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4660.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4680.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 11.2,
+          "grade_percent": 56.0
+        },
+        {
+          "start_m": 4700.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4720.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4740.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4760.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 9.1,
+          "grade_percent": 45.5
+        },
+        {
+          "start_m": 4780.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.9,
+          "grade_percent": 4.5
+        },
+        {
+          "start_m": 4800.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.5,
+          "grade_percent": -2.5
+        },
+        {
+          "start_m": 4820.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.5,
+          "grade_percent": -2.5
+        },
+        {
+          "start_m": 4840.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4860.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4880.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 0.0,
+          "grade_percent": 0.0
+        },
+        {
+          "start_m": 4900.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -3.3,
+          "grade_percent": -16.5
+        },
+        {
+          "start_m": 4920.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.9,
+          "grade_percent": -4.5
+        },
+        {
+          "start_m": 4940.0,
+          "distance_m": 20.0,
+          "elevation_change_m": -0.3,
+          "grade_percent": -1.5
+        },
+        {
+          "start_m": 4960.0,
+          "distance_m": 20.0,
+          "elevation_change_m": 3.0,
+          "grade_percent": 15.0
+        },
+        {
+          "start_m": 4980.0,
+          "distance_m": 17.61,
+          "elevation_change_m": 3.5,
+          "grade_percent": 19.88
+        }
+      ],
+      "steep_segment_ratio": 0.1716039017075542,
+      "steep_distance_m": 857.6092457867544,
+      "grade_segment_min_m": 20.0,
+      "steep_grade_threshold_percent": 6.0,
+      "elevation_smoothing": "distance-resampled 20m profile; median over 60m window",
+      "uphill_grade_metrics": {
+        "thresholds": {
+          "8_percent": {
+            "distance_m": 517.6,
+            "share": 0.1036,
+            "longest_continuous_m": 80.0
+          },
+          "10_percent": {
+            "distance_m": 457.6,
+            "share": 0.0916,
+            "longest_continuous_m": 80.0
+          }
+        },
+        "max_sustained_uphill_grade_percent": 25.25,
+        "sustained_window_m": 100.0,
+        "profile_sample_m": 20.0,
+        "smoothing_window_m": 60.0,
+        "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+      }
+    },
+    "detour_ratio": 1.452,
+    "repeated_segment_m": 269.4,
+    "repeated_segment_share": 0.0158,
+    "crossing_metrics": {
+      "mapped_crossings_total": 13,
+      "mapped_crossings_first_300m": 1,
+      "mapped_signalized_crossings_total": 5,
+      "mapped_signalized_crossings_first_300m": 1,
+      "mapped_unsignalized_or_marked_crossings_total": 8,
+      "mapped_unknown_type_crossings_total": 0,
+      "crossing_score": 0.0,
+      "mapped_events": [
+        {
+          "id": 5502673613,
+          "chainage_m": 131.0,
+          "distance_to_ors_route_m": 11.1,
+          "type": "signalized",
+          "tags": {
+            "crossing": "traffic_signals"
+          }
+        },
+        {
+          "id": 7174750350,
+          "chainage_m": 687.0,
+          "distance_to_ors_route_m": 10.6,
+          "type": "signalized",
+          "tags": {
+            "crossing:signals": "yes"
+          }
+        },
+        {
+          "id": 10080353476,
+          "chainage_m": 1308.7,
+          "distance_to_ors_route_m": 0.0,
+          "type": "unsignalized_or_marked",
+          "tags": {
+            "crossing": "marked"
+          }
+        },
+        {
+          "id": 5973693882,
+          "chainage_m": 1456.1,
+          "distance_to_ors_route_m": 0.0,
+          "type": "unsignalized_or_marked",
+          "tags": {
+            "crossing": "marked",
+            "crossing:signals": "no"
+          }
+        },
+        {
+          "id": 7068765112,
+          "chainage_m": 1480.7,
+          "distance_to_ors_route_m": 0.1,
+          "type": "signalized",
+          "tags": {
+            "crossing": "marked",
+            "crossing:signals": "yes"
+          }
+        },
+        {
+          "id": 3274291984,
+          "chainage_m": 1518.8,
+          "distance_to_ors_route_m": 0.0,
+          "type": "signalized",
+          "tags": {
+            "crossing": "traffic_signals"
+          }
+        },
+        {
+          "id": 7483551559,
+          "chainage_m": 1533.0,
+          "distance_to_ors_route_m": 0.0,
+          "type": "signalized",
+          "tags": {
+            "crossing:signals": "yes"
+          }
+        },
+        {
+          "id": 8209594850,
+          "chainage_m": 1749.9,
+          "distance_to_ors_route_m": 0.0,
+          "type": "unsignalized_or_marked",
+          "tags": {
+            "crossing": "marked"
+          }
+        },
+        {
+          "id": 8209594851,
+          "chainage_m": 1760.0,
+          "distance_to_ors_route_m": 0.0,
+          "type": "unsignalized_or_marked",
+          "tags": {
+            "crossing": "marked"
+          }
+        },
+        {
+          "id": 11197054449,
+          "chainage_m": 1788.0,
+          "distance_to_ors_route_m": 0.0,
+          "type": "unsignalized_or_marked",
+          "tags": {
+            "crossing": "marked"
+          }
+        },
+        {
+          "id": 8562572788,
+          "chainage_m": 1874.4,
+          "distance_to_ors_route_m": 0.1,
+          "type": "unsignalized_or_marked",
+          "tags": {
+            "crossing": "marked"
+          }
+        },
+        {
+          "id": 12194128581,
+          "chainage_m": 3473.7,
+          "distance_to_ors_route_m": 0.0,
+          "type": "unsignalized_or_marked",
+          "tags": {
+            "crossing": "marked"
+          }
+        },
+        {
+          "id": 5973684186,
+          "chainage_m": 3485.2,
+          "distance_to_ors_route_m": 0.1,
+          "type": "unsignalized_or_marked",
+          "tags": {
+            "crossing": "marked"
+          }
+        }
+      ],
+      "traffic_signal_nodes_near_route_not_confirmed_crossings": 2,
+      "data_status": "OSM mapped records only; missing or unmapped crossings are unknown, not absent.",
+      "match_distance_m": 15,
+      "early_window_m": 300
+    },
+    "network_metrics": {
+      "matched_osm_network_share": 1.0001,
+      "dedicated_pedestrian_way_share_of_route": 0.4299,
+      "steps_share_of_route": 0.0009,
+      "mapped_motor_road_share_of_route": 0.5692,
+      "mapped_sidewalk_share_of_route": 0.0439,
+      "explicitly_no_sidewalk_share_of_route": 0.0,
+      "repeated_mapped_network_edge_m": 79.1,
+      "repeated_mapped_network_edge_share": 0.0158,
+      "mapped_edge_count": 209,
+      "mapped_edge_ids": [
+        "1101530933:0",
+        "1101530933:1",
+        "1101530933:2",
+        "1283637449:0",
+        "1283637449:2",
+        "1283637449:3",
+        "1283637449:4",
+        "1283637449:5",
+        "1283637449:6",
+        "1283637449:7",
+        "1283637449:8",
+        "1283637449:9",
+        "1283637449:10",
+        "1283637449:11",
+        "1283637450:0",
+        "1455534419:6",
+        "1455534419:7",
+        "1455534419:8",
+        "1455534419:9",
+        "1455534419:10",
+        "1455534419:11",
+        "1455534419:12",
+        "1455534419:13",
+        "1455534419:14",
+        "1455534419:16",
+        "1455534419:17",
+        "1455534419:18",
+        "1455534419:19",
+        "1455534419:20",
+        "1455534419:21",
+        "1455534419:23",
+        "1455534419:24",
+        "1455534419:25",
+        "1455534427:0",
+        "1455534429:0",
+        "1455534433:0",
+        "1545575919:0",
+        "1548975918:1",
+        "1554927912:0",
+        "156922849:27",
+        "156922849:28",
+        "156922849:29",
+        "156922849:31",
+        "156922849:32",
+        "156922849:33",
+        "218769263:10",
+        "218769263:11",
+        "218769263:12",
+        "218769263:13",
+        "218769263:14",
+        "218769263:16",
+        "218769263:17",
+        "277257904:2",
+        "304252466:1",
+        "304252466:2",
+        "304252466:3",
+        "304252466:6",
+        "304252466:7",
+        "304252466:8",
+        "304252468:2",
+        "304252468:4",
+        "304252468:5",
+        "304252468:7",
+        "304253672:3",
+        "304253672:4",
+        "304253672:5",
+        "304253672:7",
+        "304253672:8",
+        "304253672:9",
+        "304253672:10",
+        "304253674:6",
+        "304253674:8",
+        "380096907:2",
+        "380096907:4",
+        "380096908:0",
+        "380096908:2",
+        "380096908:3",
+        "381080950:0",
+        "381081001:0",
+        "381081001:1",
+        "381081001:3",
+        "381081001:5",
+        "381081001:6",
+        "381081162:0",
+        "381081274:0",
+        "381081274:2",
+        "381081274:3",
+        "381081274:4",
+        "381081274:6",
+        "381204499:0",
+        "381204499:2",
+        "381204499:3",
+        "381204501:0",
+        "381204501:1",
+        "381204501:2",
+        "381204501:6",
+        "381204501:8",
+        "381204501:9",
+        "381204516:2",
+        "381204516:5",
+        "381204556:1",
+        "381204556:2",
+        "381204559:0",
+        "381204559:2",
+        "381204577:2",
+        "381208139:0",
+        "381208148:10",
+        "381208151:1",
+        "381208151:2",
+        "381208151:3",
+        "381208151:4",
+        "381208151:5",
+        "381208151:6",
+        "381208151:7",
+        "415913722:0",
+        "415913722:1",
+        "415913722:2",
+        "415913722:3",
+        "415913722:4",
+        "415913722:5",
+        "415913723:0",
+        "415913723:1",
+        "415913723:2",
+        "415913723:3",
+        "415913723:4",
+        "415936744:0",
+        "415936744:1",
+        "415936744:2",
+        "415936744:3",
+        "415936744:4",
+        "415936744:5",
+        "415936744:7",
+        "415936744:8",
+        "416291714:0",
+        "416291715:0",
+        "416291715:1",
+        "416291715:2",
+        "416291715:3",
+        "416291715:4",
+        "416291715:6",
+        "416291715:7",
+        "517583988:0",
+        "517583988:1",
+        "517583988:2",
+        "517583988:3",
+        "517583988:6",
+        "517583988:7",
+        "517583988:9",
+        "517583988:10",
+        "517583988:13",
+        "517583988:15",
+        "517583988:18",
+        "517583988:19",
+        "517583988:20",
+        "517583988:21",
+        "517583988:22",
+        "518702966:17",
+        "572790625:3",
+        "614423628:2",
+        "614423629:0",
+        "617362744:9",
+        "632698297:10",
+        "632698298:1",
+        "632698298:2",
+        "64986818:11",
+        "64986818:14",
+        "64986818:15",
+        "64986818:16",
+        "64986818:18",
+        "64986818:20",
+        "64986818:25",
+        "64986818:27",
+        "771404367:0",
+        "771404367:2",
+        "771404367:4",
+        "771404367:6",
+        "771404367:9",
+        "771404367:10",
+        "771404367:11",
+        "771404367:12",
+        "771404367:13",
+        "771404367:14",
+        "771404367:15",
+        "771404368:0",
+        "771404368:1",
+        "771404368:2",
+        "771404369:0",
+        "771404370:0",
+        "771404370:1",
+        "771404371:0",
+        "771404371:1",
+        "771404371:3",
+        "771404372:0",
+        "771404372:1",
+        "772206477:0",
+        "772206477:1",
+        "772206477:2",
+        "773004581:1",
+        "773004581:11",
+        "773004581:13",
+        "773004588:12",
+        "800200230:0",
+        "800200231:0",
+        "800200231:1",
+        "800200231:2",
+        "800200232:0",
+        "800200232:1",
+        "800200232:2",
+        "800200233:0"
+      ],
+      "mapped_edge_lengths_m": {
+        "1101530933:0": 1.22,
+        "1101530933:1": 2.63,
+        "1101530933:2": 7.12,
+        "1283637449:0": 6.82,
+        "1283637449:10": 7.7,
+        "1283637449:11": 7.21,
+        "1283637449:2": 11.69,
+        "1283637449:3": 8.01,
+        "1283637449:4": 20.13,
+        "1283637449:5": 12.21,
+        "1283637449:6": 22.89,
+        "1283637449:7": 23.33,
+        "1283637449:8": 9.97,
+        "1283637449:9": 3.34,
+        "1283637450:0": 1.56,
+        "1455534419:10": 30.57,
+        "1455534419:11": 30.51,
+        "1455534419:12": 41.41,
+        "1455534419:13": 93.26,
+        "1455534419:14": 23.45,
+        "1455534419:16": 8.3,
+        "1455534419:17": 9.6,
+        "1455534419:18": 24.43,
+        "1455534419:19": 10.29,
+        "1455534419:20": 27.37,
+        "1455534419:21": 3.18,
+        "1455534419:23": 17.57,
+        "1455534419:24": 18.36,
+        "1455534419:25": 50.55,
+        "1455534419:6": 58.97,
+        "1455534419:7": 9.53,
+        "1455534419:8": 22.0,
+        "1455534419:9": 19.73,
+        "1455534427:0": 9.67,
+        "1455534429:0": 24.88,
+        "1455534433:0": 19.33,
+        "1545575919:0": 6.71,
+        "1548975918:1": 9.94,
+        "1554927912:0": 19.27,
+        "156922849:27": 380.67,
+        "156922849:28": 130.51,
+        "156922849:29": 27.7,
+        "156922849:31": 11.55,
+        "156922849:32": 41.73,
+        "156922849:33": 8.2,
+        "218769263:10": 17.68,
+        "218769263:11": 33.56,
+        "218769263:12": 40.0,
+        "218769263:13": 28.2,
+        "218769263:14": 30.91,
+        "218769263:16": 22.07,
+        "218769263:17": 47.01,
+        "277257904:2": 3.98,
+        "304252466:1": 20.78,
+        "304252466:2": 20.03,
+        "304252466:3": 18.46,
+        "304252466:6": 72.56,
+        "304252466:7": 7.77,
+        "304252466:8": 9.87,
+        "304252468:2": 70.22,
+        "304252468:4": 17.27,
+        "304252468:5": 27.49,
+        "304252468:7": 35.97,
+        "304253672:10": 7.53,
+        "304253672:3": 6.34,
+        "304253672:4": 18.52,
+        "304253672:5": 11.83,
+        "304253672:7": 20.74,
+        "304253672:8": 11.62,
+        "304253672:9": 10.41,
+        "304253674:6": 17.08,
+        "304253674:8": 37.07,
+        "380096907:2": 12.37,
+        "380096907:4": 3.34,
+        "380096908:0": 10.22,
+        "380096908:2": 5.12,
+        "380096908:3": 4.35,
+        "381080950:0": 19.31,
+        "381081001:0": 3.86,
+        "381081001:1": 6.78,
+        "381081001:3": 37.24,
+        "381081001:5": 20.75,
+        "381081001:6": 35.47,
+        "381081162:0": 83.27,
+        "381081274:0": 10.57,
+        "381081274:2": 31.18,
+        "381081274:3": 17.41,
+        "381081274:4": 16.74,
+        "381081274:6": 25.29,
+        "381204499:0": 5.89,
+        "381204499:2": 21.92,
+        "381204499:3": 17.47,
+        "381204501:0": 6.15,
+        "381204501:1": 6.51,
+        "381204501:2": 7.15,
+        "381204501:6": 18.18,
+        "381204501:8": 19.56,
+        "381204501:9": 7.82,
+        "381204516:2": 5.97,
+        "381204516:5": 14.33,
+        "381204556:1": 4.95,
+        "381204556:2": 6.49,
+        "381204559:0": 23.92,
+        "381204559:2": 21.61,
+        "381204577:2": 31.93,
+        "381208139:0": 17.27,
+        "381208148:10": 79.59,
+        "381208151:1": 27.2,
+        "381208151:2": 9.73,
+        "381208151:3": 14.93,
+        "381208151:4": 25.6,
+        "381208151:5": 24.49,
+        "381208151:6": 14.73,
+        "381208151:7": 17.45,
+        "415913722:0": 5.91,
+        "415913722:1": 31.43,
+        "415913722:2": 20.76,
+        "415913722:3": 19.87,
+        "415913722:4": 28.58,
+        "415913722:5": 16.17,
+        "415913723:0": 5.65,
+        "415913723:1": 11.21,
+        "415913723:2": 14.03,
+        "415913723:3": 7.63,
+        "415913723:4": 9.74,
+        "415936744:0": 13.22,
+        "415936744:1": 4.7,
+        "415936744:2": 5.73,
+        "415936744:3": 7.1,
+        "415936744:4": 6.23,
+        "415936744:5": 20.42,
+        "415936744:7": 10.62,
+        "415936744:8": 6.1,
+        "416291714:0": 25.33,
+        "416291715:0": 29.15,
+        "416291715:1": 62.83,
+        "416291715:2": 32.93,
+        "416291715:3": 49.51,
+        "416291715:4": 39.2,
+        "416291715:6": 111.09,
+        "416291715:7": 21.85,
+        "517583988:0": 10.74,
+        "517583988:1": 30.59,
+        "517583988:10": 23.03,
+        "517583988:13": 43.63,
+        "517583988:15": 17.69,
+        "517583988:18": 18.19,
+        "517583988:19": 35.9,
+        "517583988:2": 35.28,
+        "517583988:20": 11.54,
+        "517583988:21": 36.02,
+        "517583988:22": 7.11,
+        "517583988:3": 25.04,
+        "517583988:6": 29.92,
+        "517583988:7": 13.61,
+        "517583988:9": 11.57,
+        "518702966:17": 30.26,
+        "572790625:3": 44.42,
+        "614423628:2": 4.63,
+        "614423629:0": 9.2,
+        "617362744:9": 15.1,
+        "632698297:10": 20.5,
+        "632698298:1": 11.59,
+        "632698298:2": 8.37,
+        "64986818:11": 28.16,
+        "64986818:14": 61.66,
+        "64986818:15": 28.01,
+        "64986818:16": 39.23,
+        "64986818:18": 140.49,
+        "64986818:20": 254.21,
+        "64986818:25": 29.7,
+        "64986818:27": 44.51,
+        "771404367:0": 8.48,
+        "771404367:10": 10.43,
+        "771404367:11": 14.63,
+        "771404367:12": 17.0,
+        "771404367:13": 4.41,
+        "771404367:14": 17.05,
+        "771404367:15": 16.34,
+        "771404367:2": 28.71,
+        "771404367:4": 14.12,
+        "771404367:6": 38.52,
+        "771404367:9": 33.81,
+        "771404368:0": 5.27,
+        "771404368:1": 10.16,
+        "771404368:2": 4.98,
+        "771404369:0": 10.96,
+        "771404370:0": 12.0,
+        "771404370:1": 6.78,
+        "771404371:0": 14.02,
+        "771404371:1": 21.18,
+        "771404371:3": 39.83,
+        "771404372:0": 4.57,
+        "771404372:1": 1.14,
+        "772206477:0": 19.69,
+        "772206477:1": 19.63,
+        "772206477:2": 3.63,
+        "773004581:1": 5.36,
+        "773004581:11": 2.73,
+        "773004581:13": 9.96,
+        "773004588:12": 11.23,
+        "800200230:0": 8.71,
+        "800200231:0": 2.78,
+        "800200231:1": 3.97,
+        "800200231:2": 10.24,
+        "800200232:0": 11.85,
+        "800200232:1": 14.22,
+        "800200232:2": 4.44,
+        "800200233:0": 3.72
+      },
+      "walkability_score": 42.89,
+      "walkability_score_note": "Only mapped OSM ways are classified; unmatched portions remain unknown and are not treated as unsafe.",
+      "snap_threshold_m": 12.0
+    },
+    "running_fitness": {
+      "score": 43.08,
+      "components": {
+        "running_friendly_share": 42.9908,
+        "vehicle_separation_proxy_share": 43.0836,
+        "continuous_running_estimate_score": 47.5,
+        "surface_width_quality_score": 58.94,
+        "naturalness_score": 0.0
+      },
+      "running_friendly_share_of_route": 0.4299,
+      "vehicle_separation_proxy_share_of_route": 0.4308,
+      "estimated_longest_continuous_run_m": 570.0,
+      "steps_share_of_route": 0.0009,
+      "low_quality_surface_or_way_share_of_route": 0.3028,
+      "uncertain_cycleway_share_of_route": 0.0,
+      "unknown_or_unmatched_share_of_route": 0.0,
+      "matched_way_class_lengths_m": {
+        "footway": 2112.3,
+        "other_motor_road": 1508.4,
+        "pedestrian": 36.0,
+        "residential_unknown_sidewalk": 1336.3,
+        "steps": 4.6
+      },
+      "matched_osm_route_share": 1.0001,
+      "max_route_to_osm_match_distance_m": 0.9,
+      "classification_status": "OSM tag estimate only; not field-verified running quality or safety.",
+      "vehicle_separation_note": "OSM highway class is a separation proxy; physical barriers, traffic conditions and actual use were not verified.",
+      "continuous_running_note": "Longest mapped running-friendly stretch between OSM-mapped crossing/signal interruptions; unmapped interruptions may be missing.",
+      "cycleway_note": "Cycleways without foot=yes/designated/permissive are excluded from walkable running share and reported as uncertain.",
+      "matching_threshold_m": 12.0
+    },
+    "access_connections": {
+      "stops": [
+        {
+          "id": "osm-running-node-2135148779",
+          "name": "OSM footway 보행로 접근 지점",
+          "distance_to_ors_geometry_m": 0.0,
+          "route_chainage_m": 0.0,
+          "connected_within_tolerance": true
+        },
+        {
+          "id": "osm-way-156922849-node-5521",
+          "name": "OSM footway 네트워크 지점",
+          "distance_to_ors_geometry_m": 0.0,
+          "route_chainage_m": 1012.5,
+          "connected_within_tolerance": true
+        },
+        {
+          "id": "simujang",
+          "name": "심우장",
+          "distance_to_ors_geometry_m": 8.2,
+          "route_chainage_m": 4997.6,
+          "connected_within_tolerance": true
+        }
+      ],
+      "all_stops_connected": true,
+      "max_stop_snap_m": 50.0,
+      "status": "ORS route geometry snap distance; confirms routing-network attachment only, not a physical open entrance."
+    },
+    "turn_metrics": {
+      "sharp_turn_count_estimate": 30,
+      "u_turn_count_estimate": 2,
+      "turn_thresholds_degrees": {
+        "sharp": 65,
+        "u_turn": 150
+      },
+      "turn_measurement_note": "ORS geometry heading changes over adjacent segments >=5m; mapped road junction identity is not available."
+    },
+    "overlap_with_higher_ranked": [],
+    "meets_gentle_thresholds": false,
+    "start_accessibility_score": 78.0,
+    "station_access": null,
+    "cross_mode_selection": null,
+    "reason": "거리 오차 3m; 출발 300m 내 OSM 매핑 횡단 1회, 전체 매핑 횡단 13회; 경사 점수 56.2/100, 상승 181.4m; 급경사 구간 14.4%; 반복 구간 1.6%, 급회전 추정 30회, U턴 추정 2회",
+    "slope_diagnostic_scores": {
+      "low": 64.78,
+      "any": 39.82
+    },
+    "grade_ranking_model_version": "distance_window_grade_v2"
+  },
+  "start": {
+    "id": "osm-running-node-2135148779",
+    "name": "OSM footway 보행로 접근 지점",
+    "latitude": 37.5704002,
+    "longitude": 127.0174831,
+    "access_type": "running_network_access",
+    "running_way_class": "footway",
+    "running_fitness_access_score": 88.0,
+    "coordinate_source": "OpenStreetMap mapped running/walking way vertex",
+    "coordinate_verified": true,
+    "entrance_verified": false,
+    "station_access": null
+  },
+  "waypoints": [
+    {
+      "id": "osm-way-156922849-node-5521",
+      "name": "OSM footway 네트워크 지점",
+      "latitude": 37.5695929,
+      "longitude": 127.0062693,
+      "candidate_type": "foot_network_footway",
+      "running_way_class": "footway",
+      "running_way_score": 91.0,
+      "coordinate_source": "OpenStreetMap footway geometry via Overpass API",
+      "coordinate_verified": true,
+      "entrance_verified": false
+    }
+  ],
+  "destination": {
+    "id": "simujang",
+    "name": "심우장",
+    "latitude": 37.5936268,
+    "longitude": 126.9916662,
+    "coordinate_source": "project default; entrance not field-verified",
+    "coordinate_verified": null,
+    "entrance_verified": false
+  },
+  "final_grade_review": {
+    "metrics": {
+      "thresholds": {
+        "8_percent": {
+          "distance_m": 517.6,
+          "share": 0.1036,
+          "longest_continuous_m": 80.0
+        },
+        "10_percent": {
+          "distance_m": 457.6,
+          "share": 0.0916,
+          "longest_continuous_m": 80.0
+        }
+      },
+      "max_sustained_uphill_grade_percent": 25.25,
+      "sustained_window_m": 100.0,
+      "profile_sample_m": 20.0,
+      "smoothing_window_m": 60.0,
+      "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+    },
+    "slope_preference_diagnostic_scores": {
+      "low": 64.78,
+      "any": 39.82
+    },
+    "note": "Re-scored from saved ORS route geometry/elevation and saved OSM metrics; no ORS request or OSM data fetch was made.",
+    "model": "offline_saved_candidate_rerank_v1",
+    "terrain_metrics": {
+      "rank": null,
+      "route_id": "5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any",
+      "distance_km": 4.9972,
+      "distance_error_m": 2.8,
+      "distance_status": "within_100m",
+      "start": {
+        "id": "osm-running-node-2135148779",
+        "name": "OSM footway 보행로 접근 지점",
+        "latitude": 37.5704002,
+        "longitude": 127.0174831,
+        "access_type": "running_network_access",
+        "station_access": null
+      },
+      "ascent_m": 181.4,
+      "uphill_8_percent_share": 0.1036,
+      "uphill_10_percent_share": 0.0916,
+      "max_sustained_uphill_grade_percent": 25.25,
+      "longest_continuous_8_percent_uphill_m": 80.0,
+      "running_fitness_score": 43.08,
+      "running_friendly_share": 0.4299,
+      "longest_continuous_run_m": 570.0,
+      "repeated_network_edge_share": 0.0158,
+      "u_turn_count_estimate": 2,
+      "final_score": 39.82,
+      "score_source": "saved_running_fitness",
+      "explicit_access_restricted_m": 0.0,
+      "restriction_check_available": true,
+      "route_json": "outputs/recommendations/simujang/running_focused/5km/5km-osm-running-node-2135148779-via-osm-way-156922849-node-5521-simujang-any.json"
+    }
+  },
+  "offline_rerank": {
+    "selected_preference": "any",
+    "score": 39.82,
+    "scoring_model": "offline_saved_candidate_rerank_v1",
+    "candidate_geometry_fingerprint": "7ac26a96e13fdb3cb8c2"
+  }
+}

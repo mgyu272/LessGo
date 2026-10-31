@@ -1,0 +1,71 @@
+{
+  "default_destination_id": "simujang",
+  "target_distance_km": 3.0,
+  "slope_preference": "low",
+  "distance_tolerance_min_m": 100,
+  "distance_tolerance_fraction": 0.0,
+  "preferred_distance_error_m": 50,
+  "max_ors_calls_per_run": 18,
+  "route_diversity_max_shared_fraction": 0.7,
+  "route_diversity_relaxation_steps": [0.7],
+  "osm_search_radius_min_m": 4500,
+  "osm_search_radius_per_target_km_m": 1500,
+  "osm_search_radius_max_m": 15000,
+  "steep_grade_threshold_percent": 6.0,
+  "gentle_max_ascent_per_km_m": 33.3333333,
+  "gentle_max_steep_segment_ratio": 0.15,
+  "grade_assessment": {
+    "profile_sample_m": 20.0,
+    "smoothing_window_m": 60.0,
+    "sustained_window_m": 100.0,
+    "uphill_thresholds_percent": [8.0, 10.0],
+    "gentle_max_uphill_8_share": 0.12,
+    "gentle_max_sustained_grade_percent": 8.0,
+    "mode_penalties": {
+      "low": {
+        "uphill_8_share": 35.0,
+        "uphill_10_share": 25.0,
+        "max_sustained_grade": 20.0,
+        "long_climb": 10.0,
+        "ascent_per_km": 10.0
+      },
+      "any": {
+        "uphill_8_share": 12.0,
+        "uphill_10_share": 8.0,
+        "max_sustained_grade": 8.0,
+        "long_climb": 4.0,
+        "ascent_per_km": 8.0
+      }
+    }
+  },
+  "running_score_weights": {
+    "low": {
+      "distance": 0.18,
+      "crossings": 0.10,
+      "continuity": 0.10,
+      "slope": 0.38,
+      "walkability": 0.08,
+      "access": 0.16
+    },
+    "any": {
+      "distance": 0.22,
+      "crossings": 0.15,
+      "continuity": 0.24,
+      "slope": 0.03,
+      "walkability": 0.25,
+      "access": 0.11
+    }
+  },
+  "running_score_notes": {
+    "early_crossing_window_m": 300,
+    "crossing_map_match_m": 15,
+    "repeat_segment_penalty_max": 45,
+    "u_turn_penalty_points": 18,
+    "sharp_turn_penalty_points": 2,
+    "local_refinement_radius_m": 250,
+    "max_station_access_distance_m": 400,
+    "estimated_walking_speed_m_per_min": 80,
+    "cross_mode_alternative_max_score_drop": 10,
+    "cross_mode_max_shared_fraction": 0.70
+  }
+}

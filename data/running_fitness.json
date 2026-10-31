@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "description": "OSM-tag-based running-route suitability estimates. Scores describe mapped attributes, not verified safety.",
+  "matching": {
+    "max_snap_m": 12,
+    "max_stop_snap_m": 50,
+    "unknown_is_neutral": true
+  },
+  "way_scores": {
+    "pedestrian": 96,
+    "footway": 88,
+    "path": 78,
+    "cycleway_foot_allowed": 72,
+    "living_street": 66,
+    "residential_with_sidewalk": 58,
+    "residential_unknown_sidewalk": 42,
+    "service_with_sidewalk": 48,
+    "other_motor_road": 24,
+    "steps": 0,
+    "uncertain_cycleway": null,
+    "unmapped_or_unknown": null
+  },
+  "surface_adjustments": {
+    "asphalt": 8,
+    "paved": 7,
+    "concrete": 6,
+    "paving_stones": 3,
+    "compacted": 1,
+    "fine_gravel": 0,
+    "gravel": -8,
+    "ground": -12,
+    "dirt": -15,
+    "sand": -25,
+    "mud": -35,
+    "unknown": 0
+  },
+  "smoothness_adjustments": {
+    "excellent": 5,
+    "very_good": 4,
+    "good": 2,
+    "intermediate": 0,
+    "bad": -15,
+    "very_bad": -28,
+    "horrible": -40,
+    "very_horrible": -50,
+    "impassable": -60
+  },
+  "width_m": {
+    "narrow_below": 1.2,
+    "narrow_penalty": 18,
+    "comfortable_above": 2.0,
+    "comfortable_bonus": 3
+  },
+  "route_score_weights": {
+    "low": 0.20,
+    "any": 0.28
+  },
+  "score_components": {
+    "mapped_running_friendly_share": 0.45,
+    "vehicle_separation_proxy_share": 0.20,
+    "continuous_run_estimate": 0.20,
+    "surface_and_width_quality": 0.10,
+    "naturalness": 0.05
+  },
+  "notes": [
+    "OSM tags may be missing or outdated; mapped suitability is an estimate, not a safety finding.",
+    "highway=cycleway is not considered walkable unless foot=yes, designated, or permissive is mapped.",
+    "OSM highway classes are only a proxy for separation from motor traffic.",
+    "Continuous running length is estimated from mapped crossings and route continuity; actual signal timing and interruptions are unknown."
+  ]
+}
