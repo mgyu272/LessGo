@@ -1,71 +1,110 @@
 # Less GO
 
-Less GO는 역사문화 장소를 목적지로 삼아 러닝 코스를 추천하는 서비스입니다. 사용자는 목적지, 목표 거리, 경사 선호를 선택하고 저장된 경로와 안내 데이터를 이용할 수 있습니다.
+Less GO는 역사문화 장소에 도착하는 러닝 코스를 추천하고, 저장된 경로를 지도와 영어 음성 안내에서 활용하는 프로젝트입니다. 목적지·거리·경사 선호를 기준으로 경로를 선택할 수 있습니다.
 
 - 목적지: 심우장 (`simujang`), 정릉 (`jeongneung`), 의릉 (`uiryeong`)
-- 거리: 3km, 5km, 10km
-- 경사 선호: `low`(완만한 길 선호), `any`(언덕 허용)
-- 러닝 완료 후 한국어·영어 역사 해설을 제공하는 것을 목표로 합니다. 현재 준비된 것은 해설 데이터이며, 앱 화면과 해설 TTS는 별도 구현이 필요합니다.
+- 목표 거리: 3km, 5km, 10km
+- 경사 선호: `low`(급경사 부담을 낮추는 방향), `any`(언덕을 허용하고 러닝 환경을 평가)
+- 러닝 완료 후 한국어·영어 역사 해설 제공을 목표로 합니다. 현재 제공물은 대본 데이터이며 앱 화면과 해설 TTS는 별도 구현이 필요합니다.
 
-## 1. 핵심 기능 및 구현 상태
+## 핵심 기능 및 구현 상태
 
 | 기능 | 상태 | 설명 |
 |---|---|---|
-| ORS 보행 경로 추천 | 구현됨 | `foot-walking` 경로 계산과 저장된 추천 데이터를 사용합니다. 새 경로 탐색에는 ORS 키와 외부 네트워크가 필요합니다. |
-| 거리·경사별 코스 선택 | 일부 구현 | 대표 인덱스에 거리·경사별 경로 상태가 있습니다. 모든 조합에 별도 경로가 있지는 않습니다. |
-| Kakao 지도 경로 표시 | 구현됨 | 로컬 Python 서버와 Kakao Maps JavaScript SDK로 저장 경로를 표시합니다. |
-| 영어 음성 내비게이션 | 구현됨, 기기 검증 미완료 | 저장된 ORS 안내 단계, GPS 또는 시뮬레이션, 브라우저 Web Speech API(`en-US`)를 사용합니다. 실제 GPS 기기 현장 검증은 하지 않았습니다. |
-| 한국어·영어 역사 해설 데이터 | 구현됨 | 세 유적지의 6개 대본이 `data/narrations.json`에 있습니다. |
-| 역사 해설 화면·TTS | 미구현 | 앱 완주 이벤트 연결, 해설 화면, 언어 선택, 해설 음성은 앱에서 추가해야 합니다. |
-| 실제 출입구·안전·노면 확인 | 미완료 | ORS·OSM 데이터만으로 현장 개방 여부나 안전을 보증하지 않습니다. |
+| ORS 보행 경로 탐색 | 구현됨 | ORS Directions `foot-walking`으로 실제 보행 경로와 방향 안내 단계를 계산합니다. API 탐색에는 ORS 키와 인터넷 연결이 필요합니다. |
+| 목적지·거리·경사별 경로 데이터 | 구현됨 | 기본 앱 인덱스와 18개 경로 최종 실험 인덱스가 있습니다. 기본 앱 데이터와 최종 실험 데이터는 별도입니다. |
+| OSM 후보·제약 검토 | 일부 구현 | OSM에서 출발지·경유지 후보와 도로 속성을 수집하고 매칭합니다. 누락 태그는 현장 통행이나 안전을 증명하지 않습니다. |
+| 경사 및 러닝 친화도 평가 | 구현됨 | ORS 고도 프로필과 OSM 매칭 지표를 계산합니다. 자세한 공식은 [경로 추천 알고리즘 문서](docs/ROUTING_ALGORITHM.md)를 참고하세요. |
+| Kakao 지도 경로 표시 | 구현됨 | 로컬 Python 서버가 저장 GeoJSON을 Kakao Maps JavaScript SDK 위에 표시합니다. 지도에서 경로를 다시 계산하지 않습니다. |
+| 영어 음성 내비게이션 | 구현됨, 실제 기기 검증 미완료 | 저장된 ORS 안내 단계, GPS 또는 시뮬레이션, 브라우저 Web Speech API(`en-US`)를 사용합니다. |
+| 한국어·영어 역사 해설 데이터 | 구현됨 | 세 유적지의 6개 대본이 [`data/narrations.json`](data/narrations.json)에 있습니다. |
+| 역사 해설 화면·TTS | 미구현 | 앱의 완주 이벤트 연결, 해설 화면, 언어 선택과 앱 TTS 연동이 필요합니다. |
+| 실제 출입구·안전·노면 현장 확인 | 미완료 | 자동 경로 검증은 현장 개방 여부, 안전, 실제 노면 상태를 보증하지 않습니다. |
 
-## 2. 현재 코스 지원 현황
+## 알고리즘 흐름
 
-18개 목적지·거리·경사 조합 중 16개에 경로 파일이 있습니다. 의릉 10km의 두 모드는 `no_route`입니다.
+```mermaid
+flowchart TD
+    A[목적지·목표 거리·low/any 입력] --> B[목적지 중심 OSM 캐시 또는 데이터 수집]
+    B --> C[출구·공원 접근점·보행망 후보 생성]
+    C --> D[공간 분산 및 유형 균형으로 후보 선택]
+    D --> E[경유지 조합 생성·좌표 중복 제거]
+    E --> F[ORS foot-walking 조회 및 캐시 재사용]
+    F --> G[실제 거리 ±300m·연결성·보행 제한 검증]
+    G --> H[고도·경사·OSM 러닝 지표 산출]
+    H --> I[low 또는 any 기준으로 별도 평가·순위화]
+    I --> J[JSON·GeoJSON 및 지도 데이터 저장]
+```
 
-| 목적지 | 3km (`low` / `any`) | 5km (`low` / `any`) | 10km (`low` / `any`) |
-|---|---|---|---|
-| 심우장 | 검증 완료 / 검증 필요 | 검증 완료 / 검증 완료 | 검증 필요 / 검증 필요 |
-| 정릉 | 검증 완료 / 검증 완료 | 검증 완료 / 검증 완료 | 검증 필요 / 검증 필요 |
-| 의릉 | 검증 완료 / 검증 완료 | 검증 완료 / 검증 완료 | 경로 없음 / 경로 없음 |
+이 프로젝트는 후보 탐색과 규칙 기반 평가를 사용합니다. 머신러닝 모델을 사용하지 않습니다. 구현 세부 사항은 [docs/ROUTING_ALGORITHM.md](docs/ROUTING_ALGORITHM.md)에 정리했습니다.
 
-최신 상태와 실제 파일 경로는 [대표 경로 인덱스](outputs/app/representative_routes.json)의 각 `modes` 항목을 확인하세요. 일부 `low`와 `any`는 같은 route ID 또는 좌표를 공유합니다. 경사 모드가 항상 다른 코스를 뜻하지는 않습니다.
+## 최종 18개 경로 결과
 
-## 3. 앱 개발자 빠른 시작
+아래 표는 2026-11-01 최종 실험 데이터의 18개 대표 경로입니다. 18개 모두 생성되었고 목표 거리에서 ±300m 이내입니다. 자동 검증에서 모두 `needs_verification`으로 남아 있어 현장 확인이 완료된 경로라는 뜻은 아닙니다. 경사 모드별 경로가 같은 목적지·거리 조합도 있습니다.
+
+| 목적지 | 거리 | 모드 | 실제 거리 km | ORS 예상 도보 시간 분 | 상승 m | 러닝 점수 /100 |
+|---|---:|---|---:|---:|---:|---:|
+| 심우장 | 3 | low | 3.0799 | 37.0 | 126.9 | 39.29 |
+| 심우장 | 3 | any | 3.0253 | 36.3 | 135.2 | 43.64 |
+| 심우장 | 5 | low | 5.1532 | 61.8 | 180.4 | 19.38 |
+| 심우장 | 5 | any | 4.8701 | 58.4 | 180.9 | 64.26 |
+| 심우장 | 10 | low | 9.9502 | 119.4 | 261.0 | 50.56 |
+| 심우장 | 10 | any | 9.9502 | 119.4 | 261.0 | 50.56 |
+| 정릉 | 3 | low | 2.9495 | 35.4 | 128.1 | 48.64 |
+| 정릉 | 3 | any | 2.9888 | 35.9 | 110.8 | 41.12 |
+| 정릉 | 5 | low | 5.1945 | 62.3 | 216.5 | 18.14 |
+| 정릉 | 5 | any | 4.8620 | 58.3 | 180.6 | 40.06 |
+| 정릉 | 10 | low | 9.9385 | 119.3 | 177.3 | 79.55 |
+| 정릉 | 10 | any | 9.9385 | 119.3 | 177.3 | 79.55 |
+| 의릉 | 3 | low | 2.9485 | 35.4 | 37.6 | 49.36 |
+| 의릉 | 3 | any | 2.9735 | 35.7 | 36.7 | 50.55 |
+| 의릉 | 5 | low | 4.7994 | 57.6 | 58.6 | 62.26 |
+| 의릉 | 5 | any | 4.7994 | 57.6 | 58.6 | 62.26 |
+| 의릉 | 10 | low | 10.1250 | 121.5 | 100.1 | 65.26 |
+| 의릉 | 10 | any | 10.1355 | 121.6 | 133.7 | 56.67 |
+
+`ORS 예상 도보 시간`은 ORS 보행 프로필의 시간이며 달리기 예상 시간은 아닙니다. 러닝 점수는 OSM에 매핑된 도로 속성의 추정치입니다. 구성별 비교, 급경사 비율과 경로 ID는 [최종 대표 경로 인덱스](analysis/experiments/final_routes_20261101/outputs/app/representative_routes.json)와 상세 [알고리즘 문서](docs/ROUTING_ALGORITHM.md)에서 확인할 수 있습니다.
+
+기본 앱 인덱스 [`outputs/app/representative_routes.json`](outputs/app/representative_routes.json)은 이 최종 실험 인덱스로 교체되지 않았습니다. 최종 18개 데이터는 `analysis/experiments/final_routes_20261101/`에 따로 보관되어 있습니다. 기존 지도 서버에서 최종 데이터셋을 미리 보려면 아래처럼 실행합니다.
+
+## 앱 개발자 빠른 시작
 
 | 용도 | 파일 |
 |---|---|
-| 목적지·거리·경사 인덱스 | [outputs/app/representative_routes.json](outputs/app/representative_routes.json) |
-| 상세 코스 JSON·GeoJSON | 인덱스 항목의 `files.json`, `files.geojson` |
-| 영어 음성 내비게이션 | [web/english_voice_navigation.js](web/english_voice_navigation.js), [src/navigation_data.py](src/navigation_data.py) |
-| 한국어·영어 해설 원문 | [data/narrations.json](data/narrations.json) |
-| 앱 연동 상세 안내 | [docs/APP_INTEGRATION.md](docs/APP_INTEGRATION.md) |
+| 기본 앱 경로 인덱스 | [`outputs/app/representative_routes.json`](outputs/app/representative_routes.json) |
+| 최종 18개 실험 인덱스 | [`analysis/experiments/final_routes_20261101/outputs/app/representative_routes.json`](analysis/experiments/final_routes_20261101/outputs/app/representative_routes.json) |
+| 최종 경로 JSON·GeoJSON | 최종 인덱스의 각 `modes.low` 또는 `modes.any` 안 `files.json`, `files.geojson` |
+| 영어 음성 내비게이션 | [`web/english_voice_navigation.js`](web/english_voice_navigation.js), [`src/navigation_data.py`](src/navigation_data.py) |
+| 한국어·영어 해설 원문 | [`data/narrations.json`](data/narrations.json) |
+| 앱 데이터 연동 안내 | [`docs/APP_INTEGRATION.md`](docs/APP_INTEGRATION.md) |
+| 알고리즘 설명 | [`docs/ROUTING_ALGORITHM.md`](docs/ROUTING_ALGORITHM.md) |
 
-앱에는 대표 경로 인덱스와 참조된 경로 데이터를 함께 제공하세요. 현재 Python 서버에는 역사 해설 JSON 전용 API가 없으므로 앱 리소스로 번들하거나 배포 백엔드에서 제공해야 합니다.
+인덱스 구조는 `destinations[destination_id]["3km"|"5km"|"10km"].modes["low"|"any"]`입니다. 상태와 파일 존재를 확인한 뒤 GeoJSON의 `geometry.coordinates`를 사용하세요. 파일 참조는 저장소 루트 기준 상대 경로입니다. Windows 경로 구분자가 포함되면 웹 경로로 만들 때 `\\`를 `/`로 정규화해야 합니다.
 
-## 4. 프로젝트 폴더 구조
+## 프로젝트 구조
 
 ~~~text
 .
-├── data/                       # 목적지, 탐색 설정, 해설 및 후보 입력
-├── docs/                       # 앱 연동 가이드
+├── data/                       # 목적지·탐색 설정·제약·역사 해설
+├── docs/                       # 알고리즘 상세 문서
 ├── outputs/
-│   ├── app/                    # 대표 경로 인덱스와 설명
-│   ├── recommendations/        # 앱에서 쓰는 경로 JSON·GeoJSON·HTML
+│   ├── app/                    # 기본 앱 대표 경로 인덱스
+│   ├── recommendations/        # 기존 지도용 경로 파일
 │   └── cache/                  # 로컬 ORS·OSM 캐시 (Git 제외)
-├── src/                        # 경로 계산·평가·내비게이션 데이터 로더
-├── tests/                      # 영어 내비게이션 자동 테스트
-├── web/                        # Kakao 지도 화면과 음성 안내 모듈
-├── main.py                     # 추천 실행 진입점
+├── analysis/experiments/       # 재현·검증용 실험 및 최종 18개 데이터
+├── src/                        # 경로 계산·OSM 및 경사·러닝 평가
+├── tests/                      # 자동 테스트
+├── web/                        # Kakao 지도와 영어 음성 안내
+├── main.py                     # 추천 실행 CLI
 ├── serve_kakao_map.py          # 로컬 지도/API 서버
 └── requirements.txt
 ~~~
 
-주요 설정 파일은 `data/destinations.json`, `data/route_defaults.json`, `data/route_exclusions.json`, `data/running_fitness.json`입니다.
+주요 설정은 `data/destinations.json`, `data/route_defaults.json`, `data/route_exclusions.json`, `data/running_fitness.json`에 있습니다.
 
-## 5. 로컬 실행 방법
+## 로컬 실행
 
-PowerShell에서 프로젝트 폴더를 열어 실행 환경을 준비합니다.
+PowerShell에서 프로젝트 폴더를 열고 가상환경을 준비합니다.
 
 ~~~powershell
 py -m venv .venv
@@ -74,43 +113,50 @@ pip install -r requirements.txt
 Copy-Item .env.example .env
 ~~~
 
-`.env`에 본인이 발급한 `ORS_API_KEY`를 입력하세요. Kakao 지도에는 `KAKAO_JS_KEY`도 필요합니다. `.env`는 Git에서 제외됩니다. Kakao JavaScript 키는 브라우저에 전달되므로 Kakao Developers의 허용 도메인을 제한하세요.
+`.env`에 본인이 발급한 `ORS_API_KEY`와 `KAKAO_JS_KEY`를 입력합니다. 실제 `.env`는 Git에서 제외됩니다. Kakao JavaScript 키는 브라우저에 전달되므로 Kakao Developers에서 `http://localhost:8000` 등 허용 도메인을 제한하세요.
 
-저장된 지도와 로컬 API 서버:
+기존 Kakao 지도 서버를 실행하려면:
 
 ~~~powershell
 python serve_kakao_map.py
 ~~~
 
-브라우저에서 [http://localhost:8000](http://localhost:8000)을 엽니다. 새 추천 경로 계산 예시는 ORS API를 호출할 수 있습니다.
+기본 화면은 `http://localhost:8000/`입니다. 최종 18개 실험 데이터를 선택해 보려면 다음 주소를 엽니다.
 
-~~~powershell
-python main.py --recommend --destination-id uiryeong --target-distance-km 3 --slope-preference low --running-focused
+~~~text
+http://localhost:8000/?dataset=final_routes&destination=simujang&distance=3&slope=compare&strategy=running_focused
 ~~~
 
-음성 안내 로직 테스트:
+저장된 영어 안내 로직 테스트:
 
 ~~~powershell
 node --test tests/english_voice_navigation.test.cjs
 ~~~
 
-## 6. 사용 기술
+새 코스를 ORS로 탐색하는 예시(외부 API 호출):
 
-- Python: 경로 추천, 데이터 조회, 로컬 HTTP 서버
-- OpenRouteService: `foot-walking` 경로 및 방향 안내 단계
-- OpenStreetMap: 보행 네트워크·장소·도로 정보
-- Folium: 결과 HTML 지도 생성
-- Kakao Maps JavaScript SDK: 지도 시각화
-- Browser Geolocation API 및 Web Speech API: 영어 GPS 안내와 브라우저 음성
-- JSON·GeoJSON: 코스와 역사 해설 데이터
+~~~powershell
+python main.py --recommend --destination-id uiryeong --target-distance-km 3 --slope-preference low --running-focused
+~~~
 
-## 7. 현재 한계 및 주의사항
+## 사용 기술
 
-- 18개 조합 중 16개만 경로가 있으며, 의릉 10km는 경로가 없습니다. 일부 경로는 `needs_verification`입니다.
-- 저경사와 언덕 허용 모드가 동일한 도로를 반환할 수 있습니다. 실제 `route_id`와 좌표를 비교하세요.
-- 영어 음성 내비게이션은 구현됐지만 실제 GPS 기기·야외 테스트가 필요합니다. GPS는 위치 권한과 HTTPS 또는 `localhost` 보안 컨텍스트가 필요합니다.
-- 역사 해설은 JSON 데이터만 있습니다. 완주 이벤트 연결, 해설 UI, 앱 TTS는 미구현입니다.
-- `serve_kakao_map.py`는 `127.0.0.1:8000`에 바인딩하는 개발용 서버로 인터넷 배포용이 아닙니다.
-- 대표 경로 인덱스의 `files.*`는 프로젝트 루트 기준 상대 경로입니다. Windows 백슬래시는 웹 경로로 사용할 때 슬래시로 정규화하세요.
-- 경로 데이터는 출입 개방, 안전 또는 노면 상태를 보증하지 않습니다.
-- `outputs/cache/`, 로그, 백업은 로컬 개발 자료입니다. 앱용 추천 JSON·GeoJSON과 혼동하거나 저장소에 추가하지 마세요.
+- Python: OSM/ORS 데이터 수집, 경로 후보 탐색·평가, 로컬 HTTP 서버
+- OpenRouteService: `foot-walking` 경로 및 방향 안내 데이터
+- OpenStreetMap / Overpass: 보행 네트워크와 매핑된 장소·도로 속성
+- Folium: 생성 결과용 HTML 지도
+- Kakao Maps JavaScript SDK: 저장된 경로 시각화
+- Browser Geolocation API / Web Speech API: GPS 위치와 영어 음성 안내
+- JSON / GeoJSON: 경로, 설정, 해설 데이터
+
+## 현재 한계 및 주의사항
+
+- 최종 실험 인덱스에는 18개 조합이 있지만 기본 앱 인덱스에는 자동 반영되지 않았습니다. 배포 전에 어느 인덱스를 앱의 기준 데이터로 사용할지 확인하세요.
+- 18개 경로는 `generation_status=success`이고 자동 경로 검사를 통과했지만, 모두 `verification_status=needs_verification`입니다. 출발 접근과 유적지 입구의 현장 통행은 미확인입니다.
+- `low`와 `any`는 같을 수 있습니다. 심우장 10km, 정릉 10km, 의릉 5km는 최종 데이터에서 같은 경로 형상을 공유합니다.
+- GPS 음성 안내는 구현됐으나 실제 휴대전화·야외 수신 품질은 검증되지 않았습니다. 브라우저 위치 권한 및 HTTPS 또는 `localhost`가 필요합니다.
+- 역사 해설은 JSON만 있습니다. 완주 이벤트 처리, 앱 UI, 언어 선택 및 앱 TTS는 별도 구현해야 합니다.
+- ORS 시간은 걷기 경로 시간이며 러닝 페이스를 반영하지 않습니다.
+- OSM 태그 기반 러닝 점수·차량 분리·횡단 정보는 매핑 데이터의 추정입니다. 안전이나 실제 개방을 보증하지 않습니다.
+- `serve_kakao_map.py`는 `127.0.0.1:8000`에 바인딩하는 개발 서버로 인터넷 배포용이 아닙니다.
+- `outputs/cache/`, 로그, 백업 및 로컬 실험 캐시는 실행 자료입니다. `.gitignore` 규칙을 확인하고 앱용 코스 파일과 혼동하지 마세요.
