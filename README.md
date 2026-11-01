@@ -78,6 +78,13 @@ flowchart TD
 | 한국어·영어 해설 원문 | [`data/narrations.json`](data/narrations.json) |
 | 앱 데이터 연동 안내 | [`docs/APP_INTEGRATION.md`](docs/APP_INTEGRATION.md) |
 | 알고리즘 설명 | [`docs/ROUTING_ALGORITHM.md`](docs/ROUTING_ALGORITHM.md) |
+| run(성북 런트립) 앱 데이터 변환 | [`export_runtrip.py`](export_runtrip.py), [`src/runtrip_export.py`](src/runtrip_export.py) |
+
+최종 18개 경로를 run 앱의 `public/data/courses.geojson`, `spots.json` 형식으로 바꾸려면 아래처럼 실행합니다. `--run-data-dir`를 주면 기존 run 데이터는 그대로 두고 LessGo 코스와 스팟만 교체·추가합니다. 생략하면 `outputs/runtrip/`에 저장합니다. 경로가 같은 low/any 조합은 코스 하나로 합쳐 15개가 됩니다. LessGo에는 가로등·유동인구·주거지 데이터가 없어서 `lamps`, `crowd`, `residential`은 기본값(2, `mid`, `false`)으로 채워집니다.
+
+~~~powershell
+python export_runtrip.py --run-data-dir "C:\path\to\run\public\data"
+~~~
 
 인덱스 구조는 `destinations[destination_id]["3km"|"5km"|"10km"].modes["low"|"any"]`입니다. 상태와 파일 존재를 확인한 뒤 GeoJSON의 `geometry.coordinates`를 사용하세요. 파일 참조는 저장소 루트 기준 상대 경로입니다. Windows 경로 구분자가 포함되면 웹 경로로 만들 때 `\\`를 `/`로 정규화해야 합니다.
 
