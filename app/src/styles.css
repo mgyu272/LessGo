@@ -146,7 +146,7 @@ small { font-size: 12px; }
 .map { position: absolute; inset: 0; background: #EEF0EE; z-index: 0; font-family: var(--sans); }
 .map-dark { background: var(--ink); }
 /* 카카오맵은 어두운 지도가 없어서, 달리기 화면에서는 지도 타일 그림만 반전해 밤 지도처럼 보여요 */
-.map-dark img[src*="daumcdn.net"] { filter: invert(1) hue-rotate(195deg) brightness(.55) saturate(.35) contrast(1.05); }
+.map-dark img[src*="mts.kakaocdn.net"] { filter: invert(1) hue-rotate(195deg) brightness(.55) saturate(.35) contrast(1.05); }
 .map-half { bottom: auto; height: 44%; }
 .map.map-mini { position: relative; inset: auto; height: 220px; border-radius: var(--r-md); overflow: hidden; margin: 4px 0 10px; }
 /* 키가 없거나 SDK를 못 불러왔을 때 지도 자리 */
