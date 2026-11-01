@@ -57,14 +57,20 @@ class ApiRetryPolicyTests(unittest.TestCase):
         self.assertEqual(post.call_count, 1)
         self.assertEqual(raised.exception.error_category, "authentication")
 
+    @patch("src.routing.time.monotonic")
     @patch("src.routing.time.sleep")
     @patch("src.routing.requests.post")
-    def test_5xx_gets_one_exponential_backoff_retry(self, post, sleep):
+    def test_5xx_gets_one_exponential_backoff_retry(self, post, sleep, monotonic):
+        # Fake clock: sleeping advances time, so request pacing sees the backoff wait.
+        clock = [100.0]
+        monotonic.side_effect = lambda: clock[0]
+        sleep.side_effect = lambda seconds: clock.__setitem__(0, clock[0] + seconds)
         post.side_effect = [response(503), response(503)]
         with self.assertRaises(RouteError) as raised:
             fetch_walking_route_points(self.stops, "not-printed", "route", max_retries=1)
         self.assertEqual(post.call_count, 2)
-        self.assertEqual([call.args[0] for call in sleep.call_args_list], [1.0, 1.0])
+        # The 1 s backoff already covers the 1 request/s pacing, so no extra wait.
+        self.assertEqual([call.args[0] for call in sleep.call_args_list], [1.0])
         self.assertEqual(raised.exception.error_category, "server_error")
 
     @patch("src.osm_data.requests.post")
