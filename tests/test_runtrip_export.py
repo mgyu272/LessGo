@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -36,6 +37,8 @@ class RuntripExportTest(unittest.TestCase):
             self.assertTrue(all(len(c) == 2 for c in coords))
             self.assertEqual(p["cues"][0]["at"], coords[0])
             self.assertTrue(all(c["text"]["ko"] and c["text"]["en"] for c in p["cues"]))
+            # An en-US voice cannot read Hangul road names.
+            self.assertFalse(any(re.search("[가-힣]", c["text"]["en"]) for c in p["cues"]))
 
     def test_spot_radius_covers_every_route_end(self) -> None:
         from src.navigation_data import _distance_m

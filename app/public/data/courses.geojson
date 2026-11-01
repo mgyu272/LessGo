@@ -414,7 +414,7 @@
             ],
             "text": {
               "ko": "심우장까지 출발합니다. 대명길 방향으로 가세요.",
-              "en": "Starting your run to Simujang. Head along 대명길."
+              "en": "Starting your run to Simujang."
             }
           },
           {
@@ -424,7 +424,7 @@
             ],
             "text": {
               "ko": "창경궁로34길 방향으로 오른쪽 길로 계속 가세요.",
-              "en": "Keep right onto 창경궁로34길."
+              "en": "Keep right."
             }
           },
           {
@@ -434,7 +434,7 @@
             ],
             "text": {
               "ko": "창경궁로 방향으로 우회전하세요.",
-              "en": "Turn right onto 창경궁로."
+              "en": "Turn right."
             }
           },
           {
@@ -464,7 +464,7 @@
             ],
             "text": {
               "ko": "한양도성 순성길 내부구간 방향으로 직진하세요.",
-              "en": "Continue straight onto 한양도성 순성길 내부구간."
+              "en": "Continue straight."
             }
           },
           {
@@ -484,7 +484,7 @@
             ],
             "text": {
               "ko": "동소문로5길 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로5길."
+              "en": "Turn right."
             }
           },
           {
@@ -494,7 +494,7 @@
             ],
             "text": {
               "ko": "동소문로, 41 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로, 41."
+              "en": "Turn right."
             }
           },
           {
@@ -504,7 +504,7 @@
             ],
             "text": {
               "ko": "성북로2길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 성북로2길."
+              "en": "Turn left."
             }
           },
           {
@@ -514,7 +514,7 @@
             ],
             "text": {
               "ko": "성북로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 성북로."
+              "en": "Turn left."
             }
           },
           {
@@ -524,7 +524,7 @@
             ],
             "text": {
               "ko": "성북로 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로."
+              "en": "Turn right."
             }
           },
           {
@@ -534,7 +534,7 @@
             ],
             "text": {
               "ko": "성북로9길 방향으로 직진하세요.",
-              "en": "Continue straight onto 성북로9길."
+              "en": "Continue straight."
             }
           },
           {
@@ -544,7 +544,7 @@
             ],
             "text": {
               "ko": "창경궁로35다길 방향으로 우회전하세요.",
-              "en": "Turn right onto 창경궁로35다길."
+              "en": "Turn right."
             }
           },
           {
@@ -564,7 +564,7 @@
             ],
             "text": {
               "ko": "성북로21길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 성북로21길."
+              "en": "Turn left."
             }
           },
           {
@@ -574,7 +574,7 @@
             ],
             "text": {
               "ko": "성북로19길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 성북로19길."
+              "en": "Turn left."
             }
           },
           {
@@ -584,7 +584,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로23길."
+              "en": "Turn right."
             }
           },
           {
@@ -594,7 +594,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 성북로23길."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -604,7 +604,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 왼쪽 길로 계속 가세요.",
-              "en": "Keep left onto 성북로23길."
+              "en": "Keep left."
             }
           },
           {
@@ -614,7 +614,7 @@
             ],
             "text": {
               "ko": "성북로23나길 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로23나길."
+              "en": "Turn right."
             }
           },
           {
@@ -624,7 +624,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로23길."
+              "en": "Turn right."
             }
           },
           {
@@ -634,7 +634,7 @@
             ],
             "text": {
               "ko": "성북로29길 방향으로 직진하세요.",
-              "en": "Continue straight onto 성북로29길."
+              "en": "Continue straight."
             }
           }
         ],
@@ -1326,7 +1326,7 @@
             ],
             "text": {
               "ko": "심우장까지 출발합니다. 동소문로20길 방향으로 가세요.",
-              "en": "Starting your run to Simujang. Head along 동소문로20길."
+              "en": "Starting your run to Simujang."
             }
           },
           {
@@ -1336,7 +1336,7 @@
             ],
             "text": {
               "ko": "동소문로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로."
+              "en": "Turn left."
             }
           },
           {
@@ -1346,7 +1346,7 @@
             ],
             "text": {
               "ko": "동소문로2길 방향으로 오른쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp right onto 동소문로2길."
+              "en": "Turn sharp right."
             }
           },
           {
@@ -1386,7 +1386,7 @@
             ],
             "text": {
               "ko": "성북로 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로."
+              "en": "Turn right."
             }
           },
           {
@@ -1396,7 +1396,7 @@
             ],
             "text": {
               "ko": "성북로9길 방향으로 직진하세요.",
-              "en": "Continue straight onto 성북로9길."
+              "en": "Continue straight."
             }
           },
           {
@@ -1406,7 +1406,7 @@
             ],
             "text": {
               "ko": "창경궁로35다길 방향으로 우회전하세요.",
-              "en": "Turn right onto 창경궁로35다길."
+              "en": "Turn right."
             }
           },
           {
@@ -1426,7 +1426,7 @@
             ],
             "text": {
               "ko": "와룡공원길(한양도성 순성길) 방향으로 좌회전하세요.",
-              "en": "Turn left onto 와룡공원길(한양도성 순성길)."
+              "en": "Turn left."
             }
           },
           {
@@ -1456,7 +1456,7 @@
             ],
             "text": {
               "ko": "와룡공원길(한양도성 순성길) 방향으로 왼쪽으로 살짝 꺾으세요.",
-              "en": "Bear left onto 와룡공원길(한양도성 순성길)."
+              "en": "Bear left."
             }
           },
           {
@@ -1466,7 +1466,7 @@
             ],
             "text": {
               "ko": "북정마을 암문 방향으로 우회전하세요.",
-              "en": "Turn right onto 북정마을 암문."
+              "en": "Turn right."
             }
           },
           {
@@ -1476,7 +1476,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 오른쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp right onto 성북로23길."
+              "en": "Turn sharp right."
             }
           },
           {
@@ -1486,7 +1486,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 성북로23길."
+              "en": "Turn left."
             }
           },
           {
@@ -1496,7 +1496,7 @@
             ],
             "text": {
               "ko": "성북로29길 방향으로 직진하세요.",
-              "en": "Continue straight onto 성북로29길."
+              "en": "Continue straight."
             }
           }
         ],
@@ -2076,7 +2076,7 @@
             ],
             "text": {
               "ko": "심우장까지 출발합니다. 고려대로 방향으로 가세요.",
-              "en": "Starting your run to Simujang. Head along 고려대로."
+              "en": "Starting your run to Simujang."
             }
           },
           {
@@ -2086,7 +2086,7 @@
             ],
             "text": {
               "ko": "보문로26길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 보문로26길."
+              "en": "Turn left."
             }
           },
           {
@@ -2096,7 +2096,7 @@
             ],
             "text": {
               "ko": "지봉로23길 방향으로 우회전하세요.",
-              "en": "Turn right onto 지봉로23길."
+              "en": "Turn right."
             }
           },
           {
@@ -2106,7 +2106,7 @@
             ],
             "text": {
               "ko": "지봉로23길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 지봉로23길."
+              "en": "Turn left."
             }
           },
           {
@@ -2116,7 +2116,7 @@
             ],
             "text": {
               "ko": "지봉로21길 방향으로 우회전하세요.",
-              "en": "Turn right onto 지봉로21길."
+              "en": "Turn right."
             }
           },
           {
@@ -2126,7 +2126,7 @@
             ],
             "text": {
               "ko": "보문로29길 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 보문로29길."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -2136,7 +2136,7 @@
             ],
             "text": {
               "ko": "삼선교로16길 방향으로 오른쪽으로 살짝 꺾으세요.",
-              "en": "Bear right onto 삼선교로16길."
+              "en": "Bear right."
             }
           },
           {
@@ -2146,7 +2146,7 @@
             ],
             "text": {
               "ko": "삼선교로14길 방향으로 직진하세요.",
-              "en": "Continue straight onto 삼선교로14길."
+              "en": "Continue straight."
             }
           },
           {
@@ -2156,7 +2156,7 @@
             ],
             "text": {
               "ko": "삼선교로10길 방향으로 우회전하세요.",
-              "en": "Turn right onto 삼선교로10길."
+              "en": "Turn right."
             }
           },
           {
@@ -2166,7 +2166,7 @@
             ],
             "text": {
               "ko": "삼선교로10길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 삼선교로10길."
+              "en": "Turn left."
             }
           },
           {
@@ -2176,7 +2176,7 @@
             ],
             "text": {
               "ko": "삼선교로8길 방향으로 오른쪽으로 살짝 꺾으세요.",
-              "en": "Bear right onto 삼선교로8길."
+              "en": "Bear right."
             }
           },
           {
@@ -2186,7 +2186,7 @@
             ],
             "text": {
               "ko": "삼선교로6길 방향으로 직진하세요.",
-              "en": "Continue straight onto 삼선교로6길."
+              "en": "Continue straight."
             }
           },
           {
@@ -2196,7 +2196,7 @@
             ],
             "text": {
               "ko": "삼선교로2길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 삼선교로2길."
+              "en": "Turn left."
             }
           },
           {
@@ -2246,7 +2246,7 @@
             ],
             "text": {
               "ko": "동소문로7길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로7길."
+              "en": "Turn left."
             }
           },
           {
@@ -2256,7 +2256,7 @@
             ],
             "text": {
               "ko": "동소문로11길 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로11길."
+              "en": "Turn right."
             }
           },
           {
@@ -2266,7 +2266,7 @@
             ],
             "text": {
               "ko": "동소문로, 41 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로, 41."
+              "en": "Turn left."
             }
           },
           {
@@ -2276,7 +2276,7 @@
             ],
             "text": {
               "ko": "동소문로13가길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로13가길."
+              "en": "Turn left."
             }
           },
           {
@@ -2286,7 +2286,7 @@
             ],
             "text": {
               "ko": "동소문로7길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로7길."
+              "en": "Turn left."
             }
           },
           {
@@ -2296,7 +2296,7 @@
             ],
             "text": {
               "ko": "성북로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 성북로."
+              "en": "Turn left."
             }
           },
           {
@@ -2306,7 +2306,7 @@
             ],
             "text": {
               "ko": "성북로 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로."
+              "en": "Turn right."
             }
           },
           {
@@ -2316,7 +2316,7 @@
             ],
             "text": {
               "ko": "성북로9길 방향으로 직진하세요.",
-              "en": "Continue straight onto 성북로9길."
+              "en": "Continue straight."
             }
           },
           {
@@ -2326,7 +2326,7 @@
             ],
             "text": {
               "ko": "창경궁로35다길 방향으로 우회전하세요.",
-              "en": "Turn right onto 창경궁로35다길."
+              "en": "Turn right."
             }
           },
           {
@@ -2346,7 +2346,7 @@
             ],
             "text": {
               "ko": "성북로21길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 성북로21길."
+              "en": "Turn left."
             }
           },
           {
@@ -2356,7 +2356,7 @@
             ],
             "text": {
               "ko": "성북로19길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 성북로19길."
+              "en": "Turn left."
             }
           },
           {
@@ -2366,7 +2366,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로23길."
+              "en": "Turn right."
             }
           },
           {
@@ -2376,7 +2376,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 성북로23길."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -2386,7 +2386,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 왼쪽 길로 계속 가세요.",
-              "en": "Keep left onto 성북로23길."
+              "en": "Keep left."
             }
           },
           {
@@ -2396,7 +2396,7 @@
             ],
             "text": {
               "ko": "성북로23나길 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로23나길."
+              "en": "Turn right."
             }
           },
           {
@@ -2406,7 +2406,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로23길."
+              "en": "Turn right."
             }
           },
           {
@@ -2416,7 +2416,7 @@
             ],
             "text": {
               "ko": "성북로29길 방향으로 직진하세요.",
-              "en": "Continue straight onto 성북로29길."
+              "en": "Continue straight."
             }
           }
         ],
@@ -3332,7 +3332,7 @@
             ],
             "text": {
               "ko": "종로32길 방향으로 직진하세요.",
-              "en": "Continue straight onto 종로32길."
+              "en": "Continue straight."
             }
           },
           {
@@ -3372,7 +3372,7 @@
             ],
             "text": {
               "ko": "창경궁로 방향으로 우회전하세요.",
-              "en": "Turn right onto 창경궁로."
+              "en": "Turn right."
             }
           },
           {
@@ -3392,7 +3392,7 @@
             ],
             "text": {
               "ko": "동순라길 방향으로 우회전하세요.",
-              "en": "Turn right onto 동순라길."
+              "en": "Turn right."
             }
           },
           {
@@ -3492,7 +3492,7 @@
             ],
             "text": {
               "ko": "창경궁로27길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 창경궁로27길."
+              "en": "Turn left."
             }
           },
           {
@@ -3502,7 +3502,7 @@
             ],
             "text": {
               "ko": "성균관로5길 방향으로 왼쪽으로 살짝 꺾으세요.",
-              "en": "Bear left onto 성균관로5길."
+              "en": "Bear left."
             }
           },
           {
@@ -3542,7 +3542,7 @@
             ],
             "text": {
               "ko": "명륜3길 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 명륜3길."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -3552,7 +3552,7 @@
             ],
             "text": {
               "ko": "명륜길 방향으로 우회전하세요.",
-              "en": "Turn right onto 명륜길."
+              "en": "Turn right."
             }
           },
           {
@@ -3562,7 +3562,7 @@
             ],
             "text": {
               "ko": "명륜5길 방향으로 오른쪽 길로 계속 가세요.",
-              "en": "Keep right onto 명륜5길."
+              "en": "Keep right."
             }
           },
           {
@@ -3572,7 +3572,7 @@
             ],
             "text": {
               "ko": "명륜5길 방향으로 우회전하세요.",
-              "en": "Turn right onto 명륜5길."
+              "en": "Turn right."
             }
           },
           {
@@ -3582,7 +3582,7 @@
             ],
             "text": {
               "ko": "명륜9길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 명륜9길."
+              "en": "Turn left."
             }
           },
           {
@@ -3592,7 +3592,7 @@
             ],
             "text": {
               "ko": "와룡공원길(한양도성 순성길) 방향으로 왼쪽으로 살짝 꺾으세요.",
-              "en": "Bear left onto 와룡공원길(한양도성 순성길)."
+              "en": "Bear left."
             }
           },
           {
@@ -3602,7 +3602,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 오른쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp right onto 성북로23길."
+              "en": "Turn sharp right."
             }
           },
           {
@@ -3612,7 +3612,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 성북로23길."
+              "en": "Turn left."
             }
           },
           {
@@ -3622,7 +3622,7 @@
             ],
             "text": {
               "ko": "성북로29길 방향으로 직진하세요.",
-              "en": "Continue straight onto 성북로29길."
+              "en": "Continue straight."
             }
           }
         ],
@@ -4518,7 +4518,7 @@
             ],
             "text": {
               "ko": "마조로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 마조로."
+              "en": "Turn left."
             }
           },
           {
@@ -4548,7 +4548,7 @@
             ],
             "text": {
               "ko": "마조로5길 방향으로 우회전하세요.",
-              "en": "Turn right onto 마조로5길."
+              "en": "Turn right."
             }
           },
           {
@@ -4558,7 +4558,7 @@
             ],
             "text": {
               "ko": "마조로7길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 마조로7길."
+              "en": "Turn left."
             }
           },
           {
@@ -4568,7 +4568,7 @@
             ],
             "text": {
               "ko": "마조로1길 방향으로 우회전하세요.",
-              "en": "Turn right onto 마조로1길."
+              "en": "Turn right."
             }
           },
           {
@@ -4588,7 +4588,7 @@
             ],
             "text": {
               "ko": "마조로11길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 마조로11길."
+              "en": "Turn left."
             }
           },
           {
@@ -4598,7 +4598,7 @@
             ],
             "text": {
               "ko": "마조로 방향으로 직진하세요.",
-              "en": "Continue straight onto 마조로."
+              "en": "Continue straight."
             }
           },
           {
@@ -4748,7 +4748,7 @@
             ],
             "text": {
               "ko": "고산자로60길 방향으로 우회전하세요.",
-              "en": "Turn right onto 고산자로60길."
+              "en": "Turn right."
             }
           },
           {
@@ -4868,7 +4868,7 @@
             ],
             "text": {
               "ko": "고려대로7가길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 고려대로7가길."
+              "en": "Turn left."
             }
           },
           {
@@ -4878,7 +4878,7 @@
             ],
             "text": {
               "ko": "고려대로7길 방향으로 우회전하세요.",
-              "en": "Turn right onto 고려대로7길."
+              "en": "Turn right."
             }
           },
           {
@@ -4888,7 +4888,7 @@
             ],
             "text": {
               "ko": "보문로26길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 보문로26길."
+              "en": "Turn left."
             }
           },
           {
@@ -4898,7 +4898,7 @@
             ],
             "text": {
               "ko": "지봉로23길 방향으로 우회전하세요.",
-              "en": "Turn right onto 지봉로23길."
+              "en": "Turn right."
             }
           },
           {
@@ -4908,7 +4908,7 @@
             ],
             "text": {
               "ko": "삼선교로23가길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 삼선교로23가길."
+              "en": "Turn left."
             }
           },
           {
@@ -4918,7 +4918,7 @@
             ],
             "text": {
               "ko": "동소문로8길 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로8길."
+              "en": "Turn right."
             }
           },
           {
@@ -4928,7 +4928,7 @@
             ],
             "text": {
               "ko": "동소문로2길 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 동소문로2길."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -4968,7 +4968,7 @@
             ],
             "text": {
               "ko": "성북로 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로."
+              "en": "Turn right."
             }
           },
           {
@@ -4978,7 +4978,7 @@
             ],
             "text": {
               "ko": "성북로9길 방향으로 직진하세요.",
-              "en": "Continue straight onto 성북로9길."
+              "en": "Continue straight."
             }
           },
           {
@@ -4988,7 +4988,7 @@
             ],
             "text": {
               "ko": "창경궁로35다길 방향으로 우회전하세요.",
-              "en": "Turn right onto 창경궁로35다길."
+              "en": "Turn right."
             }
           },
           {
@@ -5008,7 +5008,7 @@
             ],
             "text": {
               "ko": "성북로21길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 성북로21길."
+              "en": "Turn left."
             }
           },
           {
@@ -5018,7 +5018,7 @@
             ],
             "text": {
               "ko": "성북로19길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 성북로19길."
+              "en": "Turn left."
             }
           },
           {
@@ -5028,7 +5028,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로23길."
+              "en": "Turn right."
             }
           },
           {
@@ -5038,7 +5038,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 성북로23길."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -5048,7 +5048,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 왼쪽 길로 계속 가세요.",
-              "en": "Keep left onto 성북로23길."
+              "en": "Keep left."
             }
           },
           {
@@ -5058,7 +5058,7 @@
             ],
             "text": {
               "ko": "성북로23나길 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로23나길."
+              "en": "Turn right."
             }
           },
           {
@@ -5068,7 +5068,7 @@
             ],
             "text": {
               "ko": "성북로23길 방향으로 우회전하세요.",
-              "en": "Turn right onto 성북로23길."
+              "en": "Turn right."
             }
           },
           {
@@ -5078,7 +5078,7 @@
             ],
             "text": {
               "ko": "성북로29길 방향으로 직진하세요.",
-              "en": "Continue straight onto 성북로29길."
+              "en": "Continue straight."
             }
           }
         ],
@@ -6957,7 +6957,7 @@
             ],
             "text": {
               "ko": "동소문로2길 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로2길."
+              "en": "Turn right."
             }
           },
           {
@@ -6967,7 +6967,7 @@
             ],
             "text": {
               "ko": "동소문로 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 동소문로."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -6977,7 +6977,7 @@
             ],
             "text": {
               "ko": "보문로40길 방향으로 우회전하세요.",
-              "en": "Turn right onto 보문로40길."
+              "en": "Turn right."
             }
           },
           {
@@ -6987,7 +6987,7 @@
             ],
             "text": {
               "ko": "동소문로20길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로20길."
+              "en": "Turn left."
             }
           },
           {
@@ -6997,7 +6997,7 @@
             ],
             "text": {
               "ko": "동소문로, 41 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로, 41."
+              "en": "Turn right."
             }
           },
           {
@@ -7017,7 +7017,7 @@
             ],
             "text": {
               "ko": "동소문로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로."
+              "en": "Turn left."
             }
           },
           {
@@ -7027,7 +7027,7 @@
             ],
             "text": {
               "ko": "동소문로23길 방향으로 직진하세요.",
-              "en": "Continue straight onto 동소문로23길."
+              "en": "Continue straight."
             }
           },
           {
@@ -7037,7 +7037,7 @@
             ],
             "text": {
               "ko": "동소문로23길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로23길."
+              "en": "Turn left."
             }
           },
           {
@@ -7047,7 +7047,7 @@
             ],
             "text": {
               "ko": "동소문로25길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로25길."
+              "en": "Turn left."
             }
           },
           {
@@ -7057,7 +7057,7 @@
             ],
             "text": {
               "ko": "아리랑로 방향으로 직진하세요.",
-              "en": "Continue straight onto 아리랑로."
+              "en": "Continue straight."
             }
           },
           {
@@ -7067,7 +7067,7 @@
             ],
             "text": {
               "ko": "동소문로13나길 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로13나길."
+              "en": "Turn right."
             }
           },
           {
@@ -7087,7 +7087,7 @@
             ],
             "text": {
               "ko": "흥천사길 방향으로 왼쪽 길로 계속 가세요.",
-              "en": "Keep left onto 흥천사길."
+              "en": "Keep left."
             }
           },
           {
@@ -7107,7 +7107,7 @@
             ],
             "text": {
               "ko": "북악산로3길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 북악산로3길."
+              "en": "Turn left."
             }
           },
           {
@@ -7117,7 +7117,7 @@
             ],
             "text": {
               "ko": "북악산로3길 방향으로 직진하세요.",
-              "en": "Continue straight onto 북악산로3길."
+              "en": "Continue straight."
             }
           },
           {
@@ -7127,7 +7127,7 @@
             ],
             "text": {
               "ko": "아리랑로19다길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 아리랑로19다길."
+              "en": "Turn left."
             }
           },
           {
@@ -7137,7 +7137,7 @@
             ],
             "text": {
               "ko": "아리랑로19다길 방향으로 우회전하세요.",
-              "en": "Turn right onto 아리랑로19다길."
+              "en": "Turn right."
             }
           },
           {
@@ -7147,7 +7147,7 @@
             ],
             "text": {
               "ko": "아리랑로19길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 아리랑로19길."
+              "en": "Turn left."
             }
           },
           {
@@ -7661,7 +7661,7 @@
             ],
             "text": {
               "ko": "동소문로, 41 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로, 41."
+              "en": "Turn left."
             }
           },
           {
@@ -7671,7 +7671,7 @@
             ],
             "text": {
               "ko": "동소문로 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로."
+              "en": "Turn right."
             }
           },
           {
@@ -7701,7 +7701,7 @@
             ],
             "text": {
               "ko": "정릉로, 20 방향으로 우회전하세요.",
-              "en": "Turn right onto 정릉로, 20."
+              "en": "Turn right."
             }
           },
           {
@@ -7711,7 +7711,7 @@
             ],
             "text": {
               "ko": "아리랑로19길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 아리랑로19길."
+              "en": "Turn left."
             }
           },
           {
@@ -7721,7 +7721,7 @@
             ],
             "text": {
               "ko": "아리랑로19길 방향으로 직진하세요.",
-              "en": "Continue straight onto 아리랑로19길."
+              "en": "Continue straight."
             }
           },
           {
@@ -8195,7 +8195,7 @@
             ],
             "text": {
               "ko": "정릉까지 출발합니다. 삼양로 방향으로 가세요.",
-              "en": "Starting your run to Jeongneung. Head along 삼양로."
+              "en": "Starting your run to Jeongneung."
             }
           },
           {
@@ -8205,7 +8205,7 @@
             ],
             "text": {
               "ko": "삼양로39길 방향으로 우회전하세요.",
-              "en": "Turn right onto 삼양로39길."
+              "en": "Turn right."
             }
           },
           {
@@ -8225,7 +8225,7 @@
             ],
             "text": {
               "ko": "삼양로37길 방향으로 우회전하세요.",
-              "en": "Turn right onto 삼양로37길."
+              "en": "Turn right."
             }
           },
           {
@@ -8235,7 +8235,7 @@
             ],
             "text": {
               "ko": "솔샘로 방향으로 오른쪽으로 살짝 꺾으세요.",
-              "en": "Bear right onto 솔샘로."
+              "en": "Bear right."
             }
           },
           {
@@ -8245,7 +8245,7 @@
             ],
             "text": {
               "ko": "솔샘로 방향으로 우회전하세요.",
-              "en": "Turn right onto 솔샘로."
+              "en": "Turn right."
             }
           },
           {
@@ -8255,7 +8255,7 @@
             ],
             "text": {
               "ko": "솔샘로50길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 솔샘로50길."
+              "en": "Turn left."
             }
           },
           {
@@ -8265,7 +8265,7 @@
             ],
             "text": {
               "ko": "삼양로27길 방향으로 직진하세요.",
-              "en": "Continue straight onto 삼양로27길."
+              "en": "Continue straight."
             }
           },
           {
@@ -8275,7 +8275,7 @@
             ],
             "text": {
               "ko": "삼양로27길 방향으로 오른쪽 길로 계속 가세요.",
-              "en": "Keep right onto 삼양로27길."
+              "en": "Keep right."
             }
           },
           {
@@ -8285,7 +8285,7 @@
             ],
             "text": {
               "ko": "삼양로19길 방향으로 우회전하세요.",
-              "en": "Turn right onto 삼양로19길."
+              "en": "Turn right."
             }
           },
           {
@@ -8305,7 +8305,7 @@
             ],
             "text": {
               "ko": "큰돌산길 방향으로 오른쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp right onto 큰돌산길."
+              "en": "Turn sharp right."
             }
           },
           {
@@ -8315,7 +8315,7 @@
             ],
             "text": {
               "ko": "삼양로15길 방향으로 오른쪽 길로 계속 가세요.",
-              "en": "Keep right onto 삼양로15길."
+              "en": "Keep right."
             }
           },
           {
@@ -8325,7 +8325,7 @@
             ],
             "text": {
               "ko": "큰돌산길 방향으로 직진하세요.",
-              "en": "Continue straight onto 큰돌산길."
+              "en": "Continue straight."
             }
           },
           {
@@ -8335,7 +8335,7 @@
             ],
             "text": {
               "ko": "길음로 방향으로 직진하세요.",
-              "en": "Continue straight onto 길음로."
+              "en": "Continue straight."
             }
           },
           {
@@ -8355,7 +8355,7 @@
             ],
             "text": {
               "ko": "삼양로13길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 삼양로13길."
+              "en": "Turn left."
             }
           },
           {
@@ -8365,7 +8365,7 @@
             ],
             "text": {
               "ko": "숭인로 방향으로 직진하세요.",
-              "en": "Continue straight onto 숭인로."
+              "en": "Continue straight."
             }
           },
           {
@@ -8375,7 +8375,7 @@
             ],
             "text": {
               "ko": "삼양로2길 방향으로 직진하세요.",
-              "en": "Continue straight onto 삼양로2길."
+              "en": "Continue straight."
             }
           },
           {
@@ -8385,7 +8385,7 @@
             ],
             "text": {
               "ko": "삼양로2길 방향으로 오른쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp right onto 삼양로2길."
+              "en": "Turn sharp right."
             }
           },
           {
@@ -8395,7 +8395,7 @@
             ],
             "text": {
               "ko": "삼양로, 41 방향으로 좌회전하세요.",
-              "en": "Turn left onto 삼양로, 41."
+              "en": "Turn left."
             }
           },
           {
@@ -8435,7 +8435,7 @@
             ],
             "text": {
               "ko": "동소문로, 41 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로, 41."
+              "en": "Turn left."
             }
           },
           {
@@ -8445,7 +8445,7 @@
             ],
             "text": {
               "ko": "동소문로 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로."
+              "en": "Turn right."
             }
           },
           {
@@ -8475,7 +8475,7 @@
             ],
             "text": {
               "ko": "정릉로, 20 방향으로 우회전하세요.",
-              "en": "Turn right onto 정릉로, 20."
+              "en": "Turn right."
             }
           },
           {
@@ -8485,7 +8485,7 @@
             ],
             "text": {
               "ko": "아리랑로19길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 아리랑로19길."
+              "en": "Turn left."
             }
           },
           {
@@ -8495,7 +8495,7 @@
             ],
             "text": {
               "ko": "아리랑로19길 방향으로 직진하세요.",
-              "en": "Continue straight onto 아리랑로19길."
+              "en": "Continue straight."
             }
           },
           {
@@ -9195,7 +9195,7 @@
             ],
             "text": {
               "ko": "종암로40길 방향으로 오른쪽 길로 계속 가세요.",
-              "en": "Keep right onto 종암로40길."
+              "en": "Keep right."
             }
           },
           {
@@ -9245,7 +9245,7 @@
             ],
             "text": {
               "ko": "종암로 방향으로 우회전하세요.",
-              "en": "Turn right onto 종암로."
+              "en": "Turn right."
             }
           },
           {
@@ -9255,7 +9255,7 @@
             ],
             "text": {
               "ko": "종암로23길 방향으로 우회전하세요.",
-              "en": "Turn right onto 종암로23길."
+              "en": "Turn right."
             }
           },
           {
@@ -9265,7 +9265,7 @@
             ],
             "text": {
               "ko": "종암로23길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 종암로23길."
+              "en": "Turn left."
             }
           },
           {
@@ -9315,7 +9315,7 @@
             ],
             "text": {
               "ko": "종암로27길 방향으로 우회전하세요.",
-              "en": "Turn right onto 종암로27길."
+              "en": "Turn right."
             }
           },
           {
@@ -9325,7 +9325,7 @@
             ],
             "text": {
               "ko": "정릉로48길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 정릉로48길."
+              "en": "Turn left."
             }
           },
           {
@@ -9335,7 +9335,7 @@
             ],
             "text": {
               "ko": "정릉로, 20 방향으로 오른쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp right onto 정릉로, 20."
+              "en": "Turn sharp right."
             }
           },
           {
@@ -9345,7 +9345,7 @@
             ],
             "text": {
               "ko": "삼양로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 삼양로."
+              "en": "Turn left."
             }
           },
           {
@@ -9375,7 +9375,7 @@
             ],
             "text": {
               "ko": "동소문로, 41 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로, 41."
+              "en": "Turn left."
             }
           },
           {
@@ -9385,7 +9385,7 @@
             ],
             "text": {
               "ko": "동소문로 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로."
+              "en": "Turn right."
             }
           },
           {
@@ -9415,7 +9415,7 @@
             ],
             "text": {
               "ko": "정릉로, 20 방향으로 우회전하세요.",
-              "en": "Turn right onto 정릉로, 20."
+              "en": "Turn right."
             }
           },
           {
@@ -9425,7 +9425,7 @@
             ],
             "text": {
               "ko": "아리랑로19길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 아리랑로19길."
+              "en": "Turn left."
             }
           },
           {
@@ -9435,7 +9435,7 @@
             ],
             "text": {
               "ko": "아리랑로19길 방향으로 직진하세요.",
-              "en": "Continue straight onto 아리랑로19길."
+              "en": "Continue straight."
             }
           },
           {
@@ -10234,7 +10234,7 @@
             ],
             "text": {
               "ko": "정릉까지 출발합니다. 중랑천서자전거길 방향으로 가세요.",
-              "en": "Starting your run to Jeongneung. Head along 중랑천서자전거길."
+              "en": "Starting your run to Jeongneung."
             }
           },
           {
@@ -10264,7 +10264,7 @@
             ],
             "text": {
               "ko": "이화교 동편 출입로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 이화교 동편 출입로."
+              "en": "Turn left."
             }
           },
           {
@@ -10304,7 +10304,7 @@
             ],
             "text": {
               "ko": "중랑천동자전거길 방향으로 왼쪽으로 살짝 꺾으세요.",
-              "en": "Bear left onto 중랑천동자전거길."
+              "en": "Bear left."
             }
           },
           {
@@ -10384,7 +10384,7 @@
             ],
             "text": {
               "ko": "화랑로 방향으로 우회전하세요.",
-              "en": "Turn right onto 화랑로."
+              "en": "Turn right."
             }
           },
           {
@@ -10404,7 +10404,7 @@
             ],
             "text": {
               "ko": "화랑로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 화랑로."
+              "en": "Turn left."
             }
           },
           {
@@ -10414,7 +10414,7 @@
             ],
             "text": {
               "ko": "화랑로 방향으로 오른쪽 길로 계속 가세요.",
-              "en": "Keep right onto 화랑로."
+              "en": "Keep right."
             }
           },
           {
@@ -10424,7 +10424,7 @@
             ],
             "text": {
               "ko": "화랑로 방향으로 직진하세요.",
-              "en": "Continue straight onto 화랑로."
+              "en": "Continue straight."
             }
           },
           {
@@ -10434,7 +10434,7 @@
             ],
             "text": {
               "ko": "화랑로 방향으로 직진하세요.",
-              "en": "Continue straight onto 화랑로."
+              "en": "Continue straight."
             }
           },
           {
@@ -10444,7 +10444,7 @@
             ],
             "text": {
               "ko": "화랑로 방향으로 직진하세요.",
-              "en": "Continue straight onto 화랑로."
+              "en": "Continue straight."
             }
           },
           {
@@ -10454,7 +10454,7 @@
             ],
             "text": {
               "ko": "화랑로 방향으로 직진하세요.",
-              "en": "Continue straight onto 화랑로."
+              "en": "Continue straight."
             }
           },
           {
@@ -10524,7 +10524,7 @@
             ],
             "text": {
               "ko": "동소문로, 41 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동소문로, 41."
+              "en": "Turn left."
             }
           },
           {
@@ -10534,7 +10534,7 @@
             ],
             "text": {
               "ko": "동소문로 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로."
+              "en": "Turn right."
             }
           },
           {
@@ -10564,7 +10564,7 @@
             ],
             "text": {
               "ko": "정릉로, 20 방향으로 우회전하세요.",
-              "en": "Turn right onto 정릉로, 20."
+              "en": "Turn right."
             }
           },
           {
@@ -10574,7 +10574,7 @@
             ],
             "text": {
               "ko": "아리랑로19길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 아리랑로19길."
+              "en": "Turn left."
             }
           },
           {
@@ -10584,7 +10584,7 @@
             ],
             "text": {
               "ko": "아리랑로19길 방향으로 직진하세요.",
-              "en": "Continue straight onto 아리랑로19길."
+              "en": "Continue straight."
             }
           },
           {
@@ -11715,7 +11715,7 @@
             ],
             "text": {
               "ko": "의릉까지 출발합니다. 화랑로 방향으로 가세요.",
-              "en": "Starting your run to Uireung. Head along 화랑로."
+              "en": "Starting your run to Uireung."
             }
           },
           {
@@ -11745,7 +11745,7 @@
             ],
             "text": {
               "ko": "화랑로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 화랑로."
+              "en": "Turn left."
             }
           },
           {
@@ -11795,7 +11795,7 @@
             ],
             "text": {
               "ko": "한천로66길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 한천로66길."
+              "en": "Turn left."
             }
           },
           {
@@ -11805,7 +11805,7 @@
             ],
             "text": {
               "ko": "한천로78길 방향으로 오른쪽 길로 계속 가세요.",
-              "en": "Keep right onto 한천로78길."
+              "en": "Keep right."
             }
           },
           {
@@ -11815,7 +11815,7 @@
             ],
             "text": {
               "ko": "한천로78길 방향으로 직진하세요.",
-              "en": "Continue straight onto 한천로78길."
+              "en": "Continue straight."
             }
           },
           {
@@ -11825,7 +11825,7 @@
             ],
             "text": {
               "ko": "한천로76길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 한천로76길."
+              "en": "Turn left."
             }
           },
           {
@@ -11835,7 +11835,7 @@
             ],
             "text": {
               "ko": "한천로76가길 방향으로 직진하세요.",
-              "en": "Continue straight onto 한천로76가길."
+              "en": "Continue straight."
             }
           },
           {
@@ -11845,7 +11845,7 @@
             ],
             "text": {
               "ko": "한천로72길 방향으로 우회전하세요.",
-              "en": "Turn right onto 한천로72길."
+              "en": "Turn right."
             }
           },
           {
@@ -11855,7 +11855,7 @@
             ],
             "text": {
               "ko": "돌곶이로14길 방향으로 우회전하세요.",
-              "en": "Turn right onto 돌곶이로14길."
+              "en": "Turn right."
             }
           },
           {
@@ -11865,7 +11865,7 @@
             ],
             "text": {
               "ko": "돌곶이로8길 방향으로 오른쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp right onto 돌곶이로8길."
+              "en": "Turn sharp right."
             }
           },
           {
@@ -11895,7 +11895,7 @@
             ],
             "text": {
               "ko": "돌곶이로 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 돌곶이로."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -11905,7 +11905,7 @@
             ],
             "text": {
               "ko": "돌곶이로9나길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 돌곶이로9나길."
+              "en": "Turn left."
             }
           },
           {
@@ -11915,7 +11915,7 @@
             ],
             "text": {
               "ko": "돌곶이로3길 방향으로 오른쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp right onto 돌곶이로3길."
+              "en": "Turn sharp right."
             }
           },
           {
@@ -11925,7 +11925,7 @@
             ],
             "text": {
               "ko": "화랑로32길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 화랑로32길."
+              "en": "Turn left."
             }
           },
           {
@@ -11935,7 +11935,7 @@
             ],
             "text": {
               "ko": "화랑로32길 방향으로 우회전하세요.",
-              "en": "Turn right onto 화랑로32길."
+              "en": "Turn right."
             }
           },
           {
@@ -12425,7 +12425,7 @@
             ],
             "text": {
               "ko": "의릉까지 출발합니다. 동일로, 3 방향으로 가세요.",
-              "en": "Starting your run to Uireung. Head along 동일로, 3."
+              "en": "Starting your run to Uireung."
             }
           },
           {
@@ -12435,7 +12435,7 @@
             ],
             "text": {
               "ko": "동일로174길 방향으로 우회전하세요.",
-              "en": "Turn right onto 동일로174길."
+              "en": "Turn right."
             }
           },
           {
@@ -12445,7 +12445,7 @@
             ],
             "text": {
               "ko": "화랑로 방향으로 오른쪽으로 살짝 꺾으세요.",
-              "en": "Bear right onto 화랑로."
+              "en": "Bear right."
             }
           },
           {
@@ -12515,7 +12515,7 @@
             ],
             "text": {
               "ko": "한천로66길 방향으로 우회전하세요.",
-              "en": "Turn right onto 한천로66길."
+              "en": "Turn right."
             }
           },
           {
@@ -12525,7 +12525,7 @@
             ],
             "text": {
               "ko": "한천로76다길 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 한천로76다길."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -12535,7 +12535,7 @@
             ],
             "text": {
               "ko": "한천로76길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 한천로76길."
+              "en": "Turn left."
             }
           },
           {
@@ -12545,7 +12545,7 @@
             ],
             "text": {
               "ko": "한천로68길 방향으로 우회전하세요.",
-              "en": "Turn right onto 한천로68길."
+              "en": "Turn right."
             }
           },
           {
@@ -12565,7 +12565,7 @@
             ],
             "text": {
               "ko": "돌곶이로8길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 돌곶이로8길."
+              "en": "Turn left."
             }
           },
           {
@@ -12575,7 +12575,7 @@
             ],
             "text": {
               "ko": "돌곶이로8길 방향으로 우회전하세요.",
-              "en": "Turn right onto 돌곶이로8길."
+              "en": "Turn right."
             }
           },
           {
@@ -12615,7 +12615,7 @@
             ],
             "text": {
               "ko": "돌곶이로 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 돌곶이로."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -12625,7 +12625,7 @@
             ],
             "text": {
               "ko": "돌곶이로9나길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 돌곶이로9나길."
+              "en": "Turn left."
             }
           },
           {
@@ -12635,7 +12635,7 @@
             ],
             "text": {
               "ko": "돌곶이로3길 방향으로 오른쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp right onto 돌곶이로3길."
+              "en": "Turn sharp right."
             }
           },
           {
@@ -12645,7 +12645,7 @@
             ],
             "text": {
               "ko": "화랑로32길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 화랑로32길."
+              "en": "Turn left."
             }
           },
           {
@@ -12655,7 +12655,7 @@
             ],
             "text": {
               "ko": "화랑로32길 방향으로 우회전하세요.",
-              "en": "Turn right onto 화랑로32길."
+              "en": "Turn right."
             }
           },
           {
@@ -13183,7 +13183,7 @@
             ],
             "text": {
               "ko": "경춘선 숲길 방향으로 오른쪽 길로 계속 가세요.",
-              "en": "Keep right onto 경춘선 숲길."
+              "en": "Keep right."
             }
           },
           {
@@ -13223,7 +13223,7 @@
             ],
             "text": {
               "ko": "화랑로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 화랑로."
+              "en": "Turn left."
             }
           },
           {
@@ -13273,7 +13273,7 @@
             ],
             "text": {
               "ko": "한천로66길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 한천로66길."
+              "en": "Turn left."
             }
           },
           {
@@ -13283,7 +13283,7 @@
             ],
             "text": {
               "ko": "한천로78길 방향으로 오른쪽 길로 계속 가세요.",
-              "en": "Keep right onto 한천로78길."
+              "en": "Keep right."
             }
           },
           {
@@ -13293,7 +13293,7 @@
             ],
             "text": {
               "ko": "한천로78길 방향으로 직진하세요.",
-              "en": "Continue straight onto 한천로78길."
+              "en": "Continue straight."
             }
           },
           {
@@ -13303,7 +13303,7 @@
             ],
             "text": {
               "ko": "한천로76길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 한천로76길."
+              "en": "Turn left."
             }
           },
           {
@@ -13313,7 +13313,7 @@
             ],
             "text": {
               "ko": "한천로76가길 방향으로 직진하세요.",
-              "en": "Continue straight onto 한천로76가길."
+              "en": "Continue straight."
             }
           },
           {
@@ -13323,7 +13323,7 @@
             ],
             "text": {
               "ko": "한천로72길 방향으로 우회전하세요.",
-              "en": "Turn right onto 한천로72길."
+              "en": "Turn right."
             }
           },
           {
@@ -13333,7 +13333,7 @@
             ],
             "text": {
               "ko": "돌곶이로14길 방향으로 우회전하세요.",
-              "en": "Turn right onto 돌곶이로14길."
+              "en": "Turn right."
             }
           },
           {
@@ -13343,7 +13343,7 @@
             ],
             "text": {
               "ko": "돌곶이로8길 방향으로 오른쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp right onto 돌곶이로8길."
+              "en": "Turn sharp right."
             }
           },
           {
@@ -13373,7 +13373,7 @@
             ],
             "text": {
               "ko": "돌곶이로 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 돌곶이로."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -13383,7 +13383,7 @@
             ],
             "text": {
               "ko": "돌곶이로9나길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 돌곶이로9나길."
+              "en": "Turn left."
             }
           },
           {
@@ -13393,7 +13393,7 @@
             ],
             "text": {
               "ko": "돌곶이로3길 방향으로 오른쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp right onto 돌곶이로3길."
+              "en": "Turn sharp right."
             }
           },
           {
@@ -13403,7 +13403,7 @@
             ],
             "text": {
               "ko": "화랑로32길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 화랑로32길."
+              "en": "Turn left."
             }
           },
           {
@@ -13413,7 +13413,7 @@
             ],
             "text": {
               "ko": "화랑로32길 방향으로 우회전하세요.",
-              "en": "Turn right onto 화랑로32길."
+              "en": "Turn right."
             }
           },
           {
@@ -14028,7 +14028,7 @@
             ],
             "text": {
               "ko": "의릉까지 출발합니다. 아리랑로 방향으로 가세요.",
-              "en": "Starting your run to Uireung. Head along 아리랑로."
+              "en": "Starting your run to Uireung."
             }
           },
           {
@@ -14038,7 +14038,7 @@
             ],
             "text": {
               "ko": "동소문로20가길 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 동소문로20가길."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -14048,7 +14048,7 @@
             ],
             "text": {
               "ko": "동소문로22길 방향으로 우회전하세요.",
-              "en": "Turn right onto 동소문로22길."
+              "en": "Turn right."
             }
           },
           {
@@ -14058,7 +14058,7 @@
             ],
             "text": {
               "ko": "보문로30길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 보문로30길."
+              "en": "Turn left."
             }
           },
           {
@@ -14068,7 +14068,7 @@
             ],
             "text": {
               "ko": "보문로30가길 방향으로 직진하세요.",
-              "en": "Continue straight onto 보문로30가길."
+              "en": "Continue straight."
             }
           },
           {
@@ -14078,7 +14078,7 @@
             ],
             "text": {
               "ko": "고려대로13길 방향으로 우회전하세요.",
-              "en": "Turn right onto 고려대로13길."
+              "en": "Turn right."
             }
           },
           {
@@ -14168,7 +14168,7 @@
             ],
             "text": {
               "ko": "약령시로11길 방향으로 직진하세요.",
-              "en": "Continue straight onto 약령시로11길."
+              "en": "Continue straight."
             }
           },
           {
@@ -14178,7 +14178,7 @@
             ],
             "text": {
               "ko": "약령중앙로 방향으로 직진하세요.",
-              "en": "Continue straight onto 약령중앙로."
+              "en": "Continue straight."
             }
           },
           {
@@ -14188,7 +14188,7 @@
             ],
             "text": {
               "ko": "약령동길 방향으로 우회전하세요.",
-              "en": "Turn right onto 약령동길."
+              "en": "Turn right."
             }
           },
           {
@@ -14198,7 +14198,7 @@
             ],
             "text": {
               "ko": "약령중앙로12길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 약령중앙로12길."
+              "en": "Turn left."
             }
           },
           {
@@ -14208,7 +14208,7 @@
             ],
             "text": {
               "ko": "경동시장로 방향으로 우회전하세요.",
-              "en": "Turn right onto 경동시장로."
+              "en": "Turn right."
             }
           },
           {
@@ -14218,7 +14218,7 @@
             ],
             "text": {
               "ko": "경동시장로14길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 경동시장로14길."
+              "en": "Turn left."
             }
           },
           {
@@ -14228,7 +14228,7 @@
             ],
             "text": {
               "ko": "왕산로37길 방향으로 우회전하세요.",
-              "en": "Turn right onto 왕산로37길."
+              "en": "Turn right."
             }
           },
           {
@@ -14238,7 +14238,7 @@
             ],
             "text": {
               "ko": "홍릉로1길 방향으로 왼쪽으로 크게 꺾으세요.",
-              "en": "Turn sharp left onto 홍릉로1길."
+              "en": "Turn sharp left."
             }
           },
           {
@@ -14288,7 +14288,7 @@
             ],
             "text": {
               "ko": "청량문화광장 방향으로 좌회전하세요.",
-              "en": "Turn left onto 청량문화광장."
+              "en": "Turn left."
             }
           },
           {
@@ -14368,7 +14368,7 @@
             ],
             "text": {
               "ko": "망우로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 망우로."
+              "en": "Turn left."
             }
           },
           {
@@ -14438,7 +14438,7 @@
             ],
             "text": {
               "ko": "한천로58길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 한천로58길."
+              "en": "Turn left."
             }
           },
           {
@@ -14458,7 +14458,7 @@
             ],
             "text": {
               "ko": "한천로66길 방향으로 오른쪽 길로 계속 가세요.",
-              "en": "Keep right onto 한천로66길."
+              "en": "Keep right."
             }
           },
           {
@@ -14468,7 +14468,7 @@
             ],
             "text": {
               "ko": "한천로 방향으로 좌회전하세요.",
-              "en": "Turn left onto 한천로."
+              "en": "Turn left."
             }
           },
           {
@@ -14488,7 +14488,7 @@
             ],
             "text": {
               "ko": "이문로54길 방향으로 직진하세요.",
-              "en": "Continue straight onto 이문로54길."
+              "en": "Continue straight."
             }
           },
           {
@@ -14498,7 +14498,7 @@
             ],
             "text": {
               "ko": "돌곶이로 방향으로 우회전하세요.",
-              "en": "Turn right onto 돌곶이로."
+              "en": "Turn right."
             }
           },
           {
@@ -14508,7 +14508,7 @@
             ],
             "text": {
               "ko": "화랑로32길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 화랑로32길."
+              "en": "Turn left."
             }
           },
           {
@@ -14518,7 +14518,7 @@
             ],
             "text": {
               "ko": "화랑로32길 방향으로 우회전하세요.",
-              "en": "Turn right onto 화랑로32길."
+              "en": "Turn right."
             }
           },
           {
@@ -16012,7 +16012,7 @@
             ],
             "text": {
               "ko": "의릉까지 출발합니다. 동일로183길 방향으로 가세요.",
-              "en": "Starting your run to Uireung. Head along 동일로183길."
+              "en": "Starting your run to Uireung."
             }
           },
           {
@@ -16022,7 +16022,7 @@
             ],
             "text": {
               "ko": "동일로183길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동일로183길."
+              "en": "Turn left."
             }
           },
           {
@@ -16052,7 +16052,7 @@
             ],
             "text": {
               "ko": "동일로180길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동일로180길."
+              "en": "Turn left."
             }
           },
           {
@@ -16062,7 +16062,7 @@
             ],
             "text": {
               "ko": "동일로180길 방향으로 우회전하세요.",
-              "en": "Turn right onto 동일로180길."
+              "en": "Turn right."
             }
           },
           {
@@ -16072,7 +16072,7 @@
             ],
             "text": {
               "ko": "동일로178길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 동일로178길."
+              "en": "Turn left."
             }
           },
           {
@@ -16082,7 +16082,7 @@
             ],
             "text": {
               "ko": "동일로178길 방향으로 우회전하세요.",
-              "en": "Turn right onto 동일로178길."
+              "en": "Turn right."
             }
           },
           {
@@ -16092,7 +16092,7 @@
             ],
             "text": {
               "ko": "공릉로 방향으로 직진하세요.",
-              "en": "Continue straight onto 공릉로."
+              "en": "Continue straight."
             }
           },
           {
@@ -16162,7 +16162,7 @@
             ],
             "text": {
               "ko": "묵동천 자전거길 방향으로 직진하세요.",
-              "en": "Continue straight onto 묵동천 자전거길."
+              "en": "Continue straight."
             }
           },
           {
@@ -16192,7 +16192,7 @@
             ],
             "text": {
               "ko": "중랑천로29길 방향으로 오른쪽으로 살짝 꺾으세요.",
-              "en": "Bear right onto 중랑천로29길."
+              "en": "Bear right."
             }
           },
           {
@@ -16242,7 +16242,7 @@
             ],
             "text": {
               "ko": "망우로, 6 방향으로 우회전하세요.",
-              "en": "Turn right onto 망우로, 6."
+              "en": "Turn right."
             }
           },
           {
@@ -16252,7 +16252,7 @@
             ],
             "text": {
               "ko": "산책로 방향으로 우회전하세요.",
-              "en": "Turn right onto 산책로."
+              "en": "Turn right."
             }
           },
           {
@@ -16262,7 +16262,7 @@
             ],
             "text": {
               "ko": "산책로 방향으로 직진하세요.",
-              "en": "Continue straight onto 산책로."
+              "en": "Continue straight."
             }
           },
           {
@@ -16272,7 +16272,7 @@
             ],
             "text": {
               "ko": "망우로26길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 망우로26길."
+              "en": "Turn left."
             }
           },
           {
@@ -16282,7 +16282,7 @@
             ],
             "text": {
               "ko": "망우로, 6 방향으로 우회전하세요.",
-              "en": "Turn right onto 망우로, 6."
+              "en": "Turn right."
             }
           },
           {
@@ -16312,7 +16312,7 @@
             ],
             "text": {
               "ko": "외대역동로34길 방향으로 우회전하세요.",
-              "en": "Turn right onto 외대역동로34길."
+              "en": "Turn right."
             }
           },
           {
@@ -16322,7 +16322,7 @@
             ],
             "text": {
               "ko": "한천로61길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 한천로61길."
+              "en": "Turn left."
             }
           },
           {
@@ -16342,7 +16342,7 @@
             ],
             "text": {
               "ko": "외대역동로27길 방향으로 우회전하세요.",
-              "en": "Turn right onto 외대역동로27길."
+              "en": "Turn right."
             }
           },
           {
@@ -16392,7 +16392,7 @@
             ],
             "text": {
               "ko": "신이문로18길 방향으로 우회전하세요.",
-              "en": "Turn right onto 신이문로18길."
+              "en": "Turn right."
             }
           },
           {
@@ -16412,7 +16412,7 @@
             ],
             "text": {
               "ko": "신이문로9길 방향으로 오른쪽 길로 계속 가세요.",
-              "en": "Keep right onto 신이문로9길."
+              "en": "Keep right."
             }
           },
           {
@@ -16422,7 +16422,7 @@
             ],
             "text": {
               "ko": "이문로54길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 이문로54길."
+              "en": "Turn left."
             }
           },
           {
@@ -16432,7 +16432,7 @@
             ],
             "text": {
               "ko": "돌곶이로 방향으로 우회전하세요.",
-              "en": "Turn right onto 돌곶이로."
+              "en": "Turn right."
             }
           },
           {
@@ -16442,7 +16442,7 @@
             ],
             "text": {
               "ko": "화랑로32길 방향으로 좌회전하세요.",
-              "en": "Turn left onto 화랑로32길."
+              "en": "Turn left."
             }
           },
           {
@@ -16452,7 +16452,7 @@
             ],
             "text": {
               "ko": "화랑로32길 방향으로 우회전하세요.",
-              "en": "Turn right onto 화랑로32길."
+              "en": "Turn right."
             }
           },
           {

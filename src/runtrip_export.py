@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 from pathlib import Path
 from typing import Any
 
@@ -19,6 +20,7 @@ DEFAULT_INDEX = Path("analysis/experiments/final_routes_20261101/outputs/app/rep
 DISTANCE_LABELS = ("3km", "5km", "10km")
 ELEVATION_SAMPLES = 24
 CUE_MIN_GAP_M = 30.0  # run app fires a cue within 25m, so closer cues would overlap.
+HANGUL = re.compile("[가-힣]")
 SEALS = {"simujang": "심우", "jeongneung": "정릉", "uiryeong": "의릉"}
 MODE_LABELS = {"low": {"ko": "완만한 길", "en": "Gentle"}, "any": {"ko": "언덕 허용", "en": "Hills OK"}}
 
@@ -87,14 +89,20 @@ def _road_name(instruction: str) -> str:
     return ""
 
 
+def _english_road(road: str) -> str:
+    """ORS road names are Hangul; an en-US voice cannot read them, so English cues drop them."""
+    return "" if HANGUL.search(road) else road
+
+
 def _cues(steps: list[dict[str, Any]], coordinates: list[list[float]], destination: dict[str, str]) -> list[dict[str, Any]]:
     """Build run app cues from saved ORS steps; unknown maneuver types are skipped."""
     cues: list[dict[str, Any]] = []
     first = coordinates[0]
     first_road = _road_name(str(steps[0].get("instruction") or "")) if steps else ""
+    first_road_en = _english_road(first_road)
     cues.append({"at": [first[0], first[1]], "text": {
         "ko": f"{destination['ko']}까지 출발합니다." + (f" {first_road} 방향으로 가세요." if first_road else ""),
-        "en": f"Starting your run to {destination['en']}." + (f" Head along {first_road}." if first_road else ""),
+        "en": f"Starting your run to {destination['en']}." + (f" Head along {first_road_en}." if first_road_en else ""),
     }})
     for step in steps:
         turn = ORS_MANEUVER_NAMES.get(step.get("type"))
@@ -106,9 +114,10 @@ def _cues(steps: list[dict[str, Any]], coordinates: list[list[float]], destinati
             continue
         ko, en = TURN_TEXT[turn]
         road = _road_name(str(step.get("instruction") or ""))
+        road_en = _english_road(road)
         cues.append({"at": [point[0], point[1]], "text": {
             "ko": f"{road} 방향으로 {ko}." if road else f"{ko}.",
-            "en": f"{en} onto {road}." if road else f"{en}.",
+            "en": f"{en} onto {road_en}." if road_en else f"{en}.",
         }})
     return cues
 
