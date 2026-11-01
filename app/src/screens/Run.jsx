@@ -7,7 +7,6 @@ import { useMemo } from "react";
 import { fmtTime, fmtPace, distance } from "../lib/geo.js";
 import { MapView, FitBounds, HexLayer, SpotMarker, Route, Dot, Me, Follow } from "../components/MapView.jsx";
 import { ShopRow } from "../components/Bits.jsx";
-import { Polyline } from "react-leaflet";
 
 export default function Run() {
   const app = useApp();
@@ -26,7 +25,7 @@ export default function Run() {
         {c && <Route path={c.path} color="#7CC4A4" />}
         {!c && data.shops.filter((s) => s.partner).map((s) => <Dot key={s.id} at={[s.lat, s.lng]} color="#7CC4A4" radius={8} />)}
         {spots.map((s) => <SpotMarker key={s.id} spot={s} />)}
-        {v.trail.length > 1 && <Polyline positions={v.trail} pathOptions={{ color: "#fff", weight: 4, opacity: 0.9 }} />}
+        {v.trail.length > 1 && <Route path={v.trail} color="#fff" weight={4} />}
         <Me at={v.me} />
         {c && <FitBounds points={c.path.map((q) => [q.lat, q.lng])} padTL={[30, 130]} padBR={[30, 330]} fitKey={c.id} />}
         <Follow pos={v.me} />{/* 내 위치를 따라 지도 이동 */}

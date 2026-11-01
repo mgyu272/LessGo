@@ -1,13 +1,12 @@
 // 시작(로그인) · 완주 요약 · ⑨ 스탬프·별 + 내 영역 + 랭킹 · 내 기록
 
 import { useEffect, useState } from "react";
-import { Polyline } from "react-leaflet";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { fmtTime, fmtPace } from "../lib/geo.js";
 import { boundary, areaKm2 } from "../lib/territory.js";
 import { NEXT_REWARD, STAR_RULES } from "../state/useUserData.js";
-import { MapView, FitBounds, HexLayer } from "../components/MapView.jsx";
+import { MapView, FitBounds, HexLayer, Route } from "../components/MapView.jsx";
 import { LangPill, OnboardingArt, Seal, sealText } from "../components/Bits.jsx";
 
 // ---------------- 시작 화면 (닉네임 → 익명 로그인) ----------------
@@ -74,7 +73,7 @@ export function Finish() {
         </div>
         <MapView className="map-mini">
           <HexLayer cells={app.user.cells} landmarkCells={app.data.landmarkCells} />
-          {f.trail.length > 1 && <Polyline positions={f.trail} pathOptions={{ color: "#1F4D3F", weight: 5 }} />}
+          {f.trail.length > 1 && <Route path={f.trail} weight={5} opacity={1} />}
           <FitBounds points={f.trail.length ? f.trail : [[37.59, 127.0]]} fitKey={r.id} />
         </MapView>
         <div className="earn">
