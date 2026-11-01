@@ -74,7 +74,7 @@ export function Finish() {
         </div>
         <MapView className="map-mini">
           <HexLayer cells={app.user.cells} landmarkCells={app.data.landmarkCells} />
-          {f.trail.length > 1 && <Polyline positions={f.trail} pathOptions={{ color: "#D2461F", weight: 5 }} />}
+          {f.trail.length > 1 && <Polyline positions={f.trail} pathOptions={{ color: "#1F4D3F", weight: 5 }} />}
           <FitBounds points={f.trail.length ? f.trail : [[37.59, 127.0]]} fitKey={r.id} />
         </MapView>
         <div className="earn">

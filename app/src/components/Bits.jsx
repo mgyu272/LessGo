@@ -5,7 +5,7 @@ import { fmtDist } from "../lib/geo.js";
 import { useApp } from "../state/AppContext.jsx";
 
 // 고도 그래프 (시안 3·4번의 언덕 모양). 라이브러리 없이 SVG로.
-export function ElevationChart({ values, color = "#D2461F", fill = "#F6D9CC", height = 64 }) {
+export function ElevationChart({ values, color = "#1F4D3F", fill = "rgba(31,77,63,.12)", height = 64 }) {
   if (!values?.length) return null;
   const w = 300, h = height, pad = 4;
   const min = Math.min(...values), max = Math.max(...values);
@@ -88,10 +88,10 @@ export function Seal({ text, size = 56, off = false, stamp = false }) {
 }
 export const sealText = (spot) => spot.seal || spot.name.ko.replace(/\s*\(.*\)/, "").slice(0, 2);
 
-// 시작 화면 그림: 해 질 녘 북악산 능선, 한양도성 성곽, 은행잎, 그 위로 그려지는 주홍 달리기 길
+// 시작 화면 그림: 달밤의 북악산 능선, 한양도성 성곽, 나뭇잎, 그 위로 그려지는 옥빛 달리기 길
 const LEAVES = [
-  [52, 236, 18, "#ECB22E", 0], [96, 262, -30, "#D2461F", 0.25], [150, 250, 40, "#ECB22E", 0.5],
-  [214, 268, -12, "#ECB22E", 0.15], [268, 254, 64, "#D2461F", 0.4], [330, 270, -48, "#ECB22E", 0.3], [372, 248, 22, "#ECB22E", 0.6],
+  [52, 236, 18, "#7CC4A4", 0], [96, 262, -30, "#B5C7BF", 0.25], [150, 250, 40, "#7CC4A4", 0.5],
+  [214, 268, -12, "#7CC4A4", 0.15], [268, 254, 64, "#B5C7BF", 0.4], [330, 270, -48, "#7CC4A4", 0.3], [372, 248, 22, "#7CC4A4", 0.6],
 ];
 export function OnboardingArt() {
   const wallY = (x) => 196 - 14 * Math.sin(x / 75) - x * 0.035;
@@ -102,30 +102,30 @@ export function OnboardingArt() {
   for (let row = 1; row <= 3; row++) {
     const pts = [];
     for (let x = -10; x <= 410; x += 10) pts.push(`${x},${(wallY(x) + row * 9).toFixed(1)}`);
-    stones.push(<polyline key={row} points={pts.join(" ")} fill="none" stroke="#1F1C2C" strokeOpacity=".22" strokeWidth="1" strokeDasharray={row % 2 ? "14 3" : "9 3"} />);
+    stones.push(<polyline key={row} points={pts.join(" ")} fill="none" stroke="#1C2B26" strokeOpacity=".22" strokeWidth="1" strokeDasharray={row % 2 ? "14 3" : "9 3"} />);
   }
   return (
     <svg viewBox="0 0 400 320" aria-hidden="true">
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#1F1C2C" /><stop offset=".55" stopColor="#4A2E3E" /><stop offset="1" stopColor="#B4532A" />
+          <stop offset="0" stopColor="#17332A" /><stop offset=".55" stopColor="#1F4D3F" /><stop offset="1" stopColor="#2F5A4C" />
         </linearGradient>
         <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#3B2B33" /><stop offset="1" stopColor="#1F1C2C" />
+          <stop offset="0" stopColor="#23453A" /><stop offset="1" stopColor="#17332A" />
         </linearGradient>
       </defs>
       <rect width="400" height="320" fill="url(#sky)" />
-      <circle cx="292" cy="118" r="38" fill="#ECB22E" opacity=".9" />
-      <path d="M0,150 C50,112 96,104 150,128 S240,86 300,112 S372,132 400,118 L400,320 L0,320 Z" fill="#2B2740" />
-      <path d="M0,178 C70,150 120,160 180,150 S300,132 400,150 L400,320 L0,320 Z" fill="#33283A" />
-      <polygon points={`${top.join(" ")} 410,320 -10,320`} fill="#CFC5B4" />
-      <g fill="#CFC5B4">{merlons}</g>
+      <circle cx="292" cy="118" r="38" fill="#DDE5E1" opacity=".9" />
+      <path d="M0,150 C50,112 96,104 150,128 S240,86 300,112 S372,132 400,118 L400,320 L0,320 Z" fill="#23453A" />
+      <path d="M0,178 C70,150 120,160 180,150 S300,132 400,150 L400,320 L0,320 Z" fill="#2B5244" />
+      <polygon points={`${top.join(" ")} 410,320 -10,320`} fill="#D9DEDA" />
+      <g fill="#D9DEDA">{merlons}</g>
       {stones}
       <rect x="0" y="232" width="400" height="88" fill="url(#ground)" />
-      <path className="ob-route" d="M18,300 C80,276 118,286 168,262 S250,236 292,226 S352,206 384,186" fill="none" stroke="#D2461F" strokeWidth="4.5" strokeLinecap="round" />
+      <path className="ob-route" d="M18,300 C80,276 118,286 168,262 S250,236 292,226 S352,206 384,186" fill="none" stroke="#7CC4A4" strokeWidth="4.5" strokeLinecap="round" />
       <g className="ob-runner">
-        <circle cx="384" cy="186" r="7" fill="#ECB22E" stroke="#fff" strokeWidth="3" />
-        <circle cx="384" cy="186" r="7" fill="none" stroke="#ECB22E" strokeWidth="2" />
+        <circle cx="384" cy="186" r="7" fill="#7CC4A4" stroke="#fff" strokeWidth="3" />
+        <circle cx="384" cy="186" r="7" fill="none" stroke="#7CC4A4" strokeWidth="2" />
       </g>
       {LEAVES.map(([x, y, rot, c, delay], i) => (
         <g key={i} transform={`translate(${x} ${y}) rotate(${rot})`}>

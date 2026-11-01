@@ -119,7 +119,7 @@ function CourseCard({ c, top, reason, onClick }) {
       <div className="row-between"><h3>{loc(p.name)}</h3><span className={`tone ${p.tone}`}>{t("tone_" + p.tone)}</span></div>
       <p className="sub">{p.themes.map((th) => t("th_" + th)).join(", ")} / {t("h_" + p.hill)}</p>
       {reason && <p className="ai-reason"><span aria-hidden="true">✦</span> {reason}</p>}
-      <ElevationChart values={p.elevation} {...(top ? { color: "#ECB22E", fill: "rgba(236,178,46,.22)" } : {})} />
+      <ElevationChart values={p.elevation} {...(top ? { color: "#7CC4A4", fill: "rgba(124,196,164,.22)" } : {})} />
       <div className="row-between">
         <span className="km">{p.distance_km}<small>km</small></span>
         <div className="meta">

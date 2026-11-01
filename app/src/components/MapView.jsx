@@ -45,13 +45,13 @@ export function HexLayer({ cells, landmarkCells, dark = false, goals = false, fr
       {owned.map(({ c, b, gold }) => (
         <Polygon key={c} positions={b} interactive={false} pathOptions={{
           className: freshSet.has(c) ? "hex-fresh" : "",
-          color: gold ? "#A8331A" : dark ? "#ECB22E" : "#C99212", weight: 1,
-          fillColor: gold ? "#D2461F" : "#ECB22E", fillOpacity: gold ? 0.7 : dark ? 0.4 : 0.42,
+          color: gold ? "#1F4D3F" : dark ? "#7CC4A4" : "#4F9C7E", weight: 1,
+          fillColor: gold ? "#2E6B57" : "#7CC4A4", fillOpacity: gold ? 0.7 : dark ? 0.4 : 0.42,
         }} />
       ))}
       {goalCells.map((c) => (
         <Polygon key={"g" + c} positions={boundary(c)} interactive={false}
-          pathOptions={{ color: "#D2461F", weight: 2, dashArray: "4 4", fillOpacity: 0 }} />
+          pathOptions={{ color: "#1F4D3F", weight: 2, dashArray: "4 4", fillOpacity: 0 }} />
       ))}
     </>
   );
