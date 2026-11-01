@@ -201,14 +201,14 @@ https://geojson.io 에서 선으로 실제 길을 따라 그리고 `properties`�
 - **모티프**: 한양도성 화강암 · 단청 색 · 은행잎과 단풍 · 먹 · 낙관(도장)
 - **색**: 먹 `#1F1C2C` · 화강암 `#E8E4DC` · 한지 `#FBF9F5` · 주홍 `#D2461F` · 은행 `#ECB22E` · 뇌록 `#2F6E5E`
   (`src/styles.css` 맨 위 `:root`에서 바꾸면 전체가 바뀌어요)
-- **글꼴**: 제목·숫자 Hahmlet, 본문 IBM Plex Sans KR (앱 안에 포함돼 있어 인터넷이 느려도 안 깨져요)
+- **글꼴**: 제목·숫자·본문 모두 Noto Sans KR (앱 안에 포함돼 있어 인터넷이 느려도 안 깨져요)
 - **움직임**: 시작 화면에서 성곽 위로 달리기 길이 그려짐 · 스팟 도착 때 도장이 쾅 찍힘 · 달리는 중 내 위치 맥박, 새 육각형 반짝임, 코스 진행 막대
   (휴대폰의 "동작 줄이기" 설정을 켜면 움직임이 꺼져요)
 - 스팟마다 도장 글자는 `public/data/spots.json`의 `seal` (예: `"길상"`)
 
 ## 9. 기술 스택 (발표용 한 줄)
 
-**React 18 + Vite · Hahmlet/IBM Plex Sans KR · Leaflet + OpenStreetMap · H3 육각형 격자 · Web Speech 음성 · Supabase(익명 로그인·Postgres·RLS) · Gemini(자료 기반 질의응답) · Vercel 배포 — 운영비 0원**
+**React 18 + Vite · Noto Sans KR · Leaflet + OpenStreetMap · H3 육각형 격자 · Web Speech 음성 · Supabase(익명 로그인·Postgres·RLS) · Gemini(자료 기반 질의응답) · Vercel 배포 — 운영비 0원**
 
 ## 10. 다음에 할 일
 

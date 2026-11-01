@@ -4,7 +4,7 @@
    모티프: 한양도성 화강암 · 단청 색(주홍·뇌록) · 은행잎 · 먹(墨) · 낙관 도장
    - 화면 바탕은 성곽 돌 색, 달리는 화면은 먹색(밤의 성곽)
    - 주홍 = 달리기·도장·중요한 버튼 / 은행 = 내 영역·별 / 뇌록 = 안내·정보
-   - 제목·숫자 = Hahmlet(한국 세리프, 옛 느낌+요즘 느낌) / 본문 = IBM Plex Sans KR
+   - 글꼴 = 제목·숫자·본문 모두 Noto Sans KR
 
    색을 바꾸고 싶으면 :root 값만 고치면 전체가 바뀌어요.
    --safe-top / --safe-bottom : 다이내믹 아일랜드·홈 바에 가리지 않게 두는 여백
@@ -26,8 +26,8 @@
   --verdigris-soft: #DDEAE4;
   --indigo: #34508C;       /* 쪽빛 */
 
-  --display: "Hahmlet", "Noto Serif KR", serif;
-  --sans: "IBM Plex Sans KR", system-ui, -apple-system, sans-serif;
+  --display: "Noto Sans KR", system-ui, -apple-system, sans-serif;
+  --sans: "Noto Sans KR", system-ui, -apple-system, sans-serif;
   --r-lg: 26px;
   --r-md: 16px;
   --r-sm: 10px;
