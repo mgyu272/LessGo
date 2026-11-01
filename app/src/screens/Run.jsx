@@ -23,7 +23,7 @@ export default function Run() {
     <section className="screen dark">
       <MapView dark zoom={16} center={v.me}>
         <HexLayer cells={app.user.cells} landmarkCells={data.landmarkCells} dark fresh={v.fresh} />
-        {c && <Route path={c.path} color="#D2461F" />}
+        {c && <Route path={c.path} color="#7CC4A4" />}
         {!c && data.shops.filter((s) => s.partner).map((s) => <Dot key={s.id} at={[s.lat, s.lng]} color="#ECB22E" radius={8} />)}
         {spots.map((s) => <SpotMarker key={s.id} spot={s} />)}
         {v.trail.length > 1 && <Polyline positions={v.trail} pathOptions={{ color: "#fff", weight: 4, opacity: 0.9 }} />}

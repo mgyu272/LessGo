@@ -141,19 +141,18 @@ small { font-size: 12px; }
 .demo-row { background: var(--verdigris-soft); }
 
 /* ---------- 지도 (옛 지도 톤) ---------- */
-.map { position: absolute; inset: 0; background: #E3DCCD; z-index: 0; }
+.map { position: absolute; inset: 0; background: #EEF0EE; z-index: 0; }
 .map.leaflet-container { position: absolute; font-family: var(--sans); }
-.map .leaflet-tile-pane { filter: sepia(.38) saturate(.75) contrast(.96) brightness(1.03); }
 .map-dark { background: var(--ink); }
 .map-dark .leaflet-tile-pane { filter: invert(1) hue-rotate(195deg) brightness(.55) saturate(.35) contrast(1.05); }
 .map-half { bottom: auto; height: 44%; }
 .map-mini.leaflet-container { position: relative; height: 220px; border-radius: var(--r-md); overflow: hidden; margin: 4px 0 10px; }
 .leaflet-control-attribution { font-size: 9px; background: rgba(251,249,245,.7) !important; }
 /* 스팟 마커: 장소 그림 배지 + 이름표. 빈 영역은 지도를 가리지 않게 클릭이 통과해요 */
-.spot-pin { pointer-events: none !important; background: none; border: 0; }
+.spot-pin { pointer-events: none !important; background: none; border: 0; --ring: #1C2B26; }
 .spot-pin .pin-lead { position: absolute; left: 0; top: 0; overflow: visible; }
 .spot-pin .pin-lead line { stroke: var(--ink); stroke-opacity: .55; stroke-width: 1.5; stroke-dasharray: 3 3; stroke-linecap: round; }
-.spot-pin .pin-dot { position: absolute; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; border: 2.5px solid #fff; box-sizing: content-box; transform: translate(-1.25px, -1.25px); box-shadow: 0 1px 3px rgba(31,28,44,.3); }
+.spot-pin .pin-dot { position: absolute; background: #1F4D3F; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; border: 2.5px solid #fff; box-sizing: content-box; transform: translate(-1.25px, -1.25px); box-shadow: 0 1px 3px rgba(31,28,44,.3); }
 .spot-pin .pin-badge { position: absolute; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; background: var(--paper); display: grid; place-items: center; box-shadow: 0 0 0 2.5px var(--ring), 0 6px 14px rgba(31,28,44,.28); pointer-events: auto; cursor: pointer; }
 .spot-pin .pin-badge svg { width: 34px; height: 34px; }
 .spot-pin .pin-badge.sm { position: static; width: 36px; height: 36px; margin: 0; }
