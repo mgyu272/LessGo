@@ -14,7 +14,7 @@ export function Settings() {
   const app = useApp();
   const s = app.settings;
   const set = (patch) => app.setSettings({ ...s, ...patch });
-  const custom = ![3, 5, 8].includes(s.km);
+  const custom = ![3, 5, 10].includes(s.km);
   const toggleTheme = (k) => { const th = new Set(s.themes); th.has(k) ? th.delete(k) : th.add(k); set({ themes: th }); };
 
   return (
@@ -29,7 +29,7 @@ export function Settings() {
         <div className="scroll-y">
           <h4>{t("distance")}</h4>
           <div className="seg">
-            {[3, 5, 8].map((km) => <button key={km} className={s.km === km ? "on" : ""} onClick={() => set({ km })}>{km}km</button>)}
+            {[3, 5, 10].map((km) => <button key={km} className={s.km === km ? "on" : ""} onClick={() => set({ km })}>{km}km</button>)}
             <button className={custom ? "on" : ""} onClick={() => set({ km: 4 })}>{t("custom")}</button>
           </div>
           {custom && <input type="number" className="input" min="1" max="21" step="0.5" value={s.km}

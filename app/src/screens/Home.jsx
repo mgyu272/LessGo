@@ -59,7 +59,7 @@ export default function Home() {
         <p className="eyebrow">{t("home_mode", { mode: t("mode_" + settings.time) })}</p>
         <h2>{t("home_title")}</h2>
         <div className="dist-row">
-          {[[3, "d_light"], [5, "d_normal"], [8, "d_long"]].map(([km, key]) => (
+          {[[3, "d_light"], [5, "d_normal"], [10, "d_long"]].map(([km, key]) => (
             <button key={km} className={settings.km === km ? "on" : ""} onClick={() => setSettings({ ...settings, km })}>
               <span className="n">{km}</span><span className="u">km</span><small>{t(key)}</small>
             </button>
