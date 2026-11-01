@@ -1,10 +1,9 @@
 // ① 홈 (시안 1번): 지도 + "오늘은 얼마나 달려볼까요?"
 
-import { useEffect, useState } from "react";
-import { useMap } from "react-leaflet";
+import { useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t } from "../lib/i18n.js";
-import { MapView, FitBounds, HexLayer, SpotMarker } from "../components/MapView.jsx";
+import { MapView, FitBounds, FlyTo, HexLayer, SpotMarker } from "../components/MapView.jsx";
 import { CategoryIcon } from "../components/SpotIcons.jsx";
 import { LangPill } from "../components/Bits.jsx";
 
@@ -70,12 +69,6 @@ export default function Home() {
       </div>
     </section>
   );
-}
-
-function FlyTo({ to }) {
-  const map = useMap();
-  useEffect(() => { if (to) map.flyTo(to, 17); }, [map, to]);
-  return null;
 }
 
 // 주소 끝에 ?speed=30 을 붙이면 시연 모드가 30배 빠르게 움직여요 (기본 10배)

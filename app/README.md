@@ -54,6 +54,16 @@ npm run dev
 
 ---
 
+## 지도 키 (카카오맵)
+
+지도는 카카오맵이에요. `.env.example`을 복사한 `.env.local`에 카카오 디벨로퍼스의 **JavaScript 키**를 넣고 `npm run dev`를 다시 실행하세요.
+```
+NEXT_PUBLIC_KAKAO_MAP_KEY=여기에_JavaScript_키
+```
+키가 없으면 지도 자리에 안내 문구만 보여요. 카카오 디벨로퍼스 → 내 애플리케이션 → 플랫폼 → **Web 사이트 도메인**에 `http://localhost:5173` 과 배포 주소를 등록해야 지도가 떠요. Vercel에 올릴 때는 Environment Variables에도 같은 이름으로 넣어 주세요.
+
+---
+
 ## 4. Supabase 연결 (로그인 + DB + 랭킹)
 
 1. https://supabase.com 가입 → **New project** (Region은 Seoul 추천, 비밀번호는 따로 적어 두기)
@@ -121,7 +131,7 @@ run/
 │  │  └─ Me.jsx               시작(로그인) · 완주 · ⑨ 스탬프·별·랭킹 · 내 기록
 │  ├─ components/
 │  │  ├─ PhoneFrame.jsx       아이폰 16 프레임
-│  │  ├─ MapView.jsx          지도·육각형·마커
+│  │  ├─ MapView.jsx          카카오 지도·육각형·마커 (지도 쓰는 화면 공통)
 │  │  └─ Bits.jsx             고도 그래프, 가게 줄, QR 자리, 탭바
 │  ├─ state/
 │  │  ├─ AppContext.jsx       앱 전체 상태 (지금 화면, 설정, 고른 코스…)
@@ -208,7 +218,7 @@ https://geojson.io 에서 선으로 실제 길을 따라 그리고 `properties`�
 
 ## 9. 기술 스택 (발표용 한 줄)
 
-**React 18 + Vite · Noto Sans KR · Leaflet + OpenStreetMap · H3 육각형 격자 · Web Speech 음성 · Supabase(익명 로그인·Postgres·RLS) · Gemini(자료 기반 질의응답) · Vercel 배포 — 운영비 0원**
+**React 18 + Vite · Noto Sans KR · 카카오맵 (react-kakao-maps-sdk) · H3 육각형 격자 · Web Speech 음성 · Supabase(익명 로그인·Postgres·RLS) · Gemini(자료 기반 질의응답) · Vercel 배포 — 운영비 0원**
 
 ## 10. 다음에 할 일
 
@@ -219,4 +229,4 @@ https://geojson.io 에서 선으로 실제 길을 따라 그리고 `properties`�
 5. 2단계: 진짜 QR, 구글 로그인, Capacitor로 앱 감싸 화면 꺼진 상태 GPS
 
 ---
-지도 © OpenStreetMap contributors · H3 (Uber, Apache 2.0) · Leaflet (BSD-2) · React (MIT)
+지도 © Kakao · H3 (Uber, Apache 2.0) · react-kakao-maps-sdk (MIT) · React (MIT)

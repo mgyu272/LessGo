@@ -142,16 +142,21 @@ small { font-size: 12px; }
 .toggle-row input:focus-visible + .switch { outline: 2.5px solid var(--ginkgo); outline-offset: 2px; }
 .demo-row { background: var(--verdigris-soft); }
 
-/* ---------- 지도 (옛 지도 톤) ---------- */
-.map { position: absolute; inset: 0; background: #EEF0EE; z-index: 0; }
-.map.leaflet-container { position: absolute; font-family: var(--sans); }
+/* ---------- 지도 (카카오맵) ---------- */
+.map { position: absolute; inset: 0; background: #EEF0EE; z-index: 0; font-family: var(--sans); }
 .map-dark { background: var(--ink); }
-.map-dark .leaflet-tile-pane { filter: invert(1) hue-rotate(195deg) brightness(.55) saturate(.35) contrast(1.05); }
+/* 카카오맵은 어두운 지도가 없어서, 달리기 화면에서는 지도 타일 그림만 반전해 밤 지도처럼 보여요 */
+.map-dark img[src*="daumcdn.net"] { filter: invert(1) hue-rotate(195deg) brightness(.55) saturate(.35) contrast(1.05); }
 .map-half { bottom: auto; height: 44%; }
-.map-mini.leaflet-container { position: relative; height: 220px; border-radius: var(--r-md); overflow: hidden; margin: 4px 0 10px; }
-.leaflet-control-attribution { font-size: 9px; background: rgba(255,255,255,.75) !important; }
+.map.map-mini { position: relative; inset: auto; height: 220px; border-radius: var(--r-md); overflow: hidden; margin: 4px 0 10px; }
+/* 키가 없거나 SDK를 못 불러왔을 때 지도 자리 */
+.map-fallback { display: grid; place-items: center; padding: 24px; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.map-fallback p { max-width: 260px; margin: 0; }
+.map-dot { display: block; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 1px 4px rgba(28,43,38,.3); }
 /* 스팟 마커: 장소 그림 배지 + 이름표. 빈 영역은 지도를 가리지 않게 클릭이 통과해요 */
-.spot-pin { pointer-events: none !important; background: none; border: 0; --ring: #1C2B26; }
+.spot-pin { position: relative; pointer-events: none; --ring: #1C2B26; }
+.spot-pin.sm { width: 36px; height: 36px; }
+.spot-pin button.pin-badge { border: 0; padding: 0; font: inherit; color: inherit; }
 .spot-pin .pin-lead { position: absolute; left: 0; top: 0; overflow: visible; }
 .spot-pin .pin-lead line { stroke: var(--text); stroke-opacity: .55; stroke-width: 1.5; stroke-dasharray: 3 3; stroke-linecap: round; }
 .spot-pin .pin-dot { position: absolute; background: #1F4D3F; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; border: 2.5px solid #fff; box-sizing: content-box; transform: translate(-1.25px, -1.25px); box-shadow: 0 1px 3px rgba(28,43,38,.3); }
@@ -165,8 +170,6 @@ small { font-size: 12px; }
 /* 내 위치: 맥박처럼 퍼지는 원 (지금 위치가 살아 있다는 표시) */
 .me-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--ginkgo); border: 3px solid #fff; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
 .me-dot::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid var(--ginkgo); animation: pulse 1.8s ease-out infinite; }
-/* 방금 얻은 육각형: 주홍으로 번쩍였다가 은행색으로 */
-.hex-fresh { animation: hexIn .9s ease-out; }
 
 /* ---------- 시작 화면 ---------- */
 .onboarding { background: var(--ink); color: #fff; }
@@ -424,7 +427,6 @@ small { font-size: 12px; }
 @keyframes leaf { from { transform: translate(0, -160px) rotate(-120deg); opacity: 0; } 30% { opacity: 1; } to { transform: none; opacity: 1; } }
 @keyframes stamp { 0% { transform: scale(2.4) rotate(-14deg); opacity: 0; } 55% { transform: scale(.92) rotate(-4deg); opacity: 1; } 75% { transform: scale(1.04) rotate(-6deg); } 100% { transform: rotate(-5deg); } }
 @keyframes ring { 0% { opacity: .8; transform: scale(.8); } 100% { opacity: 0; transform: scale(1.5); } }
-@keyframes hexIn { 0% { fill: #1C2B26; fill-opacity: .9; stroke-width: 3; } 100% { fill-opacity: .4; stroke-width: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

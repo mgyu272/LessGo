@@ -34,6 +34,8 @@ export default defineConfig(({ mode }) => {
   Object.assign(process.env, loadEnv(mode, process.cwd(), ""));
   return {
     plugins: [react(), localApi()],
+    // 브라우저로 보내도 되는 공개 값만: VITE_ (Supabase) · NEXT_PUBLIC_ (카카오 지도 JavaScript 키)
+    envPrefix: ["VITE_", "NEXT_PUBLIC_"],
     server: { host: true, port: 5173 },
     build: { chunkSizeWarningLimit: 1500 }, // 지도·Supabase 라이브러리 때문에 커요. 경고만 끈 거예요
   };
