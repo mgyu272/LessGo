@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { useMap } from "react-leaflet";
 import { useApp } from "../state/AppContext.jsx";
 import { t } from "../lib/i18n.js";
-import { MapView, FitBounds, HexLayer, SpotMarker, SPOT_COLORS } from "../components/MapView.jsx";
+import { MapView, FitBounds, HexLayer, SpotMarker } from "../components/MapView.jsx";
+import { CategoryIcon } from "../components/SpotIcons.jsx";
 import { LangPill } from "../components/Bits.jsx";
 
-const FILTERS = [["all", "filter_all", null], ["history", "filter_history", SPOT_COLORS.history], ["stream", "filter_stream", SPOT_COLORS.stream], ["park", "filter_park", SPOT_COLORS.park]];
+const FILTERS = [["all", "filter_all"], ["history", "filter_history"], ["stream", "filter_stream"], ["park", "filter_park"]];
 
 export default function Home() {
   const app = useApp();
@@ -45,9 +46,9 @@ export default function Home() {
           <LangPill />
         </div>
         <div className="chips scroll">
-          {FILTERS.map(([k, key, c]) => (
+          {FILTERS.map(([k, key]) => (
             <button key={k} className={`chip ${filter === k ? "on" : ""}`} onClick={() => setFilter(k)}>
-              {c && <i className="dot" style={{ background: c }} />}{t(key)}
+              {k !== "all" && <CategoryIcon category={k} />}{t(key)}
             </button>
           ))}
         </div>

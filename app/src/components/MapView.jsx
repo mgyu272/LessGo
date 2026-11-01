@@ -1,9 +1,10 @@
 // 지도 공통 부품 (react-leaflet + OpenStreetMap, 무료·키 없음)
 
 import { useEffect, useMemo } from "react";
-import { MapContainer, TileLayer, Polygon, CircleMarker, Tooltip, Polyline, Marker, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Polygon, CircleMarker, Polyline, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
 import { boundary } from "../lib/territory.js";
+import { spotIconSvg, LABEL_OFFSETS } from "./SpotIcons.jsx";
 import { loc } from "../lib/i18n.js";
 import { CENTER } from "../state/AppContext.jsx";
 
@@ -59,13 +60,38 @@ export function HexLayer({ cells, landmarkCells, dark = false, goals = false, fr
 // 스팟 색: 역사 = 석간주(붉은 흙색), 하천 = 쪽빛, 공원 = 뇌록
 export const SPOT_COLORS = { history: "#A8331A", stream: "#34508C", park: "#2F6E5E" };
 
+// 스팟 마커: 장소 그림이 들어간 원형 배지. label이 있으면(홈 지도) 이름표를 달고,
+// 스팟이 몰리는 곳은 배지를 옆으로 빼서 점선으로 실제 위치와 이어요.
+const PIN_BOX = 200;
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
+function spotIcon(spot, label, name) {
+  const color = SPOT_COLORS[spot.category] || "#A8331A";
+  if (!label) {
+    return L.divIcon({
+      className: "spot-pin", iconSize: [36, 36], iconAnchor: [18, 18],
+      html: `<span class="pin-badge sm" style="--ring:${color}">${spotIconSvg(spot)}</span>`,
+    });
+  }
+  const [dx, dy] = LABEL_OFFSETS[spot.id] || [0, -40];
+  const c = PIN_BOX / 2;
+  const bx = c + dx, by = c + dy;
+  const above = dy <= 0;
+  return L.divIcon({
+    className: "spot-pin", iconSize: [PIN_BOX, PIN_BOX], iconAnchor: [c, c],
+    html: `<svg class="pin-lead" width="${PIN_BOX}" height="${PIN_BOX}" aria-hidden="true"><line x1="${c}" y1="${c}" x2="${bx}" y2="${by}"/></svg>`
+      + `<span class="pin-dot" style="left:${c}px;top:${c}px;background:${color}"></span>`
+      + `<span class="pin-badge" style="left:${bx}px;top:${by}px;--ring:${color}">${spotIconSvg(spot)}</span>`
+      + `<span class="pin-label ${above ? "above" : "below"}" style="left:${bx}px;top:${by}px">${escapeHtml(name)}</span>`,
+  });
+}
+
 export function SpotMarker({ spot, label = false, onClick }) {
+  const name = loc(spot.name);
+  const icon = useMemo(() => spotIcon(spot, label, name), [spot, label, name]);
   return (
-    <CircleMarker center={[spot.lat, spot.lng]} radius={9}
-      pathOptions={{ color: "#fff", weight: 3, fillColor: SPOT_COLORS[spot.category] || "#A8331A", fillOpacity: 1 }}
-      eventHandlers={onClick ? { click: onClick } : undefined}>
-      {label && <Tooltip permanent direction="top" offset={[0, -10]} className="spot-label">{loc(spot.name)}</Tooltip>}
-    </CircleMarker>
+    <Marker position={[spot.lat, spot.lng]} icon={icon} title={name} keyboard={!!onClick}
+      eventHandlers={onClick ? { click: onClick } : undefined} />
   );
 }
 

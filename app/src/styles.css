@@ -112,7 +112,7 @@ small { font-size: 12px; }
 .chips.scroll { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
 .chips.scroll::-webkit-scrollbar { display: none; }
 .chip { padding: 9px 15px; border-radius: 999px; background: var(--paper); border: 1.5px solid var(--line); font-size: 14px; white-space: nowrap; transition: background .2s, color .2s; }
-.chip .dot { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 7px; vertical-align: 1px; transform: rotate(45deg); }
+.chip .cat-icon { display: inline-block; margin-right: 6px; vertical-align: -4px; }
 .chip.on { background: var(--ink); border-color: var(--ink); color: #fff; font-weight: 600; }
 .chip.on.purple { background: var(--vermilion); border-color: var(--vermilion); }
 .seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -149,8 +149,18 @@ small { font-size: 12px; }
 .map-half { bottom: auto; height: 44%; }
 .map-mini.leaflet-container { position: relative; height: 220px; border-radius: var(--r-md); overflow: hidden; margin: 4px 0 10px; }
 .leaflet-control-attribution { font-size: 9px; background: rgba(251,249,245,.7) !important; }
-.spot-label { background: var(--paper); border-radius: 8px; padding: 4px 9px; font-size: 12px; font-weight: 600; font-family: var(--display); box-shadow: 0 3px 10px rgba(31,28,44,.15); white-space: nowrap; border: 0; color: var(--ink); }
-.leaflet-tooltip.spot-label::before { display: none; }
+/* 스팟 마커: 장소 그림 배지 + 이름표. 빈 영역은 지도를 가리지 않게 클릭이 통과해요 */
+.spot-pin { pointer-events: none !important; background: none; border: 0; }
+.spot-pin .pin-lead { position: absolute; left: 0; top: 0; overflow: visible; }
+.spot-pin .pin-lead line { stroke: var(--ink); stroke-opacity: .55; stroke-width: 1.5; stroke-dasharray: 3 3; stroke-linecap: round; }
+.spot-pin .pin-dot { position: absolute; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; border: 2.5px solid #fff; box-sizing: content-box; transform: translate(-1.25px, -1.25px); box-shadow: 0 1px 3px rgba(31,28,44,.3); }
+.spot-pin .pin-badge { position: absolute; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; background: var(--paper); display: grid; place-items: center; box-shadow: 0 0 0 2.5px var(--ring), 0 6px 14px rgba(31,28,44,.28); pointer-events: auto; cursor: pointer; }
+.spot-pin .pin-badge svg { width: 34px; height: 34px; }
+.spot-pin .pin-badge.sm { position: static; width: 36px; height: 36px; margin: 0; }
+.spot-pin .pin-badge.sm svg { width: 26px; height: 26px; }
+.spot-pin .pin-label { position: absolute; transform: translate(-50%, 0); padding: 3px 10px; border-radius: 999px; background: var(--paper); font-size: 12px; font-weight: 700; color: var(--ink); white-space: nowrap; box-shadow: 0 2px 8px rgba(31,28,44,.18); pointer-events: auto; cursor: pointer; }
+.spot-pin .pin-label.above { margin-top: -54px; }
+.spot-pin .pin-label.below { margin-top: 28px; }
 /* 내 위치: 맥박처럼 퍼지는 원 (지금 위치가 살아 있다는 표시) */
 .me-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--ginkgo); border: 3px solid #fff; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
 .me-dot::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid var(--ginkgo); animation: pulse 1.8s ease-out infinite; }
