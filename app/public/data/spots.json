@@ -1,0 +1,402 @@
+{
+  "_설명": "명소(스팟) 데이터. lat/lng는 위도/경도. radius_m 안에 들어오면 '도착'으로 봐요. cards는 도착 화면의 카드뉴스, narration은 음성 해설 원고, faq는 인터넷이 안 될 때 쓰는 저장 답변이에요. sample이 true인 스팟은 화면 확인용 자리표시예요. seal은 도착 도장에 새길 1~2글자예요(예: 길상).",
+  "spots": [
+    {
+      "id": "gilsangsa",
+      "name": {
+        "en": "Gilsangsa Temple",
+        "ko": "길상사"
+      },
+      "seal": "길상",
+      "category": "history",
+      "area": "seongbuk-dong",
+      "lat": 37.59913,
+      "lng": 126.99427,
+      "radius_m": 45,
+      "cards": [
+        {
+          "title": {
+            "en": "From a restaurant to a temple",
+            "ko": "요정에서 절이 된 곳"
+          },
+          "body": {
+            "en": "Gilsangsa stands on the site of Daewongak, once a high-end restaurant. Many of the buildings you see are original Daewongak structures.",
+            "ko": "길상사는 고급 요정이던 대원각 자리에 세워진 절이에요. 지금 보이는 건물 상당수가 대원각 시절 그대로예요."
+          }
+        },
+        {
+          "title": {
+            "en": "A gift inspired by a book",
+            "ko": "책 한 권이 바꾼 땅"
+          },
+          "body": {
+            "en": "Its owner, Kim Young-han, was moved by Venerable Beopjeong's book 'Non-Possession' and donated the land and buildings. The temple opened in 1997.",
+            "ko": "주인 김영한은 법정 스님의 책 『무소유』에 감동해 땅과 건물을 기증했어요. 절은 1997년에 문을 열었어요."
+          }
+        },
+        {
+          "title": {
+            "en": "Beopjeong's hall",
+            "ko": "법정 스님의 진영각"
+          },
+          "body": {
+            "en": "Jinyeonggak, the highest building, displays Beopjeong's portrait, manuscripts and will. Kim Young-han's shrine and memorial stone are also on the grounds.",
+            "ko": "가장 높은 건물인 진영각에 법정 스님의 영정, 원고, 유언장이 있어요. 김영한의 사당과 공덕비도 경내에 있어요."
+          }
+        },
+        {
+          "title": {
+            "en": "What to look for",
+            "ko": "둘러볼 것"
+          },
+          "body": {
+            "en": "The main hall is Geungnakjeon. In front stands a zelkova tree nearly 200 years old. A seven-story pagoda on four lions, built in 2012 for religious harmony, is nearby.",
+            "ko": "중심 법당은 극락전이에요. 앞에는 200년 가까이 된 느티나무가 있고, 종교 화합을 위해 2012년에 세운 칠층 길상보탑도 볼 수 있어요."
+          }
+        }
+      ],
+      "narration": {
+        "en": "Welcome to Gilsangsa. This quiet temple stands on the site of Daewongak, once a high-end restaurant. Its owner, Kim Young-han, was moved by Venerable Beopjeong's book Non-Possession, and donated the land and buildings. The temple opened in 1997. Walk up to Jinyeonggak, the highest hall, to see Beopjeong's portrait and manuscripts. And don't miss the zelkova tree in front of the main hall. It is nearly two hundred years old.",
+        "ko": "길상사에 오신 걸 환영해요. 이 조용한 절은 고급 요정이던 대원각 자리에 세워졌어요. 주인 김영한은 법정 스님의 책 무소유에 감동해 땅과 건물을 기증했고, 절은 1997년에 문을 열었어요. 가장 높은 진영각에 오르면 법정 스님의 영정과 원고를 볼 수 있어요. 극락전 앞 200년 가까이 된 느티나무도 꼭 보고 가세요."
+      },
+      "notice": {
+        "en": "This is a place of practice. Please walk inside the temple and keep your voice down.",
+        "ko": "수행 공간이에요. 경내에서는 걸어서 다니고 목소리를 낮춰 주세요."
+      },
+      "sources": [
+        {
+          "title": "내 손안에 서울 — 도심 속 힐링 명소, 길상사",
+          "url": "https://mediahub.seoul.go.kr/archives/2005035"
+        }
+      ],
+      "faq": [
+        {
+          "keywords": [
+            "when",
+            "year",
+            "open",
+            "found",
+            "언제",
+            "몇 년",
+            "생겼"
+          ],
+          "answer": {
+            "en": "Gilsangsa opened as a temple in 1997.",
+            "ko": "길상사는 1997년에 절로 문을 열었어요."
+          },
+          "sources": [
+            0
+          ]
+        },
+        {
+          "keywords": [
+            "who",
+            "donat",
+            "kim",
+            "owner",
+            "누가",
+            "기증",
+            "김영한",
+            "주인"
+          ],
+          "answer": {
+            "en": "Kim Young-han, the owner of Daewongak, donated the land and buildings after being moved by Venerable Beopjeong's book 'Non-Possession'.",
+            "ko": "대원각 주인 김영한이 법정 스님의 책 『무소유』에 감동해 땅과 건물을 기증했어요."
+          },
+          "sources": [
+            0
+          ]
+        },
+        {
+          "keywords": [
+            "restaurant",
+            "daewongak",
+            "before",
+            "대원각",
+            "요정",
+            "전에"
+          ],
+          "answer": {
+            "en": "Before it was a temple, the site was Daewongak, a high-end restaurant. Many buildings are original Daewongak structures.",
+            "ko": "절이 되기 전에는 고급 요정 대원각이었어요. 지금 건물 상당수가 그때 건물이에요."
+          },
+          "sources": [
+            0
+          ]
+        },
+        {
+          "keywords": [
+            "beopjeong",
+            "monk",
+            "법정",
+            "스님",
+            "진영각"
+          ],
+          "answer": {
+            "en": "Venerable Beopjeong lived here. Jinyeonggak, the highest building, shows his portrait, manuscripts and will.",
+            "ko": "법정 스님이 이곳에 머물렀어요. 가장 높은 진영각에 스님의 영정, 원고, 유언장이 있어요."
+          },
+          "sources": [
+            0
+          ]
+        },
+        {
+          "keywords": [
+            "pagoda",
+            "tower",
+            "tree",
+            "see",
+            "탑",
+            "나무",
+            "볼거리",
+            "뭐 봐"
+          ],
+          "answer": {
+            "en": "Look for the zelkova tree, nearly 200 years old, in front of Geungnakjeon, and the seven-story Gilsang Pagoda on four lions, built in 2012.",
+            "ko": "극락전 앞 200년 가까이 된 느티나무와, 2012년에 세운 사자 네 마리가 받친 칠층 길상보탑을 찾아보세요."
+          },
+          "sources": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spot-a",
+      "sample": true,
+      "name": {
+        "en": "Spot A (sample)",
+        "ko": "스팟 A (예시)"
+      },
+      "seal": "A",
+      "category": "stream",
+      "area": "seongbuk-dong",
+      "lat": 37.5861,
+      "lng": 127.0145,
+      "radius_m": 40,
+      "cards": [
+        {
+          "title": {
+            "en": "A one-line story about this place",
+            "ko": "이 자리에 얽힌 이야기 한 줄"
+          },
+          "body": {
+            "en": "Short card-news style history goes here. The data team replaces this with reviewed content.",
+            "ko": "짧은 카드뉴스 형태로 장소의 역사와 이야기를 넘겨보며 읽어요. 데이터 담당이 검수한 내용으로 바꿔 넣어요."
+          }
+        }
+      ],
+      "narration": {
+        "en": "This is a sample spot. The reviewed story for this place will play here.",
+        "ko": "예시 스팟이에요. 검수한 해설이 여기서 재생돼요."
+      },
+      "notice": {
+        "en": "Residents live along this path. If you stop to listen, step to the side.",
+        "ko": "이 앞은 주민분들이 사는 골목이에요. 멈춰서 들을 때는 길 한쪽에 서주세요."
+      },
+      "sources": [],
+      "faq": []
+    },
+    {
+      "id": "spot-b",
+      "sample": true,
+      "name": {
+        "en": "Spot B (sample)",
+        "ko": "스팟 B (예시)"
+      },
+      "seal": "B",
+      "category": "history",
+      "area": "seongbuk-dong",
+      "lat": 37.594,
+      "lng": 127.004,
+      "radius_m": 40,
+      "cards": [
+        {
+          "title": {
+            "en": "A one-line story about this place",
+            "ko": "이 자리에 얽힌 이야기 한 줄"
+          },
+          "body": {
+            "en": "Short card-news style history goes here. The data team replaces this with reviewed content.",
+            "ko": "짧은 카드뉴스 형태로 장소의 역사와 이야기를 넘겨보며 읽어요. 데이터 담당이 검수한 내용으로 바꿔 넣어요."
+          }
+        }
+      ],
+      "narration": {
+        "en": "This is a sample spot. The reviewed story for this place will play here.",
+        "ko": "예시 스팟이에요. 검수한 해설이 여기서 재생돼요."
+      },
+      "notice": {
+        "en": "This lane is residential. If you stop to listen, step to the side.",
+        "ko": "이 앞은 주민분들이 사는 골목이에요. 멈춰서 들을 때는 길 한쪽에 서주세요."
+      },
+      "sources": [],
+      "faq": []
+    },
+    {
+      "id": "simujang",
+      "name": {
+        "ko": "심우장",
+        "en": "Simujang"
+      },
+      "seal": "심우",
+      "category": "history",
+      "lat": 37.5936268,
+      "lng": 126.9916662,
+      "radius_m": 50,
+      "cards": [
+        {
+          "title": {
+            "ko": "심우장 이야기 1",
+            "en": "Simujang story 1"
+          },
+          "body": {
+            "ko": "러닝을 마치고 도착한 이곳은 심우장입니다. 수고하셨습니다!\n\n심우장은 일제강점기의 독립운동가이자 시인, 승려였던 만해 한용운 선생이 1933년부터 1944년까지 살았던 집입니다.\n\n그런데 이 집에는 특별한 비밀이 하나 있습니다. 바로 집이 향하고 있는 방향입니다.",
+            "en": "Congratulations on finishing your run! You've arrived at Simujang.\n\nThis traditional Korean house was home to Han Yong-un, a Buddhist monk, poet, and independence activist who lived here from 1933 until his death in 1944, during Japan's colonial rule over Korea.\n\nBut there's something unusual about this house. Can you guess what it is?\n\nIt's the direction the house faces."
+          }
+        },
+        {
+          "title": {
+            "ko": "심우장 이야기 2",
+            "en": "Simujang story 2"
+          },
+          "body": {
+            "ko": "전통적인 한옥은 햇빛이 잘 드는 남향을 선호하지만, 심우장은 북쪽을 향해 지어졌습니다. 당시 한용운 선생이 남쪽에 있던 조선총독부를 바라보고 싶지 않아 일부러 반대 방향으로 집을 지었다는 이야기가 전해집니다.\n\n집의 방향에까지 나라를 빼앗긴 현실에 대한 저항의 뜻을 담았던 것입니다.\n\n또한 심우장이라는 이름은 불교에서 깨달음을 찾아가는 과정을 잃어버린 소를 찾는 일에 비유한 데서 유래했습니다.",
+            "en": "Traditional Korean houses usually face south to receive more sunlight. Simujang, however, faces north.\n\nAccording to a well-known story, Han Yong-un deliberately chose this direction because he refused to face the Japanese colonial government building.\n\nEven the direction of his home became a quiet expression of resistance.\n\nThe name Simujang means \"House of Searching for the Ox.\" In Buddhist tradition, searching for an ox symbolizes the journey toward enlightenment."
+          }
+        },
+        {
+          "title": {
+            "ko": "심우장 이야기 3",
+            "en": "Simujang story 3"
+          },
+          "body": {
+            "ko": "한용운 선생은 1919년 3·1운동에 참여한 독립운동가이자, 시집 《님의 침묵》을 남긴 문학가였습니다.\n\n오늘 여러분이 달려 도착한 이 작은 한옥에는 끝까지 신념을 지키려 했던 한 사람의 삶이 담겨 있습니다.\n\n잠시 숨을 고르며, 그가 지키고자 했던 자유의 의미를 생각해 보세요.",
+            "en": "Han Yong-un was also a leading figure in Korea's March First Independence Movement of 1919 and the author of the celebrated poetry collection The Silence of My Beloved.\n\nAs you catch your breath, take a moment to reflect on the courage of a man who refused to abandon his beliefs.\n\nWelcome to Simujang, where a small house tells a powerful story of freedom."
+          }
+        }
+      ],
+      "narration": {
+        "ko": "러닝을 마치고 도착한 이곳은 심우장입니다. 수고하셨습니다!\n\n심우장은 일제강점기의 독립운동가이자 시인, 승려였던 만해 한용운 선생이 1933년부터 1944년까지 살았던 집입니다.\n\n그런데 이 집에는 특별한 비밀이 하나 있습니다. 바로 집이 향하고 있는 방향입니다.\n\n전통적인 한옥은 햇빛이 잘 드는 남향을 선호하지만, 심우장은 북쪽을 향해 지어졌습니다. 당시 한용운 선생이 남쪽에 있던 조선총독부를 바라보고 싶지 않아 일부러 반대 방향으로 집을 지었다는 이야기가 전해집니다.\n\n집의 방향에까지 나라를 빼앗긴 현실에 대한 저항의 뜻을 담았던 것입니다.\n\n또한 심우장이라는 이름은 불교에서 깨달음을 찾아가는 과정을 잃어버린 소를 찾는 일에 비유한 데서 유래했습니다.\n\n한용운 선생은 1919년 3·1운동에 참여한 독립운동가이자, 시집 《님의 침묵》을 남긴 문학가였습니다.\n\n오늘 여러분이 달려 도착한 이 작은 한옥에는 끝까지 신념을 지키려 했던 한 사람의 삶이 담겨 있습니다.\n\n잠시 숨을 고르며, 그가 지키고자 했던 자유의 의미를 생각해 보세요.",
+        "en": "Congratulations on finishing your run! You've arrived at Simujang.\n\nThis traditional Korean house was home to Han Yong-un, a Buddhist monk, poet, and independence activist who lived here from 1933 until his death in 1944, during Japan's colonial rule over Korea.\n\nBut there's something unusual about this house. Can you guess what it is?\n\nIt's the direction the house faces.\n\nTraditional Korean houses usually face south to receive more sunlight. Simujang, however, faces north.\n\nAccording to a well-known story, Han Yong-un deliberately chose this direction because he refused to face the Japanese colonial government building.\n\nEven the direction of his home became a quiet expression of resistance.\n\nThe name Simujang means \"House of Searching for the Ox.\" In Buddhist tradition, searching for an ox symbolizes the journey toward enlightenment.\n\nHan Yong-un was also a leading figure in Korea's March First Independence Movement of 1919 and the author of the celebrated poetry collection The Silence of My Beloved.\n\nAs you catch your breath, take a moment to reflect on the courage of a man who refused to abandon his beliefs.\n\nWelcome to Simujang, where a small house tells a powerful story of freedom."
+      },
+      "notice": {
+        "ko": "유적지 입구와 관람 시간은 현장에서 확인하세요. 주민과 관람객을 배려해 주세요.",
+        "en": "Check the entrance and opening hours on site, and please be considerate of residents and visitors."
+      },
+      "sources": [],
+      "faq": [],
+      "source": "lessgo"
+    },
+    {
+      "id": "jeongneung",
+      "name": {
+        "ko": "정릉",
+        "en": "Jeongneung"
+      },
+      "seal": "정릉",
+      "category": "history",
+      "lat": 37.601177158215,
+      "lng": 127.007591783521,
+      "radius_m": 50,
+      "cards": [
+        {
+          "title": {
+            "ko": "정릉 이야기 1",
+            "en": "Jeongneung story 1"
+          },
+          "body": {
+            "ko": "러닝을 마치고 도착한 이곳은 정릉입니다. 완주를 축하합니다!\n\n울창한 숲속에 자리한 정릉은 조선을 건국한 태조 이성계의 왕비, 신덕왕후 강씨의 무덤입니다.\n\n하지만 이 고요한 왕릉에는 조선 초기의 치열한 권력 다툼이 숨겨져 있습니다.\n\n신덕왕후는 태조의 사랑과 신임을 받았으며, 자신의 아들 방석이 왕세자로 책봉되는 데 중요한 역할을 했습니다.",
+            "en": "Congratulations on completing your run! You've arrived at Jeongneung Royal Tomb.\n\nSurrounded by peaceful woodland, this historic site is the resting place of Queen Sindeok, a wife of King Taejo, the founder of Korea's Joseon Dynasty in 1392.\n\nBut behind this peaceful scenery lies a dramatic story of royal ambition and political conflict.\n\nQueen Sindeok played an important role in securing the position of crown prince for her son, Bang-seok."
+          }
+        },
+        {
+          "title": {
+            "ko": "정릉 이야기 2",
+            "en": "Jeongneung story 2"
+          },
+          "body": {
+            "ko": "그러나 신덕왕후가 세상을 떠난 뒤 왕위 계승을 둘러싼 갈등이 커졌고, 결국 1398년 제1차 왕자의 난이 일어났습니다.\n\n이 과정에서 태조의 아들 이방원이 권력을 장악했고, 훗날 태종이 되었습니다.\n\n원래 정릉은 지금의 서울 정동에 있었지만, 태종은 1409년 무덤을 도성 밖인 현재의 위치로 옮겼습니다. 옛 무덤의 석물 일부는 청계천의 광통교를 만드는 데 사용되기도 했습니다.\n\n그 후 오랜 시간이 흐른 1669년, 신덕왕후의 왕비로서의 지위가 다시 공식적으로 인정되면서 정릉도 정비되었습니다.",
+            "en": "After her death in 1396, tensions over the royal succession grew. In 1398, a violent struggle known as the First Strife of Princes broke out.\n\nPrince Yi Bang-won emerged victorious and later became King Taejong.\n\nJeongneung was originally located in central Seoul, but in 1409, King Taejong ordered the tomb to be moved outside the city walls to its present location.\n\nSome of the stones from the original tomb were even reused in a bridge over Cheonggyecheon Stream."
+          }
+        },
+        {
+          "title": {
+            "ko": "정릉 이야기 3",
+            "en": "Jeongneung story 3"
+          },
+          "body": {
+            "ko": "오늘 여러분이 달려온 이 숲길 끝에는 한 왕비의 삶과 조선 왕실의 갈등, 그리고 뒤늦은 명예 회복의 역사가 남아 있습니다.\n\n잠시 숨을 고르며, 고요한 숲이 간직한 이야기를 느껴보세요.",
+            "en": "More than two centuries later, in 1669, Queen Sindeok's royal status was formally restored, and her tomb was repaired.\n\nToday, this quiet forest preserves a remarkable story of a queen, a struggle for the throne, and the restoration of her honor.\n\nAs you rest after your run, take a moment to imagine the centuries of history hidden among these trees."
+          }
+        }
+      ],
+      "narration": {
+        "ko": "러닝을 마치고 도착한 이곳은 정릉입니다. 완주를 축하합니다!\n\n울창한 숲속에 자리한 정릉은 조선을 건국한 태조 이성계의 왕비, 신덕왕후 강씨의 무덤입니다.\n\n하지만 이 고요한 왕릉에는 조선 초기의 치열한 권력 다툼이 숨겨져 있습니다.\n\n신덕왕후는 태조의 사랑과 신임을 받았으며, 자신의 아들 방석이 왕세자로 책봉되는 데 중요한 역할을 했습니다.\n\n그러나 신덕왕후가 세상을 떠난 뒤 왕위 계승을 둘러싼 갈등이 커졌고, 결국 1398년 제1차 왕자의 난이 일어났습니다.\n\n이 과정에서 태조의 아들 이방원이 권력을 장악했고, 훗날 태종이 되었습니다.\n\n원래 정릉은 지금의 서울 정동에 있었지만, 태종은 1409년 무덤을 도성 밖인 현재의 위치로 옮겼습니다. 옛 무덤의 석물 일부는 청계천의 광통교를 만드는 데 사용되기도 했습니다.\n\n그 후 오랜 시간이 흐른 1669년, 신덕왕후의 왕비로서의 지위가 다시 공식적으로 인정되면서 정릉도 정비되었습니다.\n\n오늘 여러분이 달려온 이 숲길 끝에는 한 왕비의 삶과 조선 왕실의 갈등, 그리고 뒤늦은 명예 회복의 역사가 남아 있습니다.\n\n잠시 숨을 고르며, 고요한 숲이 간직한 이야기를 느껴보세요.",
+        "en": "Congratulations on completing your run! You've arrived at Jeongneung Royal Tomb.\n\nSurrounded by peaceful woodland, this historic site is the resting place of Queen Sindeok, a wife of King Taejo, the founder of Korea's Joseon Dynasty in 1392.\n\nBut behind this peaceful scenery lies a dramatic story of royal ambition and political conflict.\n\nQueen Sindeok played an important role in securing the position of crown prince for her son, Bang-seok.\n\nAfter her death in 1396, tensions over the royal succession grew. In 1398, a violent struggle known as the First Strife of Princes broke out.\n\nPrince Yi Bang-won emerged victorious and later became King Taejong.\n\nJeongneung was originally located in central Seoul, but in 1409, King Taejong ordered the tomb to be moved outside the city walls to its present location.\n\nSome of the stones from the original tomb were even reused in a bridge over Cheonggyecheon Stream.\n\nMore than two centuries later, in 1669, Queen Sindeok's royal status was formally restored, and her tomb was repaired.\n\nToday, this quiet forest preserves a remarkable story of a queen, a struggle for the throne, and the restoration of her honor.\n\nAs you rest after your run, take a moment to imagine the centuries of history hidden among these trees."
+      },
+      "notice": {
+        "ko": "유적지 입구와 관람 시간은 현장에서 확인하세요. 주민과 관람객을 배려해 주세요.",
+        "en": "Check the entrance and opening hours on site, and please be considerate of residents and visitors."
+      },
+      "sources": [],
+      "faq": [],
+      "source": "lessgo"
+    },
+    {
+      "id": "uiryeong",
+      "name": {
+        "ko": "의릉",
+        "en": "Uireung"
+      },
+      "seal": "의릉",
+      "category": "history",
+      "lat": 37.6044099656019,
+      "lng": 127.058716558469,
+      "radius_m": 50,
+      "cards": [
+        {
+          "title": {
+            "ko": "의릉 이야기 1",
+            "en": "Uireung story 1"
+          },
+          "body": {
+            "ko": "러닝을 마치고 도착한 이곳은 의릉입니다. 완주를 축하합니다!\n\n의릉은 조선 제20대 왕 경종과 그의 왕비 선의왕후가 잠들어 있는 왕릉입니다.\n\n경종은 조선 역사에서 잘 알려진 인물인 희빈 장씨의 아들입니다. 1720년 왕위에 올랐지만, 어려서부터 건강이 좋지 않았던 그는 불과 4년 만인 1724년에 세상을 떠났습니다.\n\n그런데 의릉에는 다른 왕릉과 구별되는 특별한 특징이 있습니다.",
+            "en": "Congratulations on finishing your run! Welcome to Uireung Royal Tomb.\n\nThis historic site is the final resting place of King Gyeongjong, the twentieth ruler of Korea's Joseon Dynasty, and his queen, Queen Seonui.\n\nKing Gyeongjong was the son of Lady Jang, a famous royal consort in Korean history.\n\nHe became king in 1720, but his reign was short. Having suffered from poor health since childhood, he died just four years later, in 1724."
+          }
+        },
+        {
+          "title": {
+            "ko": "의릉 이야기 2",
+            "en": "Uireung story 2"
+          },
+          "body": {
+            "ko": "일반적으로 왕과 왕비의 무덤은 좌우로 나란히 배치되는 경우가 많지만, 의릉은 두 무덤이 앞뒤로 놓여 있습니다.\n\n이처럼 높이가 다른 언덕에 무덤을 배치한 형식을 '상하이봉릉'이라고 부릅니다.\n\n이는 당시 사람들이 중요하게 여겼던 풍수지리 사상과 관련이 있습니다.\n\n또한 왕릉 주변에는 왕실의 권위와 무덤을 수호하는 의미를 담은 문인석, 석호, 석양 등 다양한 석물이 배치되어 있습니다.",
+            "en": "Now, here's something fascinating about Uireung.\n\nUnlike many royal tombs where the king and queen are buried side by side, the two burial mounds here are arranged one behind the other, on different levels of the hillside.\n\nThis unusual arrangement reflects traditional Korean beliefs about the relationship between the landscape and the resting places of the dead.\n\nAround the tombs, you can also find stone figures of officials and animals, including tigers and sheep. These sculptures symbolize royal dignity and protection."
+          }
+        },
+        {
+          "title": {
+            "ko": "의릉 이야기 3",
+            "en": "Uireung story 3"
+          },
+          "body": {
+            "ko": "의릉은 단순한 무덤이 아니라, 조선 왕실의 장례 문화와 자연관을 함께 보여주는 역사 공간입니다.\n\n오늘 달려온 길을 마무리하며, 수백 년 동안 이곳을 지켜온 왕릉의 고요함을 느껴보세요.",
+            "en": "Uireung is more than a burial site. It offers a glimpse into the royal traditions, architecture, and beliefs of the Joseon Dynasty.\n\nAs you recover from your run, enjoy the peaceful surroundings and imagine the centuries of history preserved here."
+          }
+        }
+      ],
+      "narration": {
+        "ko": "러닝을 마치고 도착한 이곳은 의릉입니다. 완주를 축하합니다!\n\n의릉은 조선 제20대 왕 경종과 그의 왕비 선의왕후가 잠들어 있는 왕릉입니다.\n\n경종은 조선 역사에서 잘 알려진 인물인 희빈 장씨의 아들입니다. 1720년 왕위에 올랐지만, 어려서부터 건강이 좋지 않았던 그는 불과 4년 만인 1724년에 세상을 떠났습니다.\n\n그런데 의릉에는 다른 왕릉과 구별되는 특별한 특징이 있습니다.\n\n일반적으로 왕과 왕비의 무덤은 좌우로 나란히 배치되는 경우가 많지만, 의릉은 두 무덤이 앞뒤로 놓여 있습니다.\n\n이처럼 높이가 다른 언덕에 무덤을 배치한 형식을 '상하이봉릉'이라고 부릅니다.\n\n이는 당시 사람들이 중요하게 여겼던 풍수지리 사상과 관련이 있습니다.\n\n또한 왕릉 주변에는 왕실의 권위와 무덤을 수호하는 의미를 담은 문인석, 석호, 석양 등 다양한 석물이 배치되어 있습니다.\n\n의릉은 단순한 무덤이 아니라, 조선 왕실의 장례 문화와 자연관을 함께 보여주는 역사 공간입니다.\n\n오늘 달려온 길을 마무리하며, 수백 년 동안 이곳을 지켜온 왕릉의 고요함을 느껴보세요.",
+        "en": "Congratulations on finishing your run! Welcome to Uireung Royal Tomb.\n\nThis historic site is the final resting place of King Gyeongjong, the twentieth ruler of Korea's Joseon Dynasty, and his queen, Queen Seonui.\n\nKing Gyeongjong was the son of Lady Jang, a famous royal consort in Korean history.\n\nHe became king in 1720, but his reign was short. Having suffered from poor health since childhood, he died just four years later, in 1724.\n\nNow, here's something fascinating about Uireung.\n\nUnlike many royal tombs where the king and queen are buried side by side, the two burial mounds here are arranged one behind the other, on different levels of the hillside.\n\nThis unusual arrangement reflects traditional Korean beliefs about the relationship between the landscape and the resting places of the dead.\n\nAround the tombs, you can also find stone figures of officials and animals, including tigers and sheep. These sculptures symbolize royal dignity and protection.\n\nUireung is more than a burial site. It offers a glimpse into the royal traditions, architecture, and beliefs of the Joseon Dynasty.\n\nAs you recover from your run, enjoy the peaceful surroundings and imagine the centuries of history preserved here."
+      },
+      "notice": {
+        "ko": "유적지 입구와 관람 시간은 현장에서 확인하세요. 주민과 관람객을 배려해 주세요.",
+        "en": "Check the entrance and opening hours on site, and please be considerate of residents and visitors."
+      },
+      "sources": [],
+      "faq": [],
+      "source": "lessgo"
+    }
+  ]
+}

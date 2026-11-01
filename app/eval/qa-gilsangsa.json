@@ -1,0 +1,15 @@
+{
+  "_설명": "AI 답변 정확도 채점용 정답 질문 세트 (기획서: 명소별 질문 5개 이상). keywords 중 하나라도 답에 들어 있고, in_sources 판단이 맞으면 정답. 자료에 없는 질문은 expect_in_sources:false — '모른다'고 해야 정답이에요.",
+  "spotId": "gilsangsa",
+  "items": [
+    { "q": "When did Gilsangsa become a temple?", "lang": "en", "expect_in_sources": true, "keywords": ["1997"] },
+    { "q": "Who donated the land?", "lang": "en", "expect_in_sources": true, "keywords": ["kim young-han", "kim"] },
+    { "q": "What was here before the temple?", "lang": "en", "expect_in_sources": true, "keywords": ["daewongak", "restaurant"] },
+    { "q": "Which book inspired the donation?", "lang": "en", "expect_in_sources": true, "keywords": ["non-possession", "musoyu"] },
+    { "q": "What can I see in Jinyeonggak?", "lang": "en", "expect_in_sources": true, "keywords": ["portrait", "manuscript", "will"] },
+    { "q": "How old is the tree in front of the main hall?", "lang": "en", "expect_in_sources": true, "keywords": ["200"] },
+    { "q": "길상사는 언제 절이 됐어요?", "lang": "ko", "expect_in_sources": true, "keywords": ["1997"] },
+    { "q": "What is the Wi-Fi password at the temple?", "lang": "en", "expect_in_sources": false, "keywords": [] },
+    { "q": "How much is the entrance fee?", "lang": "en", "expect_in_sources": false, "keywords": [] }
+  ]
+}

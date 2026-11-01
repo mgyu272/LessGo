@@ -1,0 +1,10 @@
+{
+  "_설명": "제휴 가게(가상 데이터). visit_coupon이 true면 들르기만 해도 쿠폰, buy_stars는 구매 인증 시 받는 별. 실제 가게 이름은 제휴 전까지 쓰지 않아요.",
+  "shops": [
+    { "id": "cafe-a", "name": { "en": "Partner Cafe A (sample)", "ko": "제휴 카페 A (예시)" }, "lat": 37.5984, "lng": 126.9952, "partner": true, "visit_coupon": true, "buy_stars": 2, "coupon": { "en": "500 KRW off drinks (sample)", "ko": "음료 500원 할인 (예시)" } },
+    { "id": "bakery-b", "name": { "en": "Partner Bakery B (sample)", "ko": "제휴 빵집 B (예시)" }, "lat": 37.5965, "lng": 126.9965, "partner": true, "visit_coupon": false, "buy_stars": 3, "coupon": null },
+    { "id": "diner-c", "name": { "en": "Partner Diner C (sample)", "ko": "제휴 식당 C (예시)" }, "lat": 37.5945, "lng": 126.9980, "partner": true, "visit_coupon": true, "buy_stars": 0, "coupon": { "en": "Free side dish (sample)", "ko": "사이드 메뉴 무료 (예시)" } },
+    { "id": "cafe-d", "name": { "en": "Partner Cafe D (sample)", "ko": "제휴 카페 D (예시)" }, "lat": 37.5866, "lng": 127.0140, "partner": true, "visit_coupon": true, "buy_stars": 2, "coupon": { "en": "500 KRW off drinks (sample)", "ko": "음료 500원 할인 (예시)" } },
+    { "id": "shop-e", "name": { "en": "Corner Store E (sample)", "ko": "동네 가게 E (예시)" }, "lat": 37.5905, "lng": 127.0050, "partner": false, "visit_coupon": false, "buy_stars": 0, "coupon": null }
+  ]
+}
