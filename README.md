@@ -78,6 +78,26 @@ flowchart TD
 | 한국어·영어 해설 원문 | [`data/narrations.json`](data/narrations.json) |
 | 앱 데이터 연동 안내 | [`docs/APP_INTEGRATION.md`](docs/APP_INTEGRATION.md) |
 | 알고리즘 설명 | [`docs/ROUTING_ALGORITHM.md`](docs/ROUTING_ALGORITHM.md) |
+| 웹앱(성북 런트립, React) | [`app/`](app/) — 사용법은 [`app/README.md`](app/README.md) |
+| 앱 데이터 변환 | [`export_runtrip.py`](export_runtrip.py), [`src/runtrip_export.py`](src/runtrip_export.py) |
+
+## 웹앱 실행
+
+`app/`은 React + Vite 웹앱입니다. 최종 18개 경로가 이미 `app/public/data/`에 들어 있습니다.
+
+~~~powershell
+cd app
+npm install
+npm run dev
+~~~
+
+`http://localhost:5173/`을 엽니다. 경로를 다시 계산한 뒤 앱 데이터를 갱신하려면 저장소 루트에서 아래 명령을 실행합니다. 앱의 기존 예시 코스·스팟은 그대로 두고 LessGo 코스와 스팟만 교체합니다.
+
+~~~powershell
+python export_runtrip.py
+~~~
+
+경로가 같은 low/any 조합은 코스 하나로 합쳐 15개가 됩니다. LessGo에는 가로등·유동인구·주거지 데이터가 없어서 `lamps`, `crowd`, `residential`은 기본값(2, `mid`, `false`)으로 채워집니다.
 
 인덱스 구조는 `destinations[destination_id]["3km"|"5km"|"10km"].modes["low"|"any"]`입니다. 상태와 파일 존재를 확인한 뒤 GeoJSON의 `geometry.coordinates`를 사용하세요. 파일 참조는 저장소 루트 기준 상대 경로입니다. Windows 경로 구분자가 포함되면 웹 경로로 만들 때 `\\`를 `/`로 정규화해야 합니다.
 
@@ -92,6 +112,7 @@ flowchart TD
 │   ├── recommendations/        # 기존 지도용 경로 파일
 │   └── cache/                  # 로컬 ORS·OSM 캐시 (Git 제외)
 ├── analysis/experiments/       # 재현·검증용 실험 및 최종 18개 데이터
+├── app/                        # 성북 런트립 웹앱 (React + Vite)
 ├── src/                        # 경로 계산·OSM 및 경사·러닝 평가
 ├── tests/                      # 자동 테스트
 ├── web/                        # Kakao 지도와 영어 음성 안내

@@ -1,0 +1,50 @@
+// 명소·코스·가게 데이터 불러오기 (public/data 폴더의 JSON)
+// 데이터 담당은 public/data 안의 파일만 고치면 돼요. 빌드 없이 바로 반영돼요.
+
+import { fromGeoJSON, lineLength } from "./geo.js";
+import { cellOf } from "./territory.js";
+
+export async function loadData() {
+  const [spots, courses, shops] = await Promise.all([
+    fetch("/data/spots.json").then((r) => r.json()),
+    fetch("/data/courses.geojson").then((r) => r.json()),
+    fetch("/data/shops.json").then((r) => r.json()),
+  ]);
+  const spotById = {};
+  const landmarkCells = new Set();
+  spots.spots.forEach((s) => { spotById[s.id] = s; landmarkCells.add(cellOf(s)); });
+  return {
+    spots: spots.spots,
+    shops: shops.shops,
+    courses: courses.features.map(prepareCourse),
+    spotById,
+    landmarkCells,
+  };
+}
+
+// 코스에 길이·예상 시간·오르막 합계를 계산해 붙여요
+function prepareCourse(f) {
+  const p = { ...f.properties };
+  const path = fromGeoJSON(f.geometry.coordinates);
+  const len = lineLength(path);
+  p.distance_km ??= Math.round(len / 100) / 10;
+  p.minutes ??= Math.round((len / 1000) * 6.3); // 6'20"/km 기준
+  p.ascent_m ??= ascentOf(p.elevation || []);
+  return {
+    id: p.id, properties: p, path, len,
+    cues: (p.cues || []).map((c) => ({ ...c, pos: { lat: c.at[1], lng: c.at[0] } })),
+  };
+}
+
+// 고도 배열에서 오르막 합계. frac(0~1)만큼 진행했을 때까지의 값도 구할 수 있어요.
+export function ascentOf(elev, frac = 1) {
+  if (elev.length < 2) return 0;
+  const upto = frac * (elev.length - 1);
+  let sum = 0;
+  for (let i = 1; i <= Math.ceil(upto); i++) {
+    const diff = elev[i] - elev[i - 1];
+    const part = Math.min(1, upto - (i - 1));
+    if (diff > 0) sum += diff * part;
+  }
+  return Math.round(sum);
+}
