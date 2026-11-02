@@ -1,0 +1,72 @@
+{
+  "uiryeong|3|low": {
+    "path": "analysis/experiments/low_high_v2_20261102/routes/uiryeong/3km/low/3km-osm-node-3401296534-via-osm-way-669610100-node-17922-uiryeong-low.json",
+    "status": "review_required",
+    "reason": "저장된 ORS 경로 중 경사 부담과 반복 구간이 더 낮은 후보; 저고도 신뢰도 및 출입구 현장 확인 필요"
+  },
+  "uiryeong|3|high": {
+    "path": "analysis/experiments/low_high_v2_20261102/routes/uiryeong/3km/high/3km-osm-node-4658746129-via-osm-way-550971136-node-17408-osm-way-569407068-node-17483-uiryeong-high.json",
+    "status": "review_required",
+    "reason": "목표 거리 -274.9m로 ±300m 내; 저고도 신뢰도 및 출입구 현장 확인 필요"
+  },
+  "uiryeong|5|low": {
+    "path": "analysis/experiments/low_high_v2_20261102/routes/uiryeong/5km/low/5km-osm-node-3401382924-via-osm-way-1417439455-node-21536-osm-way-1417439455-node-21537-uiryeong-low.json",
+    "status": "review_required",
+    "reason": "저경사 후보; 저고도 신뢰도와 실제 출발 접근 확인 필요"
+  },
+  "uiryeong|5|high": {
+    "path": "analysis/experiments/low_high_v2_20261102/routes/uiryeong/5km/high/5km-osm-node-3401296542-via-osm-way-1097751857-node-19410-osm-way-826914454-node-18587-uiryeong-high.json",
+    "status": "review_required",
+    "reason": "계단 추정 구간 약 1.3%(약 62m); 저고도 신뢰도 및 현장 보행 확인 필요"
+  },
+  "uiryeong|10|low": {
+    "path": "analysis/experiments/phase7_2_20261101/outputs/shared_pool/routes/uiryeong/10km/low/10km-osm-running-node-287298483-via-osm-way-780350790-node-18391-osm-way-925780061-node-19157-uiryeong-low.json",
+    "status": "review_required",
+    "reason": "ORS foot-walking 캐시 재사용; 저고도 신뢰도, 반복 edge 114.6m, 목적지 출입구 현장 확인 필요"
+  },
+  "uiryeong|10|high": {
+    "path": "analysis/experiments/low_high_v2_20261102/routes/uiryeong/10km/high/10km-osm-park-edge-871804001-via-osm-way-770894972-node-18304-osm-way-925780061-node-19180-uiryeong-high.json",
+    "status": "review_required",
+    "reason": "ORS foot-walking 캐시 재사용; 계단 추정 0.35%(약 34m), U턴 2회, 저고도 신뢰도와 출입구 확인 필요"
+  },
+  "jeongneung|10|low": {
+    "path": "analysis/experiments/low_high_v2_20261102/routes/jeongneung/10km/low/10km-osm-running-node-287298483-via-osm-way-536184662-node-16842-osm-way-801008452-node-17986-jeongneung-low.json",
+    "status": "review_required",
+    "reason": "경사 순서가 맞는 저장 ORS 후보; 저고도 신뢰도 및 접근/현장 확인 필요"
+  },
+  "jeongneung|10|high": {
+    "path": "analysis/experiments/low_high_v2_20261102/routes/jeongneung/10km/high/10km-osm-park-edge-2471013911-via-osm-way-563109695-node-17017-osm-way-563109697-node-17019-jeongneung-high.json",
+    "status": "review_required",
+    "reason": "경사 순서가 맞는 저장 ORS 후보; 공유 도로율 약 50.9%, 저고도 신뢰도 및 접근 확인 필요"
+  },
+  "simujang|5|low": {
+    "path": "analysis/experiments/low_high_v2_20261102/routes/simujang/5km/low/5km-sungshin-exit-1-via-osm-node-3401296573-osm-node-3401490120-simujang-low.json",
+    "geojson": "analysis/experiments/low_high_v2_20261102/routes/simujang/5km/low/5km-sungshin-exit-1-via-osm-node-3401296573-osm-node-3401490120-simujang-low.geojson",
+    "status": "review_required",
+    "reason": "Shared-pool Low selected for a distinct pair; 400.9 m mapped repeated edges and low running fitness (18.14) require review."
+  },
+  "simujang|5|high": {
+    "path": "analysis/experiments/low_high_v2_20261102/routes/simujang/5km/high/5km-osm-park-edge-2135148753-via-osm-node-3403067494-osm-node-5194568312-simujang-high.json",
+    "geojson": "analysis/experiments/low_high_v2_20261102/routes/simujang/5km/high/5km-osm-park-edge-2135148753-via-osm-node-3403067494-osm-node-5194568312-simujang-high.geojson",
+    "status": "review_required",
+    "reason": "Shared-pool High; distinct saved ORS route, 17.65% maximum 100m climb and running fitness 30.24; access/environment review required."
+  },
+  "simujang|10|low": {
+    "path": "analysis/experiments/low_high_diversification_v3_20261103/routes/simujang/10km/low/10km-osm-running-node-8064151669-via-sungshin-exit-1-simujang-low.json",
+    "geojson": "analysis/experiments/low_high_diversification_v3_20261103/routes/simujang/10km/low/10km-osm-running-node-8064151669-via-sungshin-exit-1-simujang-low.geojson",
+    "status": "review_required",
+    "reason": "New ORS Low candidate is 9.2093 km (790.7 m below target); within the user-approved 9–11 km fallback only, so review required."
+  },
+  "simujang|10|high": {
+    "path": "analysis/experiments/low_high_v2_20261102/routes/simujang/10km/high/10km-osm-park-edge-1981019398-via-osm-node-3401296562-osm-node-3401490122-simujang-high.json",
+    "geojson": "analysis/experiments/low_high_v2_20261102/routes/simujang/10km/high/10km-osm-park-edge-1981019398-via-osm-node-3401296562-osm-node-3401490122-simujang-high.geojson",
+    "status": "review_required",
+    "reason": "Existing shared-pool High retained as the ordered counterpart; review required."
+  },
+  "jeongneung|3|high": {
+    "path": "analysis/experiments/low_high_diversification_v3_20261103/routes/jeongneung/3km/high/3km-osm-node-3401490103-jeongneung-high.json",
+    "geojson": "analysis/experiments/low_high_diversification_v3_20261103/routes/jeongneung/3km/high/3km-osm-node-3401490103-jeongneung-high.geojson",
+    "status": "review_required",
+    "reason": "Saved ORS alternative rechecked with cached OSM: no mapped steps, 0 m explicit restrictions, connected stops and no repeats; high shares 73.83% of Low road edges and burden gap is only 1.61."
+  }
+}
