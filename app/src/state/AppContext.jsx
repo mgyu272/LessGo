@@ -10,6 +10,9 @@ import { useRun } from "./useRun.js";
 const Ctx = createContext(null);
 export const useApp = () => useContext(Ctx);
 
+// 로그인 없이 볼 수 있는 화면
+const AUTH_SCREENS = new Set(["loading", "onboarding", "signup", "find", "nickname"]);
+
 export const CENTER = [37.5915, 127.0035]; // 한성대입구역~성북동 사이
 
 function autoTime() {
@@ -55,10 +58,17 @@ export function AppProvider({ children }) {
     return () => clearTimeout(id);
   }, [introDone]);
 
-  // 데이터와 로그인 확인이 끝나면 첫 화면으로
+  // 데이터와 로그인 확인이 끝나면 첫 화면으로 (구글로 처음 들어온 사람은 닉네임 정하기부터)
   useEffect(() => {
-    if (screen === "loading" && data && user.ready && introDone) setScreen(user.profile ? "home" : "onboarding");
-  }, [screen, data, user.ready, user.profile, introDone]);
+    if (screen === "loading" && data && user.ready && introDone) {
+      setScreen(user.profile ? "home" : user.needsNickname ? "nickname" : "onboarding");
+    }
+  }, [screen, data, user.ready, user.profile, user.needsNickname, introDone]);
+
+  // 다른 탭에서 로그아웃했거나 세션이 끝나면 로그인 화면으로 돌아가요
+  useEffect(() => {
+    if (user.ready && !user.profile && !user.needsNickname && !AUTH_SCREENS.has(screen)) setScreen("onboarding");
+  }, [screen, user.ready, user.profile, user.needsNickname]);
 
   const changeLang = (l) => { setLang(l); setLangState(l); };
   const setDemo = (v) => { setDemoState(v); try { localStorage.setItem("runtrip.demo", v ? "on" : "off"); } catch {} };

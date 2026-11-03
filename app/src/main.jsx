@@ -5,6 +5,7 @@ import "@fontsource/noto-sans-kr/500.css";
 import "@fontsource/noto-sans-kr/600.css";
 import "@fontsource/noto-sans-kr/700.css";
 import "@fontsource/noto-sans-kr/800.css";
+import "@fontsource/roboto/500.css"; // Google 로그인 버튼 글꼴 (Google 가이드)
 import "./styles.css";
 import { AppProvider } from "./state/AppContext.jsx";
 import App from "./App.jsx";

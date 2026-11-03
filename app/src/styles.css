@@ -295,6 +295,13 @@ small { font-size: 12px; }
 .login-opts .link { color: var(--link); min-height: 44px; padding: 0 4px; }
 .or-line { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; color: var(--muted); font-size: 13px; }
 .or-line::before, .or-line::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+/* Google 로그인 버튼: Google 가이드(밝은 테마) 그대로 - 흰 바탕, #747775 테두리, #1F1F1F 글씨, Roboto Medium, 원래 색 G 로고 */
+.btn-google { width: 100%; min-height: 48px; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 12px;
+  background: #FFFFFF; border: 1px solid #747775; border-radius: 999px; color: #1F1F1F; font: 500 15px/20px "Roboto", var(--sans); letter-spacing: .25px; transition: background .15s; }
+.btn-google:hover { background: #F7F8F8; }
+.btn-google:active { background: #EEF0F0; }
+.btn-google:disabled { opacity: .6; }
+.btn-google .g-logo { width: 20px; height: 20px; flex: none; }
 .login-form .foot { color: var(--muted); }
 .lang-pill.glass { width: 44px; height: 44px; padding: 0; border-radius: 50%; color: var(--text); display: grid; place-items: center; }
 .round-back.glass { background: var(--glass-bg); box-shadow: var(--glass-shadow); }
