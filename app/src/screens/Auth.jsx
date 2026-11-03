@@ -6,7 +6,24 @@ import { useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t } from "../lib/i18n.js";
 import { checkSignup, checkUsername, NICKNAME_MAX } from "../lib/auth.js";
-import { LangPill, OnboardingArt } from "../components/Bits.jsx";
+import { getKeepLogin, setKeepLogin } from "../lib/supabase.js";
+import { LangPill } from "../components/Bits.jsx";
+import { Brand } from "../components/LogoBird.jsx";
+import LoginScene from "../components/LoginScene.jsx";
+
+// 작은 선 아이콘 (24×24)
+const ICONS = {
+  user: "M12 12a4 4 0 100-8 4 4 0 000 8z M4 21c.8-4 4-6 8-6s7.2 2 8 6",
+  lock: "M6 11h12v10H6z M8.5 11V8a3.5 3.5 0 017 0v3",
+  eye: "M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z M12 15a3 3 0 100-6 3 3 0 000 6z",
+  eyeOff: "M3 3l18 18 M10.6 5.1A10 10 0 0112 5c6.4 0 10 7 10 7a17 17 0 01-3.2 4.2 M6.6 6.6C3.7 8.4 2 12 2 12s3.6 7 10 7a9.6 9.6 0 004.4-1 M9.9 9.9a3 3 0 004.2 4.2",
+  arrow: "M5 12h14 M13 6l6 6-6 6",
+};
+export const Icon = ({ name, className = "" }) => (
+  <svg className={`ic ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d={ICONS[name]} />
+  </svg>
+);
 
 // 입력칸 하나 (이름표 + 칸 + 도움말)
 function Field({ label, hint, ...input }) {
@@ -30,6 +47,8 @@ export function Login() {
   const local = !user.online;
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [keep, setKeep] = useState(getKeepLogin);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
@@ -38,36 +57,69 @@ export function Login() {
     const bad = checkUsername(id) || (!local && !pw ? "err_pw_empty" : null);
     if (bad) return setErr(t(bad));
     setBusy(true); setErr("");
+    setKeepLogin(keep); // 로그인하기 전에 정해야 세션이 맞는 곳(local/sessionStorage)에 저장돼요
     const res = await user.signIn(id, pw);
     setBusy(false);
     if (res.ok) app.go("home"); else setErr(t(res.error));
   };
 
   return (
-    <section className="screen onboarding">
-      <div className="ob-top"><LangPill /></div>
-      <div className="ob-art"><OnboardingArt /></div>
-      <div className="ob-hero">
-        <p className="eyebrow light">Seongbuk RunTrip</p>
-        <h1>{t("ob_title")}</h1>
-        <p className="ob-sub">{t("ob_sub")}</p>
+    <section className="screen login-screen">
+      <div className="hanji-layer" aria-hidden="true" />
+      <header className="login-top">
+        <Brand />
+        <LangPill glass />
+      </header>
+      <div className="login-title">
+        <p className="kicker">RUN · SEONGBUK</p>
+        <h1>{t("login_title1")}<br /><mark>{t("login_title_mark")}</mark>{t("login_title2")}</h1>
       </div>
-      <form className="sheet auth-sheet" onSubmit={submit} noValidate>
-        <Field label={t("login_id")} value={id} placeholder={t("login_id_ph")} autoComplete="username" {...idInputProps}
-          onChange={(e) => setId(e.target.value.toLowerCase())} />
-        {!local && (
-          <Field label={t("password")} type="password" value={pw} placeholder={t("password_ph")} autoComplete="current-password"
-            onChange={(e) => setPw(e.target.value)} />
-        )}
+      <LoginScene />
+      <form className="login-form" onSubmit={submit} noValidate>
+        <div className="cred-box soft">
+          <label className="cred-row">
+            <Icon name="user" />
+            <span className="cred-field">
+              <small>{t("login_id")}</small>
+              <input value={id} placeholder={t("login_id_ph")} autoComplete="username" {...idInputProps}
+                onChange={(e) => setId(e.target.value.toLowerCase())} />
+            </span>
+          </label>
+          {!local && (
+            <>
+              <span className="cred-divider" aria-hidden="true" />
+              <div className="cred-row">
+                <Icon name="lock" />
+                <label className="cred-field">
+                  <small>{t("password")}</small>
+                  <input type={showPw ? "text" : "password"} value={pw} placeholder={t("password_ph")} autoComplete="current-password"
+                    onChange={(e) => setPw(e.target.value)} />
+                </label>
+                <button type="button" className="eye-btn" onClick={() => setShowPw(!showPw)}
+                  aria-label={t(showPw ? "pw_hide" : "pw_show")} aria-pressed={showPw}>
+                  <Icon name={showPw ? "eyeOff" : "eye"} />
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+        <div className="login-opts">
+          <label className="keep">
+            <input type="checkbox" checked={keep} onChange={(e) => setKeep(e.target.checked)} />
+            <span>{t("keep_login")}</span>
+          </label>
+          {!local && <button type="button" className="link" onClick={() => app.go("find")}>{t("to_find_short")}</button>}
+        </div>
         {err && <p className="note cream" role="alert">{err}</p>}
         {!local && user.guest && <p className="note mint">{t("guest_note")}</p>}
-        <button type="submit" className="btn btn-teal" disabled={busy || !id}>{busy ? t("signing_in") : t("login_btn")}</button>
+        <button type="submit" className="btn btn-cta" disabled={busy || !id}>
+          {busy ? t("signing_in") : t("login_btn")}<Icon name="arrow" className="arrow" />
+        </button>
         {local ? <p className="foot">{t("local_login_note")}</p> : (
-          <p className="auth-links">
-            <button type="button" className="link" onClick={() => app.go("signup")}>{t("to_signup")}</button>
-            <span aria-hidden="true">|</span>
-            <button type="button" className="link" onClick={() => app.go("find")}>{t("to_find")}</button>
-          </p>
+          <>
+            <p className="or-line"><span>{t("first_time")}</span></p>
+            <button type="button" className="btn btn-soft" onClick={() => app.go("signup")}>{t("new_account")}</button>
+          </>
         )}
       </form>
     </section>
@@ -94,11 +146,12 @@ export function Signup() {
   };
 
   return (
-    <section className="screen onboarding auth-page">
-      <button className="round-back" onClick={() => app.go("onboarding")} aria-label={t("back_login")}>‹</button>
-      <div className="ob-top"><LangPill /></div>
+    <section className="screen auth-page">
+      <div className="hanji-layer" aria-hidden="true" />
+      <button className="round-back glass" onClick={() => app.go("onboarding")} aria-label={t("back_login")}>‹</button>
+      <div className="ob-top"><LangPill glass /></div>
       <div className="ob-hero auth-hero">
-        <p className="eyebrow light">Seongbuk RunTrip</p>
+        <p className="kicker">RUN · SEONGBUK</p>
         <h1>{t("signup_title")}</h1>
         <p className="ob-sub">{t("signup_sub")}</p>
       </div>
@@ -112,7 +165,7 @@ export function Signup() {
           {user.guest && <p className="note mint">{t("guest_note")}</p>}
           {err && <p className="note cream" role="alert">{err}</p>}
         </div>
-        <button type="submit" className="btn btn-teal" disabled={busy}>{busy ? t("signing_up") : t("signup_btn")}</button>
+        <button type="submit" className="btn btn-cta" disabled={busy}>{busy ? t("signing_up") : t("signup_btn")}<Icon name="arrow" className="arrow" /></button>
         <p className="auth-links">
           <button type="button" className="link" onClick={() => app.go("onboarding")}>{t("have_account")}</button>
         </p>
@@ -126,11 +179,12 @@ export function Signup() {
 export function FindAccount() {
   const app = useApp();
   return (
-    <section className="screen onboarding auth-page">
-      <button className="round-back" onClick={() => app.go("onboarding")} aria-label={t("back_login")}>‹</button>
-      <div className="ob-top"><LangPill /></div>
+    <section className="screen auth-page">
+      <div className="hanji-layer" aria-hidden="true" />
+      <button className="round-back glass" onClick={() => app.go("onboarding")} aria-label={t("back_login")}>‹</button>
+      <div className="ob-top"><LangPill glass /></div>
       <div className="ob-hero auth-hero">
-        <p className="eyebrow light">Seongbuk RunTrip</p>
+        <p className="kicker">RUN · SEONGBUK</p>
         <h1>{t("find_title")}</h1>
         <p className="ob-sub">{t("find_sub")}</p>
       </div>
@@ -142,7 +196,7 @@ export function FindAccount() {
           <li>{t("find_step3")}</li>
         </ol>
         <p className="note mint">{t("find_note")}</p>
-        <button className="btn btn-ink" onClick={() => app.go("onboarding")}>{t("back_login")}</button>
+        <button className="btn btn-soft" onClick={() => app.go("onboarding")}>{t("back_login")}</button>
       </div>
     </section>
   );

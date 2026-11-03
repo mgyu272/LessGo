@@ -249,9 +249,55 @@ small { font-size: 12px; }
 .field > small { display: block; margin-top: 6px; font-size: 12px; color: var(--muted); }
 .auth-links { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 8px 0 0; color: var(--line); font-size: 14px; }
 .auth-links .link { padding: 8px 4px; }
+.auth-page { background: var(--bg-soft); color: var(--text); }
 .auth-page .ob-hero { padding-top: calc(64px + var(--safe-top)); }
+.auth-page .ob-hero h1 { color: var(--text); }
+.auth-page .ob-sub { color: var(--muted); }
+.auth-page .eyebrow.light { color: var(--link); }
 .auth-page .round-back { color: var(--text); }
-.auth-page .auth-sheet { flex: 1; max-height: none; }
+.auth-page .auth-sheet { flex: 1; max-height: none; background: var(--sheet-bg); }
+
+/* ---------- ⓪ 로그인 ---------- */
+.login-screen { background: var(--bg-soft); overflow-y: auto; scrollbar-width: none; }
+.login-screen::-webkit-scrollbar { display: none; }
+.login-top { display: flex; justify-content: space-between; align-items: center; padding: calc(10px + var(--safe-top)) 20px 0; }
+.brand { display: inline-flex; align-items: center; gap: 10px; }
+.brand-name { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-name b { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -.3px; }
+.brand-name small { font-size: 10px; font-weight: 700; letter-spacing: .14em; color: var(--muted); }
+.login-title { padding: 16px 24px 0; }
+.kicker { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .18em; color: var(--link); }
+.login-title h1 { margin: 6px 0 0; font-size: 30px; line-height: 1.3; font-weight: 800; color: var(--text); }
+.login-title mark { background: linear-gradient(transparent 58%, #CDEFA0 58%); color: inherit; padding: 0 2px; }
+.login-scene { display: block; width: 100%; height: auto; flex: none; margin-top: 2px; }
+.ls-sun { transform-box: fill-box; transform-origin: center; animation: sunBreath 5s ease-in-out infinite; }
+.ls-cloud { animation: drift 30s linear infinite; }
+.ls-cloud.b { animation-duration: 38s; animation-delay: -15s; }
+.ls-bounce { animation: pinBounce 1.4s ease-in-out infinite; }
+.ls-pulse { transform-box: fill-box; transform-origin: center; animation: pinPulse 1.8s ease-out infinite; }
+@keyframes pinBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes pinPulse { 0% { transform: scale(.6); opacity: .8; } 100% { transform: scale(2.2); opacity: 0; } }
+.login-form { display: flex; flex-direction: column; padding: 0 22px calc(20px + var(--safe-bottom)); }
+.cred-box { border-radius: 20px; padding: 2px 16px; }
+.cred-box:focus-within { box-shadow: var(--soft-shadow), 0 0 0 2px rgba(95, 165, 42, .5); }
+.cred-row { display: flex; align-items: center; gap: 12px; min-height: 62px; }
+.cred-row > .ic { width: 22px; height: 22px; color: var(--link); flex: none; }
+.cred-field { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.cred-field small { font-size: 11px; font-weight: 700; color: var(--muted); }
+.cred-field input { border: 0; outline: 0; background: none; padding: 2px 0 0; font-size: 16px; color: var(--text); min-height: 28px; width: 100%; }
+.cred-field input::placeholder { color: #6B8457; }
+.cred-divider { display: block; height: 1px; background: rgba(120, 190, 60, .35); margin-left: 34px; }
+.eye-btn { width: 44px; height: 44px; flex: none; display: grid; place-items: center; color: var(--muted); border-radius: 12px; margin-right: -8px; }
+.eye-btn .ic { width: 22px; height: 22px; }
+.login-opts { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 6px 2px 0; font-size: 14px; }
+.keep { display: flex; align-items: center; gap: 8px; min-height: 44px; color: var(--text); cursor: pointer; }
+.keep input { width: 20px; height: 20px; margin: 0; accent-color: var(--brand); }
+.login-opts .link { color: var(--link); min-height: 44px; padding: 0 4px; }
+.or-line { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; color: var(--muted); font-size: 13px; }
+.or-line::before, .or-line::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.login-form .foot { color: var(--muted); }
+.lang-pill.glass { width: 44px; height: 44px; padding: 0; border-radius: 50%; color: var(--text); display: grid; place-items: center; }
+.round-back.glass { background: var(--glass-bg); box-shadow: var(--glass-shadow); }
 .auth-page .ob-hero h1 { font-size: 28px; }
 .auth-steps { margin: 0 0 4px; padding-left: 20px; line-height: 1.7; font-size: 14px; color: var(--text); }
 .auth-steps li + li { margin-top: 6px; }

@@ -6,7 +6,7 @@
 // 화면 코드는 어느 쪽인지 신경 쓰지 않고 user.addRun(...) 처럼만 부르면 돼요.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { supabase, hasSupabase } from "../lib/supabase.js";
+import { supabase, hasSupabase, getKeepLogin } from "../lib/supabase.js";
 import { authErrorKey, normalizeUsername, usernameToEmail } from "../lib/auth.js";
 
 const LS = {
@@ -15,6 +15,16 @@ const LS = {
 };
 const readLS = (k, fb) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch { return fb; } };
 const writeLS = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+// 로컬 모드 로그인 정보: "로그인 상태 유지"를 끄면 sessionStorage에 둬서 브라우저를 닫으면 로그아웃돼요
+const readLocalProfile = () => {
+  try { const v = localStorage.getItem(LS.profile) ?? sessionStorage.getItem(LS.profile); return v ? JSON.parse(v) : null; } catch { return null; }
+};
+const writeLocalProfile = (p) => {
+  try {
+    const [keep, drop] = getKeepLogin() ? [localStorage, sessionStorage] : [sessionStorage, localStorage];
+    keep.setItem(LS.profile, JSON.stringify(p)); drop.removeItem(LS.profile);
+  } catch {}
+};
 
 // 별 규칙 (시안 9번 화면 기준, 숫자는 예시)
 export const STAR_RULES = { perKm: 1, perStamp: 3 };
@@ -73,14 +83,14 @@ export function useUserData() {
   // 이 기기에 저장된 내 데이터를 비워요 (로그아웃할 때)
   const clearLocal = useCallback(() => {
     uidRef.current = null;
-    Object.values(LS).forEach((k) => { try { localStorage.removeItem(k); } catch {} });
+    Object.values(LS).forEach((k) => { try { localStorage.removeItem(k); sessionStorage.removeItem(k); } catch {} });
     cellsRef.current = new Set(); stampsRef.current = new Set();
     setProfile(null); setRuns([]); setCells(new Set()); setStamps(new Set()); setCoupons([]); setBonus(0);
   }, []);
 
   // ---------- 앱 시작할 때 로그인 상태 확인 (다시 열어도 로그인 유지) ----------
   useEffect(() => {
-    if (!hasSupabase) { setProfile(readLS(LS.profile, null)); setReady(true); return; }
+    if (!hasSupabase) { setProfile(readLocalProfile()); setReady(true); return; }
     let alive = true;
     (async () => {
       try {
@@ -114,7 +124,7 @@ export function useUserData() {
     const id = normalizeUsername(username);
     if (!hasSupabase) {
       const p = { id: "local", nickname: id, username: id };
-      writeLS(LS.profile, p); setProfile(p);
+      writeLocalProfile(p); setProfile(p);
       return { ok: true };
     }
     authBusyRef.current = true;

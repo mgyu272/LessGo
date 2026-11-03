@@ -73,9 +73,12 @@ export function Toast() {
   return <div className={`toast ${toastMsg ? "show" : ""}`}>{toastMsg}</div>;
 }
 
-export function LangPill({ soft = false }) {
+export function LangPill({ soft = false, glass = false }) {
   const { lang, changeLang } = useApp();
-  return <button className={`lang-pill ${soft ? "soft" : ""}`} onClick={() => changeLang(lang === "en" ? "ko" : "en")}>{lang.toUpperCase()}</button>;
+  return (
+    <button className={`lang-pill ${soft ? "soft" : ""} ${glass ? "glass" : ""}`} onClick={() => changeLang(lang === "en" ? "ko" : "en")}
+      aria-label={lang === "en" ? "Switch language to Korean" : "언어를 영어로 바꾸기"}>{lang.toUpperCase()}</button>
+  );
 }
 
 // 낙관(도장): 스팟 도착·완주 때 찍히는 주홍 도장. text는 1~2글자 (예: 길상)
