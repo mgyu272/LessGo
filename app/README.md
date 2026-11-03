@@ -64,21 +64,50 @@ NEXT_PUBLIC_KAKAO_MAP_KEY=여기에_JavaScript_키
 
 ---
 
-## 4. Supabase 연결 (로그인 + DB + 랭킹)
+## 4. Supabase 연결 (아이디·비밀번호 로그인 + DB + 랭킹)
+
+로그인은 **아이디·비밀번호** 방식이에요. 화면에서는 아이디만 받고, 앱이 내부에서 `아이디@lessgo.local` 형태의 가짜 이메일로 바꿔 Supabase Auth(이메일+비밀번호)에 넘겨요. 메일은 보내지 않아요.
 
 1. https://supabase.com 가입 → **New project** (Region은 Seoul 추천, 비밀번호는 따로 적어 두기)
 2. 왼쪽 **SQL Editor → New query** → `supabase/schema.sql` 내용을 전부 붙여넣고 **Run**
-   → `profiles, runs, cells, stamps, coupons, star_events` 테이블과 랭킹 함수가 생겨요
-3. 왼쪽 **Authentication → Sign In / Providers** 에서 **Allow anonymous sign-ins** 켜기
-   (닉네임만 입력하고 바로 시작하는 방식이에요. 나중에 구글 로그인을 추가할 수 있어요)
+   → `profiles(아이디·닉네임), runs, cells, stamps, coupons, star_events` 테이블, 랭킹 함수, 아이디 중복 확인 함수가 생겨요
+   - **이미 예전 schema.sql로 만든 프로젝트라면** `supabase/migrations/20261103_username_login.sql` 만 한 번 실행하세요
+3. 왼쪽 **Authentication → Sign In / Providers → Email**
+   - **Enable Email provider**: 켜기
+   - **Confirm email**: **끄기** (가짜 이메일이라 확인 메일을 받을 수 없어요. 켜 두면 가입은 돼도 로그인이 안 돼요)
+   - **Secure email change**: 끄기 권장 (예전 익명 사용자가 회원가입할 때 그 계정에 아이디를 붙이는 데 필요해요)
+   - **Allow anonymous sign-ins**: 새로 쓰지는 않아요. 예전에 닉네임으로 시작한 사람들이 회원가입으로 옮겨 올 때까지는 켜 둬도 되고, 다 옮겨 왔으면 꺼도 돼요
 4. **Project Settings → API**(또는 위쪽 **Connect**)에서 **Project URL**과 **anon(또는 publishable) key** 복사
 5. 이 폴더의 `.env.example`을 복사해서 이름을 **`.env.local`**로 바꾸고 값 붙여넣기
-6. 터미널에서 `Ctrl + C` 후 `npm run dev` 다시 실행 → 시작 화면에서 닉네임 입력
+6. 터미널에서 `Ctrl + C` 후 `npm run dev` 다시 실행 → 시작 화면에서 **회원가입** → 아이디·비밀번호·닉네임 입력
 
-연결되면 시작 화면 아래의 "로컬 모드" 문구가 사라지고, **스탬프·별 탭에 영역 랭킹**이 떠요.
+연결되면 시작 화면에 비밀번호 칸과 "회원가입 | 아이디·비밀번호 찾기"가 보이고, **스탬프·별 탭에 영역 랭킹**이 떠요.
+연결하지 않으면(로컬 모드) 비밀번호 없이 아이디만으로 들어가고, 기록은 그 휴대폰에만 저장돼요.
 
-- 표(테이블)는 Supabase **Table Editor**에서 바로 볼 수 있어요.
-- 모든 표에 RLS(행 단위 보안)를 켜 둬서 각자 자기 기록만 읽고 써요. 랭킹은 닉네임과 칸 수만 보여요.
+### 아이디 규칙
+- 아이디: 영문 소문자·숫자·`_` 4~20자 (대문자로 입력해도 소문자로 바뀌어요). 중복 불가
+- 비밀번호: 8자 이상
+- 예전에 닉네임으로 시작한 사람은 **같은 휴대폰에서 회원가입**하면 그 기록이 새 아이디 계정으로 그대로 이어져요
+
+### 비밀번호를 잊었을 때 (관리자가 할 일)
+메일을 보낼 수 없어서 앱의 "아이디·비밀번호 찾기" 화면은 팀에 연락하라는 안내만 보여줘요. 연락이 오면 **SQL Editor**에서:
+```sql
+-- 1) 닉네임으로 아이디 찾기
+select p.username, p.nickname, u.created_at
+from public.profiles p join auth.users u on u.id = p.id
+where p.nickname = '닉네임';
+
+-- 2) 임시 비밀번호 설정 (8자 이상). 알려 준 뒤 로그인하게 하세요
+update auth.users
+set encrypted_password = extensions.crypt('임시비밀번호123', extensions.gen_salt('bf'))
+where email = '아이디@lessgo.local';
+```
+비밀번호는 메시지로 받지 말고, 새 임시 비밀번호만 알려 주세요.
+
+### 알아 둘 점
+- 가입할 때 "서버가 로그인 주소를 받아 주지 않았어요"가 뜨면 Supabase가 `lessgo.local` 주소를 거부한 거예요. `src/lib/auth.js`의 `AUTH_EMAIL_DOMAIN`을 팀이 가진 도메인 등으로 바꾸세요. **바꾸면 그전에 만든 계정은 로그인할 수 없으니** 사용자가 생기기 전에 정하세요.
+- 표(테이블)는 Supabase **Table Editor**에서 바로 볼 수 있어요. 가입한 계정은 **Authentication → Users**에 `아이디@lessgo.local`로 보여요.
+- 모든 표에 RLS(행 단위 보안)를 켜 둬서 각자 자기 기록만 읽고 써요. 랭킹은 닉네임과 칸 수만, 아이디 중복 확인은 "쓸 수 있다/없다"만 알려줘요.
 - 무료 프로젝트는 한동안 안 쓰면 일시정지될 수 있어요. 본선 전에 한 번 열어 두세요.
 - `anon` 키는 앱에 넣어도 되는 공개용 키예요. **`service_role` 키는 절대 넣지 마세요.**
 
@@ -218,7 +247,7 @@ https://geojson.io 에서 선으로 실제 길을 따라 그리고 `properties`�
 
 ## 9. 기술 스택 (발표용 한 줄)
 
-**React 18 + Vite · Noto Sans KR · 카카오맵 (react-kakao-maps-sdk) · H3 육각형 격자 · Web Speech 음성 · Supabase(익명 로그인·Postgres·RLS) · Gemini(자료 기반 질의응답) · Vercel 배포 — 운영비 0원**
+**React 18 + Vite · Noto Sans KR · 카카오맵 (react-kakao-maps-sdk) · H3 육각형 격자 · Web Speech 음성 · Supabase(아이디·비밀번호 로그인·Postgres·RLS) · Gemini(자료 기반 질의응답) · Vercel 배포 — 운영비 0원**
 
 ## 10. 다음에 할 일
 
