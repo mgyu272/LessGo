@@ -3,11 +3,21 @@
 import { useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t } from "../lib/i18n.js";
-import { MapView, FitBounds, FlyTo, HexLayer, SpotMarker } from "../components/MapView.jsx";
+import { MapView, FitSpots, FlyTo, HexLayer, SpotMarker } from "../components/MapView.jsx";
 import { CategoryIcon } from "../components/SpotIcons.jsx";
 import { LangPill } from "../components/Bits.jsx";
 
 const FILTERS = [["all", "filter_all"], ["history", "filter_history"], ["stream", "filter_stream"], ["park", "filter_park"]];
+
+// 스팟 배지가 보여야 하는 지도 영역: 위쪽 검색·칩 아래부터 아래 시트 위까지 (지도 안쪽 px)
+// 레이아웃 위치(offset)로 재요. 화면상 위치는 PC 아이폰 프레임 축소나 시트가 올라오는 애니메이션에 따라 달라져서요.
+// (지도는 화면 전체를 덮어서 지도 안쪽 좌표 = 화면 안쪽 좌표예요)
+function homeSafeArea() {
+  const map = document.querySelector(".home-map");
+  const top = document.querySelector(".home-top");
+  const sheet = document.querySelector(".home-sheet");
+  return { top: top.offsetTop + top.offsetHeight + 8, bottom: sheet.offsetTop - 8, left: 8, right: map.offsetWidth - 8 };
+}
 
 export default function Home() {
   const app = useApp();
@@ -30,11 +40,11 @@ export default function Home() {
 
   return (
     <section className="screen">
-      <MapView>
+      <MapView className="home-map">
         <HexLayer cells={user.cells} landmarkCells={data.landmarkCells} goals />
         {shown.map((s) => <SpotMarker key={s.id} spot={s} label onClick={() => openSpot(s)} />)}
-        {/* 위쪽 검색창(약 150px)과 아래 시트(약 330px)에 가리지 않게 여백 */}
-        <FitBounds points={data.spots.map((s) => [s.lat, s.lng])} padTL={[30, 150]} padBR={[30, 330]} />
+        {/* 위쪽 검색·칩과 아래 시트에 배지·이름표가 가리지 않게 맞춰요 */}
+        <FitSpots spots={data.spots} safe={homeSafeArea} />
         <FlyTo to={flyTo} />
       </MapView>
 

@@ -34,10 +34,10 @@ export function CategoryIcon({ category, size = 18 }) {
 }
 
 // 홈 지도처럼 스팟이 몰려 보일 때 배지를 옮겨 둘 자리 (px, 실제 위치에서 배지 중심까지). 없으면 제자리에 그려요.
-// 성북구 전체가 보이는 홈 축척에 맞춘 값이에요.
+// 홈 지도(MapView.jsx의 FitSpots)가 이 값으로 배지·이름표 자리를 계산해 화면 안에 맞춰요.
 export const LABEL_OFFSETS = {
-  gilsangsa: [-43, -71],
-  jeongneung: [27, -71],
-  uiryeong: [4, -59],
-  simujang: [-42, 22],
+  gilsangsa: [-43, -62],
+  jeongneung: [27, -62],
+  uiryeong: [36, -50],
+  simujang: [-46, 12],
 };
