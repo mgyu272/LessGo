@@ -356,6 +356,12 @@ small { font-size: 12px; }
 .topbar > div { flex: 1; }
 .topbar h3 { font-size: 22px; font-weight: 800; }
 .topbar small { color: var(--muted); }
+/* ② 추천 코스: 연두 바탕 + 한지, 뒤로·날씨는 유리 */
+.courses-screen { background: #F2F9E6; }
+.courses-screen .topbar { background: transparent; }
+.topbar .round-back { position: static; flex: none; width: 44px; height: 44px; font-size: 24px; color: var(--text); }
+.pill-outline.glass { background: var(--glass-bg); -webkit-backdrop-filter: var(--glass-filter); backdrop-filter: var(--glass-filter); border: var(--glass-border); color: var(--text); }
+.courses-screen .course-card:not(.top) { box-shadow: 0 10px 24px -18px rgba(31, 61, 20, .45); }
 .pill-outline { border: 1.5px solid var(--line); background: var(--paper); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 600; white-space: nowrap; }
 .course-card { position: relative; background: var(--paper); border-radius: 20px; padding: 18px 18px 16px 22px; margin-bottom: 12px; overflow: hidden; cursor: pointer; transition: transform .15s; }
 .course-card:active { transform: scale(.98); }
@@ -367,15 +373,16 @@ small { font-size: 12px; }
 .course-card .km { font-family: var(--display); font-size: 34px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
 .course-card .km small { font-size: 15px; font-weight: 600; margin-left: 2px; }
 /* 1순위 추천 코스는 먹색 카드로 크게 */
-.course-card.top { background: var(--ink); color: #fff; padding-top: 16px; }
+/* 대표 코스: 연두(#5FA52A) 바탕 + 짙은 글씨 (흰 글씨는 대비 4.5:1이 안 나와요) */
+.course-card.top { background: var(--brand); color: #10260A; padding-top: 16px; box-shadow: 0 14px 30px -18px rgba(47, 101, 18, .8); }
 .course-card.top::before { display: none; }
-.course-card.top .sub { color: #B5C7BF; }
-.course-card.top .meta { color: #E3ECE7; }
-.best { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--ginkgo); margin-bottom: 8px; }
-.best::before { content: ""; width: 8px; height: 8px; background: var(--ginkgo); transform: rotate(45deg); }
+.course-card.top .sub, .course-card.top .meta { color: #10260A; }
+.course-card.top .lamps { color: #F3FBE8; }
+.best { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #10260A; margin-bottom: 8px; }
+.best::before { content: ""; width: 8px; height: 8px; background: #F3FBE8; transform: rotate(45deg); }
 .ai-reason { margin: -2px 0 6px; font-size: 13px; line-height: 1.5; color: var(--verdigris); font-weight: 500; }
 .ai-reason span { color: var(--vermilion); }
-.course-card.top .ai-reason { color: var(--ginkgo); }
+.course-card.top .ai-reason, .course-card.top .ai-reason span { color: #10260A; }
 .ai-note.loading { background: var(--stone); color: var(--muted); }
 .ai-note.loading::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 8px; border-radius: 50%; background: var(--vermilion); animation: pulse 1s ease-out infinite; vertical-align: middle; }
 .mic { width: 46px; height: 46px; flex: none; border-radius: 50%; background: var(--stone); display: grid; place-items: center; }

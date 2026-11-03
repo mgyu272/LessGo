@@ -5,7 +5,7 @@ import { fmtDist } from "../lib/geo.js";
 import { useApp } from "../state/AppContext.jsx";
 
 // 고도 그래프 (시안 3·4번의 언덕 모양). 라이브러리 없이 SVG로.
-export function ElevationChart({ values, color = "#1F4D3F", fill = "rgba(31,77,63,.12)", height = 64 }) {
+export function ElevationChart({ values, color = "#5FA52A", fill = "rgba(174,218,128,.3)", height = 64 }) {
   if (!values?.length) return null;
   const w = 300, h = height, pad = 4;
   const min = Math.min(...values), max = Math.max(...values);

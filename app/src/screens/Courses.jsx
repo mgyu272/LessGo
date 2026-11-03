@@ -94,11 +94,12 @@ export function CourseList() {
   const picks = ai.picks ? ai.picks.map((p) => byId[p.id]).filter(Boolean) : rulePicks;
   const reasons = Object.fromEntries((ai.picks || []).map((p) => [p.id, p.reason]));
   return (
-    <section className="screen light">
+    <section className="screen light courses-screen">
+      <div className="hanji-layer" aria-hidden="true" />
       <header className="topbar">
-        <button className="icon-btn" onClick={() => app.go("settings")} aria-label="back">‹</button>
-        <div><h3>{t("today_3")}</h3><small>{[`${s.km}km`, t("p_" + s.purpose), t("t_" + s.time), t("h_" + s.hill)].join(" · ")}</small></div>
-        {w && <span className="pill-outline">{w.rain ? t("rainy") : t("clear", { t: Math.round(w.temp) })}</span>}
+        <button className="round-back glass" onClick={() => app.go("settings")} aria-label="back">‹</button>
+        <div><h3>{t("today_3")}</h3><small>{[`${s.km}km`, t("p_" + s.purpose), t("h_" + s.hill)].join(" · ")}</small></div>
+        {w && <span className="pill-outline glass">{w.rain ? t("rainy") : t("clear", { t: Math.round(w.temp) })}</span>}
       </header>
       <div className="scroll-y pad">
         <p className={`note mint ai-note ${ai.status}`}>
@@ -119,7 +120,7 @@ function CourseCard({ c, top, reason, onClick }) {
       <div className="row-between"><h3>{loc(p.name)}</h3><span className={`tone ${p.tone}`}>{t("tone_" + p.tone)}</span></div>
       <p className="sub">{p.themes.map((th) => t("th_" + th)).join(", ")} / {t("h_" + p.hill)}</p>
       {reason && <p className="ai-reason"><span aria-hidden="true">✦</span> {reason}</p>}
-      <ElevationChart values={p.elevation} {...(top ? { color: "#7CC4A4", fill: "rgba(124,196,164,.22)" } : {})} />
+      <ElevationChart values={p.elevation} {...(top ? { color: "#E6F7CC", fill: "rgba(230,247,204,.3)" } : {})} />
       <div className="row-between">
         <span className="km">{p.distance_km}<small>km</small></span>
         <div className="meta">
