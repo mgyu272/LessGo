@@ -107,6 +107,18 @@ VITE_FIREBASE_APP_ID=
 ### 4-4. Vercel 환경변수
 **Vercel → 프로젝트 → Settings → Environment Variables**에 위 `VITE_FIREBASE_*` 6개를 같은 값으로 넣고 **다시 배포(Redeploy)** 하세요. `VITE_` 값은 빌드할 때 들어가서, 넣은 뒤 다시 배포해야 반영돼요.
 
+### 4-5. 에뮬레이터로 테스트 (실제 서버 없이, 선택)
+진짜 Firebase에 테스트 계정을 만들지 않고 이 컴퓨터에서 가입·로그인·보안 규칙을 확인할 수 있어요. Java가 필요해요.
+```bash
+npm install -g firebase-tools
+firebase emulators:start --only auth,firestore --project demo-lessgo
+```
+다른 터미널에서 (PowerShell 기준, 값은 가짜여도 돼요):
+```powershell
+$env:VITE_FIREBASE_EMULATOR="1"; $env:VITE_FIREBASE_API_KEY="demo-key"; $env:VITE_FIREBASE_AUTH_DOMAIN="demo-lessgo.firebaseapp.com"; $env:VITE_FIREBASE_PROJECT_ID="demo-lessgo"; $env:VITE_FIREBASE_APP_ID="demo-app"; npx vite --port 5201
+```
+`http://127.0.0.1:5201` 로 여세요 (`localhost`로 열면 에뮬레이터의 구글 로그인 리다이렉트가 브라우저 저장소 분리 때문에 안 돌아와요). 설정은 `firebase.json`에 있어요.
+
 ### 데이터 구조 (Firestore)
 | 위치 | 내용 |
 |---|---|

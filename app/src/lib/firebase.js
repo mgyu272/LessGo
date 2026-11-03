@@ -7,8 +7,8 @@
 //   끄면 browserSessionPersistence → 브라우저(탭)를 닫으면 로그아웃
 
 import { initializeApp } from "firebase/app";
-import { getAuth, setPersistence, browserLocalPersistence, browserSessionPersistence } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getAuth, setPersistence, browserLocalPersistence, browserSessionPersistence, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 const env = import.meta.env;
 const config = {
@@ -31,6 +31,12 @@ export const hasFirebase = Boolean(config.apiKey && config.authDomain && config.
 const app = hasFirebase ? initializeApp(config) : null;
 export const auth = app ? getAuth(app) : null;
 export const db = app ? getFirestore(app) : null;
+
+// 테스트용: VITE_FIREBASE_EMULATOR=1 이면 실제 서버 대신 이 컴퓨터의 Firebase 에뮬레이터에 붙어요 (README 4번)
+if (app && env.VITE_FIREBASE_EMULATOR === "1") {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+}
 
 // 로그인하기 직전에 불러요. 체크 여부에 맞는 곳에 로그인 정보가 저장돼요.
 export function applyKeepLogin(keep = getKeepLogin()) {
