@@ -8,10 +8,13 @@ import Home from "./screens/Home.jsx";
 import { Settings, CourseList, CourseDetail } from "./screens/Courses.jsx";
 import Run from "./screens/Run.jsx";
 import { Spot, Shops, Coupon } from "./screens/Spot.jsx";
-import { Onboarding, Finish, Stars, Records } from "./screens/Me.jsx";
+import { Finish, Stars, Records } from "./screens/Me.jsx";
+import { Login, Signup, FindAccount } from "./screens/Auth.jsx";
 
 const SCREENS = {
-  onboarding: [Onboarding],
+  onboarding: [Login],             // 시작 화면 = 로그인
+  signup: [Signup],
+  find: [FindAccount],
   home: [Home],
   settings: [Home, Settings],      // 시안처럼 홈 지도 위에 설정 시트를 띄워요
   list: [CourseList],
@@ -25,7 +28,7 @@ const SCREENS = {
   records: [Records],
 };
 const WITH_TABS = new Set(["home", "stars", "records"]);
-const DARK = new Set(["run", "spot", "shops", "coupon", "stars", "onboarding"]);
+const DARK = new Set(["run", "spot", "shops", "coupon", "stars", "onboarding", "signup", "find"]);
 
 export default function App() {
   const { screen, data, spot } = useApp();

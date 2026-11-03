@@ -185,6 +185,21 @@ small { font-size: 12px; }
 .ob-sub { color: #BFD0C8; line-height: 1.6; margin: 0; font-size: 15px; }
 .onboarding .sheet { margin-top: 0; padding-top: 18px; background: var(--paper); }
 .onboarding .sheet h4 { margin-top: 0; }
+/* 로그인 · 회원가입 · 찾기 */
+.auth-sheet { gap: 0; max-height: 72%; }
+.auth-sheet .scroll-y { margin: 0 -2px; padding: 0 2px; }
+.field { display: block; margin-top: 12px; }
+.field:first-child { margin-top: 4px; }
+.field > span { display: block; font-size: 13px; font-weight: 600; color: var(--muted); }
+.field > small { display: block; margin-top: 6px; font-size: 12px; color: var(--muted); }
+.auth-links { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 8px 0 0; color: var(--line); font-size: 14px; }
+.auth-links .link { padding: 8px 4px; }
+.auth-page .ob-hero { padding-top: calc(64px + var(--safe-top)); }
+.auth-page .round-back { color: var(--text); }
+.auth-page .auth-sheet { flex: 1; max-height: none; }
+.auth-page .ob-hero h1 { font-size: 28px; }
+.auth-steps { margin: 0 0 4px; padding-left: 20px; line-height: 1.7; font-size: 14px; color: var(--text); }
+.auth-steps li + li { margin-top: 6px; }
 .lang-pill { background: rgba(255,255,255,.14); color: inherit; font-weight: 700; font-size: 13px; padding: 8px 12px; border-radius: 999px; }
 .home-top .lang-pill, .lang-pill.soft { background: var(--stone); color: var(--text); }
 .lang-pill.soft::after { content: " ▾"; font-size: 10px; }

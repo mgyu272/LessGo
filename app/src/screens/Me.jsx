@@ -1,4 +1,4 @@
-// 시작(로그인) · 완주 요약 · ⑨ 스탬프·별 + 내 영역 + 랭킹 · 내 기록
+// 완주 요약 · ⑨ 스탬프·별 + 내 영역 + 랭킹 · 내 기록  (로그인·회원가입은 Auth.jsx)
 
 import { useEffect, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
@@ -7,40 +7,7 @@ import { fmtTime, fmtPace } from "../lib/geo.js";
 import { boundary, areaKm2 } from "../lib/territory.js";
 import { NEXT_REWARD, STAR_RULES } from "../state/useUserData.js";
 import { MapView, FitBounds, HexLayer, Route } from "../components/MapView.jsx";
-import { LangPill, OnboardingArt, Seal, sealText } from "../components/Bits.jsx";
-
-// ---------------- 시작 화면 (닉네임 → 익명 로그인) ----------------
-export function Onboarding() {
-  const app = useApp();
-  const [name, setName] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState("");
-  const start = async () => {
-    if (!name.trim()) return;
-    setBusy(true); setErr("");
-    const res = await app.user.signIn(name.trim());
-    setBusy(false);
-    if (res.ok) app.go("home"); else setErr(t("signin_fail"));
-  };
-  return (
-    <section className="screen onboarding">
-      <div className="ob-top"><LangPill /></div>
-      <div className="ob-art"><OnboardingArt /></div>
-      <div className="ob-hero">
-        <p className="eyebrow light">Seongbuk RunTrip</p>
-        <h1>{t("ob_title")}</h1>
-        <p className="ob-sub">{t("ob_sub")}</p>
-      </div>
-      <div className="sheet">
-        <h4>{t("nickname")}</h4>
-        <input className="input" value={name} maxLength={20} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && start()} placeholder={t("nickname_ph")} />
-        {err && <p className="note cream">{err}</p>}
-        <button className="btn btn-teal" disabled={busy || !name.trim()} onClick={start}>{busy ? t("signing_in") : t("ob_start")}</button>
-        {!app.user.online && <p className="foot">{t("local_mode")}</p>}
-      </div>
-    </section>
-  );
-}
+import { Seal, sealText } from "../components/Bits.jsx";
 
 // ---------------- 완주 요약 ----------------
 export function Finish() {

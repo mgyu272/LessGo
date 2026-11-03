@@ -1,11 +1,13 @@
-// 사용자 데이터: 프로필(닉네임), 달리기 기록, 육각형 칸, 스탬프, 쿠폰, 보너스 별
+// 사용자 데이터: 프로필(아이디·닉네임), 달리기 기록, 육각형 칸, 스탬프, 쿠폰, 보너스 별
 //
-// - Supabase가 연결돼 있으면: 익명 로그인 → 서버(DB)에 저장, 다른 기기·랭킹과 공유
-// - 연결 안 돼 있으면: "로컬 모드" → 이 브라우저(localStorage)에만 저장
+// - Supabase가 연결돼 있으면: 아이디·비밀번호 로그인 → 서버(DB)에 저장, 다른 기기·랭킹과 공유
+//   (아이디는 lib/auth.js 에서 가짜 이메일로 바꿔 Supabase Auth에 넘겨요)
+// - 연결 안 돼 있으면: "로컬 모드" → 아이디만으로 들어가고, 이 브라우저(localStorage)에만 저장
 // 화면 코드는 어느 쪽인지 신경 쓰지 않고 user.addRun(...) 처럼만 부르면 돼요.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase, hasSupabase } from "../lib/supabase.js";
+import { authErrorKey, normalizeUsername, usernameToEmail } from "../lib/auth.js";
 
 const LS = {
   profile: "runtrip.profile", runs: "runtrip.runs", cells: "runtrip.cells",
@@ -26,11 +28,14 @@ export function useUserData() {
   const [stamps, setStamps] = useState(() => new Set(readLS(LS.stamps, [])));
   const [coupons, setCoupons] = useState(() => readLS(LS.coupons, []));
   const [bonus, setBonus] = useState(() => readLS(LS.bonus, 0));
+  // 예전 닉네임(익명) 로그인이 이 기기에 남아 있으면 { nickname }. 회원가입하면 그 계정에 아이디를 붙여 기록을 이어가요.
+  const [guest, setGuest] = useState(null);
 
   // 달리는 중에는 화면이 다시 그려지기 전에도 최신 값이 필요해서 ref에도 들고 있어요
   const cellsRef = useRef(cells);
   const stampsRef = useRef(stamps);
   const uidRef = useRef(null);
+  const authBusyRef = useRef(false); // 로그인·가입 처리 중에는 onAuthStateChange 쪽에서 또 불러오지 않게
 
   const remote = () => (hasSupabase && uidRef.current ? supabase : null);
   const logErr = (label) => ({ error }) => { if (error) console.warn(`[supabase] ${label}:`, error.message); };
@@ -39,14 +44,15 @@ export function useUserData() {
   const loadRemote = useCallback(async () => {
     const uid = uidRef.current;
     const [p, r, c, s, cp, b] = await Promise.all([
-      supabase.from("profiles").select("nickname").eq("id", uid).maybeSingle(),
+      // "*": username 컬럼을 아직 안 만든 DB(마이그레이션 전)에서도 프로필을 읽을 수 있게
+      supabase.from("profiles").select("*").eq("id", uid).maybeSingle(),
       supabase.from("runs").select("*").order("created_at", { ascending: false }).limit(100),
       supabase.from("cells").select("cell"),
       supabase.from("stamps").select("spot_id"),
       supabase.from("coupons").select("*").order("created_at", { ascending: false }),
       supabase.from("star_events").select("amount"),
     ]);
-    setProfile(p.data ? { id: uid, nickname: p.data.nickname } : null);
+    setProfile(p.data ? { id: uid, nickname: p.data.nickname, username: p.data.username || null } : null);
     const runList = (r.data || []).map((x) => ({
       id: x.id, date: new Date(x.created_at).getTime(), courseId: x.course_id, name: x.name,
       meters: x.meters, seconds: x.seconds, cells: x.cells, stamps: x.stamps,
@@ -59,41 +65,116 @@ export function useUserData() {
     const bn = (b.data || []).reduce((sum, x) => sum + x.amount, 0); setBonus(bn); writeLS(LS.bonus, bn);
   }, []);
 
-  // ---------- 앱 시작할 때 로그인 상태 확인 ----------
-  useEffect(() => {
-    (async () => {
-      if (!hasSupabase) { setProfile(readLS(LS.profile, null)); setReady(true); return; }
-      try {
-        const { data } = await supabase.auth.getSession();
-        if (data.session) { uidRef.current = data.session.user.id; await loadRemote(); }
-      } catch (e) { console.warn("[supabase] session", e); }
-      setReady(true);
-    })();
-  }, [loadRemote]);
-
-  // ---------- 로그인 / 로그아웃 ----------
-  const signIn = useCallback(async (nickname) => {
-    if (!hasSupabase) {
-      const p = { id: "local", nickname };
-      writeLS(LS.profile, p); setProfile(p);
-      return { ok: true };
-    }
-    const { data, error } = await supabase.auth.signInAnonymously();
-    if (error) { console.warn("[supabase] signIn", error.message); return { ok: false, error }; }
-    uidRef.current = data.user.id;
-    const up = await supabase.from("profiles").upsert({ id: data.user.id, nickname });
-    if (up.error) console.warn("[supabase] profile", up.error.message);
+  const enterSession = useCallback(async (session) => {
+    uidRef.current = session.user.id;
     await loadRemote();
-    return { ok: true };
   }, [loadRemote]);
 
-  const signOut = useCallback(async () => {
-    if (hasSupabase) await supabase.auth.signOut();
+  // 이 기기에 저장된 내 데이터를 비워요 (로그아웃할 때)
+  const clearLocal = useCallback(() => {
     uidRef.current = null;
     Object.values(LS).forEach((k) => { try { localStorage.removeItem(k); } catch {} });
     cellsRef.current = new Set(); stampsRef.current = new Set();
     setProfile(null); setRuns([]); setCells(new Set()); setStamps(new Set()); setCoupons([]); setBonus(0);
   }, []);
+
+  // ---------- 앱 시작할 때 로그인 상태 확인 (다시 열어도 로그인 유지) ----------
+  useEffect(() => {
+    if (!hasSupabase) { setProfile(readLS(LS.profile, null)); setReady(true); return; }
+    let alive = true;
+    (async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        const s = data.session;
+        if (s?.user.is_anonymous) {
+          // 예전 닉네임 로그인: 로그인으로 치지 않고, 회원가입할 때 이 계정에 아이디를 붙여요
+          const p = await supabase.from("profiles").select("nickname").eq("id", s.user.id).maybeSingle();
+          if (alive) setGuest({ nickname: p.data?.nickname || "" });
+        } else if (s) {
+          await enterSession(s);
+        }
+      } catch (e) { console.warn("[supabase] session", e); }
+      if (alive) setReady(true);
+    })();
+    // 다른 탭에서 로그인·로그아웃하거나 세션이 만료되면 따라가요
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (authBusyRef.current) return;
+      if (event === "SIGNED_OUT") { if (uidRef.current) clearLocal(); return; }
+      if (event === "SIGNED_IN" && session && !session.user.is_anonymous && session.user.id !== uidRef.current) {
+        // 이 콜백 안에서 Supabase를 바로 부르면 멈출 수 있어서 한 박자 뒤에 불러와요
+        setTimeout(() => { if (alive) enterSession(session); }, 0);
+      }
+    });
+    return () => { alive = false; sub.subscription.unsubscribe(); };
+  }, [enterSession, clearLocal]);
+
+  // ---------- 로그인 / 회원가입 / 로그아웃 ----------
+  // 결과는 { ok: true } 또는 { ok: false, error: "i18n 문구 키" }
+  const signIn = useCallback(async (username, password) => {
+    const id = normalizeUsername(username);
+    if (!hasSupabase) {
+      const p = { id: "local", nickname: id, username: id };
+      writeLS(LS.profile, p); setProfile(p);
+      return { ok: true };
+    }
+    authBusyRef.current = true;
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email: usernameToEmail(id), password });
+      if (error) { console.warn("[supabase] signIn", error.message); return { ok: false, error: authErrorKey(error) }; }
+      setGuest(null);
+      await enterSession(data.session);
+      return { ok: true };
+    } finally { authBusyRef.current = false; }
+  }, [enterSession]);
+
+  const signUp = useCallback(async ({ username, password, nickname }) => {
+    if (!hasSupabase) return { ok: false, error: "err_unknown" };
+    const id = normalizeUsername(username);
+    const nick = nickname.trim();
+    const email = usernameToEmail(id);
+    authBusyRef.current = true;
+    try {
+      // 1) 아이디 중복 미리 확인. DB에 함수가 없으면(마이그레이션 전) 건너뛰고 Supabase 응답으로 확인해요
+      const avail = await supabase.rpc("username_available", { name: id });
+      if (!avail.error && avail.data === false) return { ok: false, error: "err_id_taken" };
+
+      let user;
+      const { data: cur } = await supabase.auth.getSession();
+      if (cur.session?.user.is_anonymous) {
+        // 2-a) 이 기기의 익명 계정에 아이디·비밀번호를 붙여요 → 같은 계정이라 기존 기록이 그대로 이어져요
+        const r1 = await supabase.auth.updateUser({ email });
+        if (r1.error) return { ok: false, error: authErrorKey(r1.error) };
+        if (r1.data.user.email !== email) return { ok: false, error: "err_confirm_on" };
+        const r2 = await supabase.auth.updateUser({ password });
+        if (r2.error) return { ok: false, error: authErrorKey(r2.error) };
+        user = r2.data.user;
+      } else {
+        // 2-b) 새 계정
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) return { ok: false, error: authErrorKey(error) };
+        if (!data.session) return { ok: false, error: "err_confirm_on" }; // Confirm email이 켜져 있으면 바로 로그인이 안 돼요
+        user = data.user;
+      }
+
+      // 3) 프로필 저장 (아이디·닉네임)
+      uidRef.current = user.id;
+      let up = await supabase.from("profiles").upsert({ id: user.id, nickname: nick, username: id });
+      if (up.error?.code === "PGRST204") {
+        console.warn("[supabase] profiles.username 컬럼이 없어요. supabase/migrations 의 SQL을 실행해 주세요.");
+        up = await supabase.from("profiles").upsert({ id: user.id, nickname: nick });
+      }
+      if (up.error) console.warn("[supabase] profile", up.error.message);
+      setGuest(null);
+      await loadRemote();
+      return { ok: true };
+    } finally { authBusyRef.current = false; }
+  }, [loadRemote]);
+
+  const signOut = useCallback(async () => {
+    authBusyRef.current = true;
+    try { if (hasSupabase) await supabase.auth.signOut(); } finally { authBusyRef.current = false; }
+    clearLocal();
+  }, [clearLocal]);
 
   // ---------- 저장하기 ----------
   // 육각형 칸: 이번에 새로 얻은 칸만 넣어요
@@ -149,7 +230,7 @@ export function useUserData() {
   }, [runs, stamps, bonus]);
 
   return {
-    ready, profile, runs, cells, stamps, coupons, bonus, totalStars, online: hasSupabase,
-    signIn, signOut, addCells, hasCell, addStamp, addRun, addCoupon, addBonus, leaderboard,
+    ready, profile, runs, cells, stamps, coupons, bonus, totalStars, online: hasSupabase, guest,
+    signIn, signUp, signOut, addCells, hasCell, addStamp, addRun, addCoupon, addBonus, leaderboard,
   };
 }
