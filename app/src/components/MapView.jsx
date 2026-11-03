@@ -74,6 +74,63 @@ export function FitBounds({ points, padTL = [30, 30], padBR = [30, 30], fitKey =
   return null;
 }
 
+// 이름표 달린 스팟 마커(SpotMarker label)가 차지하는 칸: 실제 위치 기준 px [왼, 위, 오른, 아래] 목록
+function pinExtents(spot) {
+  const [dx, dy] = LABEL_OFFSETS[spot.id] || [0, -40];
+  const label = dy <= 0 ? [dx - 42, dy - 56, dx + 42, dy - 29] : [dx - 42, dy + 26, dx + 42, dy + 54];
+  return [[-8, -8, 8, 8], [dx - 28, dy - 28, dx + 28, dy + 28], label];
+}
+
+// 홈 지도: 스팟 배지·이름표까지 모두 보이게 맞춰요.
+// 카카오맵은 화면 크기마다 확대 단계가 달라서, 배지가 safe() 영역(검색·칩 아래 ~ 아래 시트 위)에 들어갈 때까지
+// 한 단계씩 넓게 보고, 배지 묶음을 그 영역 가운데로 옮겨요. safe(): 지도 안쪽 px { top, right, bottom, left }
+// 단계를 바꾼 직후에는 지도 좌표 계산이 바로 갱신되지 않아서, 처음 잰 위치로 미리 계산해요 (한 단계 = 거리 절반).
+export function FitSpots({ spots, safe }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!spots?.length) return;
+    let alive = true;
+    fit();
+    // 글꼴이 늦게 들어오면 아래 시트 높이가 바뀌어서, 다 들어온 뒤 한 번 더 맞춰요
+    document.fonts?.ready.then(() => { if (alive) fit(); });
+    return () => { alive = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, spots]);
+
+  function fit() {
+    const { kakao } = window;
+    const coords = spots.map((s) => new kakao.maps.LatLng(s.lat, s.lng));
+    const bounds = new kakao.maps.LatLngBounds();
+    coords.forEach((c) => bounds.extend(c));
+    map.setBounds(bounds);
+
+    const proj = map.getProjection();
+    const center = proj.containerPointFromCoords(map.getCenter());
+    const dots = coords.map((c) => proj.containerPointFromCoords(c));
+    const area = safe();
+    for (let step = 0; step <= 4; step++) {
+      const k = 2 ** step;
+      const box = { l: Infinity, t: Infinity, r: -Infinity, b: -Infinity };
+      spots.forEach((s, i) => {
+        const x = center.x + (dots[i].x - center.x) / k, y = center.y + (dots[i].y - center.y) / k;
+        for (const [x1, y1, x2, y2] of pinExtents(s)) {
+          box.l = Math.min(box.l, x + x1); box.t = Math.min(box.t, y + y1);
+          box.r = Math.max(box.r, x + x2); box.b = Math.max(box.b, y + y2);
+        }
+      });
+      if (step < 4 && (box.r - box.l > area.right - area.left || box.b - box.t > area.bottom - area.top)) continue;
+      // 이 단계에서 배지 묶음 가운데를 영역 가운데로: 화면 이동량을 처음 단계 기준으로 되돌려 새 중심을 구해요
+      const dx = ((box.l + box.r) / 2 - (area.left + area.right) / 2) * k;
+      const dy = ((box.t + box.b) / 2 - (area.top + area.bottom) / 2) * k;
+      const target = proj.coordsFromContainerPoint(new kakao.maps.Point(center.x + dx, center.y + dy));
+      map.setLevel(map.getLevel() + step);
+      map.setCenter(target);
+      return;
+    }
+  }
+  return null;
+}
+
 // 내 위치를 따라 지도 이동 (애니메이션 없이)
 export function Follow({ pos }) {
   const map = useMap();
