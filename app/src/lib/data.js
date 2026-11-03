@@ -8,12 +8,19 @@ import { cellOf } from "./territory.js";
 // 코스가 생기면 여기서 id를 빼면 다시 보여요.
 export const HIDDEN_SPOTS = new Set(["gilsangsa"]);
 
+const getJSON = (url) => fetch(url).then((r) => { if (!r.ok) throw new Error(`${url} ${r.status}`); return r.json(); });
+
+// 파일 하나를 못 받아도 앱은 뜨게 빈 값으로 채우고, 어떤 파일이 실패했는지 failed에 남겨요 (홈 지도에 안내)
 export async function loadData() {
-  const [spots, courses, shops] = await Promise.all([
-    fetch("/data/spots.json").then((r) => r.json()),
-    fetch("/data/courses.geojson").then((r) => r.json()),
-    fetch("/data/shops.json").then((r) => r.json()),
+  const names = ["spots", "courses", "shops"];
+  const res = await Promise.allSettled([
+    getJSON("/data/spots.json"),
+    getJSON("/data/courses.geojson"),
+    getJSON("/data/shops.json"),
   ]);
+  const failed = names.filter((n, i) => res[i].status === "rejected");
+  res.forEach((r, i) => { if (r.status === "rejected") console.error(`[data] ${names[i]}`, r.reason); });
+  const [spots, courses, shops] = res.map((r, i) => (r.status === "fulfilled" ? r.value : [{ spots: [] }, { features: [] }, { shops: [] }][i]));
   const spotById = {};
   const landmarkCells = new Set();
   const visible = spots.spots.filter((s) => !HIDDEN_SPOTS.has(s.id));
@@ -26,6 +33,7 @@ export async function loadData() {
     courses: courses.features.map(prepareCourse),
     spotById,
     landmarkCells,
+    failed,
   };
 }
 

@@ -14,6 +14,8 @@ export const useApp = () => useContext(Ctx);
 const AUTH_SCREENS = new Set(["loading", "onboarding", "signup", "find", "nickname"]);
 
 export const CENTER = [37.5915, 127.0035]; // 한성대입구역~성북동 사이
+export const HOME_CENTER = [37.5894, 127.0167]; // 홈 지도 첫 화면: 성북구 가운데
+export const HOME_LEVEL = 6;
 
 function autoTime() {
   const h = new Date().getHours();

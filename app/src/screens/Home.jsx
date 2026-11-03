@@ -1,7 +1,7 @@
 // ① 홈: 지도 + 끌어 올리는 바텀시트 "오늘은 얼마나 달려볼까요?"
 
 import { useRef, useState } from "react";
-import { useApp } from "../state/AppContext.jsx";
+import { useApp, HOME_CENTER, HOME_LEVEL } from "../state/AppContext.jsx";
 import { t } from "../lib/i18n.js";
 import { MapView, FitSpots, FlyTo, HexLayer, SpotMarker, Me } from "../components/MapView.jsx";
 import { CategoryIcon } from "../components/SpotIcons.jsx";
@@ -11,8 +11,9 @@ import { Icon } from "./Auth.jsx";
 const FILTERS = [["all", "filter_all"], ["history", "filter_history"], ["stream", "filter_stream"], ["park", "filter_park"]];
 const DISTANCES = [3, 5, 10];
 const MIN_PER_KM = 6.5;             // 예상 시간 기준: 1km 6분 30초
-const SNAPS = [150, 420, 640];      // 바텀시트가 멈추는 높이 (px)
-const DEFAULT_SNAP = 420;
+// 바텀시트가 멈추는 높이 (px). 가운데(처음) 높이는 420인데, 낮은 화면(아이폰 SE 등)에서는
+// 지도에 핀 자리가 남도록 화면 높이에 맞춰 낮춰요 (최소 300)
+const snapsFor = (screenH) => [150, Math.max(300, Math.min(420, screenH - 330)), 640];
 
 // 스팟 배지가 보여야 하는 지도 영역: 위쪽 검색·칩 아래부터 아래 시트 위까지 (지도 안쪽 px)
 // 레이아웃 위치(offset)로 재요. 화면상 위치는 PC 아이폰 프레임 축소나 시트 애니메이션에 따라 달라져서요.
@@ -26,12 +27,14 @@ function homeSafeArea() {
 
 // 끌어서 높이를 바꾸는 바텀시트. 손을 떼면 가장 가까운 멈춤 높이로 붙어요.
 function useSheet() {
-  const [height, setHeight] = useState(DEFAULT_SNAP);
+  // PC의 아이폰 프레임 안에서는 화면 높이가 852로 고정이라 창 높이 대신 프레임 높이를 써요
+  const [snaps] = useState(() => snapsFor(document.querySelector(".phone")?.offsetHeight || window.innerHeight));
+  const [height, setHeight] = useState(snaps[1]);
   const [dragging, setDragging] = useState(false);
   const drag = useRef(null);
   const justDragged = useRef(false); // 끌기를 마친 직후의 click은 무시해요
-  const maxH = () => Math.min(SNAPS[SNAPS.length - 1], (document.querySelector(".home-screen")?.offsetHeight || 852) - 120);
-  const snapTo = (h) => SNAPS.reduce((best, s) => (Math.abs(s - h) < Math.abs(best - h) ? s : best), SNAPS[0]);
+  const maxH = () => Math.min(snaps[snaps.length - 1], (document.querySelector(".home-screen")?.offsetHeight || 852) - 120);
+  const snapTo = (h) => snaps.reduce((best, s) => (Math.abs(s - h) < Math.abs(best - h) ? s : best), snaps[0]);
   const handlers = {
     onPointerDown: (e) => {
       drag.current = { y: e.clientY, h: height, moved: false };
@@ -45,7 +48,7 @@ function useSheet() {
       const scale = el ? el.getBoundingClientRect().height / el.offsetHeight || 1 : 1;
       const dy = (d.y - e.clientY) / scale;
       if (Math.abs(dy) > 4) d.moved = true;
-      setHeight(Math.max(SNAPS[0], Math.min(maxH(), d.h + dy)));
+      setHeight(Math.max(snaps[0], Math.min(maxH(), d.h + dy)));
     },
     onPointerUp: () => {
       const d = drag.current; drag.current = null; setDragging(false);
@@ -57,9 +60,9 @@ function useSheet() {
   // 손잡이를 탭하거나 키보드 Enter를 누르면 다음 높이로
   const cycle = () => {
     if (justDragged.current) { justDragged.current = false; return; }
-    setHeight((h) => SNAPS[(SNAPS.indexOf(snapTo(h)) + 1) % SNAPS.length]);
+    setHeight((h) => snaps[(snaps.indexOf(snapTo(h)) + 1) % snaps.length]);
   };
-  return { height, dragging, handlers, cycle, full: height >= SNAPS[SNAPS.length - 1] - 20 };
+  return { height, dragging, handlers, cycle, full: height >= snaps[snaps.length - 1] - 20 };
 }
 
 export default function Home() {
@@ -67,7 +70,8 @@ export default function Home() {
   const { data, settings, setSettings, user } = app;
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
-  const [flyTo, setFlyTo] = useState(null);
+  const [flyTo, setFlyTo] = useState(null); // { at: [lat, lng], level }
+  const [refit, setRefit] = useState(0);
   const [me, setMe] = useState(null);
   const [locating, setLocating] = useState(false);
   const sheet = useSheet();
@@ -82,28 +86,31 @@ export default function Home() {
     if (e.key !== "Enter") return;
     const q = query.trim().toLowerCase();
     const hit = data.spots.find((s) => s.name.ko.includes(q) || s.name.en.toLowerCase().includes(q));
-    if (hit) setFlyTo([hit.lat, hit.lng]);
+    if (hit) setFlyTo({ at: [hit.lat, hit.lng], level: 2 });
   };
   const locate = () => {
-    if (!navigator.geolocation) return app.toast(t("gps_denied"));
+    // 위치를 못 쓰면 성북구로 돌아와요 (핀이 모두 보이게 다시 맞춤)
+    const fallback = () => { setLocating(false); setFlyTo(null); setRefit((n) => n + 1); app.toast(t("gps_denied")); };
+    if (!navigator.geolocation) return fallback();
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (p) => { setLocating(false); const at = [p.coords.latitude, p.coords.longitude]; setMe(at); setFlyTo(at); },
-      () => { setLocating(false); app.toast(t("gps_denied")); },
+      (p) => { setLocating(false); const at = [p.coords.latitude, p.coords.longitude]; setMe(at); setFlyTo({ at, level: 3 }); },
+      fallback,
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 },
     );
   };
 
   return (
     <section className="screen home-screen">
-      <MapView className="home-map">
+      <MapView className="home-map" center={HOME_CENTER} level={HOME_LEVEL}>
         <HexLayer cells={user.cells} landmarkCells={data.landmarkCells} goals />
         {shown.map((s) => <SpotMarker key={s.id} spot={s} label onClick={() => openSpot(s)} />)}
         <Me at={me} />
         {/* 위쪽 검색·칩과 아래 시트에 배지·이름표가 가리지 않게 맞춰요 */}
-        <FitSpots spots={data.spots} safe={homeSafeArea} />
-        <FlyTo to={flyTo} />
+        <FitSpots spots={data.spots} safe={homeSafeArea} refitKey={refit} />
+        <FlyTo to={flyTo?.at} level={flyTo?.level} />
       </MapView>
+      {data.failed?.includes("spots") && <p className="map-notice glass" role="status">{t("spots_load_error")}</p>}
 
       <div className="home-top">
         <div className="search-row">

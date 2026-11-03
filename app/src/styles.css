@@ -325,6 +325,8 @@ small { font-size: 12px; }
 .home-chips .chip { height: 38px; padding: 0 15px; display: inline-flex; align-items: center; border: 0; color: var(--text); font-size: 14px; flex: none; }
 .home-chips .chip.on { background: var(--strong); color: #fff; box-shadow: var(--glass-shadow); }
 .home-chips .chip:last-child { margin-right: 36px; }
+/* 장소 데이터를 못 불러왔을 때 지도 위 작은 안내 (검색·칩 바로 아래) */
+.map-notice { position: absolute; left: 50%; top: calc(124px + var(--safe-top)); transform: translateX(-50%); z-index: 6; margin: 0; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; }
 .locate-btn { position: absolute; right: 14px; z-index: 6; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; color: var(--link); transition: bottom .3s var(--ease-out); }
 .locate-btn svg { width: 22px; height: 22px; }
 .locate-btn.busy svg { animation: pulseIcon 1s ease-in-out infinite; }

@@ -9,6 +9,7 @@ import { ascentOf } from "../lib/data.js";
 import { t, loc, getLang } from "../lib/i18n.js";
 import * as voice from "../lib/voice.js";
 import { STAR_RULES } from "./useUserData.js";
+import { HOME_CENTER } from "./AppContext.jsx";
 
 export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
   const ref = useRef(null);        // 달리는 중 계속 바뀌는 값 (화면을 다시 그리지 않아도 되는 것)
@@ -103,7 +104,8 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
     voice.unlock();          // 아이폰: 버튼을 누른 이 순간에 음성을 깨워야 해요
     voice.keepScreenOn();
     const { courses } = dataRef.current;
-    const simPath = course ? course.path : courses[0].path; // 자유 달리기 시연은 첫 코스 길을 따라가요
+    // 자유 달리기 시연은 첫 코스 길을 따라가요 (코스 데이터가 없으면 성북구 중심에서 제자리)
+    const simPath = course ? course.path : courses[0]?.path || [{ lat: HOME_CENTER[0], lng: HOME_CENTER[1] }];
     const r = ref.current = {
       course, demo, simPath, meters: 0, last: null, trail: [], newCells: [], visited: new Set(),
       cuesFired: new Set(), paused: false, ended: false, altUp: 0, lastAlt: null, lastCell: null,
