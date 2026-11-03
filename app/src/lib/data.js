@@ -4,6 +4,10 @@
 import { fromGeoJSON, lineLength } from "./geo.js";
 import { cellOf } from "./territory.js";
 
+// 지금은 화면(홈 지도 핀·스팟 목록·카테고리)에서 숨기는 장소. spots.json 데이터는 그대로 두고,
+// 코스가 생기면 여기서 id를 빼면 다시 보여요.
+export const HIDDEN_SPOTS = new Set(["gilsangsa"]);
+
 export async function loadData() {
   const [spots, courses, shops] = await Promise.all([
     fetch("/data/spots.json").then((r) => r.json()),
@@ -12,9 +16,12 @@ export async function loadData() {
   ]);
   const spotById = {};
   const landmarkCells = new Set();
-  spots.spots.forEach((s) => { spotById[s.id] = s; landmarkCells.add(cellOf(s)); });
+  const visible = spots.spots.filter((s) => !HIDDEN_SPOTS.has(s.id));
+  spots.spots.forEach((s) => { spotById[s.id] = s; });
+  visible.forEach((s) => landmarkCells.add(cellOf(s)));
   return {
-    spots: spots.spots,
+    spots: visible,           // 화면에 보이는 장소만
+    allSpots: spots.spots,    // 숨긴 장소까지 전부
     shops: shops.shops,
     courses: courses.features.map(prepareCourse),
     spotById,
