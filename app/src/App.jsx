@@ -29,7 +29,7 @@ const SCREENS = {
   records: [Records],
 };
 const WITH_TABS = new Set(["home", "stars", "records"]);
-const DARK = new Set(["run", "stars"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
+const DARK = new Set(["run", "stars", "coupon"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
 
 export default function App() {
   const { screen, data, spot } = useApp();

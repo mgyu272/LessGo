@@ -21,7 +21,8 @@ export function unlock() {
 }
 
 // queue: true면 앞의 말이 끝난 뒤 이어서 말해요 (길 안내용)
-export function speak(text, { lang = "en", queue = true, onend } = {}) {
+// onboundary(charIndex): 단어를 읽기 시작할 때마다 몇 번째 글자인지 알려줘요 (지원하는 브라우저에서만)
+export function speak(text, { lang = "en", queue = true, onend, onboundary } = {}) {
   if (!synth || !text) { onend?.(); return; }
   if (!queue) synth.cancel();
   const u = new SpeechSynthesisUtterance(text);
@@ -31,6 +32,7 @@ export function speak(text, { lang = "en", queue = true, onend } = {}) {
   u.rate = 0.98;
   u.onend = () => onend?.();
   u.onerror = () => onend?.();
+  if (onboundary) u.onboundary = (e) => onboundary(e.charIndex);
   synth.speak(u);
 }
 

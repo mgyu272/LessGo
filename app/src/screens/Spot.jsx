@@ -6,7 +6,9 @@ import { t, loc, getLang } from "../lib/i18n.js";
 import { distance, fmtTime } from "../lib/geo.js";
 import { askSpot } from "../lib/ask.js";
 import * as voice from "../lib/voice.js";
-import { ShopRow, FakeQr, LangPill, Seal, sealText } from "../components/Bits.jsx";
+import { ShopRow, FakeQr, LangPill } from "../components/Bits.jsx";
+import { spotIconSvg } from "../components/SpotIcons.jsx";
+import { LogoBird } from "../components/LogoBird.jsx";
 import { CENTER } from "../state/AppContext.jsx";
 
 const CAT = { history: ["History spot", "역사문화 스팟"], stream: ["Stream spot", "하천길 스팟"], park: ["Park & view spot", "공원·전망 스팟"] };
@@ -19,19 +21,48 @@ export function Spot() {
   const text = loc(spot.narration);
   const total = voice.estimateSeconds(text, lang);
   const [playing, setPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [cur, setCur] = useState(0); // 지금까지 읽은 시간(초)
   const [showScript, setShowScript] = useState(false);
   const [q, setQ] = useState("");
   const [answer, setAnswer] = useState(null); // {loading} | {text, sources, cached} | {none}
   const timer = useRef(null);
+  // 읽는 위치: from = 이번에 읽기 시작한 글자, at/atTime = 마지막으로 알려준 단어 위치와 그때 시각
+  const pos = useRef({ token: 0, from: 0, startTime: 0, at: null, atTime: 0, resume: 0 });
 
-  const stopAudio = (done = false) => { voice.stop(); clearInterval(timer.current); setPlaying(false); setProgress(done ? 100 : 0); };
+  // 브라우저가 단어 위치(onboundary)를 알려주면 그 글자 위치로, 안 알려주면 흐른 시간으로 재요
+  const elapsed = () => {
+    const p = pos.current, now = Date.now();
+    const sec = p.at != null
+      ? (p.at / text.length) * total + Math.min((now - p.atTime) / 1000, 1.5)
+      : (p.from / text.length) * total + (now - p.startTime) / 1000;
+    return Math.min(total, sec);
+  };
+  const halt = () => { pos.current.token++; voice.stop(); clearInterval(timer.current); setPlaying(false); };
+  // 멈춘 자리부터 다시 들을 수 있게, 마지막 단어 위치(없으면 시간으로 계산한 위치)를 기억해요
+  const pause = () => {
+    const p = pos.current;
+    const at = p.at ?? Math.round((elapsed() / total) * text.length);
+    p.resume = Math.max(0, text.lastIndexOf(" ", at) + 1);
+    setCur((p.resume / text.length) * total);
+    halt();
+  };
+  const stopAudio = () => { halt(); pos.current.resume = 0; setCur(0); };
   const play = () => {
-    if (playing) return stopAudio();
+    if (playing) return pause();
+    const p = pos.current;
+    const from = p.resume >= text.length - 1 ? 0 : p.resume;
+    const token = ++p.token;
+    Object.assign(p, { from, startTime: Date.now(), at: null });
     setPlaying(true);
-    const started = Date.now();
-    timer.current = setInterval(() => setProgress(Math.min(100, ((Date.now() - started) / 1000 / total) * 100)), 300);
-    voice.speak(text, { lang: getLang(), queue: false, onend: () => { clearInterval(timer.current); setPlaying(false); setProgress(100); } });
+    timer.current = setInterval(() => setCur(elapsed()), 250);
+    voice.speak(text.slice(from), {
+      lang: getLang(), queue: false,
+      onboundary: (i) => { if (p.token === token) { p.at = from + i; p.atTime = Date.now(); } },
+      onend: () => {
+        if (p.token !== token) return; // 멈춤·다시 듣기로 끊긴 건 무시
+        clearInterval(timer.current); setPlaying(false); setCur(total); p.resume = 0;
+      },
+    });
   };
 
   // 도착하자마자 해설 자동 재생 (방금 도착했을 때만)
@@ -40,7 +71,7 @@ export function Spot() {
     if (at && Date.now() - at < 3000) { const id = setTimeout(play, 600); return () => clearTimeout(id); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spot.id]);
-  useEffect(() => () => { voice.stop(); clearInterval(timer.current); }, []);
+  useEffect(() => () => { pos.current.token++; voice.stop(); clearInterval(timer.current); }, []);
 
   const ask = async (text = q) => {
     if (!text.trim()) return;
@@ -53,18 +84,17 @@ export function Spot() {
   const mic = useSpeechInput(lang, (text) => { setQ(text); ask(text); });
 
   return (
-    <section className="screen dark">
-      <div className="spot-top">
-        <Seal text={sealText(spot)} size={64} stamp />
-        <div className="stamp-text"><b>{loc(spot.name)}</b><small>{t("stamped")}</small></div>
-      </div>
+    <section className="screen spot-screen">
+      <header className="spot-head">
+        <button className="round-back glass" onClick={() => { stopAudio(); app.run.resume(); }} aria-label={t("keep_running")}>‹</button>
+        <LangPill glass />
+      </header>
+      <Record spot={spot} playing={playing} />
+      <div className="spot-title"><b>{loc(spot.name)}</b><small>{t("stamped")}</small></div>
       <div className="sheet spot-sheet">
         <div className="grip" />
         <div className="scroll-y">
-          <div className="row-between">
-            <p className="eyebrow purple">{(CAT[spot.category] || CAT.history)[lang === "ko" ? 1 : 0]}</p>
-            <LangPill soft />
-          </div>
+          <p className="eyebrow purple">{(CAT[spot.category] || CAT.history)[lang === "ko" ? 1 : 0]}</p>
           <small className="muted">{t("ai_reviewed")}</small>
 
           <div className="cards">
@@ -78,10 +108,17 @@ export function Spot() {
             ))}
           </div>
 
-          <div className="audio">
-            <button className="play" onClick={play} aria-label="play">{playing ? "■" : "▶"}</button>
-            <div className="audio-mid"><b>{t("listen")}</b><div className="bar"><i style={{ width: progress + "%" }} /></div></div>
-            <small>{fmtTime(total)}</small>
+          <div className={`audio glass ${playing ? "playing" : ""}`}>
+            <button className="play" onClick={play} aria-label={t(playing ? "audio_pause" : "audio_play")} aria-pressed={playing}>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                {playing ? <path d="M7 5h3.5v14H7z M13.5 5H17v14h-3.5z" /> : <path d="M8 5.5v13a1 1 0 001.5.9l10-6.5a1 1 0 000-1.8l-10-6.5A1 1 0 008 5.5z" />}
+              </svg>
+            </button>
+            <div className="audio-mid">
+              <b>{t("listen")}{playing && <span className="eq" aria-hidden="true"><i /><i /><i /><i /></span>}</b>
+              <div className="bar"><i style={{ width: (cur / total) * 100 + "%" }} /></div>
+            </div>
+            <small className="audio-time">{fmtTime(cur)} / {fmtTime(total)}</small>
           </div>
           {showScript && <div className="script">{text}</div>}
           <button className="link" onClick={() => setShowScript(!showScript)}>{t(showScript ? "hide_script" : "show_script")}</button>
@@ -124,6 +161,30 @@ export function Spot() {
         <p className="foot">{t("partner_note")}</p>
       </div>
     </section>
+  );
+}
+
+// 도착 화면 레코드판: 해설을 들을 때 판이 돌고 톤암이 판 위로 내려와요
+function Record({ spot, playing }) {
+  return (
+    <div className={`record-wrap ${playing ? "playing" : ""}`} aria-hidden="true">
+      <div className="vinyl">
+        <div className="record-disc">
+          <span className="record-label" dangerouslySetInnerHTML={{ __html: spotIconSvg(spot) }} />
+        </div>
+        <span className="record-shine" />
+      </div>
+      <svg className="tonearm" viewBox="0 0 70 150">
+        <circle cx="52" cy="16" r="11" fill="#F3FBE8" stroke="#4F6B3B" strokeWidth="3" />
+        <path d="M52 16V100L36 128" fill="none" stroke="#4F6B3B" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="27" y="124" width="16" height="12" rx="3" fill="#2F6512" transform="rotate(30 35 130)" />
+        <circle cx="52" cy="16" r="4" fill="#4F6B3B" />
+      </svg>
+      <span className="rec-stamp">
+        <LogoBird variant="icon" size={52} />
+        <i className="spark s1">✦</i><i className="spark s2">✦</i><i className="spark s3">✦</i><i className="spark s4">✦</i>
+      </span>
+    </div>
   );
 }
 

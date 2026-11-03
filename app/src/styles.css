@@ -447,6 +447,41 @@ small { font-size: 12px; }
 .spot-top .stamp-text b { display: block; font-family: var(--display); font-size: 22px; font-weight: 800; }
 .spot-top .stamp-text small { color: var(--ginkgo); font-size: 14px; font-weight: 600; }
 .spot-sheet { flex: 1; min-height: 0; }
+/* ④ 도착: 흰빛 → 연두 원형 그라데이션 + 레코드판 */
+.spot-screen { background: radial-gradient(130% 60% at 50% 18%, #FFFFFF 0%, #F1F9E4 42%, #DDF0C2 100%); color: var(--text); }
+.spot-head { display: flex; justify-content: space-between; align-items: center; padding: calc(8px + var(--safe-top)) 14px 0; }
+.spot-head .round-back { position: static; width: 44px; height: 44px; font-size: 24px; color: var(--text); }
+.record-wrap { position: relative; width: 236px; height: 196px; margin: -6px auto 0; flex: none; }
+.vinyl { position: absolute; left: 18px; top: 8px; width: 180px; height: 180px; border-radius: 50%; box-shadow: 0 18px 36px -18px rgba(47, 101, 18, .7); }
+.record-disc { position: absolute; inset: 0; border-radius: 50%; display: grid; place-items: center;
+  background: repeating-radial-gradient(circle at 50% 50%, #9CCF66 0 1.5px, #AEDA80 1.5px 4px), #AEDA80;
+  border: 5px solid #7DBE45; animation: spin 7s linear infinite; animation-play-state: paused; }
+.record-wrap.playing .record-disc { animation-play-state: running; }
+.record-label { width: 70px; height: 70px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 0 0 4px rgba(255, 255, 255, .5); }
+.record-label svg { width: 44px; height: 44px; }
+/* 판 위 빛 반사는 돌지 않고 제자리 */
+.record-shine { position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0) 68%, rgba(255, 255, 255, .25) 100%); }
+.tonearm { position: absolute; right: -6px; top: -4px; width: 70px; height: 150px; transform-origin: 52px 16px; transform: rotate(-14deg); transition: transform .6s var(--ease-out); }
+.record-wrap.playing .tonearm { transform: rotate(21deg); }
+.rec-stamp { position: absolute; right: 22px; bottom: 0; width: 52px; height: 52px; animation: stamp .6s .2s var(--ease-out) both; filter: drop-shadow(0 6px 10px rgba(47, 101, 18, .35)); }
+.rec-stamp .logo-bird { display: block; }
+.rec-stamp::after { content: ""; position: absolute; inset: -10px; border: 2px solid var(--brand); border-radius: 22px; opacity: 0; animation: ring .7s .5s ease-out; }
+.spark { position: absolute; font-style: normal; font-size: 14px; color: var(--brand); opacity: 0; animation: sparkle .9s .55s ease-out both; }
+.spark.s1 { left: -12px; top: -10px; } .spark.s2 { right: -12px; top: -12px; --dx: 6px; }
+.spark.s3 { left: -14px; bottom: -6px; --dy: 6px; } .spark.s4 { right: -14px; bottom: -8px; --dx: 6px; --dy: 6px; }
+.spot-title { text-align: center; padding: 6px 20px 14px; }
+.spot-title b { display: block; font-family: var(--display); font-size: 22px; font-weight: 800; color: var(--text); }
+.spot-title small { color: var(--link); font-size: 14px; font-weight: 600; }
+.audio.glass { background: var(--glass-bg); -webkit-backdrop-filter: var(--glass-filter); backdrop-filter: var(--glass-filter); border: var(--glass-border); box-shadow: var(--glass-shadow); color: var(--text); }
+.audio .play { display: grid; place-items: center; background: var(--brand); }
+.audio .play svg { width: 22px; height: 22px; }
+.audio.glass .bar { background: rgba(47, 101, 18, .14); }
+.audio.glass .bar i { background: var(--brand); }
+.audio-time { font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+.eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; margin-left: 8px; vertical-align: middle; }
+.eq i { width: 3px; height: 100%; border-radius: 2px; background: var(--brand); transform-origin: bottom; animation: eq .8s ease-in-out infinite; }
+.eq i:nth-child(2) { animation-delay: -.3s; } .eq i:nth-child(3) { animation-delay: -.55s; } .eq i:nth-child(4) { animation-delay: -.15s; }
 .spot-sheet h2 { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
 .cards { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 14px -22px 14px 0; padding-right: 22px; scrollbar-width: none; }
 .cards::-webkit-scrollbar { display: none; }
@@ -570,6 +605,9 @@ small { font-size: 12px; }
 @keyframes stamp { 0% { transform: scale(2.4) rotate(-14deg); opacity: 0; } 55% { transform: scale(.92) rotate(-4deg); opacity: 1; } 75% { transform: scale(1.04) rotate(-6deg); } 100% { transform: rotate(-5deg); } }
 @keyframes ring { 0% { opacity: .8; transform: scale(.8); } 100% { opacity: 0; transform: scale(1.5); } }
 
+@keyframes sparkle { 0% { opacity: 0; transform: scale(.3) translate(0, 0); } 40% { opacity: 1; transform: scale(1.1) translate(calc(var(--dx, -6px) / 2), calc(var(--dy, -6px) / 2)); } 100% { opacity: 0; transform: scale(.6) translate(var(--dx, -6px), var(--dy, -6px)); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes eq { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
 @media (prefers-reduced-motion: reduce) {
   /* 모든 애니메이션을 끄고 마지막 모습으로 둬요 (SVG 안 SMIL 움직임은 각 컴포넌트에서 멈춰요) */
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
