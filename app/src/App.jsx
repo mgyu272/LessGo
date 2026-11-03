@@ -10,6 +10,7 @@ import Run from "./screens/Run.jsx";
 import { Spot, Shops, Coupon } from "./screens/Spot.jsx";
 import { Finish, Stars, Records } from "./screens/Me.jsx";
 import { Login, Signup, FindAccount } from "./screens/Auth.jsx";
+import Loading from "./screens/Loading.jsx";
 
 const SCREENS = {
   onboarding: [Login],             // 시작 화면 = 로그인
@@ -28,12 +29,12 @@ const SCREENS = {
   records: [Records],
 };
 const WITH_TABS = new Set(["home", "stars", "records"]);
-const DARK = new Set(["run", "spot", "shops", "coupon", "stars", "onboarding", "signup", "find"]);
+const DARK = new Set(["run", "stars"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
 
 export default function App() {
   const { screen, data, spot } = useApp();
   if (screen === "loading" || !data) {
-    return <PhoneFrame><div className="loading">⬢</div></PhoneFrame>;
+    return <PhoneFrame><Loading /></PhoneFrame>;
   }
   let layers = SCREENS[screen] || [Home];
   if (screen === "shops" && !spot) layers = [Shops];

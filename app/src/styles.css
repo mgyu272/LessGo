@@ -1,31 +1,52 @@
 /* ============================================================
-   성북 런트립 — "가을 성곽" 디자인 (아이폰 16 기준 393×852)
+   LessGo (RUN · SEONGBUK) — 연두 한지 디자인 (아이폰 16 기준 393×852)
 
-   모티프: 한양도성 화강암 · 단청 색(주홍·뇌록) · 은행잎 · 먹(墨) · 낙관 도장
-   - 화면 바탕은 성곽 돌 색, 달리는 화면은 먹색(밤의 성곽)
-   - 주홍 = 달리기·도장·중요한 버튼 / 은행 = 내 영역·별 / 뇌록 = 안내·정보
-   - 글꼴 = 제목·숫자·본문 모두 Noto Sans KR
+   - 글자: 본문 진초록, 보조 올리브, 링크·강조 초록
+   - 메인 연두 #5FA52A, 밝은 CTA(연두 단색 + 연두 그림자), 연한 연두 바탕
+   - 유리(.glass): 반투명 흰색 + 블러 / 음영(.soft): 반투명 연두 + 안쪽 선
+   - 한지 질감(.hanji-layer): 화면 맨 뒤 배경에만 깔아요. 버튼·글씨 위에는 덮지 않아요
+   - 글꼴 = Noto Sans KR
 
    색을 바꾸고 싶으면 :root 값만 고치면 전체가 바뀌어요.
+   (--ink, --vermilion, --ginkgo 같은 이름은 예전 테마에서 쓰던 이름을 그대로 두고 값만 바꿨어요)
    --safe-top / --safe-bottom : 다이내믹 아일랜드·홈 바에 가리지 않게 두는 여백
    ============================================================ */
 :root {
-  /* "현대적 전통": 노란기 없는 미색 바탕 + 짙은 녹색 면 + 먹색 포인트 + 옥빛 강조 */
-  --ink: #1F4D3F;          /* 짙은 녹색 (버튼·탭바·어두운 화면 등 면 색) */
-  --ink-2: #23453A;
-  --ink-3: #2F5A4C;
-  --text: #1C2B26;         /* 글자색 (먹) */
-  --stone: #EAEEEB;        /* 바탕 회녹색 */
+  /* ---- 새 디자인 토큰 ---- */
+  --text: #1F3D14;         /* 본문 */
+  --muted: #4F6B3B;        /* 보조 글자 */
+  --link: #3F7F1C;         /* 링크·강조 */
+  --strong: #2F6512;       /* 진한 강조 (선택 칩 등) */
+  --brand: #5FA52A;        /* 메인 연두 */
+  --cta-bg: rgba(190, 236, 130, .9);
+  --cta-text: #1C3A0C;
+  --cta-shadow: 0 14px 28px -12px rgba(150, 215, 80, .75), 0 4px 10px -4px rgba(150, 215, 80, .5);
+  --bg-soft: #E9F6D6;      /* 연한 배경 */
+  --chip: #EAF7D8;         /* 칩 배경 */
+  --border: #DCEDC6;       /* 테두리 */
+  --handle: #C6E59E;       /* 시트 손잡이 */
+  --sheet-bg: linear-gradient(180deg, #F2F9E6 0%, #FBFBF4 38%, #FFFFFF 100%);
+  --glass-bg: rgba(255, 255, 255, .58);
+  --glass-filter: blur(14px) saturate(150%);
+  --glass-border: 1px solid rgba(255, 255, 255, .8);
+  --glass-shadow: 0 8px 24px -12px rgba(31, 61, 20, .35);
+  --soft-bg: rgba(246, 252, 234, .65);
+  --soft-shadow: inset 0 -3px 0 rgba(120, 190, 60, .22), inset 0 0 0 1px rgba(120, 190, 60, .14);
+
+  /* ---- 예전 이름 → 새 값 (기존 화면들이 이 이름으로 색을 써요) ---- */
+  --ink: #2F6512;          /* 진한 면 (진한 버튼·어두운 화면) */
+  --ink-2: #3A7418;
+  --ink-3: #4B8A24;
+  --stone: var(--bg-soft); /* 화면 바탕 */
   --paper: #FFFFFF;        /* 시트·카드 */
-  --line: #DDE2DE;
-  --muted: #66706B;
-  --vermilion: #1C2B26;    /* 포인트 = 먹 (달리기 버튼·도장) — 이름은 예전 주홍 그대로 */
-  --vermilion-deep: #1F4D3F;
-  --vermilion-soft: #E6EAE8;
-  --ginkgo: #7CC4A4;       /* 옥빛 강조 (어두운 면 위 선택·진행 표시) — 예전 은행잎 자리 */
-  --ginkgo-soft: #E3EEE8;
-  --verdigris: #2E6B57;    /* 뇌록 (안내·정보) */
-  --verdigris-soft: #E3EEE8;
+  --line: var(--border);
+  --vermilion: var(--brand);    /* 포인트 (도장·진행 등) */
+  --vermilion-deep: var(--strong);
+  --vermilion-soft: var(--chip);
+  --ginkgo: #AEDA80;       /* 진한 면 위 강조 */
+  --ginkgo-soft: var(--chip);
+  --verdigris: var(--link);     /* 안내·정보 */
+  --verdigris-soft: var(--bg-soft);
   --indigo: #34508C;       /* 쪽빛 */
 
   --display: "Noto Sans KR", system-ui, -apple-system, sans-serif;
@@ -40,7 +61,7 @@
   -webkit-font-smoothing: antialiased;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; height: 100%; background: #C9D1CD; }
+html, body { margin: 0; height: 100%; background: #DDEBCB; }
 button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
 input { font: inherit; color: inherit; }
 :focus-visible { outline: 2.5px solid var(--ginkgo); outline-offset: 2px; }
@@ -58,9 +79,9 @@ small { font-size: 12px; }
 .phone.bare { width: 100%; height: 100dvh; max-width: 480px; margin: 0 auto;
   --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px); }
 .stage { min-height: 100vh; display: grid; place-items: center; overflow: hidden;
-  background: radial-gradient(120% 80% at 50% 0%, #DCE3DF 0%, #BAC4BF 55%, #8E9993 100%); }
+  background: radial-gradient(120% 80% at 50% 0%, #F2F9E6 0%, #D6E9BC 55%, #A9C98A 100%); }
 .phone.framed { width: 393px; height: 852px; flex: none; border-radius: 55px; --safe-top: 59px; --safe-bottom: 34px;
-  box-shadow: 0 0 0 11px #12261F, 0 0 0 13px #3D5A4E, 0 50px 90px -20px rgba(10,25,20,.55); transform-origin: center; }
+  box-shadow: 0 0 0 11px #1C3A0C, 0 0 0 13px #4B7A2C, 0 50px 90px -20px rgba(28,58,12,.45); transform-origin: center; }
 .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; border-radius: 20px; background: #000; z-index: 200; pointer-events: none; }
 .statusbar { position: absolute; inset: 0 0 auto; height: 54px; z-index: 199; display: flex; justify-content: space-between; align-items: center; padding: 6px 30px 0 44px; color: var(--text); pointer-events: none; font-weight: 600; font-size: 16px; }
 .statusbar.on-dark { color: #fff; }
@@ -70,7 +91,32 @@ small { font-size: 12px; }
 .battery i { display: block; height: 100%; width: 80%; background: currentColor; border-radius: 1.5px; }
 .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: var(--ink); z-index: 200; pointer-events: none; }
 .home-indicator.on-dark { background: #fff; }
-.loading { display: grid; place-items: center; height: 100%; background: var(--ink); }
+/* ---------- 로딩 ---------- */
+.loading-screen { background: linear-gradient(180deg, #EEF6E2 0%, #F5F9EE 50%, #FBFAF6 100%); overflow: hidden; }
+.ld-sky { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+.ld-sun { transform-origin: 296px 168px; animation: sunBreath 5s ease-in-out infinite; }
+.ld-cloud { animation: drift 26s linear infinite; }
+.ld-cloud.c2 { animation-duration: 34s; animation-delay: -12s; }
+.ld-cloud.c3 { animation-duration: 30s; animation-delay: -20s; }
+.ld-wind path { stroke-dasharray: 60 140; animation: wind 3.2s linear infinite; }
+.ld-wind .w2 { animation-delay: -1.1s; }
+.ld-wind .w3 { animation-delay: -2.2s; }
+.ld-center { position: absolute; left: 0; right: 0; top: 34%; display: flex; flex-direction: column; align-items: center; z-index: 1; }
+.ld-bird { animation: flyIn 1.7s cubic-bezier(.2, .8, .25, 1) both; }
+.ld-float { animation: hover 2.6s 1.7s ease-in-out infinite; }
+.ld-shadow { width: 110px; height: 14px; margin-top: 18px; border-radius: 50%; background: rgba(95, 165, 42, .22);
+  animation: fade .6s 1.2s both, shadowBreath 2.6s 1.7s ease-in-out infinite; }
+.ld-track { position: absolute; left: 50%; bottom: calc(70px + var(--safe-bottom)); width: 300px; transform: translateX(-50%); z-index: 1; overflow: visible; }
+.ld-trail { stroke-dasharray: 100; stroke-dashoffset: 100; animation: trail 2.4s linear infinite; }
+.ld-goal { transform-box: fill-box; transform-origin: center; animation: goalPop 2.4s ease-out infinite; }
+@keyframes flyIn { 0% { transform: translate(-120px, 160px) rotate(-22deg) scale(.35); opacity: 0; } 60% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+@keyframes hover { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes shadowBreath { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.8); opacity: .65; } }
+@keyframes sunBreath { 0%, 100% { transform: scale(1); opacity: .85; } 50% { transform: scale(1.06); opacity: 1; } }
+@keyframes drift { from { transform: translateX(80px); } to { transform: translateX(-480px); } }
+@keyframes wind { from { stroke-dashoffset: 200; } to { stroke-dashoffset: 0; } }
+@keyframes trail { 0% { stroke-dashoffset: 100; } 85%, 100% { stroke-dashoffset: 0; } }
+@keyframes goalPop { 0%, 82% { transform: scale(1); } 90% { transform: scale(1.6); } 100% { transform: scale(1); } }
 
 /* ---------- 화면 공통 ---------- */
 .screen { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--stone); }
@@ -101,8 +147,17 @@ small { font-size: 12px; }
 .btn:active { transform: scale(.97); }
 .btn.sm { width: auto; min-height: 0; padding: 10px 14px; font-size: 14px; margin: 0; border-radius: 12px; }
 .btn-ink { background: var(--ink); color: #fff; }
-.btn-teal, .btn-run { background: var(--vermilion); color: #fff; box-shadow: 0 8px 20px -8px rgba(28,43,38,.35); }
-.btn-red { background: var(--vermilion); color: #fff; }
+/* 밝은 CTA: 연두 단색(그라데이션 없음) + 진초록 글자 + 연두 그림자 */
+.btn-teal, .btn-run, .btn-red, .btn-cta { background: var(--cta-bg); color: var(--cta-text); box-shadow: var(--cta-shadow); font-weight: 700; }
+.btn-soft { background: var(--soft-bg); box-shadow: var(--soft-shadow); color: var(--link); font-weight: 700; }
+.btn .arrow { width: 18px; height: 18px; flex: none; }
+
+/* 유리(glass) · 음영(soft) · 한지 질감 */
+.glass { background: var(--glass-bg); -webkit-backdrop-filter: var(--glass-filter); backdrop-filter: var(--glass-filter); border: var(--glass-border); box-shadow: var(--glass-shadow); }
+.soft { background: var(--soft-bg); box-shadow: var(--soft-shadow); }
+.screen { isolation: isolate; } /* 한지 층(z-index -1)이 화면 바탕 위·내용 아래에 깔리게 */
+.hanji-layer { position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: url("/textures/hanji.png") repeat; background-size: 360px auto; opacity: .42; mix-blend-mode: luminosity; }
 .btn-outline { background: transparent; border: 1.5px solid var(--line); color: var(--text); }
 .btn-outline-teal { background: transparent; border: 1.5px solid var(--ink); color: var(--text); font-size: 14px; min-height: 48px; }
 .btn-ghost { border: 1.5px solid rgba(255,255,255,.3); color: #fff; }
@@ -444,6 +499,8 @@ small { font-size: 12px; }
 @keyframes ring { 0% { opacity: .8; transform: scale(.8); } 100% { opacity: 0; transform: scale(1.5); } }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  /* 모든 애니메이션을 끄고 마지막 모습으로 둬요 (SVG 안 SMIL 움직임은 각 컴포넌트에서 멈춰요) */
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+  .ld-trail { stroke-dashoffset: 0; }
   .ob-route { stroke-dashoffset: 0; }
 }

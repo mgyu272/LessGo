@@ -47,10 +47,18 @@ export function AppProvider({ children }) {
     loadWeather().then(setWeather);
   }, []);
 
+  // 로딩 화면의 새가 날아 들어오는 동안(1.8초)은 보여줘요. 움직임 줄이기 설정이면 기다리지 않아요.
+  const [introDone, setIntroDone] = useState(() => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
+  useEffect(() => {
+    if (introDone) return;
+    const id = setTimeout(() => setIntroDone(true), 1800);
+    return () => clearTimeout(id);
+  }, [introDone]);
+
   // 데이터와 로그인 확인이 끝나면 첫 화면으로
   useEffect(() => {
-    if (screen === "loading" && data && user.ready) setScreen(user.profile ? "home" : "onboarding");
-  }, [screen, data, user.ready, user.profile]);
+    if (screen === "loading" && data && user.ready && introDone) setScreen(user.profile ? "home" : "onboarding");
+  }, [screen, data, user.ready, user.profile, introDone]);
 
   const changeLang = (l) => { setLang(l); setLangState(l); };
   const setDemo = (v) => { setDemoState(v); try { localStorage.setItem("runtrip.demo", v ? "on" : "off"); } catch {} };
