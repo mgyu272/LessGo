@@ -69,7 +69,7 @@ NEXT_PUBLIC_KAKAO_MAP_KEY=여기에_JavaScript_키
 무료 **Spark 플랜**만 써요 (Authentication + Firestore). Cloud Functions 같은 유료(Blaze) 기능은 쓰지 않아요.
 
 - **아이디 로그인**: 가입할 때 아이디·이메일·비밀번호·닉네임을 받아요. 로그인은 아이디(또는 가입한 이메일) + 비밀번호
-- **구글 로그인**: PC는 팝업, 휴대폰(특히 아이폰 Safari·홈 화면 앱)은 페이지 이동 방식. 처음 들어오면 닉네임을 한 번 정해요
+- **구글 로그인**: PC·휴대폰 브라우저 모두 팝업(휴대폰은 새 탭)으로 로그인해요. 팝업이 막히거나 홈 화면 앱이면 페이지 이동 방식으로 바뀌어요. 처음 들어오면 닉네임을 한 번 정해요
 - **비밀번호 찾기**: 앱의 "아이디 · 비밀번호 찾기"에서 아이디나 이메일을 넣으면 가입 이메일로 재설정 메일이 가요
 
 ### 4-1. 콘솔 설정 (한 번만)
@@ -140,7 +140,7 @@ $env:VITE_FIREBASE_EMULATOR="1"; $env:VITE_FIREBASE_API_KEY="demo-key"; $env:VIT
 - **이메일 공개 범위**: 아이디로 로그인하려면 로그인 전에 이메일을 찾아야 해서, 아이디를 아는 사람은 그 아이디의 이메일을 조회할 수 있어요 (목록으로 한꺼번에 가져가는 건 막혀 있어요). 가입 화면에도 이 안내를 적어 뒀어요.
 - **같은 사람이 계정 두 개**: 아이디 계정과 구글 계정은 따로예요. 지금은 연결(linkWithCredential) 기능을 넣지 않았어요.
 - **랭킹 칸 수는 앱이 직접 써요**: 무료 플랜이라 서버 함수로 검증하지 않아요. 규칙은 "본인 문서만, 0 이상 숫자"까지만 막아요.
-- **아이폰 Safari 구글 로그인**: 페이지 이동 방식은 `authDomain`(`*.firebaseapp.com`)이 앱 주소와 달라서, Safari의 추적 방지 때문에 로그인 뒤 돌아왔을 때 로그인이 안 된 상태로 보일 수 있어요. 그러면 Firebase 문서의 "signInWithRedirect 권장사항"대로 Vercel에서 `/__/auth/` 경로를 `https://<프로젝트ID>.firebaseapp.com/__/auth/`로 넘기고(rewrites), `VITE_FIREBASE_AUTH_DOMAIN`을 배포 주소로 바꾸세요.
+- **홈 화면 앱에서 구글 로그인**: 홈 화면에 추가한 앱은 팝업을 못 열어서 페이지 이동 방식으로 로그인해요. 그런데 `authDomain`(`*.firebaseapp.com`)이 앱 주소와 다른 사이트라, 요즘 브라우저(Chrome·Safari·Firefox)의 저장소 분리 때문에 돌아와도 로그인이 안 될 수 있어요 (에뮬레이터로 확인함). 이때는 Safari에서 로그인한 뒤 홈 화면 앱을 쓰거나, 아이디 로그인을 쓰세요. 완전히 고치려면 Firebase 문서 "signInWithRedirect 권장사항"의 프록시 방식(`/__/auth/`를 `firebaseapp.com`으로 넘기고 `VITE_FIREBASE_AUTH_DOMAIN`을 배포 주소로)을 쓰면 돼요.
 - 예전 Supabase 표·SQL은 저장소 맨 위 `docs/legacy-supabase/`에 보관했어요. 예전 Supabase 계정과 기록은 옮겨 오지 않아요.
 - 키를 안 넣으면(로컬 모드) 비밀번호 없이 아이디만으로 들어가고, 구글 버튼은 숨겨지며, 기록은 그 휴대폰에만 저장돼요.
 

@@ -62,10 +62,9 @@ export function authErrorKey(error) {
   return ERRORS[error?.code] || (error?.message?.includes("network") ? "err_network" : "err_unknown");
 }
 
-// 모바일(특히 iOS Safari·홈 화면 앱)은 팝업이 잘 막혀서 리다이렉트로 로그인해요
+// 구글 로그인은 PC·휴대폰 브라우저 모두 팝업(휴대폰은 새 탭)으로 해요.
+// 리다이렉트는 앱 주소와 Firebase 로그인 주소(*.firebaseapp.com)가 달라서, 요즘 브라우저의 저장소 분리 때문에
+// 돌아와도 로그인이 안 될 수 있어요. 팝업을 열 수 없는 홈 화면 앱(standalone)에서만 리다이렉트를 써요.
 export function preferRedirect() {
-  const ua = navigator.userAgent || "";
-  const standalone = navigator.standalone || window.matchMedia?.("(display-mode: standalone)").matches;
-  const iPadOS = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
-  return Boolean(standalone || iPadOS || /iPhone|iPad|iPod|Android|Mobile/i.test(ua));
+  return Boolean(navigator.standalone || window.matchMedia?.("(display-mode: standalone)").matches);
 }
