@@ -36,7 +36,8 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), localApi()],
     // 브라우저로 보내도 되는 공개 값만: VITE_ (Supabase) · NEXT_PUBLIC_ (카카오 지도 JavaScript 키)
     envPrefix: ["VITE_", "NEXT_PUBLIC_"],
-    server: { host: true, port: 5173 },
+    // 카카오 디벨로퍼스에 http://localhost:8000 이 등록돼 있어서 8000 고정. 쓰고 있으면 다른 포트로 넘어가지 않고 멈춰요(지도가 안 뜨는 포트로 열리지 않게)
+    server: { host: true, port: 8000, strictPort: true },
     build: { chunkSizeWarningLimit: 1500 }, // 지도·Supabase 라이브러리 때문에 커요. 경고만 끈 거예요
   };
 });

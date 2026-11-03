@@ -106,7 +106,7 @@ npm install
 npm run dev
 ~~~
 
-`http://localhost:5173/`을 엽니다. 아래 내보내기 명령은 기존 데이터 변환 흐름입니다. 최신 번들을 앱에 연결하는 방법은 번들 README를 따르며, 이 명령만으로 최신 번들이 연결되는 것은 아닙니다.
+`http://localhost:8000/`을 엽니다. 아래 내보내기 명령은 기존 데이터 변환 흐름입니다. 최신 번들을 앱에 연결하는 방법은 번들 README를 따르며, 이 명령만으로 최신 번들이 연결되는 것은 아닙니다.
 
 ~~~powershell
 python export_runtrip.py

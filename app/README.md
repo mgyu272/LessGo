@@ -25,18 +25,18 @@
 ```
 npm run dev
 ```
-→ 터미널에 나오는 `Local: http://localhost:5173/` 을 **Ctrl + 클릭**하면 브라우저에서 열려요.
+→ 터미널에 나오는 `Local: http://localhost:8000/` 을 **Ctrl + 클릭**하면 브라우저에서 열려요.
 코드를 고치고 저장하면 화면이 자동으로 바뀌어요. 끌 때는 터미널에서 `Ctrl + C`.
 
 > Live Server는 이제 안 써요. React는 `npm run dev`로 열어야 해요.
 
 ### 시연 모드
 - 코스 상세 화면 아래의 **시연 모드**가 켜져 있으면 GPS 없이 코스를 따라 자동으로 움직여요 (기본: 켜짐)
-- 주소 끝에 `?speed=30` → 30배 빠르게. 예: `http://localhost:5173/?speed=30`
+- 주소 끝에 `?speed=30` → 30배 빠르게. 예: `http://localhost:8000/?speed=30`
 - 밖에서 실제로 달릴 때는 스위치를 끄세요
 
 ### 같은 와이파이의 휴대폰으로 화면 보기
-`npm run dev` 터미널에 나오는 `Network: http://192.168.x.x:5173/` 주소를 휴대폰에서 열면 돼요.
+`npm run dev` 터미널에 나오는 `Network: http://192.168.x.x:8000/` 주소를 휴대폰에서 열면 돼요.
 (화면 확인용이에요. **실제 GPS는 https 주소에서만** 되니까 3번 Vercel 배포 후에 테스트하세요)
 
 ---
@@ -60,7 +60,7 @@ npm run dev
 ```
 NEXT_PUBLIC_KAKAO_MAP_KEY=여기에_JavaScript_키
 ```
-키가 없으면 지도 자리에 안내 문구만 보여요. 카카오 디벨로퍼스 → 내 애플리케이션 → 플랫폼 → **Web 사이트 도메인**에 `http://localhost:5173` 과 배포 주소를 등록해야 지도가 떠요. Vercel에 올릴 때는 Environment Variables에도 같은 이름으로 넣어 주세요.
+키가 없으면 지도 자리에 안내 문구만 보여요. 카카오 디벨로퍼스 → 내 애플리케이션 → 플랫폼 → **Web 사이트 도메인**에 `http://localhost:8000` 과 배포 주소를 등록해야 지도가 떠요. Vercel에 올릴 때는 Environment Variables에도 같은 이름으로 넣어 주세요.
 
 ---
 
