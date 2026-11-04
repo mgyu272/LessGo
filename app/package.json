@@ -8,7 +8,8 @@
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview --host",
-    "eval:ask": "node --env-file-if-exists=.env.local scripts/eval-ask.mjs"
+    "eval:ask": "node --env-file-if-exists=.env.local scripts/eval-ask.mjs",
+    "shops:add": "node --env-file-if-exists=.env.local scripts/add-shops.mjs"
   },
   "dependencies": {
     "@fontsource/noto-sans-kr": "^5.3.1",

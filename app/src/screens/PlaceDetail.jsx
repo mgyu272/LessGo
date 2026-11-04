@@ -11,6 +11,7 @@ import * as voice from "../lib/voice.js";
 import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections } from "../lib/places.js";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { PlaceEvents } from "./Events.jsx";
+import NearbyShops from "../components/NearbyShops.jsx";
 
 const TABS = ["story", "visit", "events"];
 
@@ -97,6 +98,8 @@ export default function PlaceDetail() {
               <div className="pd-links">
                 <a className="btn btn-soft" href={kakaoDirections(name, spot.lat, spot.lng)} target="_blank" rel="noopener">{t("directions")}</a>
               </div>
+              {/* 주변 가게: 거르기 칩 + 4곳, 더 있으면 모두 보기 (제휴 아님) */}
+              <NearbyShops spot={spot} variant="detail" />
               <div className="pd-check">
                 <small>{t("last_checked", { date: t("info_pending") })}</small>
                 <button onClick={() => setReport(true)}>{t("info_wrong")}</button>

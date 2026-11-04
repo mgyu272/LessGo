@@ -1,18 +1,18 @@
 // 내 기록 화면의 목표와 배지 규칙 (한곳에 모아 둬요. 숫자를 바꾸면 화면이 그대로 따라와요)
-// 입력: useUserData의 runs(기록 목록), cells(얻은 칸 Set), stamps(도장 찍은 장소 Set)
+// 입력: useUserData의 runs(기록 목록), stamps(도장 찍은 장소 Set), starsEarned(지금까지 모은 별)
 
 export const DAILY_GOAL_KM = 3; // 오늘 목표 거리 (km)
 
 const DAY = 24 * 3600 * 1000;
 const dayStart = (ms) => { const d = new Date(ms); return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); };
 
-// 날짜별 합계 { [하루 시작 ms]: { km, seconds, cells } }
+// 날짜별 합계 { [하루 시작 ms]: { km, seconds, stars } }
 export function byDay(runs) {
   const out = {};
   for (const r of runs) {
     const k = dayStart(r.date);
-    const o = (out[k] ||= { km: 0, seconds: 0, cells: 0 });
-    o.km += (r.meters || 0) / 1000; o.seconds += r.seconds || 0; o.cells += r.cells || 0;
+    const o = (out[k] ||= { km: 0, seconds: 0, stars: 0 });
+    o.km += (r.meters || 0) / 1000; o.seconds += r.seconds || 0; o.stars += r.starsGot || 0;
   }
   return out;
 }
@@ -36,7 +36,7 @@ export const BADGES = [
   { id: "streak_3", progress: ({ runs }) => ({ have: Math.min(3, streakDays(runs)), need: 3 }) },
   { id: "all_3", progress: ({ stamps }) => ({ have: DESTS.filter((x) => stamps.has(x)).length, need: DESTS.length, missing: DESTS.filter((x) => !stamps.has(x)) }) },
   { id: "run_10k", progress: ({ runs }) => { const best = Math.max(0, ...runs.map((r) => (r.meters || 0) / 1000)); return { have: Math.min(10, best), need: 10, best }; } },
-  { id: "cells_100", progress: ({ cells }) => ({ have: Math.min(100, cells.size), need: 100, now: cells.size }) },
+  { id: "stars_100", progress: ({ starsEarned }) => ({ have: Math.min(100, starsEarned), need: 100, now: starsEarned }) },
 ];
 
 export function badgeStates(ctx) {

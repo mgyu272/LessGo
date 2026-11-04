@@ -2,13 +2,14 @@
 //
 // - Firebase가 연결돼 있으면: 아이디·비밀번호 또는 구글 로그인 → Firestore에 저장, 다른 기기·랭킹과 공유
 //     users/{uid}                     nickname, username(구글 계정은 없음), provider, createdAt
-//     users/{uid}/runs·cells·stamps·coupons·starEvents   기존 Supabase 테이블과 같은 필드
+//     users/{uid}/runs·stamps·coupons·starEvents   기존 Supabase 테이블과 같은 필드
 //     usernames/{아이디}               { uid, email }  아이디 중복 막기 + 아이디로 로그인할 때 이메일 찾기
-//     leaderboard/{uid}               { nickname, cells }  누구나 읽는 영역 랭킹
+// 별: starEvents의 amount 합계 = 지금 가진 별(보유), +만 더한 값 = 지금까지 모은 별(누적). 쿠폰을 만들면 -10
+// 예전 영역(육각형) 기능은 없앴어요. 이미 저장된 users/{uid}/cells, leaderboard 문서는 지우지 않고 읽지도 쓰지도 않아요.
 // - 연결 안 돼 있으면: "로컬 모드" → 아이디만으로 들어가고, 이 브라우저(localStorage)에만 저장
 // 화면 코드는 어느 쪽인지 신경 쓰지 않고 user.addRun(...) 처럼만 부르면 돼요.
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult,
   GoogleAuthProvider, onAuthStateChanged, signOut as fbSignOut, sendPasswordResetEmail, deleteUser,
@@ -21,8 +22,8 @@ import { authErrorKey, isEmail, normalizeUsername, preferRedirect } from "../lib
 import { getLang } from "../lib/i18n.js";
 
 const LS = {
-  profile: "runtrip.profile", runs: "runtrip.runs", cells: "runtrip.cells",
-  stamps: "runtrip.stamps", coupons: "runtrip.coupons", bonus: "runtrip.bonusStars",
+  profile: "runtrip.profile", runs: "runtrip.runs",
+  stamps: "runtrip.stamps", coupons: "runtrip.coupons", bonus: "runtrip.bonusStars", earned: "runtrip.starsEarned",
 };
 const readLS = (k, fb) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch { return fb; } };
 const writeLS = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
@@ -40,27 +41,25 @@ const writeLocalProfile = (p) => {
 const millis = (ts) => ts?.toMillis?.() ?? Date.now();
 const warn = (label) => (e) => console.warn(`[firebase] ${label}:`, e?.code || e?.message || e);
 const fail = (label, e) => { warn(label)(e); return { ok: false, error: authErrorKey(e) }; };
-const BATCH_MAX = 400; // Firestore 한 번에 쓰기 500개 제한보다 여유 있게
 
-// 별 규칙 (시안 9번 화면 기준, 숫자는 예시)
-export const STAR_RULES = { perKm: 1, perStamp: 3 };
-export const NEXT_REWARD = 150;
+// 별 규칙: 코스는 500m마다 놓인 별을 줍고(30m 안), 자유 달리기는 500m마다 1개. 별 10개 = 쿠폰 1장
+export const STAR_RULES = { everyM: 500, pickM: 30, perCoupon: 10 };
 
 export function useUserData() {
   const [ready, setReady] = useState(false);
   const [profile, setProfile] = useState(null);
   const [runs, setRuns] = useState(() => readLS(LS.runs, []));
-  const [cells, setCells] = useState(() => new Set(readLS(LS.cells, [])));
   const [stamps, setStamps] = useState(() => new Set(readLS(LS.stamps, [])));
   const [coupons, setCoupons] = useState(() => readLS(LS.coupons, []));
-  const [bonus, setBonus] = useState(() => readLS(LS.bonus, 0));
+  const [bonus, setBonus] = useState(() => readLS(LS.bonus, 0));          // 지금 가진 별 (쿠폰으로 바꾸면 줄어요)
+  const [starsEarned, setStarsEarned] = useState(() => readLS(LS.earned, 0)); // 지금까지 모은 별 (줄지 않아요)
   // 로그인은 됐는데 users/{uid} 문서가 없음 (구글로 처음 들어온 사람) → "닉네임 정하기" 화면
   const [needsNickname, setNeedsNickname] = useState(false);
   // 구글 리다이렉트 로그인에서 돌아왔을 때 난 오류 (로그인 화면에 보여줘요)
   const [authError, setAuthError] = useState(null);
 
   // 달리는 중에는 화면이 다시 그려지기 전에도 최신 값이 필요해서 ref에도 들고 있어요
-  const cellsRef = useRef(cells);
+  const bonusRef = useRef(bonus); // 달리는 중 별을 주울 때 바로 보유 수를 알아야 해서
   const stampsRef = useRef(stamps);
   const uidRef = useRef(null);
   const profileRef = useRef(profile); profileRef.current = profile;
@@ -74,27 +73,26 @@ export function useUserData() {
     const me = await getDoc(doc(db, "users", uid));
     if (!me.exists()) { setProfile(null); setNeedsNickname(true); return false; }
     const sub = (name, ...q) => getDocs(query(collection(db, "users", uid, name), ...q));
-    const [r, c, s, cp, b] = await Promise.all([
+    const [r, s, cp, b] = await Promise.all([
       sub("runs", orderBy("created_at", "desc"), limit(100)),
-      sub("cells"), sub("stamps"),
+      sub("stamps"),
       sub("coupons", orderBy("created_at", "desc")),
       sub("starEvents"),
     ]);
     const u = me.data();
     const runList = r.docs.map((d) => {
       const x = d.data();
-      return { id: d.id, date: millis(x.created_at), courseId: x.course_id, name: x.name, meters: x.meters, seconds: x.seconds, cells: x.cells, stamps: x.stamps };
+      return { id: d.id, date: millis(x.created_at), courseId: x.course_id, name: x.name, meters: x.meters, seconds: x.seconds, stamps: x.stamps, starsGot: x.stars_got || 0 };
     });
     setRuns(runList); writeLS(LS.runs, runList);
-    cellsRef.current = new Set(c.docs.map((d) => d.id)); setCells(cellsRef.current); writeLS(LS.cells, [...cellsRef.current]);
     stampsRef.current = new Set(s.docs.map((d) => d.id)); setStamps(stampsRef.current); writeLS(LS.stamps, [...stampsRef.current]);
-    const cps = cp.docs.map((d) => { const x = d.data(); return { id: d.id, shopId: x.shop_id, title: x.title, issued: millis(x.created_at) }; });
+    const cps = cp.docs.map((d) => { const x = d.data(); return { id: d.id, shopId: x.shop_id, title: x.title, issued: millis(x.created_at), pending: !!x.pending }; });
     setCoupons(cps); writeLS(LS.coupons, cps);
-    const bn = b.docs.reduce((sum, d) => sum + (d.data().amount || 0), 0); setBonus(bn); writeLS(LS.bonus, bn);
+    const amounts = b.docs.map((d) => d.data().amount || 0);
+    const bn = amounts.reduce((sum, a) => sum + a, 0); bonusRef.current = bn; setBonus(bn); writeLS(LS.bonus, bn);
+    const earned = amounts.filter((a) => a > 0).reduce((sum, a) => sum + a, 0); setStarsEarned(earned); writeLS(LS.earned, earned);
     setNeedsNickname(false);
     setProfile({ id: uid, nickname: u.nickname, username: u.username || null, provider: u.provider });
-    // 랭킹 문서를 실제 칸 수에 맞춰 둬요 (닉네임을 바꿨거나 예전에 저장이 빠졌을 때 대비)
-    writeBatch(db).set(doc(db, "leaderboard", uid), { nickname: u.nickname, cells: cellsRef.current.size }).commit().catch(warn("leaderboard sync"));
     return true;
   }, []);
 
@@ -102,9 +100,9 @@ export function useUserData() {
   const clearLocal = useCallback(() => {
     uidRef.current = null;
     Object.values(LS).forEach((k) => { try { localStorage.removeItem(k); sessionStorage.removeItem(k); } catch {} });
-    cellsRef.current = new Set(); stampsRef.current = new Set();
+    stampsRef.current = new Set(); bonusRef.current = 0;
     setProfile(null); setNeedsNickname(false);
-    setRuns([]); setCells(new Set()); setStamps(new Set()); setCoupons([]); setBonus(0);
+    setRuns([]); setStamps(new Set()); setCoupons([]); setBonus(0); setStarsEarned(0);
   }, []);
 
   // ---------- 앱 시작할 때 로그인 상태 확인 (다시 열어도 로그인 유지) ----------
@@ -203,7 +201,6 @@ export function useUserData() {
           if ((await tx.get(ref)).exists()) throw Object.assign(new Error("id taken"), { code: "lessgo/id-taken" });
           tx.set(ref, { uid, email: cred.user.email });
           tx.set(doc(db, "users", uid), { nickname: nick, username: id, provider: "password", createdAt: serverTimestamp() });
-          tx.set(doc(db, "leaderboard", uid), { nickname: nick, cells: 0 });
         });
       } catch (e) {
         // 아이디를 못 잡았으면 방금 만든 계정을 지워서, 같은 이메일로 다시 가입할 수 있게 해요
@@ -225,7 +222,6 @@ export function useUserData() {
     try {
       const batch = writeBatch(db);
       batch.set(doc(db, "users", u.uid), { nickname: nick, provider, createdAt: serverTimestamp() });
-      batch.set(doc(db, "leaderboard", u.uid), { nickname: nick, cells: 0 });
       await batch.commit();
       return await enter(u);
     } catch (e) { return fail("setNickname", e); }
@@ -255,22 +251,6 @@ export function useUserData() {
   }, [clearLocal]);
 
   // ---------- 저장하기 ----------
-  // 육각형 칸: 이번에 새로 얻은 칸만 넣고, 같은 writeBatch로 랭킹 칸 수도 고쳐요
-  const addCells = useCallback((fresh) => {
-    if (!fresh.length) return;
-    const next = new Set(cellsRef.current);
-    fresh.forEach((c) => next.add(c));
-    cellsRef.current = next; setCells(next); writeLS(LS.cells, [...next]);
-    const uid = remoteUid(); if (!uid) return;
-    const nickname = profileRef.current?.nickname;
-    for (let i = 0; i < fresh.length; i += BATCH_MAX) {
-      const batch = writeBatch(db);
-      fresh.slice(i, i + BATCH_MAX).forEach((cell) => batch.set(doc(db, "users", uid, "cells", cell), { cell, first_at: serverTimestamp() }));
-      batch.set(doc(db, "leaderboard", uid), nickname ? { nickname, cells: next.size } : { cells: next.size }, { merge: true });
-      batch.commit().catch(warn("cells"));
-    }
-  }, []);
-  const hasCell = useCallback((c) => cellsRef.current.has(c), []);
 
   // 스탬프: 처음 찍는 스팟이면 true를 돌려줘요
   const addStamp = useCallback((spotId) => {
@@ -287,18 +267,21 @@ export function useUserData() {
     const uid = remoteUid();
     if (uid) addDoc(collection(db, "users", uid, "runs"), {
       course_id: run.courseId ?? null, name: run.name ?? null,
-      meters: run.meters, seconds: run.seconds, cells: run.cells, stamps: run.stamps, created_at: serverTimestamp(),
+      meters: run.meters, seconds: run.seconds, stamps: run.stamps, stars_got: run.starsGot || 0, created_at: serverTimestamp(),
     }).catch(warn("runs"));
   }, []);
 
   const addCoupon = useCallback((c) => {
     setCoupons((prev) => { const n = [c, ...prev]; writeLS(LS.coupons, n); return n; });
     const uid = remoteUid();
-    if (uid) addDoc(collection(db, "users", uid, "coupons"), { shop_id: c.shopId ?? null, title: c.title ?? null, used: false, created_at: serverTimestamp() }).catch(warn("coupons"));
+    // pending: 제휴 협의 중인 가게의 별 쿠폰 (아직 쓸 수 없어요)
+    if (uid) addDoc(collection(db, "users", uid, "coupons"), { shop_id: c.shopId ?? null, title: c.title ?? null, used: false, pending: !!c.pending, created_at: serverTimestamp() }).catch(warn("coupons"));
   }, []);
 
   const addBonus = useCallback((amount, reason) => {
-    setBonus((prev) => { writeLS(LS.bonus, prev + amount); return prev + amount; });
+    bonusRef.current += amount;
+    setBonus(bonusRef.current); writeLS(LS.bonus, bonusRef.current);
+    if (amount > 0) setStarsEarned((prev) => { writeLS(LS.earned, prev + amount); return prev + amount; });
     const uid = remoteUid();
     if (uid) addDoc(collection(db, "users", uid, "starEvents"), { amount, reason: reason ?? null, created_at: serverTimestamp() }).catch(warn("starEvents"));
   }, []);
@@ -313,24 +296,12 @@ export function useUserData() {
     } catch (e) { return fail("report", e); }
   }, []);
 
-  // 영역 랭킹: leaderboard를 칸 수 내림차순으로 20명. 로컬 모드면 null.
-  const leaderboard = useCallback(async () => {
-    const uid = remoteUid(); if (!uid) return null;
-    try {
-      const snap = await getDocs(query(collection(db, "leaderboard"), orderBy("cells", "desc"), limit(20)));
-      return snap.docs.map((d) => ({ nickname: d.data().nickname || "?", cells: d.data().cells || 0, is_me: d.id === uid }));
-    } catch (e) { warn("leaderboard")(e); return null; }
-  }, []);
-
-  const totalStars = useMemo(() => {
-    const km = runs.reduce((s, r) => s + r.meters / 1000, 0);
-    return Math.floor(km) * STAR_RULES.perKm + stamps.size * STAR_RULES.perStamp + bonus;
-  }, [runs, stamps, bonus]);
+  const getStarBalance = useCallback(() => bonusRef.current, []);
 
   return {
-    ready, profile, runs, cells, stamps, coupons, bonus, totalStars, online: hasFirebase, needsNickname,
+    ready, profile, runs, stamps, coupons, bonus, totalStars: bonus, starsEarned, getStarBalance, online: hasFirebase, needsNickname,
     authError, clearAuthError: () => setAuthError(null),
     signIn, signInGoogle, signUp, setNickname, sendReset, signOut,
-    addCells, hasCell, addStamp, addRun, addCoupon, addBonus, leaderboard, sendReport,
+    addStamp, addRun, addCoupon, addBonus, sendReport,
   };
 }

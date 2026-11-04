@@ -2,7 +2,7 @@
 // 주간 날짜 카드(이전/다음 주) · 주제 칩 · 활동 카드 · 상세 시트
 // 데이터: public/data/events.json (lib/events.js). 모르는 값은 "정보 준비 중"으로 보여줘요.
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc, getLang } from "../lib/i18n.js";
 import { useEvents, EVENT_CATEGORIES, mondayOf, addDays, dayKey, onDay, startOfDay } from "../lib/events.js";
@@ -16,6 +16,13 @@ export default function Events() {
   const [day, setDay] = useState(today);
   const [cat, setCat] = useState("all");
   const [sel, setSel] = useState(null);
+  const weekRef = useRef(null);
+  const showWeek = () => {
+    const el = weekRef.current; if (!el) return;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    el.focus({ preventScroll: true }); // 키보드·화면 읽기 사용자도 그 영역으로 옮겨가요
+  };
   const days = Array.from({ length: 7 }, (_, i) => addDays(week, i));
   const list = (events || []).filter((e) => onDay(e, day) && (cat === "all" || e.category === cat));
   const countOn = (d) => (events || []).filter((e) => onDay(e, d)).length;
@@ -34,10 +41,14 @@ export default function Events() {
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
           </button>
           <h1>{t("events_title")}</h1>
+          {/* 달력 보기 기능은 아직 없어서, 누르면 "이번 주 날짜" 영역으로 스크롤만 해요 */}
+          <button className="round-btn glass ev-cal" onClick={showWeek} aria-label={t("view_calendar")}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3" /><path d="M4 10h16M9 3v4M15 3v4" /></svg>
+          </button>
         </div>
         <p className="ev-sub">{t("events_sub")}</p>
 
-        <section className="card ev-week" aria-label={t("this_week")}>
+        <section className="card ev-week" aria-label={t("this_week")} ref={weekRef} tabIndex={-1}>
           <div className="ev-week-head">
             <b>{weekTitle}</b>
             <button onClick={() => moveWeek(-1)} aria-label={t("prev_week")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>

@@ -1,6 +1,6 @@
 // ⑩ 내 기록 (디자인 원본 docs/design/Stats.dc.html)
 // 탭: 오늘(목표 링) · 주간(막대 차트, 목표 달성일 별) · 배지
-// useUserData의 runs · cells · stamps로 계산하고, 목표·배지 규칙은 lib/badges.js 한곳에 있어요.
+// useUserData의 runs · stamps · 별(보유·누적) · 쿠폰으로 계산하고, 목표·배지 규칙은 lib/badges.js 한곳에 있어요.
 // 위쪽 "도장·쿠폰"(예전 스탬프·별 화면)과 "기록 목록"(예전 내 기록 · 로그아웃)으로 이어져요.
 
 import { useMemo, useState } from "react";
@@ -10,9 +10,10 @@ import { fmtTime } from "../lib/geo.js";
 import { DAILY_GOAL_KM, byDay, badgeStates, dayStart, DAY } from "../lib/badges.js";
 import { LogoBird } from "../components/LogoBird.jsx";
 import { Badge } from "../components/ui.jsx";
+import { StarProgress, CouponItem } from "../components/StarCoupons.jsx";
 
 const TABS = ["today", "week", "badge"];
-const METRICS = ["km", "time", "cell"];
+const METRICS = ["km", "time", "star"];
 
 export default function Stats() {
   const app = useApp();
@@ -20,7 +21,7 @@ export default function Stats() {
   const [tab, setTab] = useState("today");
   const days = useMemo(() => byDay(user.runs), [user.runs]);
   const share = async () => {
-    const text = t("stats_share", { km: totalKm(user.runs).toFixed(1), n: user.cells.size });
+    const text = t("stats_share_stars", { km: totalKm(user.runs).toFixed(1), n: user.starsEarned });
     try { if (navigator.share) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); app.toast(t("shared")); } } catch {}
   };
 
@@ -51,7 +52,8 @@ export default function Stats() {
 
 function Today({ days }) {
   const app = useApp();
-  const today = days[dayStart(Date.now())] || { km: 0, seconds: 0, cells: 0 };
+  const today = days[dayStart(Date.now())] || { km: 0, seconds: 0, stars: 0 };
+  const myCoupons = app.user.coupons.filter((c) => c.pending);
   const coupons = app.user.coupons.filter((c) => dayStart(c.issued || 0) === dayStart(Date.now())).length;
   const left = Math.max(0, DAILY_GOAL_KM - today.km);
   const pct = Math.min(1, today.km / DAILY_GOAL_KM);
@@ -70,10 +72,16 @@ function Today({ days }) {
       </div>
       <div className="st-trio">
         <div className="soft"><b>{fmtTime(today.seconds)}</b><small>{t("time")}</small></div>
-        <div className="soft"><b>{t("cells_plus", { n: today.cells })}</b><small>{t("new_area")}</small></div>
+        <div className="soft"><b>{t("plus_stars", { n: today.stars })}</b><small>{t("stars_collected")}</small></div>
         <div className="soft"><b>{coupons}</b><small>{t("coupons")}</small></div>
       </div>
       <p className="st-note">{t("goal_note", { km: DAILY_GOAL_KM })}</p>
+      {/* 별 쿠폰: 별 10개마다 쿠폰 1장 (제휴 협의 중이라 아직 쓸 수 없어요) */}
+      <section className="card st-coupons" aria-label={t("star_coupons")}>
+        <h3>{t("star_coupons")}</h3>
+        <StarProgress balance={app.user.bonus} />
+        {myCoupons.length ? myCoupons.map((c) => <CouponItem key={c.id} coupon={c} />) : <p className="st-none">{t("no_star_coupons")}</p>}
+      </section>
     </div>
   );
 }
@@ -81,12 +89,12 @@ function Today({ days }) {
 function Week({ days }) {
   const [metric, setMetric] = useState("km");
   const start = dayStart(Date.now()) - 6 * DAY;
-  const list = Array.from({ length: 7 }, (_, i) => ({ day: start + i * DAY, ...(days[start + i * DAY] || { km: 0, seconds: 0, cells: 0 }) }));
-  const val = (d) => (metric === "km" ? d.km : metric === "time" ? d.seconds / 60 : d.cells);
+  const list = Array.from({ length: 7 }, (_, i) => ({ day: start + i * DAY, ...(days[start + i * DAY] || { km: 0, seconds: 0, stars: 0 }) }));
+  const val = (d) => (metric === "km" ? d.km : metric === "time" ? d.seconds / 60 : d.stars);
   const max = Math.max(1, ...list.map(val), metric === "km" ? DAILY_GOAL_KM : 0);
   const goalDays = list.filter((d) => d.km >= DAILY_GOAL_KM).length;
   const avg = list.reduce((s, d) => s + d.km, 0) / 7;
-  const tot = { km: list.reduce((s, d) => s + d.km, 0), sec: list.reduce((s, d) => s + d.seconds, 0), cells: list.reduce((s, d) => s + d.cells, 0) };
+  const tot = { km: list.reduce((s, d) => s + d.km, 0), sec: list.reduce((s, d) => s + d.seconds, 0), stars: list.reduce((s, d) => s + d.stars, 0) };
   const wd = (ms) => new Intl.DateTimeFormat(getLang() === "ko" ? "ko-KR" : "en-US", { weekday: "narrow" }).format(new Date(ms));
   return (
     <div className="rise pd-col">
@@ -115,7 +123,7 @@ function Week({ days }) {
       <div className="st-trio">
         <div className="soft"><b>{tot.km.toFixed(1)}km</b><small>{t("total_km")}</small></div>
         <div className="soft"><b>{fmtTime(tot.sec)}</b><small>{t("total_time")}</small></div>
-        <div className="soft"><b>{t("cells_n", { n: tot.cells })}</b><small>{t("new_area")}</small></div>
+        <div className="soft"><b>{t("stars_n", { n: tot.stars })}</b><small>{t("stars_collected")}</small></div>
       </div>
     </div>
   );
@@ -123,16 +131,20 @@ function Week({ days }) {
 
 function Badges() {
   const { user, data } = useApp();
-  const states = badgeStates({ runs: user.runs, cells: user.cells, stamps: user.stamps });
+  const states = badgeStates({ runs: user.runs, stamps: user.stamps, starsEarned: user.starsEarned });
   const got = states.filter((b) => b.done);
   const next = states.find((b) => !b.done);
   const place = (id) => loc(data.spotById[id]?.name).replace(/\s*\(.*\)/, "");
   const sub = (b) => {
     if (b.missing?.length && !b.done) return t("badge_left", { names: b.missing.map(place).join(" · ") });
     if (b.id === "run_10k" && !b.done) return t("badge_best", { km: b.best.toFixed(1) });
-    if (b.id === "cells_100" && !b.done) return t("badge_now", { n: b.now });
+    if (b.id === "stars_100" && !b.done) return t("badge_now_stars", { n: b.now });
     return b.done ? t("badge_got") : `${Math.floor(b.have)} / ${b.need}`;
   };
+  // "다음 배지까지" 카드: 장소 배지면 "심우장만 남았어요 · 2 / 3"처럼 남은 장소와 모은 수 (실제 도장 기록으로 계산)
+  const nextSub = (b) => (b.missing?.length
+    ? t("next_left", { names: b.missing.map(place).join(" · "), have: b.have, need: b.need })
+    : sub(b));
   return (
     <div className="rise pd-col">
       {next && (
@@ -142,7 +154,7 @@ function Badges() {
             <small>{t("next_badge")}</small>
             <b>{t("badge_" + next.id)}</b>
             <span className="st-prog"><i style={{ width: `${(next.have / next.need) * 100}%` }} /></span>
-            <small className="muted">{sub(next)}</small>
+            <small className="muted">{nextSub(next)}</small>
           </div>
         </div>
       )}

@@ -1,10 +1,367 @@
 {
-  "_설명": "제휴 가게(가상 데이터). visit_coupon이 true면 들르기만 해도 쿠폰, buy_stars는 구매 인증 시 받는 별. 실제 가게 이름은 제휴 전까지 쓰지 않아요.",
-  "shops": [
-    { "id": "cafe-a", "name": { "en": "Partner Cafe A (sample)", "ko": "제휴 카페 A (예시)" }, "lat": 37.5984, "lng": 126.9952, "partner": true, "visit_coupon": true, "buy_stars": 2, "coupon": { "en": "500 KRW off drinks (sample)", "ko": "음료 500원 할인 (예시)" } },
-    { "id": "bakery-b", "name": { "en": "Partner Bakery B (sample)", "ko": "제휴 빵집 B (예시)" }, "lat": 37.5965, "lng": 126.9965, "partner": true, "visit_coupon": false, "buy_stars": 3, "coupon": null },
-    { "id": "diner-c", "name": { "en": "Partner Diner C (sample)", "ko": "제휴 식당 C (예시)" }, "lat": 37.5945, "lng": 126.9980, "partner": true, "visit_coupon": true, "buy_stars": 0, "coupon": { "en": "Free side dish (sample)", "ko": "사이드 메뉴 무료 (예시)" } },
-    { "id": "cafe-d", "name": { "en": "Partner Cafe D (sample)", "ko": "제휴 카페 D (예시)" }, "lat": 37.5866, "lng": 127.0140, "partner": true, "visit_coupon": true, "buy_stars": 2, "coupon": { "en": "500 KRW off drinks (sample)", "ko": "음료 500원 할인 (예시)" } },
-    { "id": "shop-e", "name": { "en": "Corner Store E (sample)", "ko": "동네 가게 E (예시)" }, "lat": 37.5905, "lng": 127.0050, "partner": false, "visit_coupon": false, "buy_stars": 0, "coupon": null }
-  ]
+ "_설명": "제휴 가게(가상 데이터). visit_coupon이 true면 들르기만 해도 쿠폰, buy_stars는 구매 인증 시 받는 별. 실제 가게 이름은 제휴 전까지 쓰지 않아요.",
+ "shops": [
+  {
+   "id": "cafe-a",
+   "name": {
+    "en": "Partner Cafe A (sample)",
+    "ko": "제휴 카페 A (예시)"
+   },
+   "lat": 37.5984,
+   "lng": 126.9952,
+   "partner": true,
+   "visit_coupon": true,
+   "buy_stars": 2,
+   "coupon": {
+    "en": "500 KRW off drinks (sample)",
+    "ko": "음료 500원 할인 (예시)"
+   }
+  },
+  {
+   "id": "bakery-b",
+   "name": {
+    "en": "Partner Bakery B (sample)",
+    "ko": "제휴 빵집 B (예시)"
+   },
+   "lat": 37.5965,
+   "lng": 126.9965,
+   "partner": true,
+   "visit_coupon": false,
+   "buy_stars": 3,
+   "coupon": null
+  },
+  {
+   "id": "diner-c",
+   "name": {
+    "en": "Partner Diner C (sample)",
+    "ko": "제휴 식당 C (예시)"
+   },
+   "lat": 37.5945,
+   "lng": 126.998,
+   "partner": true,
+   "visit_coupon": true,
+   "buy_stars": 0,
+   "coupon": {
+    "en": "Free side dish (sample)",
+    "ko": "사이드 메뉴 무료 (예시)"
+   }
+  },
+  {
+   "id": "cafe-d",
+   "name": {
+    "en": "Partner Cafe D (sample)",
+    "ko": "제휴 카페 D (예시)"
+   },
+   "lat": 37.5866,
+   "lng": 127.014,
+   "partner": true,
+   "visit_coupon": true,
+   "buy_stars": 2,
+   "coupon": {
+    "en": "500 KRW off drinks (sample)",
+    "ko": "음료 500원 할인 (예시)"
+   }
+  },
+  {
+   "id": "shop-e",
+   "name": {
+    "en": "Corner Store E (sample)",
+    "ko": "동네 가게 E (예시)"
+   },
+   "lat": 37.5905,
+   "lng": 127.005,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null
+  },
+  {
+   "id": "kakao-8218085",
+   "name": {
+    "ko": "성북동메밀수제비누룽지백숙",
+    "en": "성북동메밀수제비누룽지백숙"
+   },
+   "lat": 37.594575463501485,
+   "lng": 126.99056998994584,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 한식 > 육류,고기 > 닭요리",
+   "address": "서울 성북구 성북로31길 9",
+   "kakao_url": "http://place.map.kakao.com/8218085",
+   "near": "simujang",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-7953468",
+   "name": {
+    "ko": "선동보리밥",
+    "en": "선동보리밥"
+   },
+   "lat": 37.59468566122507,
+   "lng": 126.99514231474274,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 한식",
+   "address": "서울 성북구 성북로 134-4",
+   "kakao_url": "http://place.map.kakao.com/7953468",
+   "near": "simujang",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-8238823",
+   "name": {
+    "ko": "금왕돈까스 본점",
+    "en": "금왕돈까스 본점"
+   },
+   "lat": 37.594830687215,
+   "lng": 126.994383644375,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 일식 > 돈까스,우동",
+   "address": "서울 성북구 성북로 138",
+   "kakao_url": "http://place.map.kakao.com/8238823",
+   "near": "simujang",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-23300753",
+   "name": {
+    "ko": "쌍다리돼지불백 본점",
+    "en": "쌍다리돼지불백 본점"
+   },
+   "lat": 37.593499076317705,
+   "lng": 126.99568816509354,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 한식 > 육류,고기",
+   "address": "서울 성북구 성북로23길 4",
+   "kakao_url": "http://place.map.kakao.com/23300753",
+   "near": "simujang",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-7940056",
+   "name": {
+    "ko": "수연산방",
+    "en": "수연산방"
+   },
+   "lat": 37.59507217364634,
+   "lng": 126.99483655959386,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 카페 > 전통찻집",
+   "address": "서울 성북구 성북로26길 8",
+   "kakao_url": "http://place.map.kakao.com/7940056",
+   "near": "simujang",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-13324245",
+   "name": {
+    "ko": "죠셉의커피나무",
+    "en": "죠셉의커피나무"
+   },
+   "lat": 37.59459330925857,
+   "lng": 126.98859747551981,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 카페 > 커피전문점",
+   "address": "서울 성북구 성북로31길 65",
+   "kakao_url": "http://place.map.kakao.com/13324245",
+   "near": "simujang",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-834781338",
+   "name": {
+    "ko": "성북로",
+    "en": "성북로"
+   },
+   "lat": 37.5950730274893,
+   "lng": 126.99385256178043,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 카페 > 커피전문점",
+   "address": "서울 성북구 성북로28길 10",
+   "kakao_url": "http://place.map.kakao.com/834781338",
+   "near": "simujang",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-10380858",
+   "name": {
+    "ko": "봉화묵집",
+    "en": "봉화묵집"
+   },
+   "lat": 37.6027374309408,
+   "lng": 127.010722032742,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 한식",
+   "address": "서울 성북구 아리랑로19길 46-2",
+   "kakao_url": "http://place.map.kakao.com/10380858",
+   "near": "jeongneung",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-1962671869",
+   "name": {
+    "ko": "할머니만두국",
+    "en": "할머니만두국"
+   },
+   "lat": 37.6023696201391,
+   "lng": 127.012796617385,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 한식",
+   "address": "서울 성북구 아리랑로19길 9-8",
+   "kakao_url": "http://place.map.kakao.com/1962671869",
+   "near": "jeongneung",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-1408988111",
+   "name": {
+    "ko": "후후세이지",
+    "en": "후후세이지"
+   },
+   "lat": 37.60357794751,
+   "lng": 127.011845556007,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 술집 > 일본식주점",
+   "address": "서울 성북구 정릉로26길 32",
+   "kakao_url": "http://place.map.kakao.com/1408988111",
+   "near": "jeongneung",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-869837159",
+   "name": {
+    "ko": "덤브다이버",
+    "en": "덤브다이버"
+   },
+   "lat": 37.6025697440857,
+   "lng": 127.01179783337,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 카페 > 커피전문점",
+   "address": "서울 성북구 아리랑로19길 30",
+   "kakao_url": "http://place.map.kakao.com/869837159",
+   "near": "jeongneung",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-26940135",
+   "name": {
+    "ko": "더로스팅 정릉점",
+    "en": "더로스팅 정릉점"
+   },
+   "lat": 37.6024920351499,
+   "lng": 127.013856607684,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 카페",
+   "address": "서울 성북구 정릉로36길 88",
+   "kakao_url": "http://place.map.kakao.com/26940135",
+   "near": "jeongneung",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-15834471",
+   "name": {
+    "ko": "능이마을 본점",
+    "en": "능이마을 본점"
+   },
+   "lat": 37.60637282159464,
+   "lng": 127.06127756162509,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 한식 > 육류,고기 > 오리",
+   "address": "서울 성북구 돌곶이로 21",
+   "kakao_url": "http://place.map.kakao.com/15834471",
+   "near": "uiryeong",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-1023280262",
+   "name": {
+    "ko": "타입커피",
+    "en": "타입커피"
+   },
+   "lat": 37.6087103919527,
+   "lng": 127.05687163369,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 카페 > 커피전문점",
+   "address": "서울 성북구 화랑로32길 38",
+   "kakao_url": "http://place.map.kakao.com/1023280262",
+   "near": "uiryeong",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-795904388",
+   "name": {
+    "ko": "카페나누기",
+    "en": "카페나누기"
+   },
+   "lat": 37.6100357114562,
+   "lng": 127.058783271734,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 카페",
+   "address": "서울 성북구 돌곶이로22길 14",
+   "kakao_url": "http://place.map.kakao.com/795904388",
+   "near": "uiryeong",
+   "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-1129136524",
+   "name": {
+    "ko": "하이드어웨이",
+    "en": "하이드어웨이"
+   },
+   "lat": 37.60941153874042,
+   "lng": 127.05650295606084,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 간식 > 제과,베이커리",
+   "address": "서울 성북구 화랑로32길 21",
+   "kakao_url": "http://place.map.kakao.com/1129136524",
+   "near": "uiryeong",
+   "source": "2026-11-02 상권 2차 자료조사"
+  }
+ ]
 }
