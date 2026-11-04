@@ -95,11 +95,11 @@ flowchart TD
 | 앱 데이터 연동 안내 | [`docs/APP_INTEGRATION.md`](docs/APP_INTEGRATION.md) |
 | 알고리즘 설명 | [`docs/ROUTING_ALGORITHM.md`](docs/ROUTING_ALGORITHM.md) |
 | 웹앱(성북 런트립, React) | [`app/`](app/) — 사용법은 [`app/README.md`](app/README.md) |
-| 앱 데이터 변환 | [`export_runtrip.py`](export_runtrip.py), [`src/runtrip_export.py`](src/runtrip_export.py) |
+| 앱에 넣은 코스 번들 | [`app/public/data/lessgo/`](app/public/data/lessgo/) (`routes.json`, `routes.geojson` 복사본) |
 
 ## 웹앱 실행
 
-`app/`은 React + Vite 웹앱입니다. 최신 경로 번들은 별도 폴더에 준비되어 있습니다. 이 README 작성 시점에 앱에서 번들을 실제로 불러오는지는 확인되지 않았으므로, 연동 완료로 간주하지 마세요. 데이터 로딩 방법은 번들 [README](outputs/react_vite_integration_20261103_final/README.md)를 참고하세요.
+`app/`은 React + Vite 웹앱입니다. 앱은 최신 번들(`outputs/react_vite_integration_20261103_final/`의 `routes.json`, `routes.geojson`)을 `app/public/data/lessgo/`에 복사해 불러옵니다. 목적지 3곳 × 3·5·10km × low/high 18개 조합을 씁니다.
 
 ~~~powershell
 cd app
@@ -107,13 +107,7 @@ npm install
 npm run dev
 ~~~
 
-`http://localhost:8000/`을 엽니다. 아래 내보내기 명령은 기존 데이터 변환 흐름입니다. 최신 번들을 앱에 연결하는 방법은 번들 README를 따르며, 이 명령만으로 최신 번들이 연결되는 것은 아닙니다.
-
-~~~powershell
-python export_runtrip.py
-~~~
-
-과거 low/any 내보내기에서는 경로가 같은 조합을 합쳐 15개로 처리했습니다. LessGo에는 가로등·유동인구·주거지 데이터가 없어서 `lamps`, `crowd`, `residential`은 기본값(2, `mid`, `false`)으로 채워집니다.
+`http://localhost:8000/`을 엽니다. 번들을 다시 만들었다면 두 파일을 `app/public/data/lessgo/`에 다시 복사하세요 (빌드 없이 반영돼요). 예전 `courses.geojson` 변환 스크립트(`export_runtrip.py`)는 번들로 바꾸면서 지웠습니다. LessGo에는 가로등·유동인구·주거지 데이터가 없어서 앱은 `lamps`, `crowd`, `residential`을 기본값(2, `mid`, `false`)으로 둡니다.
 
 최신 번들의 인덱스 구조 및 `destinations[destination_id].distances[distance].routes[mode]` 조회 방법은 번들 [README](outputs/react_vite_integration_20261103_final/README.md)를 참고하세요. 과거 인덱스는 `destinations[destination_id][distance].modes["low"|"any"]` 구조를 사용합니다. 두 구조와 모드 이름은 서로 구분해 처리하세요.
 

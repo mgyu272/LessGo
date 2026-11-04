@@ -1,13 +1,13 @@
 // POST /api/recommend  { settings, weather, lang, avoid }
 // → { picks: [{ id, reason }], model }
 //
-// 1) 규칙 점수(src/lib/recommend.js)로 후보 코스를 최대 6개 추리고
-// 2) Gemini가 그중 3개를 고르고, 러너에게 보여줄 "추천 이유"를 한 문장씩 써요.
+// 1) 고른 거리·경사 선호에 맞는 목적지별 코스 3개(심우장·정릉·의릉)를 규칙 점수(src/lib/recommend.js)로 줄 세우고
+// 2) Gemini가 순서를 정하고, 러너에게 보여줄 "추천 이유"를 한 문장씩 써요.
 // 규칙으로 먼저 거르기 때문에 AI가 엉뚱한 코스(없는 코스, 너무 먼 코스)를 고를 수 없어요.
 
 import { askGeminiJSON, readData, handler, isMock, MODEL } from "./_lib/gemini.js";
-import { scoreCourses } from "../src/lib/recommend.js";
-import { fromGeoJSON, lineLength } from "../src/lib/geo.js";
+import { scoreCourses, candidatesFor } from "../src/lib/recommend.js";
+import { buildCourses } from "../src/lib/routes.js";
 
 const SCHEMA = {
   type: "OBJECT",
@@ -27,19 +27,11 @@ const SCHEMA = {
   required: ["picks"],
 };
 
+// 팀원 코스 번들(public/data/lessgo) → 앱과 같은 코스 모양
 async function loadCourses() {
-  const geo = await readData("courses.geojson");
-  const spots = (await readData("spots.json")).spots;
-  return geo.features.map((f) => {
-    const p = { ...f.properties };
-    const len = lineLength(fromGeoJSON(f.geometry.coordinates));
-    p.distance_km ??= Math.round(len / 100) / 10;
-    p.minutes ??= Math.round((len / 1000) * 6.3);
-    const e = p.elevation || [];
-    p.ascent_m ??= Math.round(e.reduce((s, v, i) => s + (i && v > e[i - 1] ? v - e[i - 1] : 0), 0));
-    p.spotNames = (p.spots || []).map((id) => spots.find((s) => s.id === id)?.name.en).filter(Boolean);
-    return { id: p.id, properties: p };
-  });
+  const [index, lines, spots] = await Promise.all([readData("lessgo/routes.json"), readData("lessgo/routes.geojson"), readData("spots.json")]);
+  const spotById = Object.fromEntries(spots.spots.map((s) => [s.id, s]));
+  return buildCourses(index, lines, spotById).byKey;
 }
 
 export async function recommend({ settings = {}, weather = null, lang = "en", avoid = [] }) {
@@ -47,23 +39,25 @@ export async function recommend({ settings = {}, weather = null, lang = "en", av
     km: Number(settings.km) || 5, purpose: settings.purpose || "run", time: settings.time || "day",
     hill: settings.hill || "flat", themes: new Set(settings.themes || []), quiet: settings.quiet !== false,
   };
-  const ranked = scoreCourses(await loadCourses(), s, weather).slice(0, 6);
+  const ranked = scoreCourses(candidatesFor(await loadCourses(), s), s, weather);
   const ids = ranked.map((r) => r.course.id);
 
   if (isMock()) return mockPicks(ranked, s, lang);
 
   const candidates = ranked.map(({ course: { properties: p } }) => ({
-    id: p.id, name: p.name.en, distance_km: p.distance_km, minutes: p.minutes, hill: p.hill, total_climb_m: p.ascent_m,
-    street_lights_1to3: p.lamps, themes: p.themes, residential_parts: p.residential, spots: p.spotNames,
+    id: p.id, name: p.name.en, destination: p.dest, distance_km: p.distance_km, minutes: p.minutes, route_type: p.modeName.en,
+    total_climb_m: p.ascent_m, // null = unknown
+    official_recommendation: p.formal, needs_review: p.status === "review_required", elevation_is_estimate: p.elevationLow,
   }));
 
   const system = `You recommend running courses in Seongbuk-gu, Seoul, to a visiting runner (often an international student).
-Pick up to 3 courses ONLY from the candidate list, best first. Consider distance fit, hills, time of day (prefer well-lit, gentle routes in the evening/night),
-weather (prefer flat routes when raining), themes, and the purpose. ${avoid.length ? "If quality is similar, prefer courses not in this list: " + avoid.join(", ") + "." : ""}
-For each pick write one short, concrete reason in ${lang === "ko" ? "Korean (polite 해요체)" : "simple English"} that mentions a real feature from the data (e.g. distance, climb, lights, a spot). No exaggeration.`;
+Order up to 3 courses ONLY from the candidate list, best first. Each goes to a different historic site. Consider distance fit, total climb,
+time of day and weather (prefer gentle routes at night or in rain), and the purpose. Never call a route "official" or "recommended" unless official_recommendation is true,
+and do not invent facts (lights, crowds, scenery) that are not in the data. ${avoid.length ? "If quality is similar, prefer courses not in this list: " + avoid.join(", ") + "." : ""}
+For each pick write one short, concrete reason in ${lang === "ko" ? "Korean (polite 해요체)" : "simple English"} that mentions a real feature from the data (e.g. distance, climb, the destination). No exaggeration.`;
 
   const user = JSON.stringify({
-    runner: { distance_km: s.km, purpose: s.purpose, time_of_day: s.time, hills: s.hill, themes: [...s.themes], prefers_quiet_roads: s.quiet },
+    runner: { distance_km: s.km, purpose: s.purpose, time_of_day: s.time, hills: s.hill },
     weather, candidates,
   });
 
@@ -82,8 +76,8 @@ function mockPicks(ranked, s, lang) {
     picks: ranked.slice(0, 3).map(({ course: { properties: p } }) => ({
       id: p.id,
       reason: ko
-        ? `${p.distance_km}km, 오르막 ${p.ascent_m}m${p.spotNames[0] ? ` · ${p.spotNames[0]}을(를) 지나요` : ""} (목업)`
-        : `${p.distance_km} km with ${p.ascent_m} m of climb${p.spotNames[0] ? `, passing ${p.spotNames[0]}` : ""} (mock)`,
+        ? `${p.distance_km}km, 오르막 ${p.ascent_m ?? "알 수 없음"}${p.ascent_m != null ? "m" : ""} · ${p.name.ko} (목업)`
+        : `${p.distance_km} km with ${p.ascent_m ?? "unknown"}${p.ascent_m != null ? " m" : ""} of climb · ${p.name.en} (mock)`,
     })),
   };
 }

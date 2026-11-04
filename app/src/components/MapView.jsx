@@ -48,7 +48,7 @@ const toLatLng = (p) => (Array.isArray(p) ? { lat: p[0], lng: p[1] } : { lat: p.
 // Leaflet 확대 단계(zoom, 클수록 가까이) → 카카오 레벨(level, 작을수록 가까이)
 const levelOf = (zoom) => Math.min(14, Math.max(1, 19 - zoom));
 
-export function MapView({ dark, className = "", center = CENTER, zoom = 15, children }) {
+export function MapView({ dark, className = "", center = CENTER, zoom = 15, level, children }) {
   const status = useKakaoMaps();
   // 처음 위치만 쓰고, 이후 이동은 FitBounds·Follow·FlyTo 가 맡아요
   const [initialCenter] = useState(() => toLatLng(center));
@@ -56,7 +56,7 @@ export function MapView({ dark, className = "", center = CENTER, zoom = 15, chil
   if (status !== "ready") {
     return <div className={`${cls} map-fallback`}>{status === "loading" ? null : <p>{t(status === "no-key" ? "map_no_key" : "map_error")}</p>}</div>;
   }
-  return <Map className={cls} center={initialCenter} level={levelOf(zoom)}>{children}</Map>;
+  return <Map className={cls} center={initialCenter} level={level ?? levelOf(zoom)}>{children}</Map>;
 }
 
 // 처음 한 번(또는 key가 바뀔 때) 영역에 맞춰 확대. 여백은 [왼쪽, 위], [오른쪽, 아래] (px)
@@ -81,11 +81,12 @@ function pinExtents(spot) {
   return [[-8, -8, 8, 8], [dx - 28, dy - 28, dx + 28, dy + 28], label];
 }
 
-// 홈 지도: 스팟 배지·이름표까지 모두 보이게 맞춰요.
-// 카카오맵은 화면 크기마다 확대 단계가 달라서, 배지가 safe() 영역(검색·칩 아래 ~ 아래 시트 위)에 들어갈 때까지
-// 한 단계씩 넓게 보고, 배지 묶음을 그 영역 가운데로 옮겨요. safe(): 지도 안쪽 px { top, right, bottom, left }
-// 단계를 바꾼 직후에는 지도 좌표 계산이 바로 갱신되지 않아서, 처음 잰 위치로 미리 계산해요 (한 단계 = 거리 절반).
-export function FitSpots({ spots, safe }) {
+// 홈 지도: 스팟 배지·이름표까지 모두 보이게 setBounds로 맞춰요.
+// safe(): 핀이 보여야 하는 지도 안쪽 영역 px { top, right, bottom, left } (위 검색·칩 아래 ~ 아래 시트 위)
+// 여백에 배지·이름표 크기(pinExtents)를 더해서 이름표까지 영역 안에 들어오게 해요.
+// 화면이 낮아 다 못 넣어도 maxLevel보다 멀리 축소하지 않아요 (성북구를 벗어나 서울 전체로 가지 않게).
+// refitKey가 바뀌면 다시 맞춰요 (예: 내 위치를 못 쓸 때 성북구 핀 전체 보기로 돌아오기)
+export function FitSpots({ spots, safe, maxLevel = 8, refitKey = 0 }) {
   const map = useMap();
   useEffect(() => {
     if (!spots?.length) return;
@@ -95,38 +96,39 @@ export function FitSpots({ spots, safe }) {
     document.fonts?.ready.then(() => { if (alive) fit(); });
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, spots]);
+  }, [map, spots, refitKey]);
 
   function fit() {
     const { kakao } = window;
-    const coords = spots.map((s) => new kakao.maps.LatLng(s.lat, s.lng));
-    const bounds = new kakao.maps.LatLngBounds();
-    coords.forEach((c) => bounds.extend(c));
-    map.setBounds(bounds);
-
-    const proj = map.getProjection();
-    const center = proj.containerPointFromCoords(map.getCenter());
-    const dots = coords.map((c) => proj.containerPointFromCoords(c));
+    const el = map.getNode();
+    const W = el.offsetWidth, H = el.offsetHeight;
+    if (!W || !H) return;
     const area = safe();
-    for (let step = 0; step <= 4; step++) {
-      const k = 2 ** step;
-      const box = { l: Infinity, t: Infinity, r: -Infinity, b: -Infinity };
-      spots.forEach((s, i) => {
-        const x = center.x + (dots[i].x - center.x) / k, y = center.y + (dots[i].y - center.y) / k;
-        for (const [x1, y1, x2, y2] of pinExtents(s)) {
-          box.l = Math.min(box.l, x + x1); box.t = Math.min(box.t, y + y1);
-          box.r = Math.max(box.r, x + x2); box.b = Math.max(box.b, y + y2);
-        }
-      });
-      if (step < 4 && (box.r - box.l > area.right - area.left || box.b - box.t > area.bottom - area.top)) continue;
-      // 이 단계에서 배지 묶음 가운데를 영역 가운데로: 화면 이동량을 처음 단계 기준으로 되돌려 새 중심을 구해요
-      const dx = ((box.l + box.r) / 2 - (area.left + area.right) / 2) * k;
-      const dy = ((box.t + box.b) / 2 - (area.top + area.bottom) / 2) * k;
-      const target = proj.coordsFromContainerPoint(new kakao.maps.Point(center.x + dx, center.y + dy));
-      map.setLevel(map.getLevel() + step);
-      map.setCenter(target);
-      return;
-    }
+    // 배지·이름표가 실제 위치에서 위·아래·옆으로 얼마나 나가는지
+    const ext = { l: 0, t: 0, r: 0, b: 0 };
+    spots.forEach((sp) => pinExtents(sp).forEach(([x1, y1, x2, y2]) => {
+      ext.l = Math.min(ext.l, x1); ext.t = Math.min(ext.t, y1); ext.r = Math.max(ext.r, x2); ext.b = Math.max(ext.b, y2);
+    }));
+    let pad = { top: area.top - ext.t, bottom: H - area.bottom + ext.b, left: area.left - ext.l, right: W - area.right + ext.r };
+    // 남는 칸이 너무 좁으면(낮은 화면) 이름표 여백은 포기하고 점 위치만 영역 안에 넣어요
+    if (H - pad.top - pad.bottom < 60) pad = { ...pad, top: area.top + 24, bottom: H - area.bottom + 16 };
+    if (W - pad.left - pad.right < 60) pad = { ...pad, left: area.left + 24, right: W - area.right + 24 };
+    const bounds = new kakao.maps.LatLngBounds();
+    spots.forEach((sp) => bounds.extend(new kakao.maps.LatLng(sp.lat, sp.lng)));
+    map.setBounds(bounds, pad.top, pad.right, pad.bottom, pad.left);
+
+    const level = map.getLevel();
+    if (level <= maxLevel) return;
+    // 너무 멀리 축소됐으면 maxLevel로 당기고, 핀 묶음 가운데를 영역 가운데로 옮겨요.
+    // 단계를 바꾼 직후에는 좌표 계산이 바로 갱신되지 않아서, 지금 단계에서 미리 계산해요 (한 단계 = 거리 절반)
+    const k = 2 ** (level - maxLevel);
+    const proj = map.getProjection();
+    const sw = bounds.getSouthWest(), ne = bounds.getNorthEast();
+    const mid = proj.containerPointFromCoords(new kakao.maps.LatLng((sw.getLat() + ne.getLat()) / 2, (sw.getLng() + ne.getLng()) / 2));
+    const target = { x: (area.left + area.right) / 2, y: (area.top + area.bottom) / 2 };
+    const c = proj.coordsFromContainerPoint(new kakao.maps.Point(mid.x - (target.x - W / 2) / k, mid.y - (target.y - H / 2) / k));
+    map.setLevel(maxLevel);
+    map.setCenter(c);
   }
   return null;
 }
@@ -145,7 +147,7 @@ export function FlyTo({ to, level = 2 }) {
     if (!to) return;
     map.setLevel(level);
     map.panTo(new window.kakao.maps.LatLng(to[0], to[1]));
-  }, [map, to, level]);
+  }, [map, to, level]); // to는 누를 때마다 새 배열이라 같은 곳이어도 다시 움직여요
   return null;
 }
 
@@ -203,10 +205,10 @@ export function SpotMarker({ spot, label = false, onClick }) {
   );
 }
 
-// 코스·달린 길 선. path는 [{lat,lng}] 또는 [[lat,lng]] 둘 다 돼요
-export function Route({ path, color = "#1F4D3F", weight = 6, opacity = 0.9 }) {
+// 코스·달린 길 선. path는 [{lat,lng}] 또는 [[lat,lng]] 둘 다 돼요. dashed면 짧은 점선
+export function Route({ path, color = "#1F4D3F", weight = 6, opacity = 0.9, dashed = false }) {
   const line = useMemo(() => path.map(toLatLng), [path]);
-  return <Polyline path={line} strokeColor={color} strokeWeight={weight} strokeOpacity={opacity} />;
+  return <Polyline path={line} strokeColor={color} strokeWeight={weight} strokeOpacity={opacity} strokeStyle={dashed ? "shortdash" : "solid"} />;
 }
 
 export function Dot({ at, color = "#1C2B26", radius = 7 }) {

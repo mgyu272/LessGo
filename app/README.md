@@ -1,10 +1,10 @@
-# 성북 런트립 (가칭) — React + Vite + Supabase
+# 성북 런트립 (가칭) — React + Vite + Firebase
 
 외국인 러너를 성북구 명소와 동네 가게로 잇는 러닝 관광 **웹앱**입니다. 아이폰 16 화면(393×852)에 맞췄어요.
 
 - **PC에서 열면** 아이폰 16 프레임 안에 보여요 (발표 화면·캡처용). 프레임 없이 보려면 주소 끝에 `?frame=off`를 붙이세요.
 - **휴대폰에서 열면** 프레임 없이 꽉 차게 보이고, 노치·홈 바 여백(safe area)을 지켜요.
-- **Supabase를 연결하기 전에도 동작해요** ("로컬 모드": 이 브라우저에만 저장). 연결하면 로그인, 서버 저장, 영역 랭킹이 켜져요.
+- **Firebase를 연결하기 전에도 동작해요** ("로컬 모드": 이 브라우저에만 저장). 연결하면 아이디·구글 로그인, 서버 저장, 영역 랭킹이 켜져요.
 
 > 이전 HTML 버전은 `_html_v1` 폴더에 보관했어요. 이제 안 써도 돼요.
 
@@ -46,7 +46,7 @@ npm run dev
 1. GitHub에 저장소를 만들고 이 폴더를 올리기 (`node_modules`, `.env.local`은 자동으로 빠져요)
 2. https://vercel.com 에 GitHub로 가입 (Hobby 무료)
 3. **Add New → Project** → 저장소 선택 → Framework가 **Vite**로 잡히면 그대로 **Deploy**
-4. **Settings → Environment Variables** 에 `.env.local`과 같은 값(`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`)을 넣고 다시 배포
+4. **Settings → Environment Variables** 에 `.env.local`과 같은 값(`VITE_FIREBASE_*` 6개, 카카오·Gemini 키)을 넣고 다시 배포. Firebase **승인된 도메인**에 배포 주소도 추가 (4번)
 5. 나온 https 주소를 휴대폰으로 열기 → 위치 권한 허용
 6. 아이폰 Safari에서 **공유 → 홈 화면에 추가**를 하면 주소창 없이 앱처럼 열려요
 
@@ -64,52 +64,85 @@ NEXT_PUBLIC_KAKAO_MAP_KEY=여기에_JavaScript_키
 
 ---
 
-## 4. Supabase 연결 (아이디·비밀번호 로그인 + DB + 랭킹)
+## 4. Firebase 연결 (아이디·비밀번호 + 구글 로그인 + DB + 랭킹)
 
-로그인은 **아이디·비밀번호** 방식이에요. 화면에서는 아이디만 받고, 앱이 내부에서 `아이디@lessgo.local` 형태의 가짜 이메일로 바꿔 Supabase Auth(이메일+비밀번호)에 넘겨요. 메일은 보내지 않아요.
+무료 **Spark 플랜**만 써요 (Authentication + Firestore). Cloud Functions 같은 유료(Blaze) 기능은 쓰지 않아요.
 
-1. https://supabase.com 가입 → **New project** (Region은 Seoul 추천, 비밀번호는 따로 적어 두기)
-2. 왼쪽 **SQL Editor → New query** → `supabase/schema.sql` 내용을 전부 붙여넣고 **Run**
-   → `profiles(아이디·닉네임), runs, cells, stamps, coupons, star_events` 테이블, 랭킹 함수, 아이디 중복 확인 함수가 생겨요
-   - **이미 예전 schema.sql로 만든 프로젝트라면** `supabase/migrations/20261103_username_login.sql` 만 한 번 실행하세요
-3. 왼쪽 **Authentication → Sign In / Providers → Email**
-   - **Enable Email provider**: 켜기
-   - **Confirm email**: **끄기** (가짜 이메일이라 확인 메일을 받을 수 없어요. 켜 두면 가입은 돼도 로그인이 안 돼요)
-   - **Secure email change**: 끄기 권장 (예전 익명 사용자가 회원가입할 때 그 계정에 아이디를 붙이는 데 필요해요)
-   - **Allow anonymous sign-ins**: 새로 쓰지는 않아요. 예전에 닉네임으로 시작한 사람들이 회원가입으로 옮겨 올 때까지는 켜 둬도 되고, 다 옮겨 왔으면 꺼도 돼요
-4. **Project Settings → API**(또는 위쪽 **Connect**)에서 **Project URL**과 **anon(또는 publishable) key** 복사
-5. 이 폴더의 `.env.example`을 복사해서 이름을 **`.env.local`**로 바꾸고 값 붙여넣기
-6. 터미널에서 `Ctrl + C` 후 `npm run dev` 다시 실행 → 시작 화면에서 **회원가입** → 아이디·비밀번호·닉네임 입력
+- **아이디 로그인**: 가입할 때 아이디·이메일·비밀번호·닉네임을 받아요. 로그인은 아이디(또는 가입한 이메일) + 비밀번호
+- **구글 로그인**: PC·휴대폰 브라우저 모두 팝업(휴대폰은 새 탭)으로 로그인해요. 팝업이 막히거나 홈 화면 앱이면 페이지 이동 방식으로 바뀌어요. 처음 들어오면 닉네임을 한 번 정해요
+- **비밀번호 찾기**: 앱의 "아이디 · 비밀번호 찾기"에서 아이디나 이메일을 넣으면 가입 이메일로 재설정 메일이 가요
 
-연결되면 시작 화면에 비밀번호 칸과 "회원가입 | 아이디·비밀번호 찾기"가 보이고, **스탬프·별 탭에 영역 랭킹**이 떠요.
-연결하지 않으면(로컬 모드) 비밀번호 없이 아이디만으로 들어가고, 기록은 그 휴대폰에만 저장돼요.
+### 4-1. 콘솔 설정 (한 번만)
+1. https://console.firebase.google.com → 프로젝트 → **웹 앱 등록** (`</>` 아이콘)
+2. **Authentication → 로그인 방법**에서 **이메일/비밀번호**, **Google** 사용 설정
+3. **Firestore Database → 데이터베이스 만들기** → 위치 `asia-northeast3 (서울)`, **프로덕션 모드**
+4. **Authentication → 설정 → 승인된 도메인**에 앱 주소 추가
+   - `localhost`는 기본으로 들어 있어요
+   - Vercel 배포 주소(예: `lessgo.vercel.app`)를 꼭 추가하세요. 빠지면 구글 로그인이 "이 주소에서는 아직 로그인할 수 없어요"로 실패해요
+
+### 4-2. `.env.local`
+**프로젝트 설정(톱니바퀴) → 일반 → 내 앱 → SDK 설정 및 구성 → 구성**에 나오는 값을 넣어요.
+```
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+```
+`.env.example`을 복사해 `.env.local`로 이름을 바꾸고 채운 뒤, 터미널에서 `Ctrl + C` → `npm run dev`로 다시 켜세요.
+이 값들은 브라우저로 가는 공개용 설정이라 앱에 들어가도 괜찮아요. 대신 아래 **보안 규칙**이 데이터를 지켜요.
+
+### 4-3. 보안 규칙 적용 (꼭 하기)
+프로덕션 모드는 처음에 모든 읽기·쓰기를 막아 둬서, 규칙을 안 넣으면 가입·저장이 "서버가 저장을 거부했어요"로 실패해요.
+1. **Firestore Database → 규칙** 탭
+2. 편집기 내용을 전부 지우고 `firestore.rules` 파일 내용을 그대로 붙여 넣기
+3. **게시** 클릭 (1분쯤 뒤에 적용돼요)
+
+규칙 요약:
+- `users/{uid}`와 그 아래 기록(runs·cells·stamps·coupons·starEvents): **본인만** 읽고 쓰기
+- `usernames/{아이디}` (`uid`, `email`): 누구나 **하나씩 조회**만 가능(전체 목록은 막음), 본인 uid로 **만들기만**, 수정·삭제 금지
+- `leaderboard/{uid}` (`nickname`, `cells`): 누구나 읽기, 본인 문서만 쓰기. 이 두 필드만, `cells`는 0 이상 숫자
+
+### 4-4. Vercel 환경변수
+**Vercel → 프로젝트 → Settings → Environment Variables**에 위 `VITE_FIREBASE_*` 6개를 같은 값으로 넣고 **다시 배포(Redeploy)** 하세요. `VITE_` 값은 빌드할 때 들어가서, 넣은 뒤 다시 배포해야 반영돼요.
+
+### 4-5. 에뮬레이터로 테스트 (실제 서버 없이, 선택)
+진짜 Firebase에 테스트 계정을 만들지 않고 이 컴퓨터에서 가입·로그인·보안 규칙을 확인할 수 있어요. Java가 필요해요.
+```bash
+npm install -g firebase-tools
+firebase emulators:start --only auth,firestore --project demo-lessgo
+```
+다른 터미널에서 (PowerShell 기준, 값은 가짜여도 돼요):
+```powershell
+$env:VITE_FIREBASE_EMULATOR="1"; $env:VITE_FIREBASE_API_KEY="demo-key"; $env:VITE_FIREBASE_AUTH_DOMAIN="demo-lessgo.firebaseapp.com"; $env:VITE_FIREBASE_PROJECT_ID="demo-lessgo"; $env:VITE_FIREBASE_APP_ID="demo-app"; npx vite --port 5201
+```
+`http://127.0.0.1:5201` 로 여세요 (`localhost`로 열면 에뮬레이터의 구글 로그인 리다이렉트가 브라우저 저장소 분리 때문에 안 돌아와요). 설정은 `firebase.json`에 있어요.
+
+### 데이터 구조 (Firestore)
+| 위치 | 내용 |
+|---|---|
+| `users/{uid}` | `nickname`, `username`(구글 계정은 없음), `provider`(`password`/`google`), `createdAt` |
+| `users/{uid}/runs` | `course_id`, `name`, `meters`, `seconds`, `cells`, `stamps`, `created_at` |
+| `users/{uid}/cells/{h3}` | `cell`, `first_at` |
+| `users/{uid}/stamps/{spotId}` | `spot_id`, `created_at` |
+| `users/{uid}/coupons` | `shop_id`, `title`, `used`, `created_at` |
+| `users/{uid}/starEvents` | `amount`, `reason`, `created_at` |
+| `usernames/{아이디}` | `uid`, `email` (아이디 중복 막기, 아이디로 로그인할 때 이메일 찾기) |
+| `leaderboard/{uid}` | `nickname`, `cells` (칸 저장과 같은 writeBatch로 갱신, 칸 수 많은 순 20명) |
 
 ### 아이디 규칙
-- 아이디: 영문 소문자·숫자·`_` 4~20자 (대문자로 입력해도 소문자로 바뀌어요). 중복 불가
+- 아이디: 영문 소문자·숫자·`_` 4~20자 (대문자로 입력해도 소문자로 바뀌어요). 중복 불가 (가입할 때 `usernames` 문서를 트랜잭션으로 먼저 잡아요)
 - 비밀번호: 8자 이상
-- 예전에 닉네임으로 시작한 사람은 **같은 휴대폰에서 회원가입**하면 그 기록이 새 아이디 계정으로 그대로 이어져요
-
-### 비밀번호를 잊었을 때 (관리자가 할 일)
-메일을 보낼 수 없어서 앱의 "아이디·비밀번호 찾기" 화면은 팀에 연락하라는 안내만 보여줘요. 연락이 오면 **SQL Editor**에서:
-```sql
--- 1) 닉네임으로 아이디 찾기
-select p.username, p.nickname, u.created_at
-from public.profiles p join auth.users u on u.id = p.id
-where p.nickname = '닉네임';
-
--- 2) 임시 비밀번호 설정 (8자 이상). 알려 준 뒤 로그인하게 하세요
-update auth.users
-set encrypted_password = extensions.crypt('임시비밀번호123', extensions.gen_salt('bf'))
-where email = '아이디@lessgo.local';
-```
-비밀번호는 메시지로 받지 말고, 새 임시 비밀번호만 알려 주세요.
+- 구글 계정은 아이디 없이 닉네임만 있어요
 
 ### 알아 둘 점
-- 가입할 때 "서버가 로그인 주소를 받아 주지 않았어요"가 뜨면 Supabase가 `lessgo.local` 주소를 거부한 거예요. `src/lib/auth.js`의 `AUTH_EMAIL_DOMAIN`을 팀이 가진 도메인 등으로 바꾸세요. **바꾸면 그전에 만든 계정은 로그인할 수 없으니** 사용자가 생기기 전에 정하세요.
-- 표(테이블)는 Supabase **Table Editor**에서 바로 볼 수 있어요. 가입한 계정은 **Authentication → Users**에 `아이디@lessgo.local`로 보여요.
-- 모든 표에 RLS(행 단위 보안)를 켜 둬서 각자 자기 기록만 읽고 써요. 랭킹은 닉네임과 칸 수만, 아이디 중복 확인은 "쓸 수 있다/없다"만 알려줘요.
-- 무료 프로젝트는 한동안 안 쓰면 일시정지될 수 있어요. 본선 전에 한 번 열어 두세요.
-- `anon` 키는 앱에 넣어도 되는 공개용 키예요. **`service_role` 키는 절대 넣지 마세요.**
+- **이메일 공개 범위**: 아이디로 로그인하려면 로그인 전에 이메일을 찾아야 해서, 아이디를 아는 사람은 그 아이디의 이메일을 조회할 수 있어요 (목록으로 한꺼번에 가져가는 건 막혀 있어요). 가입 화면에도 이 안내를 적어 뒀어요.
+- **같은 사람이 계정 두 개**: 아이디 계정과 구글 계정은 따로예요. 지금은 연결(linkWithCredential) 기능을 넣지 않았어요.
+- **랭킹 칸 수는 앱이 직접 써요**: 무료 플랜이라 서버 함수로 검증하지 않아요. 규칙은 "본인 문서만, 0 이상 숫자"까지만 막아요.
+- **홈 화면 앱에서 구글 로그인**: 홈 화면에 추가한 앱은 팝업을 못 열어서 페이지 이동 방식으로 로그인해요. 그런데 `authDomain`(`*.firebaseapp.com`)이 앱 주소와 다른 사이트라, 요즘 브라우저(Chrome·Safari·Firefox)의 저장소 분리 때문에 돌아와도 로그인이 안 될 수 있어요 (에뮬레이터로 확인함). 이때는 Safari에서 로그인한 뒤 홈 화면 앱을 쓰거나, 아이디 로그인을 쓰세요. 완전히 고치려면 Firebase 문서 "signInWithRedirect 권장사항"의 프록시 방식(`/__/auth/`를 `firebaseapp.com`으로 넘기고 `VITE_FIREBASE_AUTH_DOMAIN`을 배포 주소로)을 쓰면 돼요.
+- 예전 Supabase 표·SQL은 저장소 맨 위 `docs/legacy-supabase/`에 보관했어요. 예전 Supabase 계정과 기록은 옮겨 오지 않아요.
+- 키를 안 넣으면(로컬 모드) 비밀번호 없이 아이디만으로 들어가고, 구글 버튼은 숨겨지며, 기록은 그 휴대폰에만 저장돼요.
 
 ---
 
@@ -165,7 +198,7 @@ run/
 │  ├─ state/
 │  │  ├─ AppContext.jsx       앱 전체 상태 (지금 화면, 설정, 고른 코스…)
 │  │  ├─ useRun.js            달리기 진행 (GPS → 거리 → 안내 → 도착 → 완주)
-│  │  └─ useUserData.js       기록 저장 (Supabase 또는 로컬)
+│  │  └─ useUserData.js       로그인·기록 저장 (Firebase 또는 로컬)
 │  └─ lib/                    화면과 상관없는 계산 도구
 │     ├─ i18n.js              화면 문구 (영어/한국어) ← 문구 수정은 여기
 │     ├─ gps.js               실제 GPS + 시연 모드
@@ -173,18 +206,19 @@ run/
 │     ├─ voice.js             음성 안내
 │     ├─ recommend.js         코스 추천 (규칙 → 나중에 AI)
 │     ├─ ask.js / ai.js       질문하기 / AI 추천 호출
-│     ├─ supabase.js          Supabase 연결
+│     ├─ firebase.js          Firebase 연결 · auth.js 아이디 규칙·오류 안내
 │     ├─ data.js / geo.js     데이터 불러오기 / 거리 계산
 ├─ public/data/               ← 데이터 담당이 채우는 곳 (빌드 없이 바로 반영)
-│  ├─ spots.json · courses.geojson · shops.json
-├─ supabase/schema.sql        Supabase 표 만들기
+│  ├─ spots.json · shops.json
+│  ├─ lessgo/routes.json · routes.geojson   코스 번들 (팀원 데이터, 목적지 3 × 3/5/10km × low/high)
+├─ firestore.rules            Firestore 보안 규칙 (콘솔에 붙여 넣기)
 ├─ api/
 │  ├─ ask.js                  AI 질문 답변 (Vercel 서버 함수)
 │  ├─ recommend.js            AI 코스 추천
 │  └─ _lib/gemini.js          Gemini 호출 공통 (재시도·JSON 형식)
 ├─ eval/qa-gilsangsa.json     AI 정확도 채점용 정답 질문
 ├─ scripts/eval-ask.mjs       채점 스크립트 (npm run eval:ask)
-└─ .env.example               Supabase 키 넣는 법 (복사해서 .env.local)
+└─ .env.example               Firebase·카카오·Gemini 키 넣는 법 (복사해서 .env.local)
 ```
 
 **박민규 님과 나누기 좋은 단위**: 화면 파일 단위(예: 한 명은 `Courses.jsx`, 한 명은 `Spot.jsx`)로 나누면 서로 충돌이 적어요.
@@ -214,24 +248,14 @@ run/
 }
 ```
 
-### 코스: `public/data/courses.geojson`
-https://geojson.io 에서 선으로 실제 길을 따라 그리고 `properties`를 채워요.
-```json
-{
-  "id": "gilsangsa-run",
-  "name": { "en": "", "ko": "" },
-  "themes": ["fortress","stream","park","alley"],
-  "hill": "flat | mild | hard",
-  "tone": "easy | normal | hard",
-  "lamps": 1,
-  "crowd": "low | mid",
-  "residential": true,
-  "spots": ["gilsangsa"],
-  "elevation": [40, 45, 52],
-  "cues": [ { "at": [경도, 위도], "text": { "en": "", "ko": "" } } ]
-}
-```
-좌표 순서는 **[경도, 위도]** 예요. 거리·예상 시간·오르막 합계는 앱이 계산해요.
+### 코스: `public/data/lessgo/` (팀원 번들 그대로 복사)
+`outputs/react_vite_integration_20261103_final/`의 `routes.json`, `routes.geojson`을 이 폴더에 복사해요. 앱은 `src/lib/routes.js`에서 이렇게 읽어요.
+- 조회: `routes.destinations[목적지].distances['3km'|'5km'|'10km'].routes['low'|'high']` (`'any'`는 `'high'`로)
+- 선: `route.feature_id`로 `routes.geojson`의 feature를 찾아 ORS LineString 그대로 (좌표는 **[경도, 위도, 고도]**)
+- 거리·오르막: `route.summary`. 예상 시간은 1km 6분 30초로 앱이 계산 (ORS 걷기 시간은 안 씀)
+- 배지: `status === 'review_required'` → 검토 필요, `elevation.confidence === 'low'` → 고도 추정값, `formal_recommendation === true`일 때만 "오늘 가장 잘 맞는 코스"
+- 목적지 id(`simujang`, `jeongneung`, `uiryeong`)가 `spots.json`의 id와 같아서 그걸로 해설을 연결해요
+- 화면에서 숨길 장소는 `src/lib/data.js`의 `HIDDEN_SPOTS` (지금은 길상사)
 
 ---
 
@@ -247,15 +271,15 @@ https://geojson.io 에서 선으로 실제 길을 따라 그리고 `properties`�
 
 ## 9. 기술 스택 (발표용 한 줄)
 
-**React 18 + Vite · Noto Sans KR · 카카오맵 (react-kakao-maps-sdk) · H3 육각형 격자 · Web Speech 음성 · Supabase(아이디·비밀번호 로그인·Postgres·RLS) · Gemini(자료 기반 질의응답) · Vercel 배포 — 운영비 0원**
+**React 18 + Vite · Noto Sans KR · 카카오맵 (react-kakao-maps-sdk) · H3 육각형 격자 · Web Speech 음성 · Firebase(아이디·구글 로그인·Firestore·보안 규칙, 무료 Spark) · Gemini(자료 기반 질의응답) · Vercel 배포 — 운영비 0원**
 
 ## 10. 다음에 할 일
 
-1. Supabase 연결 (4번), 실제 데이터로 교체 (7번)
+1. Firebase 보안 규칙 게시·승인된 도메인 추가 (4번), 실제 데이터로 교체 (7번)
 2. Vercel 배포 후 성북천에서 실제로 달려 보기 (GPS·음성 타이밍 확인)
 3. Gemini 키 받아서 연결 (5번) → `npm run eval:ask`로 정확도 확인
 4. 발표 대비: 시연 모드로 전체 흐름 화면 녹화
-5. 2단계: 진짜 QR, 구글 로그인, Capacitor로 앱 감싸 화면 꺼진 상태 GPS
+5. 2단계: 진짜 QR, 아이디·구글 계정 연결, Capacitor로 앱 감싸 화면 꺼진 상태 GPS
 
 ---
 지도 © Kakao · H3 (Uber, Apache 2.0) · react-kakao-maps-sdk (MIT) · React (MIT)

@@ -1,0 +1,46 @@
+// LessGo Firestore 보안 규칙
+// 적용: Firebase 콘솔 → Firestore Database → 규칙 탭 → 이 파일 내용을 전부 붙여 넣고 "게시" (README 4번)
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    // 내 프로필과 기록(runs, cells, stamps, coupons, starEvents): 본인만 읽고 쓰기
+    match /users/{uid} {
+      allow read, write: if isOwner(uid);
+      match /{sub=**} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // 아이디 → { uid, email }
+    // 아이디로 로그인할 때 이메일을 찾아야 해서 누구나 읽을 수 있어요.
+    // 다만 아이디 하나씩 조회(get)만 되고, 전체 목록(list)은 막아서 이메일을 한꺼번에 가져갈 수 없어요.
+    match /usernames/{name} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if request.auth != null
+        && name.matches('^[a-z0-9_]{4,20}$')
+        && request.resource.data.keys().hasOnly(['uid', 'email'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email;
+      allow update, delete: if false;
+    }
+
+    // 영역 랭킹: 누구나 읽기, 본인 문서만 쓰기. nickname(1~20자)과 cells(0 이상 숫자)만 허용
+    match /leaderboard/{uid} {
+      function validBoard() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['nickname', 'cells'])
+          && d.cells is number && d.cells >= 0
+          && (!('nickname' in d) || (d.nickname is string && d.nickname.size() >= 1 && d.nickname.size() <= 20));
+      }
+      allow read: if true;
+      allow create, update: if isOwner(uid) && validBoard();
+      allow delete: if isOwner(uid);
+    }
+  }
+}

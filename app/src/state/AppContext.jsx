@@ -10,7 +10,12 @@ import { useRun } from "./useRun.js";
 const Ctx = createContext(null);
 export const useApp = () => useContext(Ctx);
 
+// 로그인 없이 볼 수 있는 화면
+const AUTH_SCREENS = new Set(["loading", "onboarding", "signup", "find", "nickname"]);
+
 export const CENTER = [37.5915, 127.0035]; // 한성대입구역~성북동 사이
+export const HOME_CENTER = [37.5894, 127.0167]; // 홈 지도 첫 화면: 성북구 가운데
+export const HOME_LEVEL = 6;
 
 function autoTime() {
   const h = new Date().getHours();
@@ -47,10 +52,25 @@ export function AppProvider({ children }) {
     loadWeather().then(setWeather);
   }, []);
 
-  // 데이터와 로그인 확인이 끝나면 첫 화면으로
+  // 로딩 화면의 새가 날아 들어오는 동안(1.8초)은 보여줘요. 움직임 줄이기 설정이면 기다리지 않아요.
+  const [introDone, setIntroDone] = useState(() => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
   useEffect(() => {
-    if (screen === "loading" && data && user.ready) setScreen(user.profile ? "home" : "onboarding");
-  }, [screen, data, user.ready, user.profile]);
+    if (introDone) return;
+    const id = setTimeout(() => setIntroDone(true), 1800);
+    return () => clearTimeout(id);
+  }, [introDone]);
+
+  // 데이터와 로그인 확인이 끝나면 첫 화면으로 (구글로 처음 들어온 사람은 닉네임 정하기부터)
+  useEffect(() => {
+    if (screen === "loading" && data && user.ready && introDone) {
+      setScreen(user.profile ? "home" : user.needsNickname ? "nickname" : "onboarding");
+    }
+  }, [screen, data, user.ready, user.profile, user.needsNickname, introDone]);
+
+  // 다른 탭에서 로그아웃했거나 세션이 끝나면 로그인 화면으로 돌아가요
+  useEffect(() => {
+    if (user.ready && !user.profile && !user.needsNickname && !AUTH_SCREENS.has(screen)) setScreen("onboarding");
+  }, [screen, user.ready, user.profile, user.needsNickname]);
 
   const changeLang = (l) => { setLang(l); setLangState(l); };
   const setDemo = (v) => { setDemoState(v); try { localStorage.setItem("runtrip.demo", v ? "on" : "off"); } catch {} };
