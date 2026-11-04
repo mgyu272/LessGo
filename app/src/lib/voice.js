@@ -9,8 +9,50 @@ if (synth) { loadVoices(); synth.onvoiceschanged = loadVoices; }
 
 function pickVoice(lang) {
   const want = lang === "ko" ? "ko" : "en";
-  return voices.find((v) => v.lang.startsWith(want) && /Google|Samantha|Natural|Siri/i.test(v.name))
-      || voices.find((v) => v.lang.startsWith(want));
+  const matching = voices.filter((v) => v.lang.toLowerCase().startsWith(want));
+  const feminineNames = /female|woman|samantha|siri|zira|jenny|aria|ava|yuna|sora|heami|susan/i;
+  return matching.find((v) => v.lang.toLowerCase() === (lang === "ko" ? "ko-kr" : "en-us") && feminineNames.test(v.name))
+      || matching.find((v) => feminineNames.test(v.name))
+      || matching.find((v) => v.lang.toLowerCase() === (lang === "ko" ? "ko-kr" : "en-us"))
+      || matching[0];
+}
+
+export function speechSupported() {
+  return Boolean(synth && typeof window.SpeechSynthesisUtterance === "function");
+}
+
+// Controllable narration for the AI History Lens. Existing speak() behavior used by
+// running cues and story playback remains unchanged. The returned handle controls
+// only the utterance this call created, while speechSynthesis is shared by the app.
+export function speakManaged(text, { lang = "en", onstart, onend, onerror, onpause, onresume } = {}) {
+  if (!speechSupported() || !String(text || "").trim()) return null;
+  loadVoices(); // Some mobile browsers populate the list lazily; an empty list uses their default voice.
+  synth.cancel(); // Prevent overlap with a running cue or the existing story TTS.
+  const utterance = new window.SpeechSynthesisUtterance(text);
+  const locale = lang === "ko" ? "ko-KR" : "en-US";
+  utterance.lang = locale;
+  const selectedVoice = pickVoice(lang);
+  if (selectedVoice) utterance.voice = selectedVoice;
+  utterance.rate = lang === "ko" ? 0.94 : 0.93;
+  utterance.pitch = 1.04;
+
+  let active = true;
+  utterance.onstart = () => { if (active) onstart?.(); };
+  utterance.onend = () => { if (active) { active = false; onend?.(); } };
+  utterance.onerror = (event) => { if (active) { active = false; onerror?.(event); } };
+  utterance.onpause = () => { if (active) onpause?.(); };
+  utterance.onresume = () => { if (active) onresume?.(); };
+  synth.speak(utterance);
+
+  return {
+    pause() { if (active && !synth.paused) synth.pause(); },
+    resume() { if (active && synth.paused) synth.resume(); },
+    stop() {
+      if (!active) return;
+      active = false;
+      synth.cancel();
+    },
+  };
 }
 
 export function unlock() {
