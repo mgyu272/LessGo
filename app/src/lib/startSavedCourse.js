@@ -6,10 +6,6 @@ const START_RADIUS_M = 150;
 
 export async function startSavedCourse(app, course, speedup = 10) {
   if (!course?.path?.length) { app.toast("코스 데이터를 불러오지 못했어요."); return; }
-  if (app.demo) {
-    app.run.start(course, { demo: true, speedup });
-    return;
-  }
   if (!navigator.geolocation || !window.isSecureContext) {
     app.toast("실제 GPS는 HTTPS와 위치 권한이 필요해요.");
     return;
