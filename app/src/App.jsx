@@ -8,9 +8,10 @@ import Home from "./screens/Home.jsx";
 import CoursePicker from "./screens/Courses.jsx";
 import Run from "./screens/Run.jsx";
 import { Spot, Shops, Coupon } from "./screens/Spot.jsx";
-import { Finish, Stars, Records } from "./screens/Me.jsx";
+import { Stars, Records } from "./screens/Me.jsx";
 import { Login, Signup, FindAccount, Nickname } from "./screens/Auth.jsx";
 import Loading from "./screens/Loading.jsx";
+import RunDone from "./screens/RunDone.jsx";
 
 const SCREENS = {
   onboarding: [Login],             // 시작 화면 = 로그인
@@ -23,7 +24,7 @@ const SCREENS = {
   spot: [Spot],
   shops: [Spot, Shops],            // 스팟 화면 위에 가게 시트
   coupon: [Coupon],
-  finish: [Finish],
+  finish: [RunDone],               // 완주 요약 (자유 달리기 · 코스 중간 종료)
   stars: [Stars],
   records: [Records],
   stats: [Records],

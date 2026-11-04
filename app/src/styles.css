@@ -871,3 +871,43 @@ small { font-size: 12px; }
 .s2-dots i.on { width: 16px; background: var(--brand); }
 .spot-sheet2 .cta-row { padding: 8px 22px 0; flex: none; }
 .spot-sheet2 .foot { padding: 0 22px calc(10px + var(--safe-bottom)); flex: none; }
+
+/* ---------- ⑥-1 완주 요약 (RunDone.dc.html) ---------- */
+.done-screen { background: var(--bg-soft); }
+.done-scroll { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: none; padding: calc(28px + var(--safe-top)) 20px 170px; display: flex; flex-direction: column; gap: 16px; }
+.done-scroll::-webkit-scrollbar { display: none; }
+.done-head { display: flex; align-items: center; gap: 14px; }
+.done-stamp { flex: none; display: inline-flex; filter: drop-shadow(0 10px 10px rgba(95, 165, 42, .35)); animation: stamp .6s var(--ease-out) both; }
+.kicker2 { font-size: 13px; font-weight: 700; color: var(--link); }
+.done-head h1 { margin: 2px 0 0; font-size: 26px; font-weight: 800; line-height: 1.25; letter-spacing: -.02em; }
+.done-map { border-radius: 22px; overflow: hidden; flex: none; }
+.dm-map { position: relative; height: 230px; }
+.dm-map .map { position: absolute; inset: 0; }
+.dm-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 14px 16px; }
+.dm-stats > div { display: flex; flex-direction: column; gap: 2px; }
+.dm-stats > div + div { padding-left: 14px; border-left: 1px solid var(--handle); }
+.dm-stats b { font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+.dm-stats small, .done-earn small { font-size: 12px; font-weight: 500; color: var(--muted); }
+.done-earn { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.done-earn > div { border-radius: 18px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.done-earn span { display: flex; align-items: center; gap: 6px; font-size: 22px; font-weight: 800; }
+.done-earn svg { width: 18px; height: 18px; fill: none; stroke: var(--brand); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.done-earn svg.fill { fill: var(--brand); stroke: none; }
+.done-near { display: flex; flex-direction: column; gap: 10px; }
+.done-near h2 { margin: 4px 2px 0; font-size: 15px; font-weight: 700; }
+.dn-card { border-radius: 18px; padding: 12px; display: flex; align-items: center; gap: 12px; text-align: left; color: var(--text); }
+.dn-ic { width: 48px; height: 48px; flex: none; border-radius: 14px; background: var(--chip); display: grid; place-items: center; }
+.dn-ic svg { width: 32px; height: 32px; }
+.dn-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.dn-text b { font-size: 15px; font-weight: 700; }
+.dn-text small { font-size: 12px; color: var(--muted); }
+.done-coupon { border-radius: 18px; padding: 14px; display: flex; align-items: center; gap: 12px; text-align: left; color: var(--text); }
+.done-coupon > svg:first-child { width: 22px; height: 22px; flex: none; fill: none; stroke: var(--brand); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.done-coupon > span { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.done-coupon b { font-size: 14px; font-weight: 700; }
+.done-coupon small { font-size: 12px; color: var(--muted); }
+.done-cta { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 30px 20px calc(22px + var(--safe-bottom)); background: linear-gradient(180deg, rgba(233, 246, 214, 0) 0%, var(--bg-soft) 34%); display: flex; flex-direction: column; gap: 10px; }
+.done-cta .btn { margin: 0; }
+.done-cta .btn-cta { min-height: 56px; border-radius: 18px; font-size: 16px; font-weight: 800; }
+.done-cta .btn-soft { min-height: 50px; border-radius: 18px; color: var(--strong); }
+.done-cta .share { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
