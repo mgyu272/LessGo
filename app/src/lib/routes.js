@@ -75,8 +75,13 @@ function makeCourse({ dest, km, mode, route, coords, spot }) {
     themes: [], lamps: 2, crowd: "mid", residential: false,
     tone: mode === "low" ? "easy" : "normal",
   };
-  // 음성 길안내(cues)는 이번 작업에서 연결하지 않아요 (route.directions는 영어 ORS 안내라 따로 다듬어야 해요)
-  return { id: p.id, properties: p, path, len, cues: [] };
+  const cues = (route.directions || []).map((step) => {
+    const idx = step.way_points?.[0];
+    if (!Number.isInteger(idx) || idx < 0 || idx >= path.length) return null;
+    if (step.type === 10) return null; // 중간 경유지의 도착 문구를 최종 도착으로 오인하지 않음
+    return { pos: path[idx], text: directionText(step) };
+  }).filter(Boolean);
+  return { id: p.id, properties: p, path, len, cues };
 }
 
 // 고도 그래프용: 좌표의 세 번째 값(고도)을 거리 기준으로 60개 정도로 줄여요. 고도가 없으면 빈 배열
@@ -95,4 +100,20 @@ function sampleElevation(coords, path, n = 60) {
     out.push(Math.round((a + (b - a) * t) * 10) / 10);
   }
   return out;
+}
+
+// 저장된 ORS 안내 데이터를 실제 GPS 음성 안내에 재사용합니다.
+function directionText(step) {
+  const instruction = String(step.instruction || "").trim();
+  const type = step.type;
+  const street = instruction.match(/onto (.+)$/i)?.[1] || "";
+  const suffix = street ? ` (${street})` : "";
+  const ko = type === 0 ? "좌회전하세요" : type === 1 ? "우회전하세요"
+    : type === 2 ? "급좌회전하세요" : type === 3 ? "급우회전하세요"
+    : type === 4 ? "약간 좌회전하세요" : type === 5 ? "약간 우회전하세요"
+    : type === 6 ? "직진하세요" : type === 7 ? "회전교차로를 따라 이동하세요"
+    : type === 11 ? "경로를 따라 출발하세요"
+    : type === 12 ? "왼쪽 길을 따라 이동하세요" : type === 13 ? "오른쪽 길을 따라 이동하세요"
+    : "경로를 따라 이동하세요";
+  return { ko: ko + suffix, en: instruction || "Follow the route" };
 }
