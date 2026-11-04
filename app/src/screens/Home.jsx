@@ -11,7 +11,6 @@ import { LangPill, ElevationChart } from "../components/Bits.jsx";
 import { useBottomSheet, BottomSheet, Segment, Badge } from "../components/ui.jsx";
 import { DESTINATIONS, DISTANCES } from "../lib/routes.js";
 import { getCourse } from "../lib/data.js";
-import { startSavedCourse } from "../lib/startSavedCourse.js";
 
 const FILTERS = [["all", "filter_all"], ["history", "filter_history"], ["stream", "filter_stream"], ["park", "filter_park"]];
 // 바텀시트가 멈추는 높이 (px). 가운데(처음) 높이는 420인데, 낮은 화면(아이폰 SE 등)에서는
@@ -115,7 +114,7 @@ export default function Home() {
             options={DISTANCES.map((km) => ({ value: km, label: <>{km}<small>km</small></>, sub: t("km_" + km) }))} />
 
           {pick ? <TodayCard course={pick} onMore={() => openCourses(pick.properties.dest)}
-            onStart={() => startSavedCourse(app, pick, speedParam())}
+            onStart={() => { app.setCourse(pick); app.go("toStart"); }}
             onSimulation={() => app.run.start(pick, { demo: true, speedup: speedParam() })} /> : (
             // 이 거리에는 정식 추천 경로가 없어서 추천 카드를 숨기고, 코스 고르기로 가는 버튼만 둬요
             <button className="btn btn-soft today-none" onClick={() => openCourses()}>{t("pick_course_km", { km: settings.km })}</button>
