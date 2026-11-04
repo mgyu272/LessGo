@@ -117,6 +117,18 @@ export function CourseList() {
   );
 }
 
+// 번들 검수 상태 안내: 검토가 필요한 경로, 고도 신뢰도가 낮은 경로
+export function RouteFlags({ p }) {
+  const review = p.status === "review_required";
+  if (!review && !p.elevationLow) return null;
+  return (
+    <div className="route-flags">
+      {review && <span className="flag flag-warn"><i aria-hidden="true">!</i>{t("flag_review")}</span>}
+      {p.elevationLow && <span className="flag flag-elev">{t("flag_elev")}</span>}
+    </div>
+  );
+}
+
 function CourseCard({ c, top, reason, onClick }) {
   const app = useApp();
   const p = c.properties;
@@ -127,6 +139,7 @@ function CourseCard({ c, top, reason, onClick }) {
       {top && p.formal && <div className="best">{t("best_match")}</div>}
       <div className="row-between"><h3>{loc(p.title)}</h3><span className={`tone ${p.tone}`}>{loc(p.modeName)}</span></div>
       <p className="sub">{t("to_place", { name: loc(spotName(p.dest)) })}</p>
+      <RouteFlags p={p} />
       {reason && <p className="ai-reason"><span aria-hidden="true">✦</span> {reason}</p>}
       <ElevationChart values={p.elevation} {...(top ? { color: "#E6F7CC", fill: "rgba(230,247,204,.3)" } : {})} />
       <div className="row-between">
@@ -169,6 +182,7 @@ export function CourseDetail() {
         <div className="scroll-y">
           <p className="eyebrow purple">{p.km}km · {loc(p.modeName)}</p>
           <h2>{t("ways_to", { name: place, n: pair.length })}</h2>
+          <RouteFlags p={p} />
           <div className="seg mode-seg" role="radiogroup" aria-label={t("route_type")}>
             {pair.map((o) => (
               <button key={o.id} role="radio" aria-checked={o.id === c.id} className={o.id === c.id ? "on" : ""} onClick={() => pick(o)}>
