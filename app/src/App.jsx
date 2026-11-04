@@ -5,7 +5,7 @@ import { useApp } from "./state/AppContext.jsx";
 import { PhoneFrame } from "./components/PhoneFrame.jsx";
 import { TabBar, Toast } from "./components/Bits.jsx";
 import Home from "./screens/Home.jsx";
-import { Settings, CourseList, CourseDetail } from "./screens/Courses.jsx";
+import CoursePicker from "./screens/Courses.jsx";
 import Run from "./screens/Run.jsx";
 import { Spot, Shops, Coupon } from "./screens/Spot.jsx";
 import { Finish, Stars, Records } from "./screens/Me.jsx";
@@ -18,10 +18,7 @@ const SCREENS = {
   find: [FindAccount],
   nickname: [Nickname],            // 구글로 처음 들어온 사람
   home: [Home],
-  settings: [Home, Settings],      // 시안처럼 홈 지도 위에 설정 시트를 띄워요
-  list: [CourseList],
-  courses: [CourseList],           // 코스 고르기 (다음 단계에서 새 화면으로 바꿔요)
-  detail: [CourseDetail],
+  courses: [CoursePicker],         // 코스 고르기 (예전 조건 시트 · 코스 3개 · 코스 상세를 합침)
   run: [Run],
   spot: [Spot],
   shops: [Spot, Shops],            // 스팟 화면 위에 가게 시트

@@ -102,6 +102,16 @@ export function Badge({ tone = "green", children, className = "" }) {
   return <span className={`ui-badge ${tone} ${className}`}>{children}</span>;
 }
 
+// ---------- 켜고 끄는 줄 (제목 + 설명 + 스위치) ----------
+export function Toggle({ checked, onChange, title, sub, className = "" }) {
+  return (
+    <label className={`toggle-row ${className}`}>
+      <span><b>{title}</b><small>{sub}</small></span>
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} /><i className="switch" />
+    </label>
+  );
+}
+
 // ---------- 확인 다이얼로그 ----------
 export function ConfirmDialog({ open, title, body, confirmLabel, cancelLabel, onConfirm, onCancel }) {
   const okRef = useRef(null);

@@ -730,3 +730,76 @@ small { font-size: 12px; }
   .ld-trail { stroke-dashoffset: 0; }
   .ob-route { stroke-dashoffset: 0; }
 }
+
+/* ---------- ③ 코스 고르기 (Courses.dc.html) ---------- */
+.picker-screen { background: var(--bg-soft); }
+.picker-map { position: absolute; inset: 0; }
+.picker-top { position: absolute; left: 0; right: 0; top: calc(10px + var(--safe-top)); z-index: 6; display: flex; flex-direction: column; gap: 8px; }
+.picker-title { display: flex; align-items: center; gap: 8px; padding: 0 14px; }
+.round-btn { width: 44px; height: 44px; flex: none; border-radius: 22px; display: grid; place-items: center; color: var(--text); }
+.round-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.picker-title h1 { margin: 0; height: 44px; padding: 0 16px; border-radius: 22px; display: flex; align-items: center; font-size: 16px; font-weight: 800; }
+.picker-chips { display: flex; gap: 8px; overflow-x: auto; padding: 0 14px 4px; }
+.picker-chips .ui-chip { font-weight: 700; padding: 0 12px 0 14px; }
+.picker-empty { position: absolute; left: 20px; right: 20px; top: 140px; }
+.picker-sheet { z-index: 7; border-radius: 28px 28px 0 0; background: linear-gradient(180deg, #F2F9E6 0%, #FBFBF4 30%, #FFFFFF 100%); box-shadow: 0 -10px 30px rgba(30, 43, 23, .14); }
+.picker-body { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 0 20px 24px; }
+.picker-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.picker-head h2 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
+.picker-more { flex: none; min-height: 36px; padding: 0 12px; border-radius: 18px; background: var(--chip); color: var(--strong); font-size: 12px; font-weight: 700; }
+.rail { scrollbar-width: none; display: flex; gap: 10px; overflow-x: auto; margin: 0 -20px; padding: 4px 20px 8px; scroll-snap-type: x mandatory; flex: none; }
+.rc { flex: 0 0 272px; scroll-snap-align: start; border-radius: 20px; padding: 14px; text-align: left; display: flex; flex-direction: column; gap: 8px; color: var(--text); transition: box-shadow .2s; }
+.rc.on { box-shadow: inset 0 0 0 2px #8FCB4E, 0 12px 26px -16px rgba(63, 127, 28, .6); }
+.rc-top { display: flex; align-items: center; gap: 8px; width: 100%; }
+.rc-dot { width: 12px; height: 12px; border-radius: 6px; flex: none; }
+.rc-top b { font-size: 17px; font-weight: 800; }
+.rc-badges { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+.rc-sub { font-size: 13px; font-weight: 500; color: var(--muted); }
+.rc-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; width: 100%; }
+.rc-stats > span { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.rc-stats b { font-size: 19px; font-weight: 800; white-space: nowrap; }
+.rc-stats small { font-size: 11px; font-weight: 600; color: var(--muted); }
+.rc .elev { width: 100%; height: 30px; margin: 0; }
+.rc-other { background: rgba(246, 252, 234, .8); box-shadow: inset 0 0 0 1.5px var(--border); justify-content: center; }
+.rc-other b { font-size: 16px; font-weight: 800; }
+.rc-other small { font-size: 13px; color: var(--muted); }
+.rc-icons { display: flex; }
+.rc-icons span { width: 34px; height: 34px; margin-right: -6px; border-radius: 17px; background: #FFFFFF; box-shadow: 0 0 0 2px var(--border); display: grid; place-items: center; }
+.rc-icons svg { width: 24px; height: 24px; }
+.rc-link { font-size: 13px; font-weight: 700; color: var(--strong); }
+.picker-reason, .picker-warn { margin: 0; border-radius: 14px; padding: 10px 12px; display: flex; gap: 8px; font-size: 13px; line-height: 1.5; }
+.picker-reason { font-weight: 600; color: var(--strong); }
+.picker-warn { background: #FFF6E8; box-shadow: inset 0 0 0 1px #F5D9AE; font-size: 12px; font-weight: 500; color: #7A4A0C; }
+.picker-reason svg, .picker-warn svg { width: 16px; height: 16px; flex: none; margin-top: 2px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cmp-table { border-radius: 18px; padding: 4px 14px; flex: none; }
+.cmp { display: grid; grid-template-columns: 84px 1fr 1fr; align-items: center; padding: 10px 0; border-top: 1px solid #EAF3DD; font-size: 14px; }
+.cmp:first-child { border-top: 0; }
+.cmp-h { font-size: 12px; font-weight: 700; }
+.cmp-h.low { color: var(--strong); }
+.cmp-h.high { color: #8A4B0C; }
+.cmp-k { font-size: 13px; font-weight: 600; color: var(--muted); }
+.cmp-on { font-weight: 800; color: var(--text); }
+.cmp-off { color: #5E7650; }
+.timeline h3 { margin: 4px 0 10px; font-size: 15px; font-weight: 700; }
+.timeline ol { margin: 0; padding: 0; list-style: none; }
+.tl { position: relative; display: flex; gap: 12px; padding-bottom: 16px; }
+.tl:last-child { padding-bottom: 0; }
+.tl::before { content: ""; position: absolute; left: 11px; top: 24px; bottom: -2px; width: 2px; background: var(--border); }
+.tl:last-child::before { display: none; }
+.tl-dot { width: 24px; height: 24px; flex: none; border-radius: 12px; color: #FFFFFF; display: grid; place-items: center; position: relative; z-index: 1; }
+.tl-dot svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.tl-dot.start { background: var(--strong); }
+.tl-dot.shop { background: #8A6D12; }
+.tl-dot.end { background: var(--strong); }
+.tl > span:last-child { display: flex; flex-direction: column; gap: 2px; }
+.tl b { font-size: 14px; font-weight: 700; }
+.tl small { font-size: 12px; color: var(--muted); }
+.picker-body .demo-row { flex: none; }
+.picker-spacer { height: 70px; flex: none; }
+.picker-cta { position: absolute; left: 0; right: 0; bottom: 0; z-index: 8; padding: 20px 20px calc(22px + var(--safe-bottom)); background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 38%); display: flex; gap: 10px; }
+.picker-cta .btn { margin: 0; flex: 1; min-height: 58px; border-radius: 18px; font-size: 16px; font-weight: 800; }
+.picker-cta .play { width: 16px; height: 16px; fill: currentColor; }
+.picker-heart { width: 58px; height: 58px; flex: none; border-radius: 18px; color: var(--strong); display: grid; place-items: center; }
+.picker-heart svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rail::-webkit-scrollbar, .picker-chips::-webkit-scrollbar, .picker-body::-webkit-scrollbar { display: none; }
+.picker-chips, .picker-body { scrollbar-width: none; }
