@@ -303,6 +303,16 @@ export function useUserData() {
     if (uid) addDoc(collection(db, "users", uid, "starEvents"), { amount, reason: reason ?? null, created_at: serverTimestamp() }).catch(warn("starEvents"));
   }, []);
 
+  // 장소 정보 신고 (정보가 달라요) → Firestore reports. 로그인한 사용자만, 읽기는 막혀 있어요(보안 규칙)
+  const sendReport = useCallback(async ({ spotId, reason, note }) => {
+    if (!hasFirebase) return { ok: false, error: "report_local" };
+    const uid = remoteUid(); if (!uid) return { ok: false, error: "report_login" };
+    try {
+      await addDoc(collection(db, "reports"), { spotId, reason, note: (note || "").trim().slice(0, 500), uid, createdAt: serverTimestamp() });
+      return { ok: true };
+    } catch (e) { return fail("report", e); }
+  }, []);
+
   // 영역 랭킹: leaderboard를 칸 수 내림차순으로 20명. 로컬 모드면 null.
   const leaderboard = useCallback(async () => {
     const uid = remoteUid(); if (!uid) return null;
@@ -321,6 +331,6 @@ export function useUserData() {
     ready, profile, runs, cells, stamps, coupons, bonus, totalStars, online: hasFirebase, needsNickname,
     authError, clearAuthError: () => setAuthError(null),
     signIn, signInGoogle, signUp, setNickname, sendReset, signOut,
-    addCells, hasCell, addStamp, addRun, addCoupon, addBonus, leaderboard,
+    addCells, hasCell, addStamp, addRun, addCoupon, addBonus, leaderboard, sendReport,
   };
 }

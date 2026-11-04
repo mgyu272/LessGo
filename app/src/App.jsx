@@ -12,6 +12,8 @@ import { Stars, Records } from "./screens/Me.jsx";
 import { Login, Signup, FindAccount, Nickname } from "./screens/Auth.jsx";
 import Loading from "./screens/Loading.jsx";
 import RunDone from "./screens/RunDone.jsx";
+import Places from "./screens/Places.jsx";
+import PlaceDetail from "./screens/PlaceDetail.jsx";
 
 const SCREENS = {
   onboarding: [Login],             // 시작 화면 = 로그인
@@ -20,6 +22,8 @@ const SCREENS = {
   nickname: [Nickname],            // 구글로 처음 들어온 사람
   home: [Home],
   courses: [CoursePicker],         // 코스 고르기 (예전 조건 시트 · 코스 3개 · 코스 상세를 합침)
+  places: [Places],                // 장소와 이야기
+  place: [PlaceDetail],            // 장소 상세 (app.spot)
   run: [Run],
   spot: [Spot],
   shops: [Spot, Shops],            // 스팟 화면 위에 가게 시트
