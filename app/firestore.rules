@@ -30,6 +30,18 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // 장소 정보 신고 ("정보가 달라요"): 로그인한 사용자가 자기 uid로 만들기만. 읽기·수정·삭제는 막아요 (운영팀은 콘솔에서 봐요)
+    match /reports/{id} {
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['spotId', 'reason', 'note', 'uid', 'createdAt'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.spotId is string && request.resource.data.spotId.size() <= 40
+        && request.resource.data.reason in ['hours', 'fee', 'entrance', 'closed', 'story', 'etc']
+        && request.resource.data.note is string && request.resource.data.note.size() <= 500
+        && request.resource.data.createdAt == request.time;
+      allow read, update, delete: if false;
+    }
+
     // 영역 랭킹: 누구나 읽기, 본인 문서만 쓰기. nickname(1~20자)과 cells(0 이상 숫자)만 허용
     match /leaderboard/{uid} {
       function validBoard() {

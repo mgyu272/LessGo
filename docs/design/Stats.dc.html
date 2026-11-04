@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>내 기록</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#3F7F1C}a:hover{color:#2F6512}
+.bg-grain{position:absolute;inset:0;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.35;mix-blend-mode:luminosity;pointer-events:none;z-index:0}
+.paper{position:relative;isolation:isolate}
+.paper::before{content:"";position:absolute;inset:0;border-radius:inherit;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.3;mix-blend-mode:luminosity;pointer-events:none;z-index:0}
+.paper>*{position:relative;z-index:1}
+.glass{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);border:1px solid rgba(255,255,255,.85);box-shadow:0 8px 24px -12px rgba(31,61,20,.35)}
+.soft{background:rgba(246,252,234,.7);box-shadow:inset 0 -3px 0 rgba(120,190,60,.22),inset 0 0 0 1px rgba(120,190,60,.14)}
+.card{background:#FFFFFF;box-shadow:0 1px 0 rgba(120,190,60,.12),0 10px 24px -18px rgba(63,127,28,.5)}
+.cta{background:rgba(190,236,130,.92);border:1px solid rgba(255,255,255,.6);box-shadow:0 14px 28px -12px rgba(150,215,80,.75),0 4px 10px -4px rgba(150,215,80,.5);color:#1C3A0C;transition:transform .15s ease}
+.cta:active,.tap:active{transform:scale(.98)}
+.tap{transition:transform .15s ease,background .2s ease;cursor:pointer;font-family:inherit}
+.scroll{scrollbar-width:none}.scroll::-webkit-scrollbar{display:none}
+.badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:11px;font:700 11px 'Noto Sans KR',sans-serif}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rise{animation:rise .3s ease both}
+@media (prefers-reduced-motion: reduce){.rise{animation:none}}
+.tab{position:relative;height:46px;border:0;background:transparent;font:700 15px 'Noto Sans KR',sans-serif;cursor:pointer}
+.tab[aria-selected="true"]{color:#1F3D14}.tab[aria-selected="false"]{color:#6B8259}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:22%;right:22%;bottom:0;height:3px;border-radius:2px;background:#5FA52A}
+@keyframes ring{from{stroke-dashoffset:565}}
+@keyframes grow{from{transform:scaleY(0)}}
+@keyframes wave{from{transform:translateX(0)}to{transform:translateX(-120px)}}
+.ringv{animation:ring 1.2s cubic-bezier(.3,.9,.3,1) both}
+.bar{transform-box:fill-box;transform-origin:bottom;animation:grow .6s cubic-bezier(.3,1.2,.5,1) both}
+.wave{animation:wave 4s linear infinite}
+.badge-tile{border-radius:20px;padding:14px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+@media (prefers-reduced-motion: reduce){.ringv,.bar,.wave{animation:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #E9F6D6; font-family: 'Noto Sans KR', sans-serif; color: #1F3D14">
+  <div class="bg-grain" aria-hidden="true"></div>
+  <div class="scroll" style="position: absolute; inset: 0; overflow-y: auto; padding-bottom: 110px">
+    <div style="display: flex; align-items: center; gap: 8px; height: 48px; padding: 12px 18px 0">
+      <h1 style="flex: 1; margin: 0; font: 800 24px 'Noto Sans KR', sans-serif; letter-spacing: -.02em">내 기록</h1>
+      <button class="glass tap" aria-label="공유" style="width: 44px; height: 44px; border-radius: 22px; color: #1F3D14; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5"></path><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"></path></svg></button>
+    </div>
+    <div role="tablist" aria-label="기록 보기" style="position: sticky; top: 0; z-index: 2; display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 6px; padding: 0 12px; background: rgba(233,246,214,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid #DCEDC6">
+      <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3"><button class="tab" role="tab" aria-selected="{{t.on}}" onClick="{{t.pick}}">{{t.label}}</button></sc-for>
+    </div>
+    <div style="padding: 18px; display: flex; flex-direction: column; gap: 14px">
+      <sc-if value="{{tToday}}" hint-placeholder-val="{{ true }}">
+        <div class="rise" style="display: flex; flex-direction: column; gap: 14px">
+          <div class="card" style="border-radius: 26px; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 12px">
+            <svg width="220" height="220" viewBox="0 0 220 220" role="img" aria-label="오늘 목표 3km 중 1.6km 달성">
+          <defs><clipPath id="disc"><circle cx="110" cy="110" r="78"></circle></clipPath></defs>
+          <circle cx="110" cy="110" r="90" fill="none" stroke="#DCEDC6" stroke-width="14"></circle>
+          <circle class="ringv" cx="110" cy="110" r="90" fill="none" stroke="#5FA52A" stroke-width="14" stroke-linecap="round" stroke-dasharray="565.5" stroke-dashoffset="265.8" transform="rotate(-90 110 110)"></circle>
+          <circle cx="110" cy="110" r="78" fill="#FFFFFF"></circle>
+          <g clip-path="url(#disc)">
+            <path class="wave" d="M0 105 q30 -12 60 0 t60 0 t60 0 t60 0 t60 0 V230 H0 Z" fill="#CDEFA0" opacity=".9"></path>
+            <path class="wave" style="animation-duration: 6s" d="M-30 111 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 V230 H-30 Z" fill="#9FD25E" opacity=".55"></path>
+          </g>
+          <text x="110" y="92" text-anchor="middle" style="font: 600 12px 'Noto Sans KR', sans-serif" fill="#4F6B3B">목표 3km</text>
+          <text x="110" y="128" text-anchor="middle" style="font: italic 900 40px 'Noto Sans KR', sans-serif" fill="#1F3D14">1.6</text>
+          <text x="110" y="150" text-anchor="middle" style="font: 700 13px 'Noto Sans KR', sans-serif" fill="#2F6512">km · 53%</text>
+        </svg>
+            <p style="margin: 0; font: 600 14px 'Noto Sans KR', sans-serif; color: #2F6512">1.4km만 더 달리면 오늘 목표 달성!</p>
+            <a class="cta" href="Courses.dc.html" style="width: 100%; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 800 15px 'Noto Sans KR', sans-serif; text-decoration: none">이어서 달리기<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px"><div class="soft" style="border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><b style="font: 800 20px 'Noto Sans KR', sans-serif">9:18</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">시간</small></div><div class="soft" style="border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><b style="font: 800 20px 'Noto Sans KR', sans-serif">+4칸</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">새 영역</small></div><div class="soft" style="border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><b style="font: 800 20px 'Noto Sans KR', sans-serif">1개</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">쿠폰</small></div></div>
+          <p style="margin: 0 4px; font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">목표 거리는 설정에서 바꿀 수 있어요 · 화면 값은 예시예요</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{tWeek}}" hint-placeholder-val="{{ false }}">
+        <div class="rise" style="display: flex; flex-direction: column; gap: 14px">
+          <div class="card" style="border-radius: 26px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end">
+              <div><small style="font: 600 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">이번 주 하루 평균</small><div style="display: flex; align-items: baseline; gap: 4px"><b style="font: italic 900 34px 'Noto Sans KR', sans-serif">2.2</b><span style="font: italic 800 15px 'Noto Sans KR', sans-serif; color: #3F7F1C">km</span></div></div>
+              <span class="badge" style="background: #EAF7D8; color: #2F6512"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" fill="currentColor" stroke="none"></path></svg>목표 달성 3일</span>
+            </div>
+            <svg width="320" height="190" viewBox="0 0 320 190" role="img" aria-label="이번 주 하루 거리. 목표 3km를 넘긴 날 3일" style="width: 100%; height: auto">
+            <line x1="0" y1="48" x2="310" y2="48" stroke="#9FD25E" stroke-width="1.5" stroke-dasharray="5 4"></line>
+            <text x="310" y="42" text-anchor="end" style="font: 700 10px 'Noto Sans KR', sans-serif" fill="#3F7F1C">목표 3km</text>
+            <rect class="bar" style="animation-delay: 0.00s" x="10" y="81" width="30" height="79" rx="9" fill="#C6E59E"></rect><text x="25.0" y="180" text-anchor="middle" style="font: 600 11px 'Noto Sans KR', sans-serif" fill="#4F6B3B">월</text><rect class="bar" style="animation-delay: 0.06s" x="54" y="32" width="30" height="128" rx="9" fill="#5FA52A"></rect><path transform="translate(62.0 38) scale(.58)" d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" fill="#FFFFFF"></path><text x="69.0" y="180" text-anchor="middle" style="font: 600 11px 'Noto Sans KR', sans-serif" fill="#4F6B3B">화</text><rect class="bar" style="animation-delay: 0.12s" x="98" y="115" width="30" height="45" rx="9" fill="#C6E59E"></rect><text x="113.0" y="180" text-anchor="middle" style="font: 600 11px 'Noto Sans KR', sans-serif" fill="#4F6B3B">수</text><rect class="bar" style="animation-delay: 0.18s" x="142" y="18" width="30" height="142" rx="9" fill="#5FA52A"></rect><path transform="translate(150.0 24) scale(.58)" d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" fill="#FFFFFF"></path><text x="157.0" y="180" text-anchor="middle" style="font: 600 11px 'Noto Sans KR', sans-serif" fill="#4F6B3B">목</text><rect class="bar" style="animation-delay: 0.24s" x="186" y="156" width="30" height="4" rx="9" fill="#C6E59E"></rect><text x="201.0" y="180" text-anchor="middle" style="font: 600 11px 'Noto Sans KR', sans-serif" fill="#4F6B3B">금</text><rect class="bar" style="animation-delay: 0.30s" x="230" y="44" width="30" height="116" rx="9" fill="#5FA52A"></rect><path transform="translate(238.0 50) scale(.58)" d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" fill="#FFFFFF"></path><text x="245.0" y="180" text-anchor="middle" style="font: 600 11px 'Noto Sans KR', sans-serif" fill="#4F6B3B">토</text><rect class="bar" style="animation-delay: 0.36s" x="274" y="100" width="30" height="60" rx="9" fill="#FFFFFF" stroke="#5FA52A" stroke-width="2" stroke-dasharray="4 3"></rect><text x="289.0" y="180" text-anchor="middle" style="font: 800 11px 'Noto Sans KR', sans-serif" fill="#1F3D14">오늘</text>
+          </svg>
+            <div role="radiogroup" aria-label="지표" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 14px; background: #EEF6E2">
+              <sc-for list="{{metrics}}" as="m" hint-placeholder-count="3"><button class="tap" role="radio" aria-checked="{{m.on}}" onClick="{{m.pick}}" style="height: 38px; border: 0; border-radius: 11px; {{m.style}} font: 700 13px 'Noto Sans KR', sans-serif">{{m.label}}</button></sc-for>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px"><div class="soft" style="border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><b style="font: 800 20px 'Noto Sans KR', sans-serif">15.2km</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">총 거리</small></div><div class="soft" style="border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><b style="font: 800 20px 'Noto Sans KR', sans-serif">1:38</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">총 시간</small></div><div class="soft" style="border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><b style="font: 800 20px 'Noto Sans KR', sans-serif">21칸</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">새 영역</small></div></div>
+        </div>
+      </sc-if>
+      <sc-if value="{{tBadge}}" hint-placeholder-val="{{ false }}">
+        <div class="rise" style="display: flex; flex-direction: column; gap: 14px">
+          <div class="card" style="border-radius: 26px; padding: 20px; display: flex; align-items: center; gap: 16px; background: linear-gradient(135deg, #FFFFFF 0%, #EAF7D8 100%)">
+            <span role="img" aria-label="LessGo" style="width: 72px; height: 72px; flex: none; border-radius: 22px; background: #7DBE45; display: inline-flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35), 0 10px 20px -10px rgba(95,165,42,.7)"><svg width="51" height="40" viewBox="20 0 672 512" aria-hidden="true"><path d="M36 44 L70 22 L98 10 L118 30 L150 46 L185 70 L215 100 L250 130 L275 165 L296 196 L330 206 L372 204 L404 214 L416 236 L440 226 L470 206 L488 186 L500 160 L520 120 L532 96 L540 80 L558 88 L572 116 L590 148 L606 188 L632 186 L664 182 L676 196 L672 222 L650 252 L620 270 L600 300 L566 304 L530 300 L500 312 L474 330 L456 362 L440 396 L418 428 L384 452 L356 470 L330 488 L318 500 L304 478 L276 462 L246 446 L232 424 L216 400 L190 384 L150 370 L110 350 L64 340 L46 324 L52 298 L84 284 L112 276 L104 236 L96 180 L84 128 L66 90 Z" fill="#F3F0E4" stroke="#F3F0E4" stroke-width="22" stroke-linejoin="round"></path><path d="M60 330 C 200 318, 270 312, 340 286 C 420 256, 470 250, 540 236 C 600 224, 640 212, 690 196" fill="none" stroke="#5FA52A" stroke-width="40" stroke-linecap="round"></path></svg></span>
+            <div style="display: flex; flex-direction: column; gap: 4px"><small style="font: 700 12px 'Noto Sans KR', sans-serif; color: #3F7F1C">다음 배지까지</small><b style="font: 800 18px 'Noto Sans KR', sans-serif">세 유적 완주</b><span style="height: 6px; width: 180px; border-radius: 3px; background: #DCEDC6; overflow: hidden"><i style="display: block; width: 66%; height: 100%; background: #5FA52A; border-radius: 3px"></i></span><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">심우장만 남았어요 · 2 / 3</small></div>
+          </div>
+          <h2 style="margin: 4px 2px 0; font: 700 15px 'Noto Sans KR', sans-serif">모은 배지 3 / 6</h2>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+<div class="badge-tile card">
+            <span style="width: 64px; height: 64px; border-radius: 32px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 35% 30%, #E8F8D2, #9FD25E); color: #1F3D14; box-shadow: 0 8px 16px -10px rgba(63,127,28,.7);"><span role="img" aria-label="LessGo" style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: #7DBE45; display: inline-flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35), 0 10px 20px -10px rgba(95,165,42,.7)"><svg width="28" height="22" viewBox="20 0 672 512" aria-hidden="true"><path d="M36 44 L70 22 L98 10 L118 30 L150 46 L185 70 L215 100 L250 130 L275 165 L296 196 L330 206 L372 204 L404 214 L416 236 L440 226 L470 206 L488 186 L500 160 L520 120 L532 96 L540 80 L558 88 L572 116 L590 148 L606 188 L632 186 L664 182 L676 196 L672 222 L650 252 L620 270 L600 300 L566 304 L530 300 L500 312 L474 330 L456 362 L440 396 L418 428 L384 452 L356 470 L330 488 L318 500 L304 478 L276 462 L246 446 L232 424 L216 400 L190 384 L150 370 L110 350 L64 340 L46 324 L52 298 L84 284 L112 276 L104 236 L96 180 L84 128 L66 90 Z" fill="#F3F0E4" stroke="#F3F0E4" stroke-width="22" stroke-linejoin="round"></path><path d="M60 330 C 200 318, 270 312, 340 286 C 420 256, 470 250, 540 236 C 600 224, 640 212, 690 196" fill="none" stroke="#5FA52A" stroke-width="40" stroke-linecap="round"></path></svg></span></span>
+            <b style="font: 700 13px 'Noto Sans KR', sans-serif; color: #1F3D14">첫 완주</b>
+            <small style="font: 500 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">10.28 획득</small>
+          </div>
+<div class="badge-tile card">
+            <span style="width: 64px; height: 64px; border-radius: 32px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 35% 30%, #E8F8D2, #9FD25E); color: #1F3D14; box-shadow: 0 8px 16px -10px rgba(63,127,28,.7);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2F6512" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12,2 21,7 21,17 12,22 3,17 3,7" fill="currentColor" stroke="none"></polygon></svg></span>
+            <b style="font: 700 13px 'Noto Sans KR', sans-serif; color: #1F3D14">왕릉 2곳</b>
+            <small style="font: 500 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">정릉 · 의릉</small>
+          </div>
+<div class="badge-tile card">
+            <span style="width: 64px; height: 64px; border-radius: 32px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 35% 30%, #E8F8D2, #9FD25E); color: #1F3D14; box-shadow: 0 8px 16px -10px rgba(63,127,28,.7);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" fill="currentColor" stroke="none"></path></svg></span>
+            <b style="font: 700 13px 'Noto Sans KR', sans-serif; color: #1F3D14">3일 연속</b>
+            <small style="font: 500 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">이번 주</small>
+          </div>
+<div class="badge-tile soft">
+            <span style="width: 64px; height: 64px; border-radius: 32px; display: flex; align-items: center; justify-content: center; background: #EEF3E6; color: #A9B99A;"><b style="font: 800 26px 'Noto Sans KR', sans-serif">?</b></span>
+            <b style="font: 700 13px 'Noto Sans KR', sans-serif; color: #8A9A7C">세 유적 완주</b>
+            <small style="font: 500 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">심우장 남음</small>
+          </div>
+<div class="badge-tile soft">
+            <span style="width: 64px; height: 64px; border-radius: 32px; display: flex; align-items: center; justify-content: center; background: #EEF3E6; color: #A9B99A;"><b style="font: 800 26px 'Noto Sans KR', sans-serif">?</b></span>
+            <b style="font: 700 13px 'Noto Sans KR', sans-serif; color: #8A9A7C">10km</b>
+            <small style="font: 500 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">가장 긴 달리기 3.8km</small>
+          </div>
+<div class="badge-tile soft">
+            <span style="width: 64px; height: 64px; border-radius: 32px; display: flex; align-items: center; justify-content: center; background: #EEF3E6; color: #A9B99A;"><b style="font: 800 26px 'Noto Sans KR', sans-serif">?</b></span>
+            <b style="font: 700 13px 'Noto Sans KR', sans-serif; color: #8A9A7C">영역 100칸</b>
+            <small style="font: 500 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">지금 38칸</small>
+          </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <nav class="glass" aria-label="주 메뉴" style="position: absolute; left: 14px; right: 14px; bottom: 12px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-radius: 22px; padding: 8px 6px">
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px; color: #4F6B3B; font: 500 11px 'Noto Sans KR', sans-serif; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>지도</a>
+    <a href="Places.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px; color: #4F6B3B; font: 500 11px 'Noto Sans KR', sans-serif; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"></path><path d="M4 19a2 2 0 0 1 2-2h13"></path></svg>장소·이야기</a>
+    <a href="Events.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px; color: #4F6B3B; font: 500 11px 'Noto Sans KR', sans-serif; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"></rect><path d="M4 10h16M9 3v4M15 3v4"></path></svg>문화 활동</a>
+    <a href="Stats.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px; color: #2F6512; font: 800 11px 'Noto Sans KR', sans-serif; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>내 기록</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { tab: 'today', metric: 'km' }; }
+  renderVals() {
+    const s = this.state;
+    const T = [['today', '오늘'], ['week', '주간'], ['badge', '배지']];
+    const M = [['km', '거리'], ['time', '시간'], ['cell', '영역']];
+    return {
+      tabs: T.map(([k, label]) => ({ label, on: s.tab === k ? 'true' : 'false', pick: () => this.setState({ tab: k }) })),
+      tToday: s.tab === 'today', tWeek: s.tab === 'week', tBadge: s.tab === 'badge',
+      metrics: M.map(([k, label]) => ({ label, on: s.metric === k ? 'true' : 'false', style: s.metric === k ? 'background: #FFFFFF; color: #1F3D14; box-shadow: 0 4px 10px -4px rgba(31,61,20,.3);' : 'background: transparent; color: #4F6B3B;', pick: () => this.setState({ metric: k }) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

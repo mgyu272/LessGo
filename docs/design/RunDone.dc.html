@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>자유 달리기 · 완주</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#3F7F1C}a:hover{color:#2F6512}
+.bg-grain{position:absolute;inset:0;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.35;mix-blend-mode:luminosity;pointer-events:none;z-index:0}
+.paper{position:relative;isolation:isolate}
+.paper::before{content:"";position:absolute;inset:0;border-radius:inherit;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.3;mix-blend-mode:luminosity;pointer-events:none;z-index:0}
+.paper>*{position:relative;z-index:1}
+.glass{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);border:1px solid rgba(255,255,255,.85);box-shadow:0 8px 24px -12px rgba(31,61,20,.35)}
+.soft{background:rgba(246,252,234,.7);box-shadow:inset 0 -3px 0 rgba(120,190,60,.22),inset 0 0 0 1px rgba(120,190,60,.14)}
+.card{background:#FFFFFF;box-shadow:0 1px 0 rgba(120,190,60,.12),0 10px 24px -18px rgba(63,127,28,.5)}
+.cta{background:rgba(190,236,130,.92);border:1px solid rgba(255,255,255,.6);box-shadow:0 14px 28px -12px rgba(150,215,80,.75),0 4px 10px -4px rgba(150,215,80,.5);color:#1C3A0C;transition:transform .15s ease}
+.cta:active,.tap:active{transform:scale(.98)}
+.tap{transition:transform .15s ease,background .2s ease;cursor:pointer;font-family:inherit}
+.scroll{scrollbar-width:none}.scroll::-webkit-scrollbar{display:none}
+.badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:11px;font:700 11px 'Noto Sans KR',sans-serif}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rise{animation:rise .3s ease both}
+@media (prefers-reduced-motion: reduce){.rise{animation:none}}
+@keyframes stamp{0%,40%{opacity:0;transform:rotate(-4deg) scale(2)}65%{opacity:1;transform:rotate(-10deg) scale(.9)}100%{opacity:1;transform:rotate(-7deg) scale(1)}}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+@keyframes draw{from{stroke-dashoffset:420}to{stroke-dashoffset:0}}
+.stamp{display:inline-flex;animation:stamp .8s cubic-bezier(.3,1.4,.5,1) .1s both}
+.u1{animation:up .45s ease .35s both}.u2{animation:up .45s ease .5s both}.u3{animation:up .45s ease .65s both}.u4{animation:up .45s ease .8s both}.u5{animation:up .45s ease .95s both}
+.dc{transform-box:fill-box;transform-origin:center;animation:pop .4s cubic-bezier(.3,1.5,.5,1) both}
+.dr{stroke-dasharray:420;animation:draw 1.2s ease-out .6s both}
+@media (prefers-reduced-motion: reduce){.stamp,.u1,.u2,.u3,.u4,.u5,.dc,.dr{animation:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 900px; position: relative; overflow: hidden; background: #E9F6D6; font-family: 'Noto Sans KR', sans-serif; color: #1F3D14">
+  <div class="bg-grain" aria-hidden="true"></div>
+  <div class="scroll" style="position: absolute; inset: 0; overflow-y: auto; padding: 28px 20px 170px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; align-items: center; gap: 14px">
+      <span class="stamp"><span role="img" aria-label="LessGo" style="width: 60px; height: 60px; flex: none; border-radius: 18px; background: #7DBE45; display: inline-flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35), 0 10px 20px -10px rgba(95,165,42,.7)"><svg width="43" height="33" viewBox="20 0 672 512" aria-hidden="true"><path d="M36 44 L70 22 L98 10 L118 30 L150 46 L185 70 L215 100 L250 130 L275 165 L296 196 L330 206 L372 204 L404 214 L416 236 L440 226 L470 206 L488 186 L500 160 L520 120 L532 96 L540 80 L558 88 L572 116 L590 148 L606 188 L632 186 L664 182 L676 196 L672 222 L650 252 L620 270 L600 300 L566 304 L530 300 L500 312 L474 330 L456 362 L440 396 L418 428 L384 452 L356 470 L330 488 L318 500 L304 478 L276 462 L246 446 L232 424 L216 400 L190 384 L150 370 L110 350 L64 340 L46 324 L52 298 L84 284 L112 276 L104 236 L96 180 L84 128 L66 90 Z" fill="#F3F0E4" stroke="#F3F0E4" stroke-width="22" stroke-linejoin="round"></path><path d="M60 330 C 200 318, 270 312, 340 286 C 420 256, 470 250, 540 236 C 600 224, 640 212, 690 196" fill="none" stroke="#5FA52A" stroke-width="40" stroke-linecap="round"></path></svg></span></span>
+      <div class="u1" style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font: 700 13px 'Noto Sans KR', sans-serif; color: #3F7F1C">오늘의 달리기</span>
+        <h1 style="margin: 0; font: 800 26px/1.25 'Noto Sans KR', sans-serif; letter-spacing: -.02em">자유 달리기 완주!</h1>
+      </div>
+    </div>
+
+    <div class="u2 card" style="border-radius: 22px; overflow: hidden">
+      <div style="position: relative; height: 230px; overflow: hidden">
+        <img src="/_blob/e22f937df0dc75db9f1b94d737633b2b" alt="오늘 달린 길 지도" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% 60%; transform: scale(1.5); transform-origin: 35% 55%">
+        <div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(233,246,214,.28)"></div>
+        <svg width="350" height="230" viewBox="0 30 350 230" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%">
+        <polygon class="dc" style="animation-delay: 0.70s" points="45.0,208.0 67.5,221.0 67.5,247.0 45.0,260.0 22.5,247.0 22.5,221.0" fill="rgba(154,211,90,.38)" stroke="#5FA52A" stroke-opacity=".6" stroke-width="1.4"></polygon>
+        <polygon class="dc" style="animation-delay: 0.79s" points="90.1,208.0 112.6,221.0 112.6,247.0 90.1,260.0 67.5,247.0 67.5,221.0" fill="rgba(154,211,90,.38)" stroke="#5FA52A" stroke-opacity=".6" stroke-width="1.4"></polygon>
+        <polygon class="dc" style="animation-delay: 0.88s" points="112.6,169.0 135.1,182.0 135.1,208.0 112.6,221.0 90.1,208.0 90.1,182.0" fill="rgba(154,211,90,.38)" stroke="#5FA52A" stroke-opacity=".6" stroke-width="1.4"></polygon>
+        <polygon class="dc" style="animation-delay: 0.97s" points="135.1,208.0 157.6,221.0 157.6,247.0 135.1,260.0 112.6,247.0 112.6,221.0" fill="rgba(154,211,90,.38)" stroke="#5FA52A" stroke-opacity=".6" stroke-width="1.4"></polygon>
+        <polygon class="dc" style="animation-delay: 1.06s" points="157.6,169.0 180.1,182.0 180.1,208.0 157.6,221.0 135.1,208.0 135.1,182.0" fill="rgba(154,211,90,.38)" stroke="#5FA52A" stroke-opacity=".6" stroke-width="1.4"></polygon>
+        <polygon class="dc" style="animation-delay: 1.15s" points="202.6,169.0 225.2,182.0 225.2,208.0 202.6,221.0 180.1,208.0 180.1,182.0" fill="rgba(154,211,90,.38)" stroke="#5FA52A" stroke-opacity=".6" stroke-width="1.4"></polygon>
+        <polygon class="dc" style="animation-delay: 1.24s" points="247.7,169.0 270.2,182.0 270.2,208.0 247.7,221.0 225.2,208.0 225.2,182.0" fill="rgba(154,211,90,.38)" stroke="#5FA52A" stroke-opacity=".6" stroke-width="1.4"></polygon>
+        <polygon class="dc" style="animation-delay: 1.33s" points="270.2,130.0 292.7,143.0 292.7,169.0 270.2,182.0 247.7,169.0 247.7,143.0" fill="rgba(154,211,90,.38)" stroke="#5FA52A" stroke-opacity=".6" stroke-width="1.4"></polygon>
+        <polygon class="dc" style="animation-delay: 1.42s" points="292.7,169.0 315.2,182.0 315.2,208.0 292.7,221.0 270.2,208.0 270.2,182.0" fill="rgba(154,211,90,.38)" stroke="#5FA52A" stroke-opacity=".6" stroke-width="1.4"></polygon>
+        <polygon class="dc" style="animation-delay: 1.51s" points="315.2,130.0 337.7,143.0 337.7,169.0 315.2,182.0 292.7,169.0 292.7,143.0" fill="rgba(154,211,90,.38)" stroke="#5FA52A" stroke-opacity=".6" stroke-width="1.4"></polygon>
+          <path d="M50.0 240.0 L54.6 238.5 L60.8 236.4 L68.1 234.0 L76.2 231.2 L84.9 228.4 L93.6 225.5 L102.1 222.6 L110.0 220.0 L117.5 217.4 L125.0 214.6 L132.5 211.8 L140.0 209.0 L147.5 206.3 L155.0 203.9 L162.5 201.7 L170.0 200.0 L177.7 198.9 L185.7 198.5 L193.8 198.5 L201.9 198.7 L209.7 198.8 L217.1 198.5 L223.9 197.7 L230.0 196.0 L235.1 193.1 L239.4 189.2 L243.0 184.6 L246.2 179.6 L249.3 174.8 L252.5 170.5 L256.0 167.1 L260.0 165.0 L264.8 164.4 L270.2 164.9 L276.0 166.2 L281.9 168.1 L287.5 170.2 L292.6 172.2 L296.8 173.9 L300.0 175.0" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path class="dr" d="M50.0 240.0 L54.6 238.5 L60.8 236.4 L68.1 234.0 L76.2 231.2 L84.9 228.4 L93.6 225.5 L102.1 222.6 L110.0 220.0 L117.5 217.4 L125.0 214.6 L132.5 211.8 L140.0 209.0 L147.5 206.3 L155.0 203.9 L162.5 201.7 L170.0 200.0 L177.7 198.9 L185.7 198.5 L193.8 198.5 L201.9 198.7 L209.7 198.8 L217.1 198.5 L223.9 197.7 L230.0 196.0 L235.1 193.1 L239.4 189.2 L243.0 184.6 L246.2 179.6 L249.3 174.8 L252.5 170.5 L256.0 167.1 L260.0 165.0 L264.8 164.4 L270.2 164.9 L276.0 166.2 L281.9 168.1 L287.5 170.2 L292.6 172.2 L296.8 173.9 L300.0 175.0" fill="none" stroke="#2F6512" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+          <circle cx="50" cy="240" r="6" fill="#FFFFFF" stroke="#2F6512" stroke-width="3"></circle>
+          <circle cx="300" cy="175" r="8" fill="#5FA52A" stroke="#FFFFFF" stroke-width="3"></circle>
+        </svg>
+        <span style="position: absolute; right: 8px; bottom: 6px; padding: 1px 5px; background: rgba(255,255,255,.75); font: 400 9px 'Noto Sans KR', sans-serif; color: #4A5640">© OpenStreetMap contributors</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 14px 16px">
+        <div style="display: flex; flex-direction: column; gap: 2px; padding-left: 0px;"><b style="font: 800 24px 'Noto Sans KR', sans-serif; letter-spacing: -.02em">0.54km</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">거리</small></div>
+        <div style="display: flex; flex-direction: column; gap: 2px; padding-left: 14px; border-left: 1px solid #C6E59E;"><b style="font: 800 24px 'Noto Sans KR', sans-serif; letter-spacing: -.02em">3:08</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">시간</small></div>
+        <div style="display: flex; flex-direction: column; gap: 2px; padding-left: 14px; border-left: 1px solid #C6E59E;"><b style="font: 800 24px 'Noto Sans KR', sans-serif; letter-spacing: -.02em">5'48"</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">페이스</small></div>
+      </div>
+    </div>
+
+    <div class="u3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+      <div class="soft" style="border-radius: 18px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="display: flex; align-items: center; gap: 6px; font: 800 22px 'Noto Sans KR', sans-serif"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5FA52A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12,2 21,7 21,17 12,22 3,17 3,7" fill="currentColor" stroke="none"></polygon></svg>10</span><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">새 영역</small></div>
+      <div class="soft" style="border-radius: 18px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="display: flex; align-items: center; gap: 6px; font: 800 22px 'Noto Sans KR', sans-serif"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" fill="currentColor" stroke="none"></path></svg>0</span><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">받은 별</small></div>
+      <div class="soft" style="border-radius: 18px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="display: flex; align-items: center; gap: 6px; font: 800 22px 'Noto Sans KR', sans-serif"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3F7F1C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"></path><path d="M14 6v12" stroke-dasharray="2 2"></path></svg>0</span><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">쿠폰</small></div>
+    </div>
+
+    <section class="u4" aria-label="지나간 곳의 이야기" style="display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 4px 2px 0; font: 700 15px 'Noto Sans KR', sans-serif">지나간 길 근처 이야기</h2>
+      <a class="card" href="PlaceDetail.dc.html" style="border-radius: 18px; padding: 12px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: #1F3D14">
+        <span style="width: 48px; height: 48px; flex: none; border-radius: 14px; background: #EAF7D8; color: #3F7F1C; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"></path><path d="M4 19a2 2 0 0 1 2-2h13"></path></svg></span>
+        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <b style="font: 700 15px 'Noto Sans KR', sans-serif">심우장 · 북쪽을 바라본 한옥</b>
+          <small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">코스에서 [거리] 떨어져 있어요 · 해설 듣기</small>
+        </span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7FA66B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+      </a>
+    </section>
+
+    <section class="u5 soft" aria-label="받을 수 있는 쿠폰" style="border-radius: 18px; padding: 14px; display: flex; align-items: center; gap: 12px">
+      <span style="color: #5FA52A"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h16l-1.5 10a2 2 0 0 1-2 1.7h-9a2 2 0 0 1-2-1.7z"></path><path d="M8 9V7a4 4 0 0 1 8 0v2"></path></svg></span>
+      <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+        <b style="font: 700 14px 'Noto Sans KR', sans-serif">이번엔 들른 가게가 없어요</b>
+        <small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">다음 코스에서 제휴 가게를 지나면 쿠폰이 쌓여요</small>
+      </span>
+    </section>
+  </div>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 20px 22px; background: linear-gradient(180deg, rgba(233,246,214,0) 0%, #E9F6D6 34%); display: flex; flex-direction: column; gap: 10px">
+    <button class="cta tap" style="height: 56px; border-radius: 18px; font: 800 16px 'Noto Sans KR', sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5"></path><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"></path></svg>완주 카드 공유하기</button>
+    <a class="soft" href="Main.dc.html" style="height: 50px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font: 700 15px 'Noto Sans KR', sans-serif; color: #2F6512; text-decoration: none">지도로 돌아가기</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+// ⑥-1 달리기 완주 요약 (디자인 원본 docs/design/RunDone.dc.html)
+// 자유 달리기를 마쳤거나, 코스를 목적지 전에 끝냈을 때 보여줘요.
+// 지도 카드 + 거리·시간·페이스, 새 영역·받은 별·쿠폰, 지나간 길 근처 이야기, 하단 고정 버튼(공유 · 지도로)
+
+import { useMemo } from "react";
+import { useApp } from "../state/AppContext.jsx";
+import { t, loc } from "../lib/i18n.js";
+import { fmtTime, fmtPace, distance } from "../lib/geo.js";
+import { MapView, FitBounds, HexLayer, Route } from "../components/MapView.jsx";
+import { LogoBird } from "../components/LogoBird.jsx";
+import { spotIconSvg } from "../components/SpotIcons.jsx";
+
+const NEAR_TRAIL_M = 500; // 지나간 길에서 이 거리 안의 장소를 "근처 이야기"로 보여줘요
+
+export default function RunDone() {
+  const app = useApp();
+  const f = app.finish;
+  const r = f?.record;
+  const nearby = useMemo(() => (f ? spotsNearTrail(f.trail, app.data.spots) : []), [f, app.data.spots]);
+  if (!f) return null;
+
+  const share = async () => {
+    const text = `${loc(r.name)} · ${(r.meters / 1000).toFixed(2)}km · ${fmtTime(r.seconds)} · ⬢${r.cells} — LessGo`;
+    try {
+      if (navigator.share) await navigator.share({ text });
+      else { await navigator.clipboard.writeText(text); app.toast(t("shared")); }
+    } catch {}
+  };
+  const openCoupon = () => {
+    const shop = app.data.shops.find((s) => s.id === f.coupon.shopId);
+    app.setCouponShop({ ...shop, couponTitle: f.coupon.title });
+    app.go("coupon");
+  };
+  const openPlace = (spot) => { app.setSpot(spot); app.go("place"); };
+  const title = f.course ? t("done_course", { name: loc(f.course.properties.title || f.course.properties.name) }) : t("done_free");
+
+  return (
+    <section className="screen done-screen">
+      <div className="hanji-layer" aria-hidden="true" />
+      <div className="done-scroll">
+        <div className="done-head">
+          <span className="done-stamp" role="img" aria-label="LessGo"><LogoBird variant="icon" size={60} /></span>
+          <div><span className="kicker2">{t("todays_run")}</span><h1>{title}</h1></div>
+        </div>
+
+        <div className="card done-map">
+          <div className="dm-map">
+            <MapView>
+              <HexLayer cells={app.user.cells} landmarkCells={app.data.landmarkCells} />
+              {f.trail.length > 1 && [
+                <Route key="c" path={f.trail} color="#FFFFFF" weight={10} opacity={1} />,
+                <Route key="t" path={f.trail} color="#2F6512" weight={5} opacity={1} />,
+              ]}
+              <FitBounds points={f.trail.length ? f.trail : [[37.59, 127.0]]} fitKey={r.id} />
+            </MapView>
+          </div>
+          <div className="dm-stats">
+            <div><b>{(r.meters / 1000).toFixed(2)}km</b><small>{t("distance")}</small></div>
+            <div><b>{fmtTime(r.seconds)}</b><small>{t("time")}</small></div>
+            <div><b>{fmtPace(r.seconds, r.meters)}</b><small>{t("pace")}</small></div>
+          </div>
+        </div>
+
+        <div className="done-earn">
+          <div className="soft"><span><HexIcon />{r.cells}</span><small>{t("new_area")}</small></div>
+          <div className="soft"><span><StarIcon />{f.stars}</span><small>{t("stars_got")}</small></div>
+          <div className="soft"><span><BagIcon />{f.coupon ? 1 : 0}</span><small>{t("coupons")}</small></div>
+        </div>
+
+        {nearby.length > 0 && (
+          <section className="done-near" aria-label={t("near_stories")}>
+            <h2>{t("near_stories")}</h2>
+            {nearby.map(({ s, d }) => (
+              <button key={s.id} className="card dn-card" onClick={() => openPlace(s)}>
+                <span className="dn-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
+                <span className="dn-text"><b>{loc(s.name)}</b><small>{t("near_m", { m: Math.round(d) })}</small></span>
+                <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+              </button>
+            ))}
+          </section>
+        )}
+
+        {f.coupon ? (
+          <button className="soft done-coupon" onClick={openCoupon}>
+            <BagIcon />
+            <span><b>{t("coupon_received")}</b><small>{loc(f.coupon.title)}</small></span>
+            <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+          </button>
+        ) : (
+          <section className="soft done-coupon" aria-label={t("coupons")}>
+            <BagIcon />
+            <span><b>{t("coupon_none")}</b><small>{t("coupon_none_sub")}</small></span>
+          </section>
+        )}
+      </div>
+
+      <div className="done-cta">
+        <button className="btn btn-cta" onClick={share}><ShareIcon />{t("share_card")}</button>
+        <button className="btn btn-soft" onClick={() => app.go("home")}>{t("back_to_map")}</button>
+      </div>
+    </section>
+  );
+}
+
+function spotsNearTrail(trail, spots) {
+  if (!trail?.length) return [];
+  return spots.map((s) => {
+    let best = Infinity;
+    trail.forEach(([lat, lng]) => { const d = distance({ lat, lng }, s); if (d < best) best = d; });
+    return { s, d: best };
+  }).filter((x) => x.d <= NEAR_TRAIL_M).sort((a, b) => a.d - b.d);
+}
+
+const HexIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true" className="fill"><polygon points="12,2 21,7 21,17 12,22 3,17 3,7" /></svg>;
+const StarIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true" className="fill"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" /></svg>;
+const BagIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16l-1.5 10a2 2 0 0 1-2 1.7h-9a2 2 0 0 1-2-1.7z" /><path d="M8 9V7a4 4 0 0 1 8 0v2" /></svg>;
+const ShareIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true" className="share"><path d="M12 15V3M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>;

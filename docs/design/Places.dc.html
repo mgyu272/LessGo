@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>장소와 이야기</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#3F7F1C}a:hover{color:#2F6512}
+.bg-grain{position:absolute;inset:0;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.35;mix-blend-mode:luminosity;pointer-events:none;z-index:0}
+.paper{position:relative;isolation:isolate}
+.paper::before{content:"";position:absolute;inset:0;border-radius:inherit;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.3;mix-blend-mode:luminosity;pointer-events:none;z-index:0}
+.paper>*{position:relative;z-index:1}
+.glass{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);border:1px solid rgba(255,255,255,.85);box-shadow:0 8px 24px -12px rgba(31,61,20,.35)}
+.soft{background:rgba(246,252,234,.7);box-shadow:inset 0 -3px 0 rgba(120,190,60,.22),inset 0 0 0 1px rgba(120,190,60,.14)}
+.card{background:#FFFFFF;box-shadow:0 1px 0 rgba(120,190,60,.12),0 10px 24px -18px rgba(63,127,28,.5)}
+.cta{background:rgba(190,236,130,.92);border:1px solid rgba(255,255,255,.6);box-shadow:0 14px 28px -12px rgba(150,215,80,.75),0 4px 10px -4px rgba(150,215,80,.5);color:#1C3A0C;transition:transform .15s ease}
+.cta:active,.tap:active{transform:scale(.98)}
+.tap{transition:transform .15s ease,background .2s ease;cursor:pointer;font-family:inherit}
+.scroll{scrollbar-width:none}.scroll::-webkit-scrollbar{display:none}
+.badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:11px;font:700 11px 'Noto Sans KR',sans-serif}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rise{animation:rise .3s ease both}
+@media (prefers-reduced-motion: reduce){.rise{animation:none}}
+.seg-on{background:#FFFFFF;color:#1F3D14;box-shadow:0 4px 12px -4px rgba(31,61,20,.3)}
+.seg-off{background:transparent;color:#4F6B3B}
+</style>
+</helmet>
+<div style="width: 390px; height: 1120px; position: relative; overflow: hidden; background: #E9F6D6; font-family: 'Noto Sans KR', sans-serif; color: #1F3D14">
+  <div class="bg-grain" aria-hidden="true"></div>
+  <div class="scroll" style="position: absolute; inset: 0; overflow-y: auto; padding: 12px 18px 110px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; gap: 8px; height: 48px">
+      <a class="glass" href="Main.dc.html" aria-label="뒤로" style="width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #1F3D14; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+      <h1 style="flex: 1; margin: 0; font: 800 22px 'Noto Sans KR', sans-serif; letter-spacing: -.02em">장소와 이야기</h1>
+      <div role="tablist" aria-label="보기 방식" style="display: flex; padding: 3px; border-radius: 14px; background: #DDEFC6">
+        <button role="tab" aria-selected="{{isList}}" onClick="{{toList}}" class="tap {{listCls}}" style="height: 38px; padding: 0 12px; border: 0; border-radius: 11px; display: flex; align-items: center; gap: 4px; font: 700 13px 'Noto Sans KR', sans-serif"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"></path></svg>목록</button>
+        <button role="tab" aria-selected="{{isMap}}" onClick="{{toMap}}" class="tap {{mapCls}}" style="height: 38px; padding: 0 12px; border: 0; border-radius: 11px; display: flex; align-items: center; gap: 4px; font: 700 13px 'Noto Sans KR', sans-serif"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"></path><path d="M9 4v14M15 6v14"></path></svg>지도</button>
+      </div>
+    </div>
+
+    <label class="glass" style="height: 48px; border-radius: 24px; padding: 0 16px; display: flex; align-items: center; gap: 10px; color: #4F6B3B">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><span style="position: absolute; left: -9999px">장소 검색</span>
+      <input placeholder="장소, 인물, 이야기 검색" style="flex: 1; min-width: 0; border: 0; background: none; outline: none; font: 400 15px 'Noto Sans KR', sans-serif; color: #1F3D14">
+    </label>
+
+    <div class="scroll" role="radiogroup" aria-label="주제" style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -18px; padding: 0 18px 4px">
+      <sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
+        <button class="tap" role="radio" aria-checked="{{c.on}}" onClick="{{c.pick}}" style="flex: none; height: 38px; padding: 0 14px; border: 0; border-radius: 19px; {{c.style}} font: 600 14px 'Noto Sans KR', sans-serif">{{c.label}}</button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{isMap}}" hint-placeholder-val="{{ false }}">
+      <div class="card rise" style="position: relative; height: 260px; border-radius: 22px; overflow: hidden">
+        <img src="/_blob/e22f937df0dc75db9f1b94d737633b2b" alt="성북구 장소 지도" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+        <span class="glass" style="position: absolute; left: 34px; top: 132px; height: 30px; padding: 0 10px; border-radius: 15px; display: flex; align-items: center; font: 700 12px 'Noto Sans KR', sans-serif">심우장</span>
+        <span class="glass" style="position: absolute; left: 118px; top: 92px; height: 30px; padding: 0 10px; border-radius: 15px; display: flex; align-items: center; font: 700 12px 'Noto Sans KR', sans-serif">정릉</span>
+        <span class="glass" style="position: absolute; left: 254px; top: 92px; height: 30px; padding: 0 10px; border-radius: 15px; display: flex; align-items: center; font: 700 12px 'Noto Sans KR', sans-serif">의릉</span>
+        <span style="position: absolute; right: 6px; bottom: 6px; padding: 1px 5px; background: rgba(255,255,255,.75); font: 400 9px 'Noto Sans KR', sans-serif; color: #4A5640">© OpenStreetMap contributors</span>
+      </div>
+    </sc-if>
+
+    <p style="margin: 2px 2px -4px; font: 600 13px 'Noto Sans KR', sans-serif; color: #4F6B3B">{{countText}}</p>
+      <sc-if value="{{show_simujang}}" hint-placeholder-val="{{ true }}">
+      <article class="card" style="border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; gap: 12px; align-items: flex-start">
+          <span style="width: 64px; height: 64px; flex: none; border-radius: 18px; background: #F2F9E6; box-shadow: inset 0 0 0 1px #DCEDC6; display: flex; align-items: center; justify-content: center"><svg width="44" height="44" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M25.6 3.2 a3.4 3.4 0 1 0 3.6 4.6 a2.8 2.8 0 1 1 -3.6 -4.6 z" fill="#7CC4A4"></path>
+        <rect x="4" y="27" width="24" height="2.2" rx="1" fill="#B3BAB6"></rect>
+        <rect x="8" y="17" width="16" height="10" fill="#F1F3EF"></rect>
+        <path d="M8 17v10M13.6 17v10M18.4 17v10M24 17v10" stroke="#7A5134" stroke-width="1.3"></path>
+        <rect x="14.4" y="18.6" width="3.2" height="8.4" fill="#D8B88A"></rect>
+        <path d="M16 18.6v8.4M14.4 21.4h3.2M14.4 24.2h3.2" stroke="#7A5134" stroke-width=".55"></path>
+        <rect x="9.4" y="19.4" width="2.9" height="3" fill="#F1F3EF" stroke="#7A5134" stroke-width=".6"></rect>
+        <path d="M10.85 19.4v3M9.4 20.9h2.9" stroke="#7A5134" stroke-width=".4"></path>
+        <rect x="19.7" y="19.4" width="2.9" height="3" fill="#F1F3EF" stroke="#7A5134" stroke-width=".6"></rect>
+        <path d="M21.15 19.4v3M19.7 20.9h2.9" stroke="#7A5134" stroke-width=".4"></path>
+        <path d="M1.5 15.8 C5 16.8 8 14.6 10 11.5 H22 C24 14.6 27 16.8 30.5 15.8 C28.4 18 25 18.2 22 17.4 H10 C7 18.2 3.6 18 1.5 15.8 Z" fill="#26302C"></path>
+        <path d="M9.4 11.7 Q16 9.2 22.6 11.7" fill="none" stroke="#26302C" stroke-width="2" stroke-linecap="round"></path>
+        <path d="M12 13v3.6M14.5 12.6v4M17.5 12.6v4M20 13v3.6" stroke="#3D4843" stroke-width=".8"></path>
+        <circle cx="9.4" cy="11.7" r=".9" fill="#FFFFFF"></circle>
+        <circle cx="22.6" cy="11.7" r=".9" fill="#FFFFFF"></circle>
+      </svg></span>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+            <div style="display: flex; align-items: center; gap: 6px"><h2 style="margin: 0; font: 800 18px 'Noto Sans KR', sans-serif">심우장</h2><span class="badge" style="background: #EAF7D8; color: #2F6512"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#5FA52A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12,2 21,7 21,17 12,22 3,17 3,7" fill="currentColor" stroke="none"></polygon></svg>코스 6개</span></div>
+            <small style="font: 600 12px 'Noto Sans KR', sans-serif; color: #3F7F1C">독립운동 유적 · 한옥 · 내 위치에서 [거리]</small>
+            <p style="margin: 2px 0 0; font: 400 13px/1.55 'Noto Sans KR', sans-serif; color: #3F5A2C">만해 한용운이 살았던 집. 조선총독부를 등지려 북쪽을 향해 지었다는 이야기가 전해져요.</p>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+          <a class="soft" href="PlaceDetail.dc.html" style="height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 700 14px 'Noto Sans KR', sans-serif; color: #2F6512; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"></path><path d="M4 19a2 2 0 0 1 2-2h13"></path></svg>이야기 · 방문 정보</a>
+          <a class="cta" href="Courses.dc.html" style="height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 800 14px 'Noto Sans KR', sans-serif; text-decoration: none">여기로 달리기<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        </div>
+      </article>
+      </sc-if>
+      <sc-if value="{{show_jeongneung}}" hint-placeholder-val="{{ true }}">
+      <article class="card" style="border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; gap: 12px; align-items: flex-start">
+          <span style="width: 64px; height: 64px; flex: none; border-radius: 18px; background: #F2F9E6; box-shadow: inset 0 0 0 1px #DCEDC6; display: flex; align-items: center; justify-content: center"><svg width="44" height="44" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M2 30 H30" stroke="#7FA66B" stroke-width="2.4" stroke-linecap="round"></path>
+        <path d="M4.5 16.5 C4.5 6.5, 27.5 6.5, 27.5 16.5" fill="none" stroke="#939C97" stroke-width="2.2" stroke-linecap="round"></path>
+        <path d="M7 18 C8 10.5, 24 10.5, 25 18 Z" fill="#7FA66B"></path>
+        <path d="M10.5 14.2 C13.5 12.4 18.5 12.4 21.5 14.2" fill="none" stroke="#A9C995" stroke-width="1.1" stroke-linecap="round"></path>
+        <rect x="6.5" y="17.4" width="19" height="2.6" rx=".6" fill="#DCE0DD" stroke="#939C97" stroke-width=".5"></rect>
+        <path d="M9.5 17.4v2.6M12.5 17.4v2.6M15.5 17.4v2.6M18.5 17.4v2.6M21.5 17.4v2.6" stroke="#B3BAB6" stroke-width=".5"></path>
+        <path d="M11.5 22.5V20.2M13.4 22.5V20.2M15.3 22.5V20.2M16.7 22.5V20.2M18.6 22.5V20.2M20.5 22.5V20.2" stroke="#D14B22" stroke-width=".7"></path>
+        <path d="M10 30V21.5M22 30V21.5" stroke="#D14B22" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M8.6 22.5H23.4M9.2 24.6H22.8" stroke="#D14B22" stroke-width="1.3" stroke-linecap="round"></path>
+        <circle cx="16" cy="20.6" r="1.1" fill="#7CC4A4" stroke="#D14B22" stroke-width=".4"></circle>
+      </svg></span>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+            <div style="display: flex; align-items: center; gap: 6px"><h2 style="margin: 0; font: 800 18px 'Noto Sans KR', sans-serif">정릉</h2><span class="badge" style="background: #EAF7D8; color: #2F6512"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#5FA52A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12,2 21,7 21,17 12,22 3,17 3,7" fill="currentColor" stroke="none"></polygon></svg>코스 6개</span></div>
+            <small style="font: 600 12px 'Noto Sans KR', sans-serif; color: #3F7F1C">왕릉 · 숲길 · 내 위치에서 [거리]</small>
+            <p style="margin: 2px 0 0; font: 400 13px/1.55 'Noto Sans KR', sans-serif; color: #3F5A2C">태조 이성계의 왕비 신덕왕후의 무덤. 울창한 숲속에 조선 초 권력 다툼의 이야기가 남아 있어요.</p>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+          <a class="soft" href="PlaceDetail.dc.html" style="height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 700 14px 'Noto Sans KR', sans-serif; color: #2F6512; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"></path><path d="M4 19a2 2 0 0 1 2-2h13"></path></svg>이야기 · 방문 정보</a>
+          <a class="cta" href="Courses.dc.html" style="height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 800 14px 'Noto Sans KR', sans-serif; text-decoration: none">여기로 달리기<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        </div>
+      </article>
+      </sc-if>
+      <sc-if value="{{show_uiryeong}}" hint-placeholder-val="{{ true }}">
+      <article class="card" style="border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; gap: 12px; align-items: flex-start">
+          <span style="width: 64px; height: 64px; flex: none; border-radius: 18px; background: #F2F9E6; box-shadow: inset 0 0 0 1px #DCEDC6; display: flex; align-items: center; justify-content: center"><svg width="44" height="44" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M1.5 29 C9 24.5, 19 17.5, 30.5 15 V30 H1.5 Z" fill="#C5DCB1"></path>
+        <path d="M1.5 29 C9 24.5, 19 17.5, 30.5 15" fill="none" stroke="#7FA66B" stroke-width="1.2"></path>
+        <path d="M17 12.5 C17 5.8, 29 5.8, 29 12.5" fill="none" stroke="#939C97" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M18.2 13.4 C19.2 8.4, 26.8 8.4, 27.8 13.4 Z" fill="#7FA66B"></path>
+        <path d="M20.5 10.8 Q23 9.6 25.5 10.8" fill="none" stroke="#A9C995" stroke-width=".9" stroke-linecap="round"></path>
+        <rect x="18" y="12.9" width="10" height="2" rx=".5" fill="#DCE0DD" stroke="#939C97" stroke-width=".4"></rect>
+        <path d="M4.5 21 C4.5 14.3, 16.5 14.3, 16.5 21" fill="none" stroke="#939C97" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M5.7 21.9 C6.7 16.9, 14.3 16.9, 15.3 21.9 Z" fill="#7FA66B"></path>
+        <path d="M8 19.3 Q10.5 18.1 13 19.3" fill="none" stroke="#A9C995" stroke-width=".9" stroke-linecap="round"></path>
+        <rect x="5.5" y="21.4" width="10" height="2" rx=".5" fill="#DCE0DD" stroke="#939C97" stroke-width=".4"></rect>
+        <path d="M20.4 22.6 L22.5 20.6 L24.6 22.6 Z" fill="#858E89"></path>
+        <rect x="21.4" y="22.6" width="2.2" height="2.6" fill="#D3D8D5" stroke="#858E89" stroke-width=".4"></rect>
+        <rect x="22.1" y="23.3" width=".8" height="1.1" fill="#7CC4A4"></rect>
+        <rect x="21.7" y="25.2" width="1.6" height="1.8" fill="#B3BAB6"></rect>
+        <rect x="20.8" y="27" width="3.4" height=".9" fill="#858E89"></rect>
+      </svg></span>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+            <div style="display: flex; align-items: center; gap: 6px"><h2 style="margin: 0; font: 800 18px 'Noto Sans KR', sans-serif">의릉</h2><span class="badge" style="background: #EAF7D8; color: #2F6512"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#5FA52A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12,2 21,7 21,17 12,22 3,17 3,7" fill="currentColor" stroke="none"></polygon></svg>코스 6개</span></div>
+            <small style="font: 600 12px 'Noto Sans KR', sans-serif; color: #3F7F1C">왕릉 · 언덕 · 내 위치에서 [거리]</small>
+            <p style="margin: 2px 0 0; font: 400 13px/1.55 'Noto Sans KR', sans-serif; color: #3F5A2C">경종과 선의왕후의 무덤. 두 무덤이 앞뒤로 놓인 '상하이봉릉' 형식이 특별해요.</p>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+          <a class="soft" href="PlaceDetail.dc.html" style="height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 700 14px 'Noto Sans KR', sans-serif; color: #2F6512; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"></path><path d="M4 19a2 2 0 0 1 2-2h13"></path></svg>이야기 · 방문 정보</a>
+          <a class="cta" href="Courses.dc.html" style="height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 800 14px 'Noto Sans KR', sans-serif; text-decoration: none">여기로 달리기<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        </div>
+      </article>
+      </sc-if>
+
+    <a class="soft" href="Events.dc.html" style="border-radius: 20px; padding: 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: #1F3D14">
+      <span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: #FFFFFF; color: #3F7F1C; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"></rect><path d="M4 10h16M9 3v4M15 3v4"></path></svg></span>
+      <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font: 700 15px 'Noto Sans KR', sans-serif">이 장소들과 이어진 문화 활동</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">해설 투어 · 전시 · 축제를 날짜별로 찾아보세요</small></span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7FA66B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1120}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { view: 'list', cat: 'all' }; }
+  renderVals() {
+    const s = this.state;
+    const ON = 'background: #2F6512; color: #FFFFFF;';
+    const OFF = 'background: rgba(246,252,234,.7); color: #1F3D14; box-shadow: inset 0 -3px 0 rgba(120,190,60,.22), inset 0 0 0 1px rgba(120,190,60,.14);';
+    const C = [['all', '전체'], ['tomb', '왕릉 · 숲길'], ['indep', '독립운동 유적'], ['hanok', '한옥'], ['wall', '성곽']];
+    const tag = { simujang: ['indep', 'hanok'], jeongneung: ['tomb'], uiryeong: ['tomb'] };
+    const show = (k) => s.cat === 'all' || tag[k].includes(s.cat);
+    const n = Object.keys(tag).filter(show).length;
+    return {
+      isList: s.view === 'list', isMap: s.view === 'map',
+      listCls: s.view === 'list' ? 'seg-on' : 'seg-off', mapCls: s.view === 'map' ? 'seg-on' : 'seg-off',
+      toList: () => this.setState({ view: 'list' }), toMap: () => this.setState({ view: 'map' }),
+      cats: C.map(([k, label]) => ({ label, on: s.cat === k ? 'true' : 'false', style: s.cat === k ? ON : OFF, pick: () => this.setState({ cat: k }) })),
+      show_simujang: show('simujang'), show_jeongneung: show('jeongneung'), show_uiryeong: show('uiryeong'),
+      countText: n ? '장소 ' + n + '곳' : '이 주제의 장소는 아직 준비 중이에요'
+    };
+  }
+}
+</script>
+</body>
+</html>

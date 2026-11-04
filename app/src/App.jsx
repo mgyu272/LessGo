@@ -5,12 +5,17 @@ import { useApp } from "./state/AppContext.jsx";
 import { PhoneFrame } from "./components/PhoneFrame.jsx";
 import { TabBar, Toast } from "./components/Bits.jsx";
 import Home from "./screens/Home.jsx";
-import { Settings, CourseList, CourseDetail } from "./screens/Courses.jsx";
+import CoursePicker from "./screens/Courses.jsx";
 import Run from "./screens/Run.jsx";
 import { Spot, Shops, Coupon } from "./screens/Spot.jsx";
-import { Finish, Stars, Records } from "./screens/Me.jsx";
+import { Stars, Records } from "./screens/Me.jsx";
 import { Login, Signup, FindAccount, Nickname } from "./screens/Auth.jsx";
 import Loading from "./screens/Loading.jsx";
+import RunDone from "./screens/RunDone.jsx";
+import Places from "./screens/Places.jsx";
+import PlaceDetail from "./screens/PlaceDetail.jsx";
+import Events from "./screens/Events.jsx";
+import Stats from "./screens/Stats.jsx";
 
 const SCREENS = {
   onboarding: [Login],             // 시작 화면 = 로그인
@@ -18,19 +23,22 @@ const SCREENS = {
   find: [FindAccount],
   nickname: [Nickname],            // 구글로 처음 들어온 사람
   home: [Home],
-  settings: [Home, Settings],      // 시안처럼 홈 지도 위에 설정 시트를 띄워요
-  list: [CourseList],
-  detail: [CourseDetail],
+  courses: [CoursePicker],         // 코스 고르기 (예전 조건 시트 · 코스 3개 · 코스 상세를 합침)
+  places: [Places],                // 장소와 이야기
+  place: [PlaceDetail],            // 장소 상세 (app.spot)
+  events: [Events],                // 문화 활동
   run: [Run],
   spot: [Spot],
   shops: [Spot, Shops],            // 스팟 화면 위에 가게 시트
   coupon: [Coupon],
-  finish: [Finish],
+  finish: [RunDone],               // 완주 요약 (자유 달리기 · 코스 중간 종료)
   stars: [Stars],
   records: [Records],
+  stats: [Stats],                  // 내 기록 (오늘 · 주간 · 배지)
 };
-const WITH_TABS = new Set(["home", "stars", "records"]);
-const DARK = new Set(["run", "stars", "coupon"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
+// 하단 메뉴가 보이는 화면
+const WITH_TABS = new Set(["home", "places", "events", "stats", "stars", "records"]);
+const DARK = new Set(["stars", "coupon"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
 
 export default function App() {
   const { screen, data, spot } = useApp();

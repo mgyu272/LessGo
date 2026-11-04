@@ -56,7 +56,24 @@ export function MapView({ dark, className = "", center = CENTER, zoom = 15, leve
   if (status !== "ready") {
     return <div className={`${cls} map-fallback`}>{status === "loading" ? null : <p>{t(status === "no-key" ? "map_no_key" : "map_error")}</p>}</div>;
   }
-  return <Map className={cls} center={initialCenter} level={level ?? levelOf(zoom)}>{children}</Map>;
+  return <Map className={cls} center={initialCenter} level={level ?? levelOf(zoom)}><AutoRelayout />{children}</Map>;
+}
+
+// 지도 칸 크기가 바뀌면(화면 전환·창 크기·시트) 카카오맵에 다시 맞추라고 알려요. 안 하면 타일이 일부만 그려져요
+function AutoRelayout() {
+  const map = useMap();
+  useEffect(() => {
+    const el = map.getNode();
+    if (!window.ResizeObserver || !el) return;
+    let last = "";
+    const ro = new ResizeObserver(() => {
+      const size = `${el.offsetWidth}x${el.offsetHeight}`;
+      if (size !== last) { last = size; const c = map.getCenter(); map.relayout(); map.setCenter(c); }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [map]);
+  return null;
 }
 
 // 처음 한 번(또는 key가 바뀔 때) 영역에 맞춰 확대. 여백은 [왼쪽, 위], [오른쪽, 아래] (px)
@@ -215,6 +232,15 @@ export function Dot({ at, color = "#1C2B26", radius = 7 }) {
   return (
     <CustomOverlayMap position={toLatLng(at)} xAnchor={0.5} yAnchor={0.5} zIndex={2}>
       <span className="map-dot" style={{ width: radius * 2, height: radius * 2, background: color }} />
+    </CustomOverlayMap>
+  );
+}
+
+// 1km·2km 같은 거리 표시: 흰 원 + 연두 점 + 옆에 작은 이름표
+export function KmMark({ at, label }) {
+  return (
+    <CustomOverlayMap position={toLatLng(at)} xAnchor={0.5} yAnchor={0.5} zIndex={3}>
+      <div className="km-mark"><i aria-hidden="true" /><span>{label}</span></div>
     </CustomOverlayMap>
   );
 }

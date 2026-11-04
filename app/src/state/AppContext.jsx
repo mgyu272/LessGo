@@ -31,6 +31,8 @@ export function AppProvider({ children }) {
   });
   const [weather, setWeather] = useState(null);
   const [course, setCourse] = useState(null);
+  // 코스 고르기 조건 (목적지·거리·언덕·테마). 홈·장소 화면에서 목적지를 미리 골라 넘겨요
+  const [pick, setPick] = useState({ dest: "uiryeong", km: 5, hill: "flat", themes: [] });
   const [spot, setSpot] = useState(null);
   const [couponShop, setCouponShop] = useState(null);
   const [finish, setFinish] = useState(null);
@@ -82,7 +84,7 @@ export function AppProvider({ children }) {
   };
 
   const value = {
-    lang, changeLang, screen, go, data, settings, setSettings, weather, course, setCourse,
+    lang, changeLang, screen, go, data, settings, setSettings, weather, course, setCourse, pick, setPick,
     spot, setSpot, couponShop, setCouponShop, finish, shuffle, setShuffle, toastMsg, toast,
     demo, setDemo, user, run,
   };

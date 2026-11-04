@@ -1,68 +1,38 @@
-// ① 홈: 지도 + 끌어 올리는 바텀시트 "오늘은 얼마나 달려볼까요?"
+// ① 홈: 지도 + 끌어 올리는 바텀시트 (디자인 원본 docs/design/Main.dc.html)
+// "오늘은 얼마나 달려볼까요?" 3/5/10km → 오늘의 추천 코스(다른 코스 보기 / 바로 시작) → 자유 달리기
+// 시트를 끝까지 올리면 지도에 있는 스팟 목록이 보여요.
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useApp, HOME_CENTER, HOME_LEVEL } from "../state/AppContext.jsx";
-import { t } from "../lib/i18n.js";
+import { t, loc } from "../lib/i18n.js";
 import { MapView, FitSpots, FlyTo, HexLayer, SpotMarker, Me } from "../components/MapView.jsx";
-import { CategoryIcon } from "../components/SpotIcons.jsx";
-import { LangPill } from "../components/Bits.jsx";
-import { Icon } from "./Auth.jsx";
-import { DISTANCES, MIN_PER_KM, modeOfHill } from "../lib/routes.js"; // 3/5/10km, 예상 시간 1km 6분 30초
+import { CategoryIcon, spotIconSvg } from "../components/SpotIcons.jsx";
+import { LangPill, ElevationChart } from "../components/Bits.jsx";
+import { useBottomSheet, BottomSheet, Segment, Badge } from "../components/ui.jsx";
+import { DESTINATIONS, DISTANCES } from "../lib/routes.js";
 import { getCourse } from "../lib/data.js";
 
 const FILTERS = [["all", "filter_all"], ["history", "filter_history"], ["stream", "filter_stream"], ["park", "filter_park"]];
 // 바텀시트가 멈추는 높이 (px). 가운데(처음) 높이는 420인데, 낮은 화면(아이폰 SE 등)에서는
 // 지도에 핀 자리가 남도록 화면 높이에 맞춰 낮춰요 (최소 300)
-const snapsFor = (screenH) => [150, Math.max(300, Math.min(420, screenH - 330)), 640];
+const snapsFor = (screenH) => [150, Math.max(300, Math.min(420, screenH - 330)), Math.min(640, screenH - 120)];
 
 // 스팟 배지가 보여야 하는 지도 영역: 위쪽 검색·칩 아래부터 아래 시트 위까지 (지도 안쪽 px)
 // 레이아웃 위치(offset)로 재요. 화면상 위치는 PC 아이폰 프레임 축소나 시트 애니메이션에 따라 달라져서요.
-// (지도는 화면 전체를 덮어서 지도 안쪽 좌표 = 화면 안쪽 좌표예요)
 function homeSafeArea() {
   const map = document.querySelector(".home-map");
   const top = document.querySelector(".home-top");
-  const sheet = document.querySelector(".home-sheet");
+  const sheet = document.querySelector(".home-screen .bsheet");
   return { top: top.offsetTop + top.offsetHeight + 8, bottom: sheet.offsetTop - 8, left: 8, right: map.offsetWidth - 8 };
 }
 
-// 끌어서 높이를 바꾸는 바텀시트. 손을 떼면 가장 가까운 멈춤 높이로 붙어요.
-function useSheet() {
-  // PC의 아이폰 프레임 안에서는 화면 높이가 852로 고정이라 창 높이 대신 프레임 높이를 써요
-  const [snaps] = useState(() => snapsFor(document.querySelector(".phone")?.offsetHeight || window.innerHeight));
-  const [height, setHeight] = useState(snaps[1]);
-  const [dragging, setDragging] = useState(false);
-  const drag = useRef(null);
-  const justDragged = useRef(false); // 끌기를 마친 직후의 click은 무시해요
-  const maxH = () => Math.min(snaps[snaps.length - 1], (document.querySelector(".home-screen")?.offsetHeight || 852) - 120);
-  const snapTo = (h) => snaps.reduce((best, s) => (Math.abs(s - h) < Math.abs(best - h) ? s : best), snaps[0]);
-  const handlers = {
-    onPointerDown: (e) => {
-      drag.current = { y: e.clientY, h: height, moved: false };
-      e.currentTarget.setPointerCapture(e.pointerId);
-      setDragging(true);
-    },
-    onPointerMove: (e) => {
-      const d = drag.current; if (!d) return;
-      // PC 아이폰 프레임은 축소돼 보여서, 화면상 이동량을 원래 크기로 되돌려요
-      const el = document.querySelector(".home-screen");
-      const scale = el ? el.getBoundingClientRect().height / el.offsetHeight || 1 : 1;
-      const dy = (d.y - e.clientY) / scale;
-      if (Math.abs(dy) > 4) d.moved = true;
-      setHeight(Math.max(snaps[0], Math.min(maxH(), d.h + dy)));
-    },
-    onPointerUp: () => {
-      const d = drag.current; drag.current = null; setDragging(false);
-      if (!d) return;
-      justDragged.current = d.moved;
-      setHeight((h) => (d.moved ? snapTo(h) : h));
-    },
-  };
-  // 손잡이를 탭하거나 키보드 Enter를 누르면 다음 높이로
-  const cycle = () => {
-    if (justDragged.current) { justDragged.current = false; return; }
-    setHeight((h) => snaps[(snaps.indexOf(snapTo(h)) + 1) % snaps.length]);
-  };
-  return { height, dragging, handlers, cycle, full: height >= snaps[snaps.length - 1] - 20 };
+// 오늘의 추천: 고른 거리의 완만한 길(low) 중 정식 추천(formal_recommendation) 경로. 없으면 null
+export function todaysPick(data, km) {
+  for (const dest of DESTINATIONS) {
+    const c = getCourse(data, dest, km, "low");
+    if (c?.properties.formal) return c;
+  }
+  return null;
 }
 
 export default function Home() {
@@ -74,15 +44,14 @@ export default function Home() {
   const [refit, setRefit] = useState(0);
   const [me, setMe] = useState(null);
   const [locating, setLocating] = useState(false);
-  const sheet = useSheet();
+  const sheet = useBottomSheet({ snaps: snapsFor, initial: 1 });
   const shown = data.spots.filter((s) => filter === "all" || s.category === filter);
-  const minutes = Math.round(settings.km * MIN_PER_KM);
+  const pick = todaysPick(data, settings.km);
+  const startFree = () => app.run.start(null, { demo: app.demo, speedup: speedParam() });
 
-  // 핀을 누르면 그 장소까지 가는 코스 상세로 (고른 거리, 경사 선호에 맞는 완만한 길/언덕 허용)
-  const openSpot = (spot) => {
-    const c = getCourse(data, spot.id, settings.km, modeOfHill(settings.hill));
-    if (c) { app.setCourse(c); app.go("detail"); }
-  };
+  // 코스 고르기로 (목적지를 미리 골라 둘 수 있어요)
+  const openCourses = (dest) => { app.setPick({ ...app.pick, km: settings.km, ...(dest ? { dest } : {}) }); app.go("courses"); };
+  const openSpot = (spot) => openCourses(spot.id);
   const search = (e) => {
     if (e.key !== "Enter") return;
     const q = query.trim().toLowerCase();
@@ -130,41 +99,81 @@ export default function Home() {
         </div>
       </div>
 
-      {!sheet.full && (
-        <button className={`locate-btn glass ${locating ? "busy" : ""}`} style={{ bottom: sheet.height + 12 }} onClick={locate} aria-label={t("my_location")}>
+      {!sheet.expanded && (
+        <button className={`locate-btn glass ${locating ? "busy" : ""}`} style={{ bottom: sheet.height + 14 }} onClick={locate} aria-label={t("my_location")}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="2.5" fill="currentColor" /><path d="M12 2v3 M12 19v3 M2 12h3 M19 12h3" />
+            <circle cx="12" cy="12" r="6.5" /><circle cx="12" cy="12" r="2" fill="currentColor" /><path d="M12 2v3 M12 19v3 M2 12h3 M19 12h3" />
           </svg>
         </button>
       )}
 
-      <div className={`home-sheet ${sheet.dragging ? "dragging" : ""}`} style={{ height: sheet.height }}>
-        <button className="sheet-handle" {...sheet.handlers} onClick={sheet.cycle} aria-label={t("sheet_resize")}>
-          <span className="grip" />
-        </button>
+      <BottomSheet sheet={sheet} className="home-sheet-v2">
         <div className="sheet-body">
           <h2>{t("home_title")}</h2>
-          <div className="segment" role="radiogroup" aria-label={t("distance")}>
-            {DISTANCES.map((km) => (
-              <button key={km} role="radio" aria-checked={settings.km === km} className={settings.km === km ? "on" : ""} onClick={() => setSettings({ ...settings, km })}>
-                <b>{km}</b>km<small>{t("km_" + km)}</small>
-              </button>
-            ))}
-          </div>
-          <p className="estimate">{t("estimate_line", { n: minutes })}</p>
-          <button className="btn btn-cta" onClick={() => app.go("settings")}>
-            {t("make_course_km", { km: settings.km })}<Icon name="arrow" className="arrow" />
-          </button>
-          <button className="free-card glass" onClick={() => app.run.start(null, { demo: app.demo, speedup: speedParam() })}>
+          <Segment label={t("distance")} value={settings.km} onChange={(km) => setSettings({ ...settings, km })}
+            options={DISTANCES.map((km) => ({ value: km, label: <>{km}<small>km</small></>, sub: t("km_" + km) }))} />
+
+          {pick ? <TodayCard course={pick} onMore={() => openCourses(pick.properties.dest)}
+            onStart={() => app.run.start(pick, { demo: app.demo, speedup: speedParam() })} /> : (
+            // 이 거리에는 정식 추천 경로가 없어서 추천 카드를 숨기고, 코스 고르기로 가는 버튼만 둬요
+            <button className="btn btn-soft today-none" onClick={() => openCourses()}>{t("pick_course_km", { km: settings.km })}</button>
+          )}
+
+          <button className="free-card glass" onClick={startFree}>
             <span className="free-ic" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="14" cy="4.5" r="2" /><path d="M7 21l3-6 3 2 1 4 M6 12l3-4 5 1 3 3 M10 15l1.5-5" /></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 18c4 0 4-7 8-7s4-6 8-6" /><circle cx="20" cy="5" r="1.6" fill="currentColor" /></svg>
             </span>
             <span className="free-text"><b>{t("free_title")}</b><small>{t("free_sub")}</small></span>
-            <Icon name="arrow" className="arrow" />
+            <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
           </button>
+
+          {sheet.expanded && (
+            <section className="map-spots rise">
+              <h3>{t("spots_on_map")}</h3>
+              <ul>
+                {data.spots.map((s) => (
+                  <li key={s.id}>
+                    <button onClick={() => openSpot(s)}>
+                      <span className="ms-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
+                      <span className="ms-text"><b>{loc(s.name)}</b><small>{t("filter_" + s.category)}</small></span>
+                      <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </div>
+      </BottomSheet>
+    </section>
+  );
+}
+
+// 오늘의 추천 카드: 장소 그림 + 배지 + 이름 · 거리·시간·오르막 + 고도 그래프 + 다른 코스 보기 / 바로 시작
+function TodayCard({ course, onMore, onStart }) {
+  const { data } = useApp();
+  const p = course.properties;
+  const spot = data.spotById[p.dest];
+  const place = loc(spot?.name).replace(/\s*\(.*\)/, "");
+  const climb = p.climbLevel ? t("climb_" + p.climbLevel) : t("climb_unknown");
+  return (
+    <article className="today-card card">
+      <div className="tc-head">
+        <span className="tc-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spot ? spotIconSvg(spot) : "" }} />
+        <div className="tc-text">
+          <Badge>{t("today_pick")}</Badge>
+          <b>{t("to_place_mode", { name: place, mode: loc(p.modeName) })}</b>
+          <small>{p.distance_km}km · {t("about_min", { n: p.minutes })} · {climb}</small>
         </div>
       </div>
-    </section>
+      <ElevationChart values={p.elevation} height={28} color="#2F6512" fill="rgba(47,101,18,.12)" />
+      <div className="tc-actions">
+        <button className="btn btn-soft" onClick={onMore}>{t("other_courses")}</button>
+        <button className="btn btn-cta" onClick={onStart}>{t("start_now")}
+          <svg viewBox="0 0 24 24" className="play" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" /></svg>
+        </button>
+      </div>
+    </article>
   );
 }
 

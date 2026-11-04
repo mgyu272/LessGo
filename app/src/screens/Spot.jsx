@@ -9,6 +9,7 @@ import * as voice from "../lib/voice.js";
 import { ShopRow, FakeQr, LangPill } from "../components/Bits.jsx";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { LogoBird } from "../components/LogoBird.jsx";
+import { useBottomSheet, BottomSheet } from "../components/ui.jsx";
 import { CENTER } from "../state/AppContext.jsx";
 
 const CAT = { history: ["History spot", "역사문화 스팟"], stream: ["Stream spot", "하천길 스팟"], park: ["Park & view spot", "공원·전망 스팟"] };
@@ -28,6 +29,8 @@ export function Spot() {
   const [q, setQ] = useState("");
   const [answer, setAnswer] = useState(null); // {loading} | {text, sources, cached} | {none}
   const timer = useRef(null);
+  // 해설 시트: 처음엔 레코드판 아래부터, 끌어올리면 화면 위까지
+  const sheet = useBottomSheet({ snaps: (h) => [Math.max(320, h - 380), h - 64], initial: 0 });
   // 읽는 위치: from = 이번에 읽기 시작한 글자, at/atTime = 마지막으로 알려준 단어 위치와 그때 시각
   const pos = useRef({ token: 0, from: 0, startTime: 0, at: null, atTime: 0, resume: 0 });
 
@@ -88,24 +91,31 @@ export function Spot() {
   return (
     <section className="screen spot-screen">
       <header className="spot-head">
-        <button className="round-back glass" onClick={() => { stopAudio(); app.run.resume(); }} aria-label={t("keep_running")}>‹</button>
-        <LangPill glass />
+        <button className="round-btn glass" onClick={() => { stopAudio(); app.run.resume(); }} aria-label={t("keep_running")}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+        </button>
       </header>
       <Record spot={spot} playing={playing} />
       <div className="spot-title"><b>{loc(spot.name)}</b><small>{t("stamped")}</small></div>
-      <div className="sheet spot-sheet">
-        <div className="grip" />
-        <div className="scroll-y">
-          <p className="eyebrow purple">{(CAT[spot.category] || CAT.history)[lang === "ko" ? 1 : 0]}</p>
+      <BottomSheet sheet={sheet} className="spot-sheet2">
+        <div className="scroll-y spot-body">
+          <div className="spot-cat">
+            <p>{(CAT[spot.category] || CAT.history)[lang === "ko" ? 1 : 0]}</p>
+            <LangPill glass />
+          </div>
           <small className="muted">{t("ai_reviewed")}</small>
 
-          <div className="cards">
+          {/* 이야기 카드: spots.json의 cards (밝은 반투명 카드, 옆으로 넘겨요) */}
+          <div className="story-rail" role="list">
             {spot.cards.map((c, i) => (
-              <article className="story" key={i}>
-                <span className="n">{i + 1} / {spot.cards.length}</span>
+              <article className={`story2 ${i === 0 ? "first" : ""}`} key={i} role="listitem">
+                <div className="s2-head">
+                  <span className="s2-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(spot) }} />
+                  <span className="s2-n">{t("story_n", { i: i + 1, n: spot.cards.length })}</span>
+                </div>
                 <h3>{loc(c.title)}</h3>
                 <p>{loc(c.body)}</p>
-                {i < spot.cards.length - 1 && <span className="swipe">{t("swipe_next")}</span>}
+                <span className="s2-dots" aria-hidden="true">{spot.cards.map((_, j) => <i key={j} className={j === i ? "on" : ""} />)}</span>
               </article>
             ))}
           </div>
@@ -161,7 +171,7 @@ export function Spot() {
           <button className="btn btn-outline" onClick={() => { stopAudio(); app.go("shops"); }}>{t("nearby_shops")}</button>
         </div>
         <p className="foot">{t("partner_note")}</p>
-      </div>
+      </BottomSheet>
     </section>
   );
 }

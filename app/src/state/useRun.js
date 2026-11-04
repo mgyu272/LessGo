@@ -25,14 +25,14 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
       pill, cue: r.cue, newCells: r.newCells.length, paused: r.paused,
       trail: r.trail.slice(), me: r.me, freeShops: r.freeShops, courseDone: r.courseDone,
       fresh: r.newCells.slice(-6), visited: [...r.visited],
-      progress: r.course ? Math.min(1, r.meters / r.course.len) : null,
+      progress: r.course ? Math.min(1, r.meters / r.course.len) : null, voice: r.voice,
     });
   }, []);
 
   const showCue = useCallback((text) => {
     const r = ref.current;
     r.cue = text;
-    voice.speak(text, { lang: getLang() });
+    if (r.voice) voice.speak(text, { lang: getLang() }); // 음성을 끄면 화면 안내만
     clearTimeout(r.cueTimer);
     r.cueTimer = setTimeout(() => { if (ref.current) { ref.current.cue = null; push(); } }, 9000);
   }, [push]);
@@ -113,7 +113,7 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
       course, demo, simPath, meters: 0, last: null, trail: [], newCells: [], visited: new Set(),
       cuesFired: new Set(), paused: false, ended: false, altUp: 0, lastAlt: null, lastCell: null,
       cue: null, pill: demo ? "" : t("gps_waiting"), newStamps: 0, courseDone: false,
-      me: [simPath[0].lat, simPath[0].lng], freeShops: [],
+      me: [simPath[0].lat, simPath[0].lng], freeShops: [], voice: true,
     };
     r.tracker = createTracker({
       demo, path: simPath, speedup, onPosition,
@@ -130,6 +130,14 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
     const r = ref.current; if (!r) return;
     r.paused = !r.paused;
     if (r.paused) r.tracker.pause(); else { r.tracker.resume(); r.last = null; } // 쉬는 동안 이동한 거리는 빼요
+    push();
+  }, [push]);
+
+  // 달리는 중 음성 안내 켜기·끄기
+  const toggleVoice = useCallback(() => {
+    const r = ref.current; if (!r) return;
+    r.voice = !r.voice;
+    if (!r.voice) voice.stop();
     push();
   }, [push]);
 
@@ -179,7 +187,7 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
     go("finish");
   }, [dataRef, userRef, setFinish, go]);
 
-  return { view, start, togglePause, resume, finish, isRunning: () => !!ref.current, arrivedAt: () => ref.current?.arrivedAt };
+  return { view, start, togglePause, toggleVoice, resume, finish, isRunning: () => !!ref.current, arrivedAt: () => ref.current?.arrivedAt };
 }
 
 function currentAscent(r) {

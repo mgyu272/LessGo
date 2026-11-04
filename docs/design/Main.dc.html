@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>홈 · 지도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1F4D3F}a:hover{color:#1F4D3F}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(95,165,42,.45)}100%{box-shadow:0 0 0 14px rgba(31,77,63,0)}}
+@keyframes pick{0%{transform:scale(.94)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.pin{animation:bob 2.8s ease-in-out infinite}
+.pin2{animation-delay:.5s}.pin3{animation-delay:1s}.pin4{animation-delay:1.5s}
+.dot{animation:ping 2s ease-out infinite;border-radius:50%}
+.km{transition:background .25s ease,color .25s ease,border-color .25s ease,box-shadow .25s ease}
+.km-on{animation:pick .35s ease}
+.grab{touch-action:none;cursor:grab}
+.grab:active{cursor:grabbing}
+.more{animation:rise .4s ease both}
+.bh{position:relative;isolation:isolate;overflow:hidden}
+.bh::before{content:"";position:absolute;inset:0;background:url(/_blob/bf38a862736ea3ce9378da6441abcaef) center/320px repeat;opacity:.42;mix-blend-mode:multiply;pointer-events:none;z-index:-1}
+.hanji{isolation:isolate}
+.hanji::before{content:"";position:absolute;inset:0;border-radius:inherit;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.3;mix-blend-mode:luminosity;pointer-events:none;z-index:0}
+.hanji>*{position:relative;z-index:1}
+@media (prefers-reduced-motion: reduce){.pin,.dot,.km-on,.more{animation:none}}
+.bh::before{display:none}
+.chips{scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent)}
+.chips::-webkit-scrollbar{display:none}
+.seg{transition:background .25s ease,color .25s ease,box-shadow .25s ease}
+.fab{transition:top .42s cubic-bezier(.22,1.2,.36,1),opacity .2s ease}
+.glass{background:rgba(255,255,255,.58)!important;-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);border:1px solid rgba(255,255,255,.8)!important;box-shadow:0 8px 24px -12px rgba(31,61,20,.35)!important}
+.glass-g{background:rgba(95,165,42,.74)!important;-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);border:1px solid rgba(255,255,255,.35)}
+.glass-d{background:rgba(255,255,255,.18)!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.4)!important}
+</style>
+</helmet>
+<div style="width: 390px; height: 1000px; position: relative; overflow: hidden; background: #F4F5F3; font-family: 'Noto Sans KR', sans-serif; color: #1F3D14">
+  <img src="/_blob/e22f937df0dc75db9f1b94d737633b2b" alt="성북구 일대 지도" style="position: absolute; left: 0; top: 0; width: 390px; height: 450px; object-fit: cover; object-position: top">
+  <span style="position: absolute; right: 6px; top: 412px; padding: 1px 5px; background: rgba(255,255,255,.75); font: 400 9px 'Noto Sans KR', sans-serif; color: #3E5A2C">© OpenStreetMap contributors</span>
+
+  <svg width="390" height="450" viewBox="0 0 390 450" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+    <g fill="none" stroke="#26302C" stroke-opacity=".55" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round">
+      <path d="M63 289 L106 333"></path>
+      <path d="M171 281 L144 325"></path>
+      <path d="M77 364 L98 353"></path>
+      <path d="M297 281 L293 313"></path>
+    </g>
+    <g fill="#5FA52A" stroke="#FFFFFF" stroke-width="2.5">
+      <circle cx="106" cy="333" r="5.5"></circle>
+      <circle cx="144" cy="325" r="5.5"></circle>
+      <circle cx="98" cy="353" r="5.5"></circle>
+      <circle cx="293" cy="313" r="5.5"></circle>
+    </g>
+  </svg>
+
+  <!-- 길상사: 단청 지붕과 연등 -->
+  <div style="position: absolute; left: 3px; top: 212px; width: 120px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+    <span class="glass" style="padding: 3px 10px; border-radius: 999px; background: #FFFFFF; font: 700 12px 'Noto Sans KR', sans-serif; color: #1F3D14; box-shadow: 0 2px 8px rgba(30,43,23,.18)">길상사</span>
+    <span class="pin pin1" role="img" aria-label="길상사" style="width: 48px; height: 48px; border-radius: 24px; background: #FFFFFF; box-shadow: 0 0 0 2.5px #1F3D14, 0 6px 14px rgba(30,43,23,.28); display: flex; align-items: center; justify-content: center">
+      <svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="6" y="27" width="20" height="2" rx="1" fill="#B3BAB6"></rect>
+        <rect x="11" y="17" width="10" height="10" fill="#F1F3EF"></rect>
+        <path d="M13.5 18.5v8M16 18.5v8M18.5 18.5v8M12 21.5h8M12 24.5h8" stroke="#C9A77C" stroke-width=".7"></path>
+        <path d="M9.5 16.5v10.5M22.5 16.5v10.5" stroke="#B8431C" stroke-width="1.8"></path>
+        <rect x="8" y="15" width="16" height="2.2" fill="#2E6B57"></rect>
+        <path d="M9.5 16.1h1.6M12.6 16.1h1.6M15.7 16.1h1.6M18.8 16.1h1.6M21.9 16.1h.8" stroke="#7CC4A4" stroke-width="1.1"></path>
+        <path d="M2 13 C6 14.2 9 12.2 11 9 H21 C23 12.2 26 14.2 30 13 C28 15.4 24.5 15.6 21 15 H11 C7.5 15.6 4 15.4 2 13 Z" fill="#26302C"></path>
+        <path d="M10.5 9.2 Q16 7 21.5 9.2" fill="none" stroke="#26302C" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M13 10.5v3.6M16 10v4M19 10.5v3.6" stroke="#3D4843" stroke-width=".8"></path>
+        <path d="M4.5 14.6v3" stroke="#4F6B3B" stroke-width=".6"></path>
+        <ellipse cx="4.5" cy="20" rx="2.5" ry="2.3" fill="#F29BB0"></ellipse>
+        <path d="M2.4 19.6 Q4.5 17.4 6.6 19.6 M3 21.4 Q4.5 22.6 6 21.4" fill="none" stroke="#D96A88" stroke-width=".7"></path>
+        <path d="M4.5 22.3v1.6" stroke="#7CC4A4" stroke-width=".8"></path>
+        <path d="M27.5 14.6v3" stroke="#4F6B3B" stroke-width=".6"></path>
+        <ellipse cx="27.5" cy="20" rx="2.5" ry="2.3" fill="#7CC4A4"></ellipse>
+        <path d="M25.4 19.6 Q27.5 17.4 29.6 19.6 M26 21.4 Q27.5 22.6 29 21.4" fill="none" stroke="#C48A12" stroke-width=".7"></path>
+        <path d="M27.5 22.3v1.6" stroke="#E05A2B" stroke-width=".8"></path>
+      </svg>
+    </span>
+  </div>
+
+  <!-- 정릉: 곡장 두른 봉분과 홍살문 -->
+  <div style="position: absolute; left: 111px; top: 204px; width: 120px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+    <span class="glass" style="padding: 3px 10px; border-radius: 999px; background: #FFFFFF; font: 700 12px 'Noto Sans KR', sans-serif; color: #1F3D14; box-shadow: 0 2px 8px rgba(30,43,23,.18)">정릉</span>
+    <span class="pin pin2" role="img" aria-label="정릉" style="width: 48px; height: 48px; border-radius: 24px; background: #FFFFFF; box-shadow: 0 0 0 2.5px #1F3D14, 0 6px 14px rgba(30,43,23,.28); display: flex; align-items: center; justify-content: center">
+      <svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M2 30 H30" stroke="#7FA66B" stroke-width="2.4" stroke-linecap="round"></path>
+        <path d="M4.5 16.5 C4.5 6.5, 27.5 6.5, 27.5 16.5" fill="none" stroke="#939C97" stroke-width="2.2" stroke-linecap="round"></path>
+        <path d="M7 18 C8 10.5, 24 10.5, 25 18 Z" fill="#7FA66B"></path>
+        <path d="M10.5 14.2 C13.5 12.4 18.5 12.4 21.5 14.2" fill="none" stroke="#A9C995" stroke-width="1.1" stroke-linecap="round"></path>
+        <rect x="6.5" y="17.4" width="19" height="2.6" rx=".6" fill="#DCE0DD" stroke="#939C97" stroke-width=".5"></rect>
+        <path d="M9.5 17.4v2.6M12.5 17.4v2.6M15.5 17.4v2.6M18.5 17.4v2.6M21.5 17.4v2.6" stroke="#B3BAB6" stroke-width=".5"></path>
+        <path d="M11.5 22.5V20.2M13.4 22.5V20.2M15.3 22.5V20.2M16.7 22.5V20.2M18.6 22.5V20.2M20.5 22.5V20.2" stroke="#D14B22" stroke-width=".7"></path>
+        <path d="M10 30V21.5M22 30V21.5" stroke="#D14B22" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M8.6 22.5H23.4M9.2 24.6H22.8" stroke="#D14B22" stroke-width="1.3" stroke-linecap="round"></path>
+        <circle cx="16" cy="20.6" r="1.1" fill="#7CC4A4" stroke="#D14B22" stroke-width=".4"></circle>
+      </svg>
+    </span>
+  </div>
+
+  <!-- 심우장: 북향 한옥과 초승달 -->
+  <div style="position: absolute; left: -4px; top: 351px; width: 120px; display: flex; flex-direction: column; align-items: center; gap: 4px">
+    <span class="pin pin3" role="img" aria-label="심우장" style="width: 48px; height: 48px; border-radius: 24px; background: #FFFFFF; box-shadow: 0 0 0 2.5px #1F3D14, 0 6px 14px rgba(30,43,23,.28); display: flex; align-items: center; justify-content: center">
+      <svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M25.6 3.2 a3.4 3.4 0 1 0 3.6 4.6 a2.8 2.8 0 1 1 -3.6 -4.6 z" fill="#7CC4A4"></path>
+        <rect x="4" y="27" width="24" height="2.2" rx="1" fill="#B3BAB6"></rect>
+        <rect x="8" y="17" width="16" height="10" fill="#F1F3EF"></rect>
+        <path d="M8 17v10M13.6 17v10M18.4 17v10M24 17v10" stroke="#7A5134" stroke-width="1.3"></path>
+        <rect x="14.4" y="18.6" width="3.2" height="8.4" fill="#D8B88A"></rect>
+        <path d="M16 18.6v8.4M14.4 21.4h3.2M14.4 24.2h3.2" stroke="#7A5134" stroke-width=".55"></path>
+        <rect x="9.4" y="19.4" width="2.9" height="3" fill="#F1F3EF" stroke="#7A5134" stroke-width=".6"></rect>
+        <path d="M10.85 19.4v3M9.4 20.9h2.9" stroke="#7A5134" stroke-width=".4"></path>
+        <rect x="19.7" y="19.4" width="2.9" height="3" fill="#F1F3EF" stroke="#7A5134" stroke-width=".6"></rect>
+        <path d="M21.15 19.4v3M19.7 20.9h2.9" stroke="#7A5134" stroke-width=".4"></path>
+        <path d="M1.5 15.8 C5 16.8 8 14.6 10 11.5 H22 C24 14.6 27 16.8 30.5 15.8 C28.4 18 25 18.2 22 17.4 H10 C7 18.2 3.6 18 1.5 15.8 Z" fill="#26302C"></path>
+        <path d="M9.4 11.7 Q16 9.2 22.6 11.7" fill="none" stroke="#26302C" stroke-width="2" stroke-linecap="round"></path>
+        <path d="M12 13v3.6M14.5 12.6v4M17.5 12.6v4M20 13v3.6" stroke="#3D4843" stroke-width=".8"></path>
+        <circle cx="9.4" cy="11.7" r=".9" fill="#FFFFFF"></circle>
+        <circle cx="22.6" cy="11.7" r=".9" fill="#FFFFFF"></circle>
+      </svg>
+    </span>
+    <span class="glass" style="padding: 3px 10px; border-radius: 999px; background: #FFFFFF; font: 700 12px 'Noto Sans KR', sans-serif; color: #1F3D14; box-shadow: 0 2px 8px rgba(30,43,23,.18)">심우장</span>
+  </div>
+
+  <!-- 의릉: 언덕 위아래로 놓인 두 봉분과 장명등 -->
+  <div style="position: absolute; left: 237px; top: 204px; width: 120px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+    <span class="glass" style="padding: 3px 10px; border-radius: 999px; background: #FFFFFF; font: 700 12px 'Noto Sans KR', sans-serif; color: #1F3D14; box-shadow: 0 2px 8px rgba(30,43,23,.18)">의릉</span>
+    <span class="pin pin4" role="img" aria-label="의릉" style="width: 48px; height: 48px; border-radius: 24px; background: #FFFFFF; box-shadow: 0 0 0 2.5px #1F3D14, 0 6px 14px rgba(30,43,23,.28); display: flex; align-items: center; justify-content: center">
+      <svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M1.5 29 C9 24.5, 19 17.5, 30.5 15 V30 H1.5 Z" fill="#C5DCB1"></path>
+        <path d="M1.5 29 C9 24.5, 19 17.5, 30.5 15" fill="none" stroke="#7FA66B" stroke-width="1.2"></path>
+        <path d="M17 12.5 C17 5.8, 29 5.8, 29 12.5" fill="none" stroke="#939C97" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M18.2 13.4 C19.2 8.4, 26.8 8.4, 27.8 13.4 Z" fill="#7FA66B"></path>
+        <path d="M20.5 10.8 Q23 9.6 25.5 10.8" fill="none" stroke="#A9C995" stroke-width=".9" stroke-linecap="round"></path>
+        <rect x="18" y="12.9" width="10" height="2" rx=".5" fill="#DCE0DD" stroke="#939C97" stroke-width=".4"></rect>
+        <path d="M4.5 21 C4.5 14.3, 16.5 14.3, 16.5 21" fill="none" stroke="#939C97" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M5.7 21.9 C6.7 16.9, 14.3 16.9, 15.3 21.9 Z" fill="#7FA66B"></path>
+        <path d="M8 19.3 Q10.5 18.1 13 19.3" fill="none" stroke="#A9C995" stroke-width=".9" stroke-linecap="round"></path>
+        <rect x="5.5" y="21.4" width="10" height="2" rx=".5" fill="#DCE0DD" stroke="#939C97" stroke-width=".4"></rect>
+        <path d="M20.4 22.6 L22.5 20.6 L24.6 22.6 Z" fill="#858E89"></path>
+        <rect x="21.4" y="22.6" width="2.2" height="2.6" fill="#D3D8D5" stroke="#858E89" stroke-width=".4"></rect>
+        <rect x="22.1" y="23.3" width=".8" height="1.1" fill="#7CC4A4"></rect>
+        <rect x="21.7" y="25.2" width="1.6" height="1.8" fill="#B3BAB6"></rect>
+        <rect x="20.8" y="27" width="3.4" height=".9" fill="#858E89"></rect>
+      </svg>
+    </span>
+  </div>
+
+  <div style="position: absolute; left: 14px; right: 14px; top: 8px; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; gap: 8px; align-items: center">
+      <div class="glass" style="flex: 1; min-width: 0; height: 48px; display: flex; align-items: center; gap: 10px; background: #FFFFFF; border-radius: 24px; padding: 0 16px; color: #4F6B3B">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+        <label for="q" style="position: absolute; left: -9999px">검색</label>
+        <input id="q" placeholder="스팟, 동네, 역 검색" style="flex: 1; min-width: 0; border: 0; background: none; padding: 0; outline: none; font: 400 15px 'Noto Sans KR', sans-serif; color: #1F3D14">
+      </div>
+      <button class="glass" aria-label="언어 바꾸기" style="width: 48px; height: 48px; flex: none; border-radius: 24px; border: 0; background: #FFFFFF; font: 700 12px 'Noto Sans KR', sans-serif; color: #1F3D14">KO</button>
+    </div>
+    <div class="chips" style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -14px; padding: 2px 14px 6px">
+      <button style="flex: none; height: 38px; padding: 0 16px; border-radius: 999px; border: 0; background: #2F6512; color: #FFFFFF; font: 600 14px 'Noto Sans KR', sans-serif; box-shadow: 0 6px 14px -6px rgba(31,61,20,.55)">전체</button>
+      <button class="glass" style="flex: none; height: 38px; padding: 0 14px; border-radius: 999px; border: 0; background: #FFFFFF; color: #1F3D14; font: 500 14px 'Noto Sans KR', sans-serif; box-shadow: 0 3px 10px rgba(30,43,23,.08); display: flex; align-items: center; gap: 7px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M1.5 8.6 C3.6 9.3 5.4 8 6.6 6 H13.4 C14.6 8 16.4 9.3 18.5 8.6 C17.3 10.1 15.2 10.2 13.4 9.8 H6.6 C4.8 10.2 2.7 10.1 1.5 8.6 Z" fill="#1F3D14"></path><path d="M6.2 6.1 Q10 4.4 13.8 6.1" fill="none" stroke="#1F3D14" stroke-width="1.4" stroke-linecap="round"></path><path d="M5.6 10v6.4M14.4 10v6.4" stroke="#1F3D14" stroke-width="1.5" stroke-linecap="round"></path><rect x="7.4" y="10.4" width="5.2" height="6" fill="#E6EAE8"></rect><path d="M10 10.4v6" stroke="#1F3D14" stroke-width=".8"></path><path d="M3.5 17h13" stroke="#1F3D14" stroke-width="1.5" stroke-linecap="round"></path></svg>역사문화</button>
+      <button class="glass" style="flex: none; height: 38px; padding: 0 14px; border-radius: 999px; border: 0; background: #FFFFFF; color: #1F3D14; font: 500 14px 'Noto Sans KR', sans-serif; box-shadow: 0 3px 10px rgba(30,43,23,.08); display: flex; align-items: center; gap: 7px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 7.5 C4 5.8 6 5.8 8 7.5 S12 9.2 14 7.5 S18 5.8 18 6.2" fill="none" stroke="#2F6512" stroke-width="1.7" stroke-linecap="round"></path><path d="M2 11.5 C4 9.8 6 9.8 8 11.5 S12 13.2 14 11.5 S18 9.8 18 10.2" fill="none" stroke="#7FA66B" stroke-width="1.7" stroke-linecap="round"></path><path d="M2 15.5 C4 13.8 6 13.8 8 15.5 S12 17.2 14 15.5 S18 13.8 18 14.2" fill="none" stroke="#2F6512" stroke-width="1.7" stroke-linecap="round"></path><circle cx="15.5" cy="3.6" r="1.3" fill="#7CC4A4"></circle></svg>하천길</button>
+      <button class="glass" style="flex: none; height: 38px; padding: 0 14px; border-radius: 999px; border: 0; background: #FFFFFF; color: #1F3D14; font: 500 14px 'Noto Sans KR', sans-serif; box-shadow: 0 3px 10px rgba(30,43,23,.08); display: flex; align-items: center; gap: 7px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M1.5 17 L7.5 7 L11 12.4 L13.4 9.4 L18.5 17 Z" fill="#B9D3C6"></path><path d="M6 9.4 L7.5 7 L9 9.4 Z" fill="#FFFFFF"></path><path d="M14.5 4.2 C12.2 4.2 11.2 6.6 12.2 8.2 C10.8 8.8 11 11.4 13 11.6 H16 C18 11.4 18.2 8.8 16.8 8.2 C17.8 6.6 16.8 4.2 14.5 4.2 Z" fill="#2E6B57"></path><path d="M14.5 11.6V17" stroke="#7A5134" stroke-width="1.5" stroke-linecap="round"></path><path d="M1.5 17 H18.5" stroke="#2E6B57" stroke-width="1.5" stroke-linecap="round"></path></svg>공원·전망</button>
+    </div>
+  </div>
+
+  <button class="glass fab" aria-label="내 위치로 이동" style="position: absolute; right: 14px; top: {{fabTop}}px; opacity: {{fabOp}}; visibility: {{fabVis}}; width: 48px; height: 48px; border-radius: 24px; border: 0; background: #FFFFFF; color: #3F7F1C; display: flex; align-items: center; justify-content: center; z-index: 2">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="6.5"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path></svg>
+  </button>
+
+  <div class="hanji" style="background: linear-gradient(180deg, #F2F9E6 0%, #FBFBF4 38%, #FFFFFF 100%); position: absolute; left: 0; right: 0; top: {{top}}px; height: 1000px; transition: {{ease}}; border-radius: 26px 26px 0 0; box-shadow: 0 -10px 30px rgba(30,43,23,.12); padding: 0 22px 120px; display: flex; flex-direction: column; box-sizing: border-box">
+    <button class="grab" aria-label="{{label}}" aria-expanded="{{expanded}}" onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerCancel="{{onUp}}" onKeyDown="{{onKey}}" style="align-self: stretch; height: 30px; margin: 0 -22px 6px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0">
+      <span style="width: 44px; height: 5px; border-radius: 3px; background: #C6E59E"></span>
+    </button>
+    <h1 style="margin: 4px 0 14px; font: 800 25px/1.3 'Noto Sans KR', sans-serif; letter-spacing: -.02em">오늘은 얼마나 달려볼까요?</h1>
+    <div role="radiogroup" aria-label="거리 고르기" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 18px; background: #E8F3D8; border: 1px solid #DCEDC6">
+      <button class="seg {{km3Cls}}" role="radio" aria-checked="{{km3On}}" onClick="{{pick3}}" style="height: 56px; border: 0; border-radius: 14px; {{km3Style}} display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-family: inherit; cursor: pointer">
+        <span style="font: 800 22px/1 'Noto Sans KR', sans-serif">3<small style="font: 700 12px 'Noto Sans KR', sans-serif; margin-left: 2px">km</small></span><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: {{km3Sub}}">가볍게</small>
+      </button>
+      <button class="seg {{km5Cls}}" role="radio" aria-checked="{{km5On}}" onClick="{{pick5}}" style="height: 56px; border: 0; border-radius: 14px; {{km5Style}} display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-family: inherit; cursor: pointer">
+        <span style="font: 800 22px/1 'Noto Sans KR', sans-serif">5<small style="font: 700 12px 'Noto Sans KR', sans-serif; margin-left: 2px">km</small></span><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: {{km5Sub}}">보통</small>
+      </button>
+      <button class="seg {{km8Cls}}" role="radio" aria-checked="{{km8On}}" onClick="{{pick8}}" style="height: 56px; border: 0; border-radius: 14px; {{km8Style}} display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-family: inherit; cursor: pointer">
+        <span style="font: 800 22px/1 'Noto Sans KR', sans-serif">10<small style="font: 700 12px 'Noto Sans KR', sans-serif; margin-left: 2px">km</small></span><small style="font: 500 12px 'Noto Sans KR', sans-serif; color: {{km8Sub}}">길게</small>
+      </button>
+    </div>
+    <div style="margin-top: 12px; border-radius: 22px; padding: 14px; background: #FFFFFF; box-shadow: 0 1px 0 rgba(120,190,60,.12), 0 14px 28px -20px rgba(63,127,28,.6); display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <span style="width: 52px; height: 52px; flex: none; border-radius: 16px; background: #F2F9E6; box-shadow: inset 0 0 0 1px #DCEDC6; display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M1.5 29 C9 24.5, 19 17.5, 30.5 15 V30 H1.5 Z" fill="#C5DCB1"></path>
+        <path d="M1.5 29 C9 24.5, 19 17.5, 30.5 15" fill="none" stroke="#7FA66B" stroke-width="1.2"></path>
+        <path d="M17 12.5 C17 5.8, 29 5.8, 29 12.5" fill="none" stroke="#939C97" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M18.2 13.4 C19.2 8.4, 26.8 8.4, 27.8 13.4 Z" fill="#7FA66B"></path>
+        <path d="M20.5 10.8 Q23 9.6 25.5 10.8" fill="none" stroke="#A9C995" stroke-width=".9" stroke-linecap="round"></path>
+        <rect x="18" y="12.9" width="10" height="2" rx=".5" fill="#DCE0DD" stroke="#939C97" stroke-width=".4"></rect>
+        <path d="M4.5 21 C4.5 14.3, 16.5 14.3, 16.5 21" fill="none" stroke="#939C97" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M5.7 21.9 C6.7 16.9, 14.3 16.9, 15.3 21.9 Z" fill="#7FA66B"></path>
+        <path d="M8 19.3 Q10.5 18.1 13 19.3" fill="none" stroke="#A9C995" stroke-width=".9" stroke-linecap="round"></path>
+        <rect x="5.5" y="21.4" width="10" height="2" rx=".5" fill="#DCE0DD" stroke="#939C97" stroke-width=".4"></rect>
+        <path d="M20.4 22.6 L22.5 20.6 L24.6 22.6 Z" fill="#858E89"></path>
+        <rect x="21.4" y="22.6" width="2.2" height="2.6" fill="#D3D8D5" stroke="#858E89" stroke-width=".4"></rect>
+        <rect x="22.1" y="23.3" width=".8" height="1.1" fill="#7CC4A4"></rect>
+        <rect x="21.7" y="25.2" width="1.6" height="1.8" fill="#B3BAB6"></rect>
+        <rect x="20.8" y="27" width="3.4" height=".9" fill="#858E89"></rect>
+      </svg></span>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span style="display: inline-flex; align-self: flex-start; align-items: center; height: 22px; padding: 0 8px; border-radius: 11px; background: #EAF7D8; color: #2F6512; font: 700 11px 'Noto Sans KR', sans-serif">오늘의 추천</span>
+          <b style="font: 800 17px 'Noto Sans KR', sans-serif">의릉까지 · 완만한 길</b>
+          <small style="font: 500 13px 'Noto Sans KR', sans-serif; color: #4F6B3B">{{kmLabel}}km · 약 {{kmMin}}분 · 오르막 적음</small>
+        </div>
+      </div>
+      <svg width="100%" height="28" viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true" style="display: block"><polygon points="4,56 4,29 17,20 29,9 42,20 55,37 67,52 80,47 93,25 106,20 118,15 131,14 144,12 156,12 169,8 182,8 194,15 207,15 220,16 233,4 245,6 258,4 271,20 283,6 296,6 296,56" fill="#2F6512" opacity=".12"></polygon><polyline points="4,29 17,20 29,9 42,20 55,37 67,52 80,47 93,25 106,20 118,15 131,14 144,12 156,12 169,8 182,8 194,15 207,15 220,16 233,4 245,6 258,4 271,20 283,6 296,6" fill="none" stroke="#2F6512" stroke-width="3" stroke-linejoin="round"></polyline></svg>
+      <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 8px">
+        <a href="Courses.dc.html" style="height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font: 700 15px 'Noto Sans KR', sans-serif; color: #2F6512; text-decoration: none; background: rgba(246,252,234,.8); box-shadow: inset 0 -3px 0 rgba(120,190,60,.22), inset 0 0 0 1px rgba(120,190,60,.14)">다른 코스 보기</a>
+        <a href="Run.dc.html" style="height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 800 15px 'Noto Sans KR', sans-serif; color: #1C3A0C; text-decoration: none; background: rgba(190,236,130,.92); box-shadow: 0 14px 28px -12px rgba(150,215,80,.75)">바로 시작<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor" stroke="none"></path></svg></a>
+      </div>
+    </div>
+    <a class="glass" href="Run.dc.html" style="text-decoration: none; margin-top: 10px; min-height: 56px; border-radius: 16px; border: 0; background: #FFFFFF; color: #1F3D14; display: flex; align-items: center; gap: 12px; padding: 0 14px; text-align: left; font-family: inherit; cursor: pointer">
+      <span style="width: 34px; height: 34px; flex: none; border-radius: 12px; background: #EAF7D8; color: #3F7F1C; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18c4 0 4-7 8-7s4-6 8-6"></path><circle cx="20" cy="5" r="1.6" fill="currentColor"></circle></svg></span>
+      <span style="flex: 1; display: flex; flex-direction: column; gap: 1px"><b style="font: 700 14px 'Noto Sans KR', sans-serif">코스 없이 자유 달리기</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">지나는 길에 동네 가게 쿠폰 받기</small></span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7FA66B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+    </a>
+    <sc-if value="{{expanded}}" hint-placeholder-val="{{ false }}">
+      <section class="more" style="margin-top: 22px">
+        <h2 style="margin: 0 0 6px; font: 700 15px 'Noto Sans KR', sans-serif">지도에 있는 스팟</h2>
+        <ul style="margin: 0; padding: 0; list-style: none"><li style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(31,77,63,.1)"><span style="width: 36px; height: 36px; flex: none; border-radius: 18px; background: rgba(255,255,255,.7); display: flex; align-items: center; justify-content: center; font: 800 11px 'Noto Sans KR', sans-serif; color: #5FA52A">길</span><span style="flex: 1; display: flex; flex-direction: column"><b style="font: 700 15px 'Noto Sans KR', sans-serif">길상사</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">역사문화 · 절</small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9DB08A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></li><li style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(31,77,63,.1)"><span style="width: 36px; height: 36px; flex: none; border-radius: 18px; background: rgba(255,255,255,.7); display: flex; align-items: center; justify-content: center; font: 800 11px 'Noto Sans KR', sans-serif; color: #5FA52A">정</span><span style="flex: 1; display: flex; flex-direction: column"><b style="font: 700 15px 'Noto Sans KR', sans-serif">정릉</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">역사문화 · 왕릉</small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9DB08A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></li><li style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(31,77,63,.1)"><span style="width: 36px; height: 36px; flex: none; border-radius: 18px; background: rgba(255,255,255,.7); display: flex; align-items: center; justify-content: center; font: 800 11px 'Noto Sans KR', sans-serif; color: #5FA52A">심</span><span style="flex: 1; display: flex; flex-direction: column"><b style="font: 700 15px 'Noto Sans KR', sans-serif">심우장</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">역사문화 · 한옥</small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9DB08A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></li><li style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(31,77,63,.1)"><span style="width: 36px; height: 36px; flex: none; border-radius: 18px; background: rgba(255,255,255,.7); display: flex; align-items: center; justify-content: center; font: 800 11px 'Noto Sans KR', sans-serif; color: #5FA52A">의</span><span style="flex: 1; display: flex; flex-direction: column"><b style="font: 700 15px 'Noto Sans KR', sans-serif">의릉</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">역사문화 · 왕릉</small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9DB08A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></li></ul>
+      </section>
+    </sc-if>
+  </div>
+
+  <nav class="glass-g" aria-label="주 메뉴" style="position: absolute; left: 14px; right: 14px; bottom: 12px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: rgba(95,165,42,.96); border-radius: 22px; padding: 8px 6px; box-shadow: 0 12px 30px -8px rgba(30,43,23,.6)">
+    <button style="border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px; color: #FFFFFF; font: 600 11px 'Noto Sans KR', sans-serif">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EAF7D8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>지도
+    </button>
+    <button style="border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px; color: rgba(255,255,255,.78); font: 400 11px 'Noto Sans KR', sans-serif">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c3 0 3-6 7-6s3-6 7-6"></path></svg>코스
+    </button>
+    <button style="border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px; color: rgba(255,255,255,.78); font: 400 11px 'Noto Sans KR', sans-serif">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M8 12l3 3 5-6"></path></svg>스탬프·별
+    </button>
+    <button style="border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px; color: rgba(255,255,255,.78); font: 400 11px 'Noto Sans KR', sans-serif">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>내 기록
+    </button>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { top: 420, dragging: false, km: 5 };
+    this.snaps = [150, 420, 640];
+    this.drag = null;
+    this.onDown = (e) => {
+      try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+      this.drag = { y: e.clientY, top: this.state.top, moved: 0 };
+      this.setState({ dragging: true });
+    };
+    this.onMove = (e) => {
+      if (!this.drag) return;
+      const dy = e.clientY - this.drag.y;
+      this.drag.moved = Math.max(this.drag.moved, Math.abs(dy));
+      const min = this.snaps[0], max = this.snaps[this.snaps.length - 1];
+      this.setState({ top: Math.min(max + 30, Math.max(min - 30, this.drag.top + dy)) });
+    };
+    this.onUp = () => {
+      if (!this.drag) return;
+      const d = this.drag; this.drag = null;
+      let next;
+      if (d.moved < 6) {
+        const i = this.snaps.indexOf(d.top);
+        next = i > 0 ? this.snaps[0] : this.snaps[1];
+      } else {
+        next = this.snaps.reduce((a, b) => Math.abs(b - this.state.top) < Math.abs(a - this.state.top) ? b : a);
+      }
+      this.setState({ top: next, dragging: false });
+    };
+    this.onKey = (e) => {
+      if (e.key === 'ArrowUp') { e.preventDefault(); const i = this.snaps.indexOf(this.state.top); this.setState({ top: this.snaps[Math.max(0, i - 1)] }); }
+      if (e.key === 'ArrowDown') { e.preventDefault(); const i = this.snaps.indexOf(this.state.top); this.setState({ top: this.snaps[Math.min(this.snaps.length - 1, i + 1)] }); }
+    };
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      top: s.top,
+      ease: s.dragging ? 'none' : 'top .42s cubic-bezier(.22,1.2,.36,1)',
+      expanded: s.top === this.snaps[0],
+      label: s.top === this.snaps[0] ? '시트 내리기' : '시트 올리기',
+      onDown: this.onDown, onMove: this.onMove, onUp: this.onUp, onKey: this.onKey,
+      km3Style: this.state.km === 3 ? 'background: #FFFFFF; color: #1F3D14; box-shadow: 0 4px 12px -4px rgba(31,61,20,.3);' : 'background: transparent; color: #4F6B3B; box-shadow: none;',
+      km3Sub: this.state.km === 3 ? '#3F7F1C' : '#4F6B3B',
+      km3On: this.state.km === 3 ? 'true' : 'false',
+      km3Cls: this.state.km === 3 ? 'km-on' : '',
+      pick3: () => this.setState({ km: 3 }),
+      km5Style: this.state.km === 5 ? 'background: #FFFFFF; color: #1F3D14; box-shadow: 0 4px 12px -4px rgba(31,61,20,.3);' : 'background: transparent; color: #4F6B3B; box-shadow: none;',
+      km5Sub: this.state.km === 5 ? '#3F7F1C' : '#4F6B3B',
+      km5On: this.state.km === 5 ? 'true' : 'false',
+      km5Cls: this.state.km === 5 ? 'km-on' : '',
+      pick5: () => this.setState({ km: 5 }),
+      km8Style: this.state.km === 10 ? 'background: #FFFFFF; color: #1F3D14; box-shadow: 0 4px 12px -4px rgba(31,61,20,.3);' : 'background: transparent; color: #4F6B3B; box-shadow: none;',
+      km8Sub: this.state.km === 10 ? '#3F7F1C' : '#4F6B3B',
+      km8On: this.state.km === 10 ? 'true' : 'false',
+      km8Cls: this.state.km === 10 ? 'km-on' : '',
+      pick8: () => this.setState({ km: 10 }),
+      kmLabel: this.state.km,
+      kmMin: Math.round(this.state.km * 6.5),
+      fabTop: s.top - 62,
+      fabOp: s.top === this.snaps[0] ? 0 : 1,
+      fabVis: s.top === this.snaps[0] ? 'hidden' : 'visible'
+    };
+  }
+}
+</script>
+</body>
+</html>
