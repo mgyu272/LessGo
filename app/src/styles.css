@@ -994,3 +994,10 @@ small { font-size: 12px; }
 .st-tile.done .st-medal { background: radial-gradient(circle at 35% 30%, #E8F8D2, #9FD25E); color: var(--text); box-shadow: 0 8px 16px -10px rgba(63, 127, 28, .7); }
 .st-tile b { font-size: 13px; font-weight: 700; }
 .st-tile small { font-size: 11px; font-weight: 500; color: var(--muted); }
+
+/* Existing 18-route picker: explicit live-GPS and simulation choices */
+.picker-cta .picker-cta-gps { flex: 1.05; min-width: 0; padding: 0 8px; font-size: 14px; }
+.picker-cta .picker-cta-demo { flex: 1; min-width: 0; padding: 0 6px; font-size: 12px; white-space: normal; line-height: 1.25; }
+.today-card .tc-actions { grid-template-columns: 1fr 1.1fr 1.1fr; gap: 6px; }
+.today-card .tc-actions .btn { font-size: 12px; padding: 0 5px; min-width: 0; white-space: normal; line-height: 1.2; }
+.run-screen.is-demo .run-status { border: 1px solid var(--border); }
