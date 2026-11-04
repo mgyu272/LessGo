@@ -49,14 +49,13 @@ function makeCourse({ dest, km, mode, route, coords, spot }) {
   const sum = route.summary || {};
   const distance_km = sum.distance_km != null ? Math.round(sum.distance_km * 10) / 10 : Math.round(len / 100) / 10;
   const placeName = spot?.name || { ko: dest, en: dest };
+  const short = { ko: placeName.ko.replace(/\s*\(.*\)/, ""), en: placeName.en.replace(/\s*\(.*\)/, "") };
   const ascent = sum.ascent_m != null ? Math.round(sum.ascent_m) : null;
   const perKm = ascent != null && distance_km ? ascent / distance_km : null;
   const p = {
     id: keyOf(dest, km, mode), dest, km, mode,
-    name: {
-      ko: `${placeName.ko.replace(/\s*\(.*\)/, "")} ${km}km · ${MODE_NAME[mode].ko}`,
-      en: `${placeName.en.replace(/\s*\(.*\)/, "")} ${km} km · ${MODE_NAME[mode].en}`,
-    },
+    name: { ko: `${short.ko} ${km}km · ${MODE_NAME[mode].ko}`, en: `${short.en} ${km} km · ${MODE_NAME[mode].en}` },
+    title: { ko: `${short.ko} ${km}km`, en: `${short.en} ${km} km` }, // 카드 제목 (길 종류는 옆 칩에)
     distance_km,
     minutes: Math.round(distance_km * MIN_PER_KM),
     ascent_m: ascent, // null = 알 수 없음

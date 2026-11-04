@@ -178,6 +178,12 @@ small { font-size: 12px; }
 .seg button small { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
 .seg button.on { background: var(--ink); border-color: var(--ink); color: #fff; font-weight: 600; }
 .seg-sub button.on { background: var(--ginkgo-soft); color: var(--text); border-color: var(--ginkgo); }
+/* 코스 상세: 완만한 길 / 언덕 허용 2칸 (선 색 견본 포함) */
+.seg.mode-seg { grid-template-columns: repeat(2, 1fr); margin: 4px 0 16px; }
+.mode-seg button { display: flex; flex-direction: column; align-items: center; font-weight: 700; }
+.mode-line { width: 26px; height: 4px; border-radius: 2px; margin-bottom: 6px; }
+.mode-line.low { background: #2F8A3A; }
+.mode-line.high { background: #E8780C; }
 .seg button.on small { color: inherit; opacity: .8; }
 .input { width: 100%; padding: 13px 15px; border: 1.5px solid var(--line); border-radius: 14px; background: #fff; margin-top: 8px; outline: none; }
 .input:focus { border-color: var(--ink); }

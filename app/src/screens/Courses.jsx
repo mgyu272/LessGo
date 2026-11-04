@@ -5,9 +5,13 @@ import { t, loc } from "../lib/i18n.js";
 import { pickThree } from "../lib/recommend.js";
 import { aiRecommend } from "../lib/ai.js";
 import { MapView, FitBounds, HexLayer, SpotMarker, Route, Dot } from "../components/MapView.jsx";
+import { getCourse } from "../lib/data.js";
 import { ElevationChart, Seal, sealText } from "../components/Bits.jsx";
 import { speedParam } from "./Home.jsx";
-import { DISTANCES } from "../lib/routes.js";
+import { DISTANCES, MODES } from "../lib/routes.js";
+
+// 지도 선 색: 완만한 길(low) = 초록, 언덕 허용(high) = 주황 (단색)
+export const MODE_COLOR = { low: "#2F8A3A", high: "#E8780C" };
 import { useEffect, useState } from "react";
 
 // ---------------- ② 설정 ----------------
@@ -78,7 +82,7 @@ export function Toggle({ checked, onChange, title, sub, className = "" }) {
 export function CourseList() {
   const app = useApp();
   const s = app.settings;
-  const rulePicks = pickThree(app.data.courses, s, app.weather, app.shuffle);
+  const rulePicks = pickThree(app.data, s, app.weather, app.shuffle);
   const w = app.weather;
   // AI 추천: 규칙 결과를 먼저 보여주고, AI 답이 오면 순서와 "추천 이유"를 바꿔 끼워요
   const [ai, setAi] = useState({ status: "loading", picks: null });
@@ -91,7 +95,7 @@ export function CourseList() {
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settingsKey]);
-  const byId = Object.fromEntries(app.data.courses.map((c) => [c.id, c]));
+  const byId = app.data.courseByKey;
   const picks = ai.picks ? ai.picks.map((p) => byId[p.id]).filter(Boolean) : rulePicks;
   const reasons = Object.fromEntries((ai.picks || []).map((p) => [p.id, p.reason]));
   return (
@@ -114,19 +118,22 @@ export function CourseList() {
 }
 
 function CourseCard({ c, top, reason, onClick }) {
+  const app = useApp();
   const p = c.properties;
+  const spotName = (id) => app.data.spotById[id]?.name;
   return (
     <article className={`course-card tone-${p.tone} ${top ? "top" : ""}`} onClick={onClick} data-course={c.id}>
-      {top && <div className="best">{t("best_match")}</div>}
-      <div className="row-between"><h3>{loc(p.name)}</h3><span className={`tone ${p.tone}`}>{t("tone_" + p.tone)}</span></div>
-      <p className="sub">{p.themes.map((th) => t("th_" + th)).join(", ")} / {t("h_" + p.hill)}</p>
+      {/* 정식 추천 경로(formal_recommendation)일 때만 "오늘 가장 잘 맞는 코스" 배지 */}
+      {top && p.formal && <div className="best">{t("best_match")}</div>}
+      <div className="row-between"><h3>{loc(p.title)}</h3><span className={`tone ${p.tone}`}>{loc(p.modeName)}</span></div>
+      <p className="sub">{t("to_place", { name: loc(spotName(p.dest)) })}</p>
       {reason && <p className="ai-reason"><span aria-hidden="true">✦</span> {reason}</p>}
       <ElevationChart values={p.elevation} {...(top ? { color: "#E6F7CC", fill: "rgba(230,247,204,.3)" } : {})} />
       <div className="row-between">
         <span className="km">{p.distance_km}<small>km</small></span>
         <div className="meta">
           <span>{t("about_min", { n: p.minutes })}</span>
-          <span>{t("uphill", { lv: t(p.hill === "flat" ? "lv_low" : p.hill === "mild" ? "lv_mid" : "lv_high") })}</span>
+          <span>{t("uphill", { lv: p.climbLevel ? t("lv_" + p.climbLevel) : t("unknown") })}</span>
           <span className="lamps" title={t("lamps")}>{"●".repeat(p.lamps)}{"○".repeat(3 - p.lamps)}</span>
         </div>
       </div>
@@ -141,26 +148,39 @@ export function CourseDetail() {
   const [fav, setFav] = useState(() => readFavs().has(c.id));
   const p = c.properties;
   const spots = p.spots.map((id) => app.data.spotById[id]).filter(Boolean);
+  const pair = MODES.map((m) => getCourse(app.data, p.dest, p.km, m)).filter(Boolean);
+  const place = loc(app.data.spotById[p.dest]?.name).replace(/\s*\(.*\)/, "");
+  const pick = (other) => { app.setCourse(other); setFav(readFavs().has(other.id)); };
   const toggleFav = () => { const f = readFavs(); f.has(c.id) ? f.delete(c.id) : f.add(c.id); writeFavs(f); setFav(f.has(c.id)); };
 
   return (
     <section className="screen">
       <MapView className="map-half">
         <HexLayer cells={app.user.cells} landmarkCells={app.data.landmarkCells} />
-        <Route path={c.path} />
+        {/* 고르지 않은 쪽은 얇은 점선, 고른 쪽은 굵은 실선 (고른 선이 위에 오게 나중에 그려요) */}
+        {pair.filter((o) => o.id !== c.id).map((o) => <Route key={o.id} path={o.path} color={MODE_COLOR[o.properties.mode]} weight={3} opacity={0.85} dashed />)}
+        <Route key={c.id} path={c.path} color={MODE_COLOR[p.mode]} weight={7} opacity={0.95} />
         <Dot at={[c.path[0].lat, c.path[0].lng]} />
         {spots.map((s) => <SpotMarker key={s.id} spot={s} />)}
-        <FitBounds points={c.path.map((q) => [q.lat, q.lng])} padTL={[40, 90]} padBR={[40, 40]} fitKey={c.id} />
+        <FitBounds points={pair.flatMap((o) => o.path).map((q) => [q.lat, q.lng])} padTL={[40, 90]} padBR={[40, 40]} fitKey={p.dest + p.km} />
       </MapView>
       <button className="round-back" onClick={() => app.go("list")} aria-label="back">‹</button>
       <div className="sheet detail-sheet">
         <div className="scroll-y">
-          <p className="eyebrow purple">{p.themes.map((th) => t("th_" + th)).join(", ")} / {t("h_" + p.hill)}</p>
-          <h2>{loc(p.name)}</h2>
+          <p className="eyebrow purple">{p.km}km · {loc(p.modeName)}</p>
+          <h2>{t("ways_to", { name: place, n: pair.length })}</h2>
+          <div className="seg mode-seg" role="radiogroup" aria-label={t("route_type")}>
+            {pair.map((o) => (
+              <button key={o.id} role="radio" aria-checked={o.id === c.id} className={o.id === c.id ? "on" : ""} onClick={() => pick(o)}>
+                <i className={`mode-line ${o.properties.mode}`} aria-hidden="true" />{loc(o.properties.modeName)}
+                <small>{o.properties.distance_km}km · {o.properties.ascent_m == null ? t("unknown") : `+${o.properties.ascent_m}m`}</small>
+              </button>
+            ))}
+          </div>
           <div className="stat-boxes">
             <div><b>{p.distance_km}km</b><small>{t("distance")}</small></div>
             <div><b>{t("about_min", { n: p.minutes })}</b><small>{t("est_time")}</small></div>
-            <div><b>+{p.ascent_m}m</b><small>{t("ascent_total")}</small></div>
+            <div><b>{p.ascent_m == null ? t("unknown") : `+${p.ascent_m}m`}</b><small>{t("ascent_total")}</small></div>
           </div>
           <h4>{t("elev")}</h4>
           <ElevationChart values={p.elevation} />

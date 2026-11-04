@@ -205,10 +205,10 @@ export function SpotMarker({ spot, label = false, onClick }) {
   );
 }
 
-// 코스·달린 길 선. path는 [{lat,lng}] 또는 [[lat,lng]] 둘 다 돼요
-export function Route({ path, color = "#1F4D3F", weight = 6, opacity = 0.9 }) {
+// 코스·달린 길 선. path는 [{lat,lng}] 또는 [[lat,lng]] 둘 다 돼요. dashed면 짧은 점선
+export function Route({ path, color = "#1F4D3F", weight = 6, opacity = 0.9, dashed = false }) {
   const line = useMemo(() => path.map(toLatLng), [path]);
-  return <Polyline path={line} strokeColor={color} strokeWeight={weight} strokeOpacity={opacity} />;
+  return <Polyline path={line} strokeColor={color} strokeWeight={weight} strokeOpacity={opacity} strokeStyle={dashed ? "shortdash" : "solid"} />;
 }
 
 export function Dot({ at, color = "#1C2B26", radius = 7 }) {

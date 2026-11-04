@@ -7,7 +7,8 @@ import { MapView, FitSpots, FlyTo, HexLayer, SpotMarker, Me } from "../component
 import { CategoryIcon } from "../components/SpotIcons.jsx";
 import { LangPill } from "../components/Bits.jsx";
 import { Icon } from "./Auth.jsx";
-import { DISTANCES, MIN_PER_KM } from "../lib/routes.js"; // 3/5/10km, 예상 시간 1km 6분 30초
+import { DISTANCES, MIN_PER_KM, modeOfHill } from "../lib/routes.js"; // 3/5/10km, 예상 시간 1km 6분 30초
+import { getCourse } from "../lib/data.js";
 
 const FILTERS = [["all", "filter_all"], ["history", "filter_history"], ["stream", "filter_stream"], ["park", "filter_park"]];
 // 바텀시트가 멈추는 높이 (px). 가운데(처음) 높이는 420인데, 낮은 화면(아이폰 SE 등)에서는
@@ -77,8 +78,9 @@ export default function Home() {
   const shown = data.spots.filter((s) => filter === "all" || s.category === filter);
   const minutes = Math.round(settings.km * MIN_PER_KM);
 
+  // 핀을 누르면 그 장소까지 가는 코스 상세로 (고른 거리, 경사 선호에 맞는 완만한 길/언덕 허용)
   const openSpot = (spot) => {
-    const c = data.courses.find((c) => c.properties.spots.includes(spot.id));
+    const c = getCourse(data, spot.id, settings.km, modeOfHill(settings.hill));
     if (c) { app.setCourse(c); app.go("detail"); }
   };
   const search = (e) => {
