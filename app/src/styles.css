@@ -425,6 +425,38 @@ small { font-size: 12px; }
 .free-text b { font-size: 15px; }
 .free-text small { color: var(--muted); font-size: 12px; margin-top: 2px; }
 .free-card .arrow { width: 18px; height: 18px; color: var(--link); flex: none; }
+/* 홈 v2 (Main.dc.html) */
+.home-sheet-v2 .sheet-body { padding-top: 0; }
+.home-sheet-v2 h2 { margin: 4px 0 14px; font-size: 25px; font-weight: 800; line-height: 1.3; letter-spacing: -.02em; }
+.chev { width: 16px; height: 16px; flex: none; fill: none; stroke: #7FA66B; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.today-card { margin-top: 12px; border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 0 rgba(120, 190, 60, .12), 0 14px 28px -20px rgba(63, 127, 28, .6); }
+.tc-head { display: flex; align-items: center; gap: 12px; }
+.tc-ic { width: 52px; height: 52px; flex: none; border-radius: 16px; background: #F2F9E6; box-shadow: inset 0 0 0 1px var(--border); display: grid; place-items: center; }
+.tc-ic svg { width: 34px; height: 34px; }
+.tc-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; align-items: flex-start; }
+.tc-text b { font-size: 17px; font-weight: 800; }
+.tc-text small { font-size: 13px; font-weight: 500; color: var(--muted); }
+.today-card .elev { height: 28px; margin: 0; }
+.tc-actions { display: grid; grid-template-columns: 1fr 1.3fr; gap: 8px; }
+.tc-actions .btn { margin: 0; min-height: 50px; padding: 0 10px; border-radius: 16px; font-size: 15px; }
+.tc-actions .btn-soft { color: var(--strong); }
+.tc-actions .btn-cta { font-weight: 800; }
+.tc-actions .play { width: 14px; height: 14px; fill: currentColor; }
+.today-none { margin-top: 12px; }
+.home-sheet-v2 .free-card { min-height: 56px; border-radius: 16px; padding: 0 14px; }
+.home-sheet-v2 .free-ic { width: 34px; height: 34px; }
+.home-sheet-v2 .free-ic svg { width: 18px; height: 18px; }
+.home-sheet-v2 .free-text b { font-size: 14px; font-weight: 700; }
+.map-spots { margin-top: 22px; }
+.map-spots h3 { margin: 0 0 6px; font-size: 15px; font-weight: 700; }
+.map-spots ul { margin: 0; padding: 0; list-style: none; }
+.map-spots li + li button, .map-spots li:first-child button { border-top: 1px solid rgba(31, 77, 63, .1); }
+.map-spots button { width: 100%; min-height: 56px; display: flex; align-items: center; gap: 12px; padding: 10px 0; text-align: left; color: var(--text); }
+.ms-ic { width: 36px; height: 36px; flex: none; border-radius: 18px; background: rgba(255, 255, 255, .7); display: grid; place-items: center; }
+.ms-ic svg { width: 26px; height: 26px; }
+.ms-text { flex: 1; display: flex; flex-direction: column; }
+.ms-text b { font-size: 15px; font-weight: 700; }
+.ms-text small { font-size: 12px; color: var(--muted); }
 
 /* ---------- 하단 내비 (반투명 연두 유리) ---------- */
 /* 글자는 진초록(비선택)과 흰 알약 위 진초록(선택)으로 써서 연두 바탕에서도 4.5:1 이상 대비를 지켜요 */

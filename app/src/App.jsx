@@ -20,6 +20,7 @@ const SCREENS = {
   home: [Home],
   settings: [Home, Settings],      // 시안처럼 홈 지도 위에 설정 시트를 띄워요
   list: [CourseList],
+  courses: [CourseList],           // 코스 고르기 (다음 단계에서 새 화면으로 바꿔요)
   detail: [CourseDetail],
   run: [Run],
   spot: [Spot],
