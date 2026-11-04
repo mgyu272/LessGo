@@ -119,6 +119,7 @@ export default function Home() {
             <button className="btn btn-soft today-none" onClick={() => openCourses()}>{t("pick_course_km", { km: settings.km })}</button>
           )}
 
+          <button className="btn btn-soft" style={{width:"100%",marginBottom:12}} onClick={() => app.go("currentRun")}>📍 현위치에서 목적지까지 달리기</button>
           <button className="free-card glass" onClick={startFree}>
             <span className="free-ic" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 18c4 0 4-7 8-7s4-6 8-6" /><circle cx="20" cy="5" r="1.6" fill="currentColor" /></svg>
