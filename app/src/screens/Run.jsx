@@ -76,7 +76,7 @@ export default function Run() {
         <div className="rp-stats">
           <div><b>{fmtPace(v.seconds, v.meters)}</b><small>{t("pace")}</small></div>
           <div><b>{fmtTime(v.seconds)}</b><small>{t("time")}</small></div>
-          <div><b>+{v.ascent}m</b><small>{t("ascent")}</small></div>
+          <div><b>{v.ascent == null ? "–" : `+${v.ascent}m`}</b><small>{t("ascent")}</small></div>
         </div>
         <div className="rp-cards">
           <button className="soft rp-card" onClick={() => app.go("stars")}>
