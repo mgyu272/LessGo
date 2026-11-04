@@ -74,27 +74,30 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
       });
     }
 
-    // 스팟 도착
-    const candidates = r.course ? r.course.properties.spots.map((id) => spotById[id]) : spots;
-    const next = candidates.filter((s) => s && !r.visited.has(s.id))
-      .map((s) => ({ s, d: distance(p, s) })).sort((a, b) => a.d - b.d)[0];
-    if (next && next.d <= next.s.radius_m) {
-      r.visited.add(next.s.id);
-      if (user.addStamp(next.s.id)) r.newStamps++;
+    // 스팟 도착 → 도장 찍고 도착 화면(해설)으로
+    const arrive = (spot) => {
+      r.visited.add(spot.id);
+      if (user.addStamp(spot.id)) r.newStamps++;
       if (r.demo) r.tracker.pause(); // 시연 모드는 해설 듣는 동안 멈춰요
       r.arrivedAt = Date.now();
       push();
-      setSpot(next.s);
+      setSpot(spot);
       go("spot");
-      return;
-    }
+    };
+    const candidates = r.course ? r.course.properties.spots.map((id) => spotById[id]) : spots;
+    const next = candidates.filter((s) => s && !r.visited.has(s.id))
+      .map((s) => ({ s, d: distance(p, s) })).sort((a, b) => a.d - b.d)[0];
+    if (next && next.d <= next.s.radius_m) return arrive(next.s);
     if (r.course) r.pill = next ? t("next_spot", { d: fmtDist(next.d) }) : t("all_spots");
     else r.freeShops = shops.filter((s) => s.partner).map((s) => ({ s, d: distance(p, s) }))
       .filter((x) => x.d < 600).sort((a, b) => a.d - b.d).slice(0, 3);
 
-    // 시연 모드에서 코스 끝까지 가면
+    // 코스 끝까지 가면(완주): 목적지 도착을 아직 못 했으면 도착 화면으로 넘어가요
+    // (코스는 지하철 출구 → 목적지라 끝점이 목적지예요. 반경 판정이 빗나가도 완주하면 해설을 들을 수 있게)
     if (info.progress >= 1 && !r.courseDone) {
       r.courseDone = true;
+      const dest = r.course && spotById[r.course.properties.dest];
+      if (dest && !r.visited.has(dest.id)) return arrive(dest);
       showCue(getLang() === "ko" ? "코스 완주! 종료 버튼을 눌러 기록을 저장하세요." : "Course complete! Tap Finish to save your run.");
     }
     push();
