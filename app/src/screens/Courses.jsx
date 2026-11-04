@@ -139,9 +139,7 @@ export default function CoursePicker() {
           <svg viewBox="0 0 24 24" aria-hidden="true" fill={saved ? "#9FD25E" : "none"}><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
         </button>
         <button className="btn btn-soft" onClick={startSimulation}>시뮬레이션</button>
-        <button className="btn btn-cta" onClick={start}>출발지 길찾기
-          <svg viewBox="0 0 24 24" className="play" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" /></svg>
-        </button>
+        <button className="btn btn-cta" onClick={start} style={{ whiteSpace: "nowrap" }}>출발지 길찾기</button>
       </div>
 
       <DestSheet open={chip === "dest"} dest={dest} place={place} onClose={() => setChip("")} onPick={(v) => setPick({ ...pick, dest: v })} />
