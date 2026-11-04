@@ -16,7 +16,7 @@ import { getCourse } from "../lib/data.js";
 import { MapView, FitBounds, SpotMarker, Route, Dot } from "../components/MapView.jsx";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { ElevationChart } from "../components/Bits.jsx";
-import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet, Toggle } from "../components/ui.jsx";
+import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet } from "../components/ui.jsx";
 import { speedParam } from "./Home.jsx";
 import { startSavedCourse } from "../lib/startSavedCourse.js";
 
@@ -120,8 +120,7 @@ export default function CoursePicker() {
 
           <CompareTable pair={pair} sel={course.id} />
           <Timeline course={course} />
-          {/* 디자인에는 없지만 PC에서 확인할 수 있게 시연 모드 스위치를 맨 아래에 둬요 */}
-          <Toggle className="demo-row" checked={app.demo} onChange={app.setDemo} title={t("demo_mode")} sub={t("demo_sub")} />
+          <p className="soft picker-reason">실제 GPS 모드 · 코스 출발지 근처에서 시작할 수 있어요.</p>
           <span className="picker-spacer" aria-hidden="true" />
         </div>
       </BottomSheet>
