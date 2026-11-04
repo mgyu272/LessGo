@@ -16,7 +16,7 @@ import { getCourse } from "../lib/data.js";
 import { MapView, FitBounds, SpotMarker, Route, Dot } from "../components/MapView.jsx";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { ElevationChart } from "../components/Bits.jsx";
-import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet, Toggle } from "../components/ui.jsx";
+import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet } from "../components/ui.jsx";
 import { speedParam } from "./Home.jsx";
 
 // 지도 선 색: 완만한 길(low) = 초록, 언덕 허용(high) = 주황 (단색)
@@ -66,7 +66,8 @@ export default function CoursePicker() {
   const p = course.properties;
   const saved = favs.has(course.id);
   const toggleSave = () => { const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
-  const start = () => app.run.start(course, { demo: app.demo, speedup: speedParam() });
+  const start = () => { app.setCourse(course); app.go("toStart"); };
+  const startSimulation = () => app.run.start(course, { demo: true, speedup: speedParam() });
   const reason = reasons[course.id] || factualReason(course, pair);
   const themeText = pick.themes.length ? (pick.themes.length > 1 ? t("theme_more", { first: t("th2_" + pick.themes[0]), n: pick.themes.length - 1 }) : t("th2_" + pick.themes[0])) : t("theme");
 
@@ -119,8 +120,7 @@ export default function CoursePicker() {
 
           <CompareTable pair={pair} sel={course.id} />
           <Timeline course={course} />
-          {/* 디자인에는 없지만 PC에서 확인할 수 있게 시연 모드 스위치를 맨 아래에 둬요 */}
-          <Toggle className="demo-row" checked={app.demo} onChange={app.setDemo} title={t("demo_mode")} sub={t("demo_sub")} />
+          <p className="soft picker-reason">실제 러닝은 GPS로 출발지를 확인해요. 시뮬레이션 모드는 GPS 없이 가상으로 코스를 체험합니다.</p>
           <span className="picker-spacer" aria-hidden="true" />
         </div>
       </BottomSheet>
@@ -129,9 +129,8 @@ export default function CoursePicker() {
         <button className="soft picker-heart" aria-label={t(saved ? "unsave_course" : "save_course")} aria-pressed={saved} onClick={toggleSave}>
           <svg viewBox="0 0 24 24" aria-hidden="true" fill={saved ? "#9FD25E" : "none"}><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
         </button>
-        <button className="btn btn-cta" onClick={start}>{t("start_with", { mode: loc(p.modeName) })}
-          <svg viewBox="0 0 24 24" className="play" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" /></svg>
-        </button>
+        <button className="btn btn-cta picker-cta-gps" onClick={start}>{t("gps_start")}</button>
+        <button className="btn btn-soft picker-cta-demo" onClick={startSimulation}>{t("simulation_mode")}</button>
       </div>
 
       <OptionSheet open={chip === "dest"} title={t("ask_dest")} cols={2} value={dest} onClose={() => setChip("")}

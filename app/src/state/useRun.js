@@ -4,6 +4,7 @@
 import { useCallback, useRef, useState } from "react";
 import { createTracker } from "../lib/gps.js";
 import { distance, fmtDist, fmtTime } from "../lib/geo.js";
+import { nearestOnRoute } from "../lib/routeProgress.js";
 import { cellsBetween } from "../lib/territory.js";
 import { ascentOf } from "../lib/data.js";
 import { t, loc, getLang } from "../lib/i18n.js";
@@ -25,6 +26,8 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
       pill, cue: r.cue, newCells: r.newCells.length, paused: r.paused,
       trail: r.trail.slice(), me: r.me, freeShops: r.freeShops, courseDone: r.courseDone,
       fresh: r.newCells.slice(-6), visited: [...r.visited],
+      gpsReady: r.gpsReady, gpsError: r.gpsError, offRoute: r.offRoute,
+      remainingM: r.remainingM,
       progress: r.course ? Math.min(1, r.meters / r.course.len) : null, voice: r.voice,
     });
   }, []);
@@ -42,7 +45,22 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
     const { spots, spotById, shops } = dataRef.current;
     const user = userRef.current;
     r.me = [p.lat, p.lng];
+    r.gpsReady = true;
+    r.gpsError = null;
     if (r.paused) return push();
+    if (r.course && !r.demo) {
+      const match = nearestOnRoute(r.course.path, p);
+      if (match) {
+        r.remainingM = match.remainingM;
+        if (match.distanceM > 85) r.offRouteCount++;
+        else r.offRouteCount = 0;
+        if (r.offRouteCount >= 3 && !r.offRoute) {
+          r.offRoute = true;
+          showCue(getLang() === "ko" ? "저장된 코스에서 벗어났어요. 지도를 확인하고 안전하게 이동해 주세요." : "You are off the saved route. Check the map before continuing.");
+        }
+        if (match.distanceM < 35) r.offRoute = false;
+      }
+    }
 
     // 거리 누적 (2m 미만 떨림은 무시)
     if (r.last) {
@@ -54,7 +72,8 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
     r.trail.push([p.lat, p.lng]);
 
     // 실제 GPS 고도가 있으면 오르막 누적
-    if (p.altitude != null) {
+    if (Number.isFinite(p.altitude)) {
+      r.hasAltitude = true;
       if (r.lastAlt != null && p.altitude - r.lastAlt > 1) r.altUp += p.altitude - r.lastAlt;
       if (r.lastAlt == null || Math.abs(p.altitude - r.lastAlt) > 1) r.lastAlt = p.altitude;
     }
@@ -94,7 +113,7 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
 
     // 코스 끝까지 가면(완주): 목적지 도착을 아직 못 했으면 도착 화면으로 넘어가요
     // (코스는 지하철 출구 → 목적지라 끝점이 목적지예요. 반경 판정이 빗나가도 완주하면 해설을 들을 수 있게)
-    if (info.progress >= 1 && !r.courseDone) {
+    if ((r.demo && info.progress >= 1) && !r.courseDone) {
       r.courseDone = true;
       const dest = r.course && spotById[r.course.properties.dest];
       if (dest && !r.visited.has(dest.id)) return arrive(dest);
@@ -111,17 +130,23 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
     const simPath = course ? course.path : courses[0]?.path || [{ lat: HOME_CENTER[0], lng: HOME_CENTER[1] }];
     const r = ref.current = {
       course, demo, simPath, meters: 0, last: null, trail: [], newCells: [], visited: new Set(),
+      gpsReady: !!demo, gpsError: null, offRoute: false, offRouteCount: 0, remainingM: course?.len ?? 0, hasAltitude: false,
       cuesFired: new Set(), paused: false, ended: false, altUp: 0, lastAlt: null, lastCell: null,
       cue: null, pill: demo ? "" : t("gps_waiting"), newStamps: 0, courseDone: false,
       me: [simPath[0].lat, simPath[0].lng], freeShops: [], voice: true,
     };
     r.tracker = createTracker({
       demo, path: simPath, speedup, onPosition,
-      onError: (e) => { r.pill = e.code === 1 ? t("gps_denied") : t("gps_waiting"); push(); },
+      onError: (e) => {
+        r.gpsError = e.code === 1 ? (getLang() === "ko" ? "GPS 권한이 거부됐어요." : "Location permission denied.")
+          : e.code === 3 ? (getLang() === "ko" ? "GPS 신호가 늦어지고 있어요. 실외에서 다시 확인해 주세요." : "Waiting for GPS signal.")
+          : (getLang() === "ko" ? "GPS 위치를 확인할 수 없어요." : "GPS unavailable.");
+        push();
+      },
     });
     r.tracker.start();
     r.clock = setInterval(push, 1000);
-    if (course) { r.cuesFired.add(0); voice.speak(loc(course.cues[0]?.text) || "", { lang: getLang() }); }
+    if (course?.cues?.length) { r.cuesFired.add(0); voice.speak(loc(course.cues[0]?.text) || "", { lang: getLang() }); }
     push();
     go("run");
   }, [dataRef, onPosition, push, go]);
@@ -191,6 +216,7 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
 }
 
 function currentAscent(r) {
+  if (!r.demo) return r.hasAltitude ? Math.round(r.altUp) : null;
   if (r.altUp > 0 || !r.course) return Math.round(r.altUp);
   const frac = Math.min(1, r.meters / r.course.len);
   return ascentOf(r.course.properties.elevation || [], frac);

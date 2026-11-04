@@ -38,7 +38,7 @@ export function AppProvider({ children }) {
   const [finish, setFinish] = useState(null);
   const [shuffle, setShuffle] = useState(0);
   const [toastMsg, setToastMsg] = useState("");
-  const [demo, setDemoState] = useState(() => { try { return localStorage.getItem("runtrip.demo") !== "off"; } catch { return true; } });
+  const [demo, setDemoState] = useState(false);
 
   const user = useUserData();
   // 달리기 중 콜백이 항상 최신 값을 보게 ref로도 들고 있어요

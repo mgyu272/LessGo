@@ -994,3 +994,33 @@ small { font-size: 12px; }
 .st-tile.done .st-medal { background: radial-gradient(circle at 35% 30%, #E8F8D2, #9FD25E); color: var(--text); box-shadow: 0 8px 16px -10px rgba(63, 127, 28, .7); }
 .st-tile b { font-size: 13px; font-weight: 700; }
 .st-tile small { font-size: 11px; font-weight: 500; color: var(--muted); }
+
+/* Existing 18-route picker: explicit live-GPS and simulation choices */
+.picker-cta .picker-cta-gps { flex: 1.05; min-width: 0; padding: 0 8px; font-size: 14px; }
+.picker-cta .picker-cta-demo { flex: 1; min-width: 0; padding: 0 6px; font-size: 12px; white-space: normal; line-height: 1.25; }
+.today-card .tc-actions { grid-template-columns: 1fr 1.1fr 1.1fr; gap: 6px; }
+.today-card .tc-actions .btn { font-size: 12px; padding: 0 5px; min-width: 0; white-space: normal; line-height: 1.2; }
+.run-screen.is-demo .run-status { border: 1px solid var(--border); }
+
+/* Walk to a saved route start before recording a GPS run */
+.to-start-screen { background: var(--bg-soft); }
+.to-start-map { position: absolute; inset: 0; height: 60%; }
+.to-start-top { position: absolute; top: calc(12px + var(--safe-top)); left: 16px; right: 16px; z-index: 7; display: flex; align-items: center; gap: 10px; }
+.to-start-top strong { border-radius: 16px; padding: 12px 16px; font-size: 14px; }
+.to-start-panel { position: absolute; left: 0; right: 0; bottom: 0; z-index: 8; padding: 20px 18px calc(18px + var(--safe-bottom)); background: #FFFFFF; border-radius: 25px 25px 0 0; box-shadow: 0 -8px 26px rgba(30,43,23,.12); display: flex; flex-direction: column; gap: 9px; }
+.to-start-panel h2 { font-size: 20px; font-weight: 800; margin: 0; }
+.to-start-course { font-size: 13px; font-weight: 600; color: var(--muted); margin: 0; }
+.to-start-destination { display: flex; flex-direction: column; gap: 2px; background: var(--bg-soft); border-radius: 14px; padding: 12px; }
+.to-start-destination > span, .to-start-destination small { font-size: 11px; color: var(--muted); }
+.to-start-destination strong { font-size: 16px; font-weight: 800; }
+.to-start-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.to-start-metrics > div { display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
+.to-start-metrics small { font-size: 11px; color: var(--muted); }
+.to-start-metrics strong { font-size: 19px; font-weight: 800; }
+.to-start-status { margin: 0; font-size: 12px; line-height: 1.4; color: var(--strong); font-weight: 650; }
+.to-start-error { margin: 0; font-size: 12px; color: #A33; }
+.to-start-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.to-start-actions .btn { min-width: 0; margin: 0; min-height: 54px; padding: 8px; line-height: 1.2; white-space: normal; font-size: 13px; border-radius: 14px; }
+.to-start-actions .btn:disabled { opacity: .45; cursor: not-allowed; }
+.to-start-refresh { align-self: center; color: var(--link); font-weight: 700; font-size: 12px; padding: 5px; text-decoration: underline; }
+.to-start-hint { margin: 0; font-size: 11px; line-height: 1.4; color: var(--muted); }

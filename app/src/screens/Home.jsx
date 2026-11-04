@@ -47,7 +47,7 @@ export default function Home() {
   const sheet = useBottomSheet({ snaps: snapsFor, initial: 1 });
   const shown = data.spots.filter((s) => filter === "all" || s.category === filter);
   const pick = todaysPick(data, settings.km);
-  const startFree = () => app.run.start(null, { demo: app.demo, speedup: speedParam() });
+  const startFree = () => app.run.start(null, { demo: false, speedup: 1 });
 
   // 코스 고르기로 (목적지를 미리 골라 둘 수 있어요)
   const openCourses = (dest) => { app.setPick({ ...app.pick, km: settings.km, ...(dest ? { dest } : {}) }); app.go("courses"); };
@@ -114,7 +114,8 @@ export default function Home() {
             options={DISTANCES.map((km) => ({ value: km, label: <>{km}<small>km</small></>, sub: t("km_" + km) }))} />
 
           {pick ? <TodayCard course={pick} onMore={() => openCourses(pick.properties.dest)}
-            onStart={() => app.run.start(pick, { demo: app.demo, speedup: speedParam() })} /> : (
+            onStart={() => { app.setCourse(pick); app.go("toStart"); }}
+            onSimulation={() => app.run.start(pick, { demo: true, speedup: speedParam() })} /> : (
             // 이 거리에는 정식 추천 경로가 없어서 추천 카드를 숨기고, 코스 고르기로 가는 버튼만 둬요
             <button className="btn btn-soft today-none" onClick={() => openCourses()}>{t("pick_course_km", { km: settings.km })}</button>
           )}
@@ -150,7 +151,7 @@ export default function Home() {
 }
 
 // 오늘의 추천 카드: 장소 그림 + 배지 + 이름 · 거리·시간·오르막 + 고도 그래프 + 다른 코스 보기 / 바로 시작
-function TodayCard({ course, onMore, onStart }) {
+function TodayCard({ course, onMore, onStart, onSimulation }) {
   const { data } = useApp();
   const p = course.properties;
   const spot = data.spotById[p.dest];
@@ -169,9 +170,8 @@ function TodayCard({ course, onMore, onStart }) {
       <ElevationChart values={p.elevation} height={28} color="#2F6512" fill="rgba(47,101,18,.12)" />
       <div className="tc-actions">
         <button className="btn btn-soft" onClick={onMore}>{t("other_courses")}</button>
-        <button className="btn btn-cta" onClick={onStart}>{t("start_now")}
-          <svg viewBox="0 0 24 24" className="play" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" /></svg>
-        </button>
+        <button className="btn btn-cta" onClick={onStart}>{t("gps_start")}</button>
+        <button className="btn btn-soft" onClick={onSimulation}>{t("simulation_mode")}</button>
       </div>
     </article>
   );
