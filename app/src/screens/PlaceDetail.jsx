@@ -10,6 +10,7 @@ import { fmtTime } from "../lib/geo.js";
 import * as voice from "../lib/voice.js";
 import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections } from "../lib/places.js";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
+import { PlaceEvents } from "./Events.jsx";
 
 const TABS = ["story", "visit", "events"];
 
@@ -103,12 +104,7 @@ export default function PlaceDetail() {
             </div>
           )}
 
-          {tab === "events" && (
-            <div className="rise pd-col">
-              <p className="note mint">{t("info_pending")}</p>
-              <button className="link pd-all-events" onClick={() => app.go("events")}>{t("all_events")} →</button>
-            </div>
-          )}
+          {tab === "events" && <div className="rise pd-col"><PlaceEvents spotId={spot.id} /></div>}
         </div>
       </div>
 

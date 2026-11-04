@@ -1,0 +1,41 @@
+{
+  "_설명": "문화 활동 일정. 실제 데이터가 생기면 events 배열에 넣어 주세요. sample: true 항목은 개발 모드(npm run dev)에서만 보여요. 날짜는 ISO 형식(+09:00), 모르는 값은 null로 두면 앱이 '정보 준비 중'으로 보여줘요.",
+  "_항목": {
+    "id": "고유 id",
+    "sample": "예시 데이터면 true (배포 화면에는 안 보임)",
+    "category": "tour(해설 투어) | show(전시) | stage(공연) | fest(축제) | class(체험)",
+    "title": { "ko": "제목", "en": "Title" },
+    "start": "시작 일시 2026-11-04T10:00:00+09:00",
+    "end": "끝 일시 (하루짜리면 같은 날)",
+    "where": { "ko": "장소", "en": "Place" },
+    "near": "가까운 장소 id (simujang | jeongneung | uiryeong)",
+    "fee": { "ko": "요금", "en": "Fee" },
+    "apply": { "ko": "신청 방법 · 정원", "en": "How to apply · capacity" },
+    "url": "공식 안내 주소",
+    "source": { "name": { "ko": "주최 기관", "en": "Organizer" }, "checked": "마지막 확인 날짜 YYYY-MM-DD" }
+  },
+  "updated": null,
+  "events": [
+    {
+      "id": "sample-hanyong-walk", "sample": true, "category": "tour",
+      "title": { "ko": "(예시) 만해의 길 해설 산책", "en": "(Sample) Manhae's path guided walk" },
+      "start": "2026-11-04T10:00:00+09:00", "end": "2026-11-04T12:00:00+09:00",
+      "where": { "ko": "심우장 일대", "en": "Around Simujang" }, "near": "simujang",
+      "fee": null, "apply": null, "url": null, "source": null
+    },
+    {
+      "id": "sample-tomb-photo", "sample": true, "category": "show",
+      "title": { "ko": "(예시) 왕릉의 석물 사진전", "en": "(Sample) Stone figures of royal tombs: photo exhibition" },
+      "start": "2026-11-02T09:00:00+09:00", "end": "2026-11-08T18:00:00+09:00",
+      "where": null, "near": "uiryeong",
+      "fee": null, "apply": null, "url": null, "source": null
+    },
+    {
+      "id": "sample-morning-walk", "sample": true, "category": "class",
+      "title": { "ko": "(예시) 숲속 왕릉 아침 걷기", "en": "(Sample) Morning walk at the forest tomb" },
+      "start": "2026-11-07T07:30:00+09:00", "end": "2026-11-07T09:00:00+09:00",
+      "where": { "ko": "정릉 입구", "en": "Jeongneung entrance" }, "near": "jeongneung",
+      "fee": null, "apply": null, "url": null, "source": null
+    }
+  ]
+}

@@ -14,6 +14,7 @@ import Loading from "./screens/Loading.jsx";
 import RunDone from "./screens/RunDone.jsx";
 import Places from "./screens/Places.jsx";
 import PlaceDetail from "./screens/PlaceDetail.jsx";
+import Events from "./screens/Events.jsx";
 
 const SCREENS = {
   onboarding: [Login],             // 시작 화면 = 로그인
@@ -24,6 +25,7 @@ const SCREENS = {
   courses: [CoursePicker],         // 코스 고르기 (예전 조건 시트 · 코스 3개 · 코스 상세를 합침)
   places: [Places],                // 장소와 이야기
   place: [PlaceDetail],            // 장소 상세 (app.spot)
+  events: [Events],                // 문화 활동
   run: [Run],
   spot: [Spot],
   shops: [Spot, Shops],            // 스팟 화면 위에 가게 시트

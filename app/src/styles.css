@@ -998,3 +998,54 @@ small { font-size: 12px; }
 .pd-sent > span { width: 56px; height: 56px; border-radius: 28px; background: var(--chip); color: var(--link); display: grid; place-items: center; font-size: 24px; font-weight: 800; }
 .pd-sent h2 { margin: 0; font-size: 19px; }
 .pd-sent p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--muted); }
+
+/* ---------- ⑨ 문화 활동 (Events.dc.html) ---------- */
+.events-screen { background: var(--bg-soft); }
+.ev-sub { margin: -6px 2px 0; font-size: 13px; color: var(--muted); }
+.ev-week { border-radius: 22px; padding: 12px 10px 10px; flex: none; }
+.ev-week-head { display: flex; align-items: center; gap: 4px; padding: 0 6px 8px; }
+.ev-week-head b { flex: 1; font-size: 15px; font-weight: 800; }
+.ev-week-head button { width: 44px; height: 44px; border-radius: 22px; background: #F2F9E6; color: var(--strong); display: grid; place-items: center; }
+.ev-week-head svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.ev-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.ev-day { min-height: 64px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text); }
+.ev-day small { font-size: 11px; font-weight: 600; color: #5E7650; }
+.ev-day.sat small { color: #2F5E9E; }
+.ev-day.sun small { color: #A3461F; }
+.ev-day b { font-size: 17px; font-weight: 800; line-height: 1.1; }
+.ev-day > span { display: flex; gap: 2px; height: 5px; }
+.ev-day > span i { width: 5px; height: 5px; border-radius: 3px; }
+.ev-day > span i.d1 { background: var(--brand); }
+.ev-day > span i.d2 { background: #9FD25E; }
+.ev-day.today { background: #F2F9E6; box-shadow: inset 0 0 0 1.5px #9FD25E; }
+.ev-day.on { background: var(--strong); color: #FFFFFF; box-shadow: 0 10px 18px -10px rgba(31, 61, 20, .7); }
+.ev-day.on small { color: #DDF3C4; }
+.ev-day.on > span i.d1, .ev-day.on > span i.d2 { background: #CDEFA0; }
+.ev-legend { display: flex; align-items: center; gap: 12px; padding: 10px 6px 0; font-size: 11px; font-weight: 500; color: var(--muted); }
+.ev-legend span { display: flex; align-items: center; gap: 4px; }
+.ev-legend .dot { width: 6px; height: 6px; border-radius: 3px; background: var(--brand); }
+.ev-legend .box { width: 14px; height: 14px; border-radius: 5px; box-shadow: inset 0 0 0 1.5px #9FD25E; }
+.ev-card { border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 10px; text-align: left; color: var(--text); flex: none; }
+.ev-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.ev-card > b { font-size: 17px; font-weight: 800; line-height: 1.35; }
+.ev-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13px; font-weight: 500; color: var(--muted); }
+.ev-note { margin: 4px 4px 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.ev-sheet-head { display: flex; gap: 8px; align-items: flex-start; }
+.ev-sheet-head > div { flex: 1; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.ev-sheet-head h2 { margin: 0; font-size: 20px; line-height: 1.35; }
+.ev-sheet-head .round-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+.ev-kv { margin: 0; border-radius: 18px; padding: 2px 16px; }
+.ev-kv > div { display: grid; grid-template-columns: 64px 1fr; gap: 8px; padding: 11px 0; border-top: 1px solid #EAF3DD; font-size: 14px; }
+.ev-kv > div:first-child { border-top: 0; }
+.ev-kv dt { color: var(--muted); font-weight: 600; }
+.ev-kv dd { margin: 0; font-weight: 600; }
+.ev-src { font-size: 12px; line-height: 1.5; color: var(--muted); }
+.ev-sheet-head + .ev-kv + .ev-src + .ui-dialog-row .btn { margin: 0; }
+.ui-optsheet .ui-dialog-row .btn { margin: 0; }
+.pd-event { border-radius: 18px; padding: 14px; display: flex; gap: 12px; text-align: left; color: var(--text); }
+.pd-date { width: 52px; flex: none; border-radius: 14px; background: var(--chip); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 0; }
+.pd-date small { font-size: 11px; font-weight: 700; color: var(--link); }
+.pd-date b { font-size: 18px; font-weight: 800; }
+.pd-ev-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; align-items: flex-start; }
+.pd-ev-text b { font-size: 15px; font-weight: 700; }
+.pd-ev-text small { font-size: 12px; color: var(--muted); }
