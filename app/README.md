@@ -185,16 +185,22 @@ run/
 │  ├─ main.jsx                시작점
 │  ├─ App.jsx                 화면 이름 → 화면 컴포넌트 연결표
 │  ├─ styles.css              색·모양 (맨 위 :root 색만 바꾸면 전체 색이 바뀜)
-│  ├─ screens/                화면들 (시안 번호대로)
-│  │  ├─ Home.jsx             ① 홈
-│  │  ├─ Courses.jsx          ② 설정 · ③ 코스 3개 · ④ 상세
-│  │  ├─ Run.jsx              ⑤ 달리기
-│  │  ├─ Spot.jsx             ⑥ 스팟 도착 · ⑦ 주변 가게 · ⑧ 쿠폰
-│  │  └─ Me.jsx               시작(로그인) · 완주 · ⑨ 스탬프·별·랭킹 · 내 기록
+│  ├─ screens/                화면들 (디자인 원본: 저장소 맨 위 docs/design/*.dc.html)
+│  │  ├─ Loading.jsx · Auth.jsx  로딩 · 로그인·회원가입
+│  │  ├─ Home.jsx             홈 (지도 + 오늘의 추천)
+│  │  ├─ Courses.jsx          코스 고르기 (조건 칩 · 경로 카드 · 비교표)
+│  │  ├─ Run.jsx              달리는 중
+│  │  ├─ Spot.jsx             도착 (레코드판 해설) · 주변 가게 · 쿠폰
+│  │  ├─ RunDone.jsx          완주 요약
+│  │  ├─ Places.jsx · PlaceDetail.jsx  장소와 이야기 · 장소 상세(신고)
+│  │  ├─ Events.jsx           문화 활동 (public/data/events.json)
+│  │  ├─ Stats.jsx            내 기록 (오늘 · 주간 · 배지, 규칙은 lib/badges.js)
+│  │  └─ Me.jsx               도장·쿠폰 · 기록 목록 (내 기록에서 열려요)
 │  ├─ components/
 │  │  ├─ PhoneFrame.jsx       아이폰 16 프레임
 │  │  ├─ MapView.jsx          카카오 지도·육각형·마커 (지도 쓰는 화면 공통)
-│  │  └─ Bits.jsx             고도 그래프, 가게 줄, QR 자리, 탭바
+│  │  ├─ Bits.jsx             고도 그래프, 가게 줄, QR 자리, 탭바
+│  │  └─ ui.jsx               공통 부품 (바텀시트 · 칩 · 세그먼트 · 배지 · 확인 다이얼로그 · 옵션 시트)
 │  ├─ state/
 │  │  ├─ AppContext.jsx       앱 전체 상태 (지금 화면, 설정, 고른 코스…)
 │  │  ├─ useRun.js            달리기 진행 (GPS → 거리 → 안내 → 도착 → 완주)

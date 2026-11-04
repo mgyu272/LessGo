@@ -1,10 +1,9 @@
 // 코스 추천 — 규칙 점수 (AI 추천의 후보 거르기 + AI가 안 될 때 대신)
 // 목적지 3곳(심우장·정릉·의릉)마다, 고른 거리(가장 가까운 3/5/10km)와 경사 선호(평지 위주 = low, 그 외 = high)에
 // 맞는 코스를 하나씩 골라 점수 순서로 보여줘요.
-// 같은 점수대는 날짜·버튼 누른 횟수에 따라 순서를 돌려서 한 코스에 사람이 몰리지 않게 해요.
 //
 // ▶ AI 추천은 api/recommend.js 에 있어요: 같은 후보 3개를 Gemini가 순서를 정하고 "추천 이유"를 써요.
-//   AI가 안 되면 이 파일의 결과가 그대로 쓰여요.
+//   코스 고르기 화면은 AI 이유가 없으면 데이터로 만든 문장을 보여줘요.
 
 import { DESTINATIONS, keyOf, modeOfHill, nearestKm } from "./routes.js";
 
@@ -28,9 +27,3 @@ export function scoreCourses(courses, s, weather) {
   }).sort((a, b) => b.score - a.score);
 }
 
-export function pickThree(data, settings, weather, shuffleSeed = 0) {
-  const ranked = scoreCourses(candidatesFor(data.courseByKey, settings), settings, weather).map((r) => r.course);
-  // "다른 코스 보기": 누를 때마다 순서를 한 칸씩 돌려요
-  const offset = ranked.length ? shuffleSeed % ranked.length : 0;
-  return [...ranked.slice(offset), ...ranked.slice(0, offset)];
-}

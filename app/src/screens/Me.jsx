@@ -1,4 +1,4 @@
-// 완주 요약 · ⑨ 스탬프·별 + 내 영역 + 랭킹 · 내 기록  (로그인·회원가입은 Auth.jsx)
+// 도장·쿠폰(스탬프·별 + 내 영역 + 랭킹) · 기록 목록(로그아웃)  — 새 "내 기록" 화면(Stats.jsx)에서 열려요
 
 import { useEffect, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
@@ -10,55 +10,6 @@ import { MapView, FitBounds, HexLayer, Route } from "../components/MapView.jsx";
 import { Seal, sealText } from "../components/Bits.jsx";
 
 // ---------------- 완주 요약 ----------------
-export function Finish() {
-  const app = useApp();
-  const f = app.finish;
-  const r = f.record;
-  const share = async () => {
-    const text = `${loc(r.name)} · ${(r.meters / 1000).toFixed(2)}km · ${fmtTime(r.seconds)} · ⬢${r.cells} — Seongbuk RunTrip`;
-    try {
-      if (navigator.share) await navigator.share({ text });
-      else { await navigator.clipboard.writeText(text); app.toast(t("shared")); }
-    } catch {}
-  };
-  const openCoupon = () => {
-    const shop = app.data.shops.find((s) => s.id === f.coupon.shopId);
-    app.setCouponShop({ ...shop, couponTitle: f.coupon.title });
-    app.go("coupon");
-  };
-  return (
-    <section className="screen light">
-      <div className="scroll-y pad finish">
-        <div className="finish-head">
-          <Seal text={t("run_seal")} size={60} stamp />
-          <div><small>{t("finished")}</small><h2>{f.course ? t("f_title", { name: loc(f.course.properties.name) }) : t("f_title_free")}</h2></div>
-        </div>
-        <div className="stat-boxes">
-          <div><b>{(r.meters / 1000).toFixed(2)}km</b><small>{t("distance")}</small></div>
-          <div><b>{fmtTime(r.seconds)}</b><small>{t("time")}</small></div>
-          <div><b>{fmtPace(r.seconds, r.meters)}</b><small>{t("pace")}</small></div>
-        </div>
-        <MapView className="map-mini">
-          <HexLayer cells={app.user.cells} landmarkCells={app.data.landmarkCells} />
-          {f.trail.length > 1 && <Route path={f.trail} weight={5} opacity={1} />}
-          <FitBounds points={f.trail.length ? f.trail : [[37.59, 127.0]]} fitKey={r.id} />
-        </MapView>
-        <div className="earn">
-          <div><b>★ {f.stars}</b><small>{t("earn_stars")}</small></div>
-          <div><b>⬢ {r.cells}</b><small>{t("earn_cells")}</small></div>
-          <div><b>{r.stamps}</b><small>{t("earn_stamps")}</small></div>
-        </div>
-        {f.coupon && (
-          <div className="coupon-mini"><span>🎟</span><b>{t("run_coupon", { title: loc(f.coupon.title) })}</b>
-            <button className="btn btn-ink sm" onClick={openCoupon}>{t("view")}</button></div>
-        )}
-        <button className="btn btn-ink" onClick={share}>{t("share")}</button>
-        <button className="btn btn-outline" onClick={() => app.go("home")}>{t("home")}</button>
-      </div>
-    </section>
-  );
-}
-
 // ---------------- ⑨ 스탬프·별 + 내 영역 + 랭킹 ----------------
 const REWARDS = {
   ko: [["제휴 가게 무료 음료·빵", "달리고 나서 쉬어가기", 150], ["러닝 용품 할인권", "양말·벨트 등 제휴 상품", 300], ["동네 길 가꾸기에 기부", "가로등·안내판 개선에 쓰여요", 100], ["성북 러닝 행사 참가권", "동네 러닝 모임·소규모 대회", 500]],
