@@ -15,6 +15,7 @@ import RunDone from "./screens/RunDone.jsx";
 import Places from "./screens/Places.jsx";
 import PlaceDetail from "./screens/PlaceDetail.jsx";
 import Events from "./screens/Events.jsx";
+import Stats from "./screens/Stats.jsx";
 
 const SCREENS = {
   onboarding: [Login],             // 시작 화면 = 로그인
@@ -33,9 +34,9 @@ const SCREENS = {
   finish: [RunDone],               // 완주 요약 (자유 달리기 · 코스 중간 종료)
   stars: [Stars],
   records: [Records],
-  stats: [Records],
+  stats: [Stats],                  // 내 기록 (오늘 · 주간 · 배지)
 };
-// 하단 메뉴가 보이는 화면 (places·events·stats는 화면이 생기기 전까지 기존 화면으로 이어져요)
+// 하단 메뉴가 보이는 화면
 const WITH_TABS = new Set(["home", "places", "events", "stats", "stars", "records"]);
 const DARK = new Set(["stars", "coupon"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
 

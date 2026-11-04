@@ -1049,3 +1049,48 @@ small { font-size: 12px; }
 .pd-ev-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; align-items: flex-start; }
 .pd-ev-text b { font-size: 15px; font-weight: 700; }
 .pd-ev-text small { font-size: 12px; color: var(--muted); }
+
+/* ---------- ⑩ 내 기록 (Stats.dc.html) ---------- */
+.stats-screen { background: var(--bg-soft); }
+.stats-screen .pd-scroll { padding-bottom: calc(110px + var(--safe-bottom)); }
+.st-top { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: calc(12px + var(--safe-top)) 18px 0; }
+.st-top h1 { flex: 1; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+.st-top .round-btn svg { fill: none; }
+.st-links { display: flex; gap: 8px; padding: 8px 18px 0; }
+.st-links button { min-height: 40px; padding: 0 14px; border-radius: 20px; font-size: 13px; font-weight: 700; color: var(--strong); }
+.stats-screen .pd-tabs { margin-top: 8px; }
+.st-ring-card { border-radius: 26px; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.st-ring { width: 180px; height: 180px; }
+.st-ring-num { font: italic 900 38px var(--sans); fill: var(--text); }
+.st-ring-sub { font: 700 13px var(--sans); fill: var(--muted); }
+.st-ring-card p { margin: 0; font-size: 14px; font-weight: 600; color: var(--strong); text-align: center; }
+.st-ring-card .btn { margin: 0; min-height: 52px; border-radius: 16px; font-weight: 800; font-size: 15px; }
+.st-trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.st-trio > div { border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.st-trio b { font-size: 20px; font-weight: 800; white-space: nowrap; }
+.st-trio small { font-size: 12px; color: var(--muted); }
+.st-note { margin: 0 4px; font-size: 12px; color: var(--muted); }
+.st-week { border-radius: 26px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.st-week-head { display: flex; justify-content: space-between; align-items: flex-end; }
+.st-week-head small { font-size: 12px; font-weight: 600; color: var(--muted); }
+.st-big { font-size: 34px; font-weight: 900; font-style: italic; }
+.st-big em { margin-left: 4px; font-size: 15px; font-weight: 800; color: var(--link); }
+.st-bars { width: 100%; height: auto; }
+.st-star { font-size: 12px; fill: #C9A227; }
+.st-day { font: 600 11px var(--sans); fill: var(--muted); }
+.st-metric { background: #EEF6E2; border: 0; border-radius: 14px; }
+.st-metric button { min-height: 44px; border-radius: 11px; font-size: 13px; font-weight: 700; }
+.st-next { border-radius: 26px; padding: 20px; display: flex; align-items: center; gap: 16px; background: linear-gradient(135deg, #FFFFFF 0%, #EAF7D8 100%); }
+.st-next > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.st-next small { font-size: 12px; font-weight: 700; color: var(--link); }
+.st-next small.muted { font-weight: 500; color: var(--muted); }
+.st-next b { font-size: 18px; font-weight: 800; }
+.st-prog { display: block; height: 6px; width: 180px; max-width: 100%; border-radius: 3px; background: var(--border); overflow: hidden; }
+.st-prog i { display: block; height: 100%; background: var(--brand); border-radius: 3px; }
+.st-h2 { margin: 4px 2px 0; font-size: 15px; font-weight: 700; }
+.st-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.st-tile { border-radius: 18px; padding: 14px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.st-medal { width: 64px; height: 64px; border-radius: 32px; display: grid; place-items: center; font-size: 26px; font-weight: 800; background: #EEF3E6; color: #6E7E62; }
+.st-tile.done .st-medal { background: radial-gradient(circle at 35% 30%, #E8F8D2, #9FD25E); color: var(--text); box-shadow: 0 8px 16px -10px rgba(63, 127, 28, .7); }
+.st-tile b { font-size: 13px; font-weight: 700; }
+.st-tile small { font-size: 11px; font-weight: 500; color: var(--muted); }
