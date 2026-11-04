@@ -18,6 +18,7 @@ import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { ElevationChart } from "../components/Bits.jsx";
 import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet, Toggle } from "../components/ui.jsx";
 import { speedParam } from "./Home.jsx";
+import { startSavedCourse } from "../lib/startSavedCourse.js";
 
 // 지도 선 색: 완만한 길(low) = 초록, 언덕 허용(high) = 주황 (단색)
 export const MODE_COLOR = { low: "#2F6512", high: "#E38B2C" };
@@ -66,7 +67,7 @@ export default function CoursePicker() {
   const p = course.properties;
   const saved = favs.has(course.id);
   const toggleSave = () => { const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
-  const start = () => app.run.start(course, { demo: app.demo, speedup: speedParam() });
+  const start = () => startSavedCourse(app, course, speedParam());
   const reason = reasons[course.id] || factualReason(course, pair);
   const themeText = pick.themes.length ? (pick.themes.length > 1 ? t("theme_more", { first: t("th2_" + pick.themes[0]), n: pick.themes.length - 1 }) : t("th2_" + pick.themes[0])) : t("theme");
 
