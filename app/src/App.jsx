@@ -16,6 +16,7 @@ import Places from "./screens/Places.jsx";
 import PlaceDetail from "./screens/PlaceDetail.jsx";
 import Events from "./screens/Events.jsx";
 import Stats from "./screens/Stats.jsx";
+import ToCourseStart from "./screens/ToCourseStart.jsx";
 
 const SCREENS = {
   onboarding: [Login],             // 시작 화면 = 로그인
@@ -28,6 +29,7 @@ const SCREENS = {
   place: [PlaceDetail],            // 장소 상세 (app.spot)
   events: [Events],                // 문화 활동
   run: [Run],
+  toStart: [ToCourseStart],
   spot: [Spot],
   shops: [Spot, Shops],            // 스팟 화면 위에 가게 시트
   coupon: [Coupon],
