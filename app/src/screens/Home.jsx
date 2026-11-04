@@ -48,7 +48,7 @@ export default function Home() {
   const sheet = useBottomSheet({ snaps: snapsFor, initial: 1 });
   const shown = data.spots.filter((s) => filter === "all" || s.category === filter);
   const pick = todaysPick(data, settings.km);
-  const startFree = () => app.run.start(null, { demo: app.demo, speedup: speedParam() });
+  const startFree = () => app.run.start(null, { demo: false, speedup: 1 });
 
   // 코스 고르기로 (목적지를 미리 골라 둘 수 있어요)
   const openCourses = (dest) => { app.setPick({ ...app.pick, km: settings.km, ...(dest ? { dest } : {}) }); app.go("courses"); };
