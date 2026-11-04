@@ -209,7 +209,8 @@ run/
 │     ├─ firebase.js          Firebase 연결 · auth.js 아이디 규칙·오류 안내
 │     ├─ data.js / geo.js     데이터 불러오기 / 거리 계산
 ├─ public/data/               ← 데이터 담당이 채우는 곳 (빌드 없이 바로 반영)
-│  ├─ spots.json · courses.geojson · shops.json
+│  ├─ spots.json · shops.json
+│  ├─ lessgo/routes.json · routes.geojson   코스 번들 (팀원 데이터, 목적지 3 × 3/5/10km × low/high)
 ├─ firestore.rules            Firestore 보안 규칙 (콘솔에 붙여 넣기)
 ├─ api/
 │  ├─ ask.js                  AI 질문 답변 (Vercel 서버 함수)
@@ -247,24 +248,14 @@ run/
 }
 ```
 
-### 코스: `public/data/courses.geojson`
-https://geojson.io 에서 선으로 실제 길을 따라 그리고 `properties`를 채워요.
-```json
-{
-  "id": "gilsangsa-run",
-  "name": { "en": "", "ko": "" },
-  "themes": ["fortress","stream","park","alley"],
-  "hill": "flat | mild | hard",
-  "tone": "easy | normal | hard",
-  "lamps": 1,
-  "crowd": "low | mid",
-  "residential": true,
-  "spots": ["gilsangsa"],
-  "elevation": [40, 45, 52],
-  "cues": [ { "at": [경도, 위도], "text": { "en": "", "ko": "" } } ]
-}
-```
-좌표 순서는 **[경도, 위도]** 예요. 거리·예상 시간·오르막 합계는 앱이 계산해요.
+### 코스: `public/data/lessgo/` (팀원 번들 그대로 복사)
+`outputs/react_vite_integration_20261103_final/`의 `routes.json`, `routes.geojson`을 이 폴더에 복사해요. 앱은 `src/lib/routes.js`에서 이렇게 읽어요.
+- 조회: `routes.destinations[목적지].distances['3km'|'5km'|'10km'].routes['low'|'high']` (`'any'`는 `'high'`로)
+- 선: `route.feature_id`로 `routes.geojson`의 feature를 찾아 ORS LineString 그대로 (좌표는 **[경도, 위도, 고도]**)
+- 거리·오르막: `route.summary`. 예상 시간은 1km 6분 30초로 앱이 계산 (ORS 걷기 시간은 안 씀)
+- 배지: `status === 'review_required'` → 검토 필요, `elevation.confidence === 'low'` → 고도 추정값, `formal_recommendation === true`일 때만 "오늘 가장 잘 맞는 코스"
+- 목적지 id(`simujang`, `jeongneung`, `uiryeong`)가 `spots.json`의 id와 같아서 그걸로 해설을 연결해요
+- 화면에서 숨길 장소는 `src/lib/data.js`의 `HIDDEN_SPOTS` (지금은 길상사)
 
 ---
 
