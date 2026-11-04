@@ -112,7 +112,7 @@ export default function Home() {
             options={DISTANCES.map((km) => ({ value: km, label: <>{km}<small>km</small></>, sub: t("km_" + km) }))} />
 
           {pick ? <TodayCard course={pick} onMore={() => openCourses(pick.properties.dest)}
-            onStart={() => app.run.start(pick, { demo: app.demo, speedup: speedParam() })} /> : (
+            onStart={() => { app.setCourse(pick); app.go("toStart"); }} /> : (
             // 이 거리에 경로가 하나도 없으면 추천 카드 대신 코스 고르기로 가는 버튼만 둬요
             <button className="btn btn-soft today-none" onClick={() => openCourses()}>{t("pick_course_km", { km: settings.km })}</button>
           )}
