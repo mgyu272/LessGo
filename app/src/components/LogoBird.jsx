@@ -15,13 +15,14 @@ const OUTLINE = [
   [356, 470], [330, 488], [318, 500], [304, 478], [276, 462], [246, 446], [232, 424], [216, 400], [190, 384], [150, 370],
   [110, 350], [64, 340], [46, 324], [52, 298], [84, 284], [112, 276], [104, 236], [96, 180], [84, 128], [66, 90],
 ];
-// 날개를 내린 모양: 왼쪽 위 끝(1~3번)과 오른쪽 위 끝(18~21번) 꼭짓점을 아래로 내려요
-const WING_DOWN = { 1: 30, 2: 40, 3: 26, 18: 22, 19: 34, 20: 42, 21: 30 };
 const toPath = (pts) => "M" + pts.map(([x, y]) => `${x} ${y}`).join(" L") + " Z";
-const BODY_UP = toPath(OUTLINE);
-const BODY_DOWN = toPath(OUTLINE.map(([x, y], i) => [x, y + (WING_DOWN[i] || 0)]));
-const ROUTE = "M96 330 C 200 318, 270 312, 340 286 C 420 256, 470 250, 540 236 C 590 226, 615 214, 636 206";
-const END = [636, 206];
+export const BODY_UP = toPath(OUTLINE);
+// 날개를 내린 모양: 디자인 캔버스(로딩 화면) 원본 값 그대로. 꼭짓점 60개라 BODY_UP과 짝이 맞아요
+export const BODY_DOWN = "M20 228 L56 222 L90 218 L118 216 L150 214 L185 214 L215 214 L250 214 L275 216 L296 218 L330 206 L372 204 L404 214 L416 236 L440 226 L470 206 L488 222 L506 226 L526 232 L544 236 L560 242 L572 238 L584 232 L596 222 L606 210 L632 186 L664 182 L676 196 L672 222 L650 252 L620 270 L600 300 L566 304 L530 300 L500 312 L474 330 L456 362 L440 396 L418 428 L384 452 L356 470 L330 488 L318 500 L304 478 L276 462 L246 446 L232 424 L216 400 L190 384 L150 370 L110 350 L64 340 L46 324 L52 298 L84 284 L112 276 L104 260 L80 250 L54 244 L30 238 Z";
+export const ROUTE = "M96 330 C 200 318, 270 312, 340 286 C 420 256, 470 250, 540 236 C 590 226, 615 214, 636 206";
+export const END = [636, 206];
+// 날갯짓: 펼침 → 내림 → 펼침, 0.9초 (디자인 값)
+export const FLAP = { dur: "0.9s", keyTimes: "0;.4;1", keySplines: ".45 0 .55 1;.45 0 .55 1", values: `${BODY_UP};${BODY_DOWN};${BODY_UP}` };
 
 function useReducedMotion() {
   const query = "(prefers-reduced-motion: reduce)";
@@ -42,8 +43,8 @@ function Body({ fill, stroke, strokeWidth, flap }) {
   return (
     <path d={BODY_UP} fill={fill} stroke={stroke} strokeWidth={strokeWidth} strokeLinejoin="round">
       {flap && !reduced && (
-        <animate attributeName="d" dur="0.9s" repeatCount="indefinite" calcMode="spline"
-          keyTimes="0;0.5;1" keySplines=".45 0 .55 1;.45 0 .55 1" values={`${BODY_UP};${BODY_DOWN};${BODY_UP}`} />
+        <animate attributeName="d" dur={FLAP.dur} repeatCount="indefinite" calcMode="spline"
+          keyTimes={FLAP.keyTimes} keySplines={FLAP.keySplines} values={FLAP.values} />
       )}
     </path>
   );

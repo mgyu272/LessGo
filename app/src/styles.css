@@ -92,31 +92,40 @@ small { font-size: 12px; }
 .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: var(--ink); z-index: 200; pointer-events: none; }
 .home-indicator.on-dark { background: #fff; }
 /* ---------- 로딩 ---------- */
-.loading-screen { background: linear-gradient(180deg, #EEF6E2 0%, #F5F9EE 50%, #FBFAF6 100%); overflow: hidden; }
-.ld-sky { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
-.ld-sun { transform-origin: 296px 168px; animation: sunBreath 5s ease-in-out infinite; }
-.ld-cloud { animation: drift 26s linear infinite; }
-.ld-cloud.c2 { animation-duration: 34s; animation-delay: -12s; }
-.ld-cloud.c3 { animation-duration: 30s; animation-delay: -20s; }
-.ld-wind path { stroke-dasharray: 60 140; animation: wind 3.2s linear infinite; }
-.ld-wind .w2 { animation-delay: -1.1s; }
-.ld-wind .w3 { animation-delay: -2.2s; }
-.ld-center { position: absolute; left: 0; right: 0; top: 34%; display: flex; flex-direction: column; align-items: center; z-index: 1; }
-.ld-bird { animation: flyIn 1.7s cubic-bezier(.2, .8, .25, 1) both; }
-.ld-float { animation: hover 2.6s 1.7s ease-in-out infinite; }
-.ld-shadow { width: 110px; height: 14px; margin-top: 18px; border-radius: 50%; background: rgba(95, 165, 42, .22);
-  animation: fade .6s 1.2s both, shadowBreath 2.6s 1.7s ease-in-out infinite; }
-.ld-track { position: absolute; left: 50%; bottom: calc(70px + var(--safe-bottom)); width: 300px; transform: translateX(-50%); z-index: 1; overflow: visible; }
-.ld-trail { stroke-dasharray: 100; stroke-dashoffset: 100; animation: trail 2.4s linear infinite; }
-.ld-goal { transform-box: fill-box; transform-origin: center; animation: goalPop 2.4s ease-out infinite; }
-@keyframes flyIn { 0% { transform: translate(-120px, 160px) rotate(-22deg) scale(.35); opacity: 0; } 60% { opacity: 1; } 100% { transform: none; opacity: 1; } }
-@keyframes hover { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-@keyframes shadowBreath { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.8); opacity: .65; } }
+/* 디자인 캔버스 "로딩"(390×844) 값 그대로. 일러스트는 위에서 170/844 지점, 가로 꽉 채워 비율 유지 */
+.screen.loading-screen { background: linear-gradient(180deg, #EEF6E2 0%, #F5F9EE 50%, #FBFAF6 100%); overflow: hidden; } /* .screen 기본 배경보다 앞서게 */
+.loading-screen .hanji-layer { opacity: .35; background-size: 414px auto; background-position: center top; }
+.ld-art { position: absolute; left: 0; top: calc(170 / 844 * 100%); width: 100%; height: auto; overflow: hidden; }
+.ld-sun { transform-box: fill-box; transform-origin: center; animation: ldSun 4s ease-in-out infinite; }
+.ld-cloud { animation: ldCloud 16s linear infinite; }
+.ld-cloud.c2 { animation-delay: -6s; animation-duration: 20s; }
+.ld-cloud.c3 { animation-delay: -11s; animation-duration: 13s; }
+.ld-wind { animation: ldWind 1.4s linear infinite; }
+.ld-wind.w2 { animation-delay: -.35s; animation-duration: 1.2s; }
+.ld-wind.w3 { animation-delay: -.8s; animation-duration: 1.6s; }
+.ld-wind.w4 { animation-delay: -1.1s; }
+.ld-wind.w5 { animation-delay: -.55s; animation-duration: 1.3s; }
+.ld-shadow { transform-box: fill-box; transform-origin: center; opacity: .55; animation: ldShadow 1.8s ease-in-out 1.7s infinite; }
+.ld-flyin { transform-box: fill-box; transform-origin: center; animation: ldFlyIn 1.7s cubic-bezier(.2, .8, .25, 1) both; }
+.ld-hover { transform-box: fill-box; transform-origin: center; animation: ldHover 1.8s ease-in-out 1.7s infinite; }
+.ld-route { stroke-dasharray: 700; animation: ldDraw 3s ease-out infinite; }
+.ld-halo { transform-box: fill-box; transform-origin: center; animation: ldGlow 1.8s ease-in-out infinite; }
+.ld-progress { position: absolute; left: 0; right: 0; bottom: 92px; display: flex; justify-content: center; }
+.ld-trail { stroke-dasharray: 100; animation: ldTrail 2.6s cubic-bezier(.45, 0, .4, 1) infinite; }
+.ld-goal { transform-box: fill-box; transform-origin: center; animation: ldGoal 2.6s ease-out infinite; }
+@keyframes ldFlyIn { 0% { transform: translate(-300px, 150px) rotate(-14deg) scale(.55); opacity: 0; } 25% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+@keyframes ldHover { 0%, 100% { transform: translateY(4px) rotate(-3deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
+@keyframes ldShadow { 0%, 100% { transform: scaleX(1); opacity: .55; } 50% { transform: scaleX(.78); opacity: .3; } }
+@keyframes ldWind { from { transform: translateX(0); } to { transform: translateX(-520px); } }
+@keyframes ldCloud { from { transform: translateX(0); } to { transform: translateX(-560px); } }
+@keyframes ldDraw { 0% { stroke-dashoffset: 700; } 70%, 100% { stroke-dashoffset: 0; } }
+@keyframes ldGlow { 0%, 100% { opacity: .3; transform: scale(1); } 50% { opacity: .7; transform: scale(1.35); } }
+@keyframes ldSun { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+@keyframes ldTrail { 0% { stroke-dashoffset: 100; opacity: 1; } 75% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes ldGoal { 0%, 70% { transform: scale(1); opacity: .6; } 82% { transform: scale(1.6); opacity: 1; } 100% { transform: scale(1); opacity: .6; } }
+/* 로그인 그림(ls-)이 같이 쓰는 움직임 */
 @keyframes sunBreath { 0%, 100% { transform: scale(1); opacity: .85; } 50% { transform: scale(1.06); opacity: 1; } }
 @keyframes drift { from { transform: translateX(80px); } to { transform: translateX(-480px); } }
-@keyframes wind { from { stroke-dashoffset: 200; } to { stroke-dashoffset: 0; } }
-@keyframes trail { 0% { stroke-dashoffset: 100; } 85%, 100% { stroke-dashoffset: 0; } }
-@keyframes goalPop { 0%, 82% { transform: scale(1); } 90% { transform: scale(1.6); } 100% { transform: scale(1); } }
 
 /* ---------- 화면 공통 ---------- */
 .screen { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--stone); }
