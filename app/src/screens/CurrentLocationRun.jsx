@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { MapView, Route, Me, SpotMarker, FitBounds } from "../components/MapView.jsx";
 import { distance } from "../lib/geo.js";
-import { speedParam } from "./Home.jsx";
 import { DESTINATIONS } from "../lib/routes.js";
 import { loc } from "../lib/i18n.js";
 
@@ -50,8 +49,8 @@ export default function CurrentLocationRun() {
         modeName:{ko:"러닝 친화 경로",en:"Running-friendly route"}
       }
     };
-    // GPS 출발 코스는 실제 위치로 추적. 시연 모드가 켜져 있으면 시뮬레이터 사용.
-    app.run.start(course,{demo:app.demo,speedup:speedParam()});
+    // 현위치 출발은 반드시 실제 GPS로 기록 (앱 기본 시연 모드와 무관).
+    app.run.start(course,{demo:false,speedup:speedParam()});
   };
   return <section className="screen picker-screen">
     <MapView className="picker-map">
