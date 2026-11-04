@@ -1,6 +1,6 @@
 // ③ 코스 고르기 (디자인 원본 docs/design/Courses.dc.html)
 // 한 화면에서 조건을 고르고 두 길을 비교해요. (예전 코스 조건 시트 · 코스 3개 · 코스 상세를 합쳤어요)
-// - 지도 위 조건 칩 4개(목적지 · 거리 · 언덕 · 테마) → 옵션 시트
+// - 지도 위: 뒤로 + 목적지 버튼(누르면 목적지 고르기 시트). 거리는 시트 안 탭, 경사는 완만한 길/언덕 허용 카드로 골라요
 // - 바텀시트: 가로로 넘기는 경로 카드(완만한 길 low / 언덕 허용 high). 고른 카드의 경로가 지도에서 굵게
 // - 시트를 끌어올리면 비교표(거리 · 예상 시간 · 오르막 · 급경사)와 지나가는 곳
 // - 아래 고정: 저장(하트) + "…로 시작"
@@ -16,14 +16,16 @@ import { getCourse } from "../lib/data.js";
 import { MapView, FitBounds, SpotMarker, Route, Dot } from "../components/MapView.jsx";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { ElevationChart } from "../components/Bits.jsx";
-import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet, Toggle } from "../components/ui.jsx";
+import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet, Toggle, Segment } from "../components/ui.jsx";
 import { speedParam } from "./Home.jsx";
 
 // 지도 선 색: 완만한 길(low) = 초록, 언덕 허용(high) = 주황 (단색)
 export const MODE_COLOR = { low: "#2F6512", high: "#E38B2C" };
 const HILLS = ["flat", "some", "hard"];           // 평지 위주 → low, 약간 언덕·도전 → high
 const THEMES = ["wall", "hanok", "tomb", "indep", "river", "park", "temple", "cafe", "market", "night"];
-const NEAR_ROUTE_M = 150;                          // 이 거리 안의 제휴 가게를 "지나가는 곳"에 보여줘요
+const NEAR_ROUTE_M = 150;
+// 조건 칩 줄(거리·경사·테마)을 보일지. 지금은 숨겨요 (테마는 실제 필터가 없어서). 다시 쓰려면 true
+const SHOW_CONDITION_CHIPS = false;                          // 이 거리 안의 제휴 가게를 "지나가는 곳"에 보여줘요
 
 // 시트 높이: 처음엔 지도가 넉넉히 보이게(위에서 470px), 끌어올리면 위 칩 아래(118px)까지
 const snapsFor = (screenH) => [Math.max(300, screenH - 470), screenH - 118];
@@ -57,8 +59,9 @@ export default function CoursePicker() {
   if (!course) {
     return (
       <section className="screen picker-screen">
-        <PickerTop onBack={() => app.go("home")} />
+        <PickerTop onBack={() => app.go("home")} name={place(dest)} onDest={() => setChip("dest")} />
         <p className="note cream picker-empty">{t("no_route_data")}</p>
+        <DestSheet open={chip === "dest"} dest={dest} place={place} onClose={() => setChip("")} onPick={(v) => setPick({ ...pick, dest: v })} />
       </section>
     );
   }
@@ -82,16 +85,18 @@ export default function CoursePicker() {
         <Route key={course.id} path={course.path} color={MODE_COLOR[p.mode]} weight={7} opacity={1} />
         <Dot at={[course.path[0].lat, course.path[0].lng]} color={MODE_COLOR[p.mode]} />
         {data.spotById[dest] && <SpotMarker spot={data.spotById[dest]} />}
-        <FitBounds points={pair.flatMap((o) => o.path).map((q) => [q.lat, q.lng])} padTL={[30, 130]} padBR={[30, sheet.snaps[0] + 20]} fitKey={dest + km} />
+        <FitBounds points={pair.flatMap((o) => o.path).map((q) => [q.lat, q.lng])} padTL={[30, 100]} padBR={[30, sheet.snaps[0] + 20]} fitKey={dest + km} />
       </MapView>
 
-      <PickerTop onBack={() => app.go("home")}>
-        <div className="picker-chips scroll" role="toolbar" aria-label={t("course_conditions")}>
-          <Chip caret aria-haspopup="dialog" onClick={() => setChip("dest")}>{place(dest)}</Chip>
-          <Chip caret aria-haspopup="dialog" onClick={() => setChip("km")}>{km}km</Chip>
-          <Chip caret aria-haspopup="dialog" onClick={() => setChip("hill")}>{t("hill2_" + pick.hill)}</Chip>
-          <Chip caret aria-haspopup="dialog" onClick={() => setChip("theme")}>{themeText}</Chip>
-        </div>
+      <PickerTop onBack={() => app.go("home")} name={place(dest)} onDest={() => setChip("dest")}>
+        {/* 예전 조건 칩 줄. 거리·경사는 시트 안에서 고르고, 테마는 실제로 거르는 기능이 없어서 숨겨 뒀어요 */}
+        {SHOW_CONDITION_CHIPS && (
+          <div className="picker-chips scroll" role="toolbar" aria-label={t("course_conditions")}>
+            <Chip caret aria-haspopup="dialog" onClick={() => setChip("km")}>{km}km</Chip>
+            <Chip caret aria-haspopup="dialog" onClick={() => setChip("hill")}>{t("hill2_" + pick.hill)}</Chip>
+            <Chip caret aria-haspopup="dialog" onClick={() => setChip("theme")}>{themeText}</Chip>
+          </div>
+        )}
       </PickerTop>
 
       <BottomSheet sheet={sheet} className="picker-sheet" aria-label={t("pick_course")}>
@@ -100,6 +105,9 @@ export default function CoursePicker() {
             <h2>{t("course_to", { name: place(dest), km })}</h2>
             <button className="picker-more" onClick={sheet.toggle}>{t(sheet.expanded ? "fold" : "details")}</button>
           </div>
+          {/* 거리 탭: 3km · 가볍게 / 5km · 보통 / 10km · 길게 */}
+          <Segment className="picker-km" label={t("distance")} value={km} onChange={(v) => setPick({ ...pick, km: v })}
+            options={DISTANCES.map((k) => ({ value: k, label: <>{k}<small>km</small></>, sub: t("km_" + k) }))} />
 
           <div className="rail scroll" role="radiogroup" aria-label={t("route_type")}>
             {pair.map((o) => <RouteCard key={o.id} c={o} on={o.id === course.id} onPick={() => setSel(o.properties.mode)} />)}
@@ -134,9 +142,7 @@ export default function CoursePicker() {
         </button>
       </div>
 
-      <OptionSheet open={chip === "dest"} title={t("ask_dest")} cols={2} value={dest} onClose={() => setChip("")}
-        options={DESTINATIONS.map((d) => ({ value: d, label: place(d), sub: t("dest_sub_" + d) }))}
-        onPick={(v) => setPick({ ...pick, dest: v })} />
+      <DestSheet open={chip === "dest"} dest={dest} place={place} onClose={() => setChip("")} onPick={(v) => setPick({ ...pick, dest: v })} />
       <OptionSheet open={chip === "km"} title={t("ask_km")} cols={3} value={km} onClose={() => setChip("")}
         options={DISTANCES.map((k) => ({ value: k, label: `${k}km`, sub: t("km_" + k) }))}
         onPick={(v) => setPick({ ...pick, km: v })} />
@@ -151,17 +157,30 @@ export default function CoursePicker() {
   );
 }
 
-function PickerTop({ onBack, children }) {
+// 위쪽: 뒤로 버튼 + 목적지 버튼 (버튼 전체를 누르면 목적지 고르기 시트)
+function PickerTop({ onBack, name, onDest, children }) {
   return (
     <div className="picker-top">
       <div className="picker-title">
-        <button className="round-btn glass" onClick={onBack} aria-label={t("back_home")}>
+        <button className="round-btn glass picker-back" onClick={onBack} aria-label={t("back_home")}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
         </button>
-        <h1 className="glass">{t("pick_course")}</h1>
+        <button className="dest-btn" onClick={onDest} aria-haspopup="dialog" aria-label={t("dest_btn_label", { name })}>
+          <span className="dest-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg></span>
+          <span className="dest-text"><small>{t("where_to")}</small><b>{name}</b></span>
+          <span className="dest-change" aria-hidden="true">{t("change")} ▾</span>
+        </button>
       </div>
       {children}
     </div>
+  );
+}
+
+// 목적지 고르기 시트 ("어디든" 같은 데이터 없는 옵션은 넣지 않아요)
+function DestSheet({ open, dest, place, onClose, onPick }) {
+  return (
+    <OptionSheet open={open} title={t("choose_dest")} cols={2} value={dest} onClose={onClose}
+      options={DESTINATIONS.map((d) => ({ value: d, label: place(d), sub: t("dest_sub_" + d) }))} onPick={onPick} />
   );
 }
 

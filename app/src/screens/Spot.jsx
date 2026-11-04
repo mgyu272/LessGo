@@ -10,6 +10,7 @@ import { ShopRow, FakeQr, LangPill } from "../components/Bits.jsx";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { LogoBird } from "../components/LogoBird.jsx";
 import { useBottomSheet, BottomSheet } from "../components/ui.jsx";
+import NearbyShops from "../components/NearbyShops.jsx";
 import { CENTER } from "../state/AppContext.jsx";
 
 const CAT = { history: ["History spot", "역사문화 스팟"], stream: ["Stream spot", "하천길 스팟"], park: ["Park & view spot", "공원·전망 스팟"] };
@@ -134,6 +135,9 @@ export function Spot() {
           </div>
           {showScript && <div className="script">{text}</div>}
           <button className="link" onClick={() => setShowScript(!showScript)}>{t(showScript ? "hide_script" : "show_script")}</button>
+
+          {/* 근처에서 쉬어 가기: 카카오맵 가게 가까운 순 4곳 (제휴 아님) */}
+          <NearbyShops spot={spot} variant="arrival" />
 
           <p className="note cream">{loc(spot.notice)}</p>
 

@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { useApp, HOME_CENTER, HOME_LEVEL } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
-import { MapView, FitSpots, FlyTo, HexLayer, SpotMarker, Me } from "../components/MapView.jsx";
+import { MapView, FitSpots, FlyTo, SpotMarker, Me } from "../components/MapView.jsx";
 import { CategoryIcon, spotIconSvg } from "../components/SpotIcons.jsx";
 import { LangPill, ElevationChart } from "../components/Bits.jsx";
 import { useBottomSheet, BottomSheet, Segment, Badge } from "../components/ui.jsx";
@@ -26,13 +26,12 @@ function homeSafeArea() {
   return { top: top.offsetTop + top.offsetHeight + 8, bottom: sheet.offsetTop - 8, left: 8, right: map.offsetWidth - 8 };
 }
 
-// 오늘의 추천: 고른 거리의 완만한 길(low) 중 정식 추천(formal_recommendation) 경로. 없으면 null
+// 오늘의 추천: 고른 거리의 완만한 길(low) 중 정식 추천(formal_recommendation) 경로를 먼저 골라요.
+// 정식 추천이 없는 거리(5·10km)에서도 디자인처럼 카드를 보여주되, 카드에 "검토 필요" 배지를 붙여요.
+// 경로 데이터(팀원 코스 번들)는 그대로 두고 화면에서만 고르는 방식이에요. 경로가 아예 없으면 null
 export function todaysPick(data, km) {
-  for (const dest of DESTINATIONS) {
-    const c = getCourse(data, dest, km, "low");
-    if (c?.properties.formal) return c;
-  }
-  return null;
+  const lows = DESTINATIONS.map((dest) => getCourse(data, dest, km, "low")).filter(Boolean);
+  return lows.find((c) => c.properties.formal) || lows[0] || null;
 }
 
 export default function Home() {
@@ -73,7 +72,6 @@ export default function Home() {
   return (
     <section className="screen home-screen">
       <MapView className="home-map" center={HOME_CENTER} level={HOME_LEVEL}>
-        <HexLayer cells={user.cells} landmarkCells={data.landmarkCells} goals />
         {shown.map((s) => <SpotMarker key={s.id} spot={s} label onClick={() => openSpot(s)} />)}
         <Me at={me} />
         {/* 위쪽 검색·칩과 아래 시트에 배지·이름표가 가리지 않게 맞춰요 */}
@@ -115,7 +113,7 @@ export default function Home() {
 
           {pick ? <TodayCard course={pick} onMore={() => openCourses(pick.properties.dest)}
             onStart={() => app.run.start(pick, { demo: app.demo, speedup: speedParam() })} /> : (
-            // 이 거리에는 정식 추천 경로가 없어서 추천 카드를 숨기고, 코스 고르기로 가는 버튼만 둬요
+            // 이 거리에 경로가 하나도 없으면 추천 카드 대신 코스 고르기로 가는 버튼만 둬요
             <button className="btn btn-soft today-none" onClick={() => openCourses()}>{t("pick_course_km", { km: settings.km })}</button>
           )}
 
@@ -161,7 +159,10 @@ function TodayCard({ course, onMore, onStart }) {
       <div className="tc-head">
         <span className="tc-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spot ? spotIconSvg(spot) : "" }} />
         <div className="tc-text">
-          <Badge>{t("today_pick")}</Badge>
+          <span className="tc-badges">
+            <Badge>{t("today_pick")}</Badge>
+            {!p.formal && <Badge tone="warn">{t("needs_review")}</Badge>}
+          </span>
           <b>{t("to_place_mode", { name: place, mode: loc(p.modeName) })}</b>
           <small>{p.distance_km}km · {t("about_min", { n: p.minutes })} · {climb}</small>
         </div>

@@ -4,7 +4,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Map, CustomOverlayMap, Polygon, Polyline, useMap } from "react-kakao-maps-sdk";
-import { boundary } from "../lib/territory.js";
 import { spotIconSvg, LABEL_OFFSETS } from "./SpotIcons.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { CENTER } from "../state/AppContext.jsx";
@@ -168,24 +167,15 @@ export function FlyTo({ to, level = 2 }) {
   return null;
 }
 
-// 육각형 영역 (얻은 칸 = 옥빛, 스팟 칸 = 녹색, 아직 못 얻은 스팟 칸 = 녹색 점선). 방금 얻은 칸은 더 진하게
-export function HexLayer({ cells, landmarkCells, dark = false, goals = false, fresh = [] }) {
-  const freshSet = useMemo(() => new Set(fresh), [fresh.join(",")]);
-  const owned = useMemo(() => [...cells].map((c) => ({ c, path: boundary(c).map(toLatLng), gold: landmarkCells.has(c) })), [cells, landmarkCells]);
-  const goalCells = useMemo(() => (goals ? [...landmarkCells].filter((c) => !cells.has(c)) : []), [goals, cells, landmarkCells]);
+// 달리기 별: 흰 원(r12) + 금색 테두리 + 금색 별. 주운 별은 연한 금색 바탕
+export function StarMark({ at, got = false }) {
   return (
-    <>
-      {owned.map(({ c, path, gold }) => (
-        <Polygon key={c} path={path} strokeWeight={1} strokeOpacity={1}
-          strokeColor={gold ? "#1F4D3F" : dark ? "#7CC4A4" : "#4F9C7E"}
-          fillColor={gold ? "#2E6B57" : "#7CC4A4"}
-          fillOpacity={freshSet.has(c) ? 0.75 : gold ? 0.7 : dark ? 0.4 : 0.42} />
-      ))}
-      {goalCells.map((c) => (
-        <Polygon key={"g" + c} path={boundary(c).map(toLatLng)} strokeWeight={2} strokeColor="#1F4D3F"
-          strokeOpacity={1} strokeStyle="dash" fillOpacity={0} />
-      ))}
-    </>
+    <CustomOverlayMap position={toLatLng(at)} xAnchor={0.5} yAnchor={0.5} zIndex={4}>
+      <svg className={`star-mark ${got ? "got" : ""}`} width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+        <circle cx="14" cy="14" r="12" fill={got ? "#FFF6D6" : "#FFFFFF"} stroke="#F2D27A" strokeWidth="2" />
+        <path d="M14 7.5l1.9 3.9 4.3.6-3.1 3 .7 4.3-3.8-2-3.8 2 .7-4.3-3.1-3 4.3-.6z" fill="#E0B63A" opacity={got ? 0.55 : 1} />
+      </svg>
+    </CustomOverlayMap>
   );
 }
 

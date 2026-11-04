@@ -2,7 +2,6 @@
 // 데이터 담당은 public/data 안의 파일만 고치면 돼요. 빌드 없이 바로 반영돼요.
 // 코스는 팀원 번들 public/data/lessgo/ (routes.json + routes.geojson) → lib/routes.js 에서 앱 모양으로 바꿔요.
 
-import { cellOf } from "./territory.js";
 import { buildCourses, keyOf, nearestKm } from "./routes.js";
 
 // 지금은 화면(홈 지도 핀·스팟 목록·카테고리)에서 숨기는 장소. spots.json 데이터는 그대로 두고,
@@ -24,10 +23,8 @@ export async function loadData() {
   res.forEach((r, i) => { if (r.status === "rejected") console.error(`[data] ${names[i]}`, r.reason); });
   const [spots, routes, routeLines, shops] = res.map((r, i) => (r.status === "fulfilled" ? r.value : [{ spots: [] }, {}, { features: [] }, { shops: [] }][i]));
   const spotById = {};
-  const landmarkCells = new Set();
   const visible = spots.spots.filter((s) => !HIDDEN_SPOTS.has(s.id));
   spots.spots.forEach((s) => { spotById[s.id] = s; });
-  visible.forEach((s) => landmarkCells.add(cellOf(s)));
   const { byKey, list } = buildCourses(routes, routeLines, spotById);
   return {
     spots: visible,           // 화면에 보이는 장소만
@@ -36,7 +33,6 @@ export async function loadData() {
     courses: list,            // 목적지 3 × 거리 3 × low/high = 18개
     courseByKey: byKey,
     spotById,
-    landmarkCells,
     failed,
   };
 }

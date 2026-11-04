@@ -46,7 +46,8 @@ export function AppProvider({ children }) {
   const userRef = useRef(user); userRef.current = user;
 
   const go = useCallback((s) => setScreen(s), []);
-  const run = useRun({ dataRef, userRef, go, setSpot, setFinish });
+  const toastRef = useRef(null); // 아래에서 만든 toast를 달리기 쪽(별 +1 알림)에서도 쓰게
+  const run = useRun({ dataRef, userRef, go, setSpot, setFinish, toast: useCallback((m) => toastRef.current?.(m), []) });
 
   // 데이터 + 날씨 불러오기
   useEffect(() => {
@@ -77,7 +78,7 @@ export function AppProvider({ children }) {
   const changeLang = (l) => { setLang(l); setLangState(l); };
   const setDemo = (v) => { setDemoState(v); try { localStorage.setItem("runtrip.demo", v ? "on" : "off"); } catch {} };
   const toastTimer = useRef(null);
-  const toast = (msg) => {
+  const toast = toastRef.current = (msg) => {
     setToastMsg(msg);
     clearTimeout(toastTimer.current);
     toastTimer.current = setTimeout(() => setToastMsg(""), 2200);
