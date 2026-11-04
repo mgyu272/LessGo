@@ -30,7 +30,7 @@ const SCREENS = {
 };
 // 하단 메뉴가 보이는 화면 (places·events·stats는 화면이 생기기 전까지 기존 화면으로 이어져요)
 const WITH_TABS = new Set(["home", "places", "events", "stats", "stars", "records"]);
-const DARK = new Set(["run", "stars", "coupon"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
+const DARK = new Set(["stars", "coupon"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
 
 export default function App() {
   const { screen, data, spot } = useApp();

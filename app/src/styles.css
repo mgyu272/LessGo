@@ -203,7 +203,7 @@ small { font-size: 12px; }
 .ui-badge.plain { background: rgba(255, 255, 255, .8); color: var(--muted); box-shadow: inset 0 0 0 1px var(--border); }
 .ui-layer { position: absolute; inset: 0; z-index: 60; }
 .ui-scrim { position: absolute; inset: 0; background: rgba(31, 61, 20, .38); }
-.ui-dialog { position: absolute; left: 20px; right: 20px; top: 50%; transform: translateY(-50%); border-radius: 24px; padding: 22px 20px 18px; background: #FBFBF4; box-shadow: 0 24px 50px -20px rgba(31, 61, 20, .6); }
+.ui-dialog { position: absolute; left: 12px; right: 12px; bottom: calc(12px + var(--safe-bottom)); border-radius: 26px; padding: 22px 20px 18px; animation: riseIn .3s ease both; background: #FBFBF4; box-shadow: 0 24px 50px -20px rgba(31, 61, 20, .6); }
 .ui-dialog h2 { margin: 0 0 6px; font-size: 19px; font-weight: 800; }
 .ui-dialog p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--muted); }
 .ui-dialog-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
@@ -803,3 +803,48 @@ small { font-size: 12px; }
 .picker-heart svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .rail::-webkit-scrollbar, .picker-chips::-webkit-scrollbar, .picker-body::-webkit-scrollbar { display: none; }
 .picker-chips, .picker-body { scrollbar-width: none; }
+
+/* ---------- ⑤ 달리는 중 (Run.dc.html) ---------- */
+.run-screen { background: var(--bg-soft); }
+.run-map { position: absolute; left: 0; right: 0; top: 0; height: 50%; overflow: hidden; }
+.run-map .map { position: absolute; inset: 0; }
+.run-locate { position: absolute; right: 14px; bottom: 40px; z-index: 2; color: var(--strong); width: 48px; height: 48px; border-radius: 24px; }
+.run-locate svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.run-top2 { position: absolute; left: 14px; right: 14px; top: calc(10px + var(--safe-top)); z-index: 4; display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+.run-status, .run-left { height: 44px; padding: 0 14px; border-radius: 22px; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; white-space: nowrap; }
+.run-left { font-size: 13px; color: var(--strong); gap: 6px; }
+.run-left svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.live { width: 8px; height: 8px; border-radius: 4px; background: var(--brand); animation: live 1.2s ease-in-out infinite; }
+.is-paused .live { background: #C9A227; animation-play-state: paused; }
+@keyframes live { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+.run-panel2 { position: absolute; left: 0; right: 0; top: 47%; bottom: 0; z-index: 3; border-radius: 28px 28px 0 0; background: linear-gradient(180deg, #F2F9E6 0%, #FBFBF4 40%, #FFFFFF 100%); box-shadow: 0 -10px 30px rgba(30, 43, 23, .10); padding: 18px 22px calc(18px + var(--safe-bottom)); display: flex; flex-direction: column; }
+.rp-label { font-size: 13px; font-weight: 600; color: var(--muted); }
+.rp-big { margin-top: 2px; font-size: 60px; font-weight: 900; font-style: italic; line-height: 1; letter-spacing: -.04em; }
+.rp-big em { margin-left: 4px; font-size: 20px; font-weight: 800; color: var(--link); }
+.rp-next { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.rp-bar { flex: 1; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.rp-bar i { display: block; height: 100%; border-radius: 3px; background: var(--brand); transition: width .4s; }
+.rp-next small { font-size: 12px; font-weight: 600; color: #3F5A2C; }
+.rp-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 14px; }
+.rp-stats > div { display: flex; flex-direction: column; gap: 2px; }
+.rp-stats > div + div { padding-left: 14px; border-left: 1px solid var(--border); }
+.rp-stats b { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+.rp-stats small { font-size: 12px; font-weight: 500; color: var(--muted); }
+.rp-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.rp-card { min-width: 0; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; text-align: left; color: var(--text); }
+.rp-card small { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.rp-card small svg { width: 12px; height: 12px; fill: none; stroke: var(--brand); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rp-card small svg.fill { fill: var(--brand); stroke: none; }
+.rp-card > span { display: flex; align-items: center; justify-content: space-between; gap: 6px; min-width: 0; }
+.rp-card b { font-size: 17px; font-weight: 800; }
+.rp-card .ellipsis { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rp-ctl { margin-top: auto; padding-top: 12px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; justify-items: center; }
+.ctl { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #3F5A2C; }
+.ctl-round { width: 56px; height: 56px; border-radius: 28px; background: #FFFFFF; color: var(--strong); display: grid; place-items: center; box-shadow: inset 0 0 0 1.5px var(--handle); }
+.ctl-main { width: 84px; height: 84px; border-radius: 42px; display: grid; place-items: center; background: var(--cta-bg); color: var(--cta-text); box-shadow: var(--cta-shadow); }
+.ctl svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ctl-main svg { width: 32px; height: 32px; }
+.ctl svg.fill { fill: currentColor; stroke: none; }
+.km-mark { position: relative; width: 18px; height: 18px; border-radius: 50%; background: #FFFFFF; box-shadow: inset 0 0 0 3px var(--brand); }
+.km-mark i { position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: var(--brand); }
+.km-mark span { position: absolute; left: 24px; top: -2px; height: 22px; padding: 0 9px; border-radius: 11px; background: #FFFFFF; border: 1px solid var(--border); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--strong); white-space: nowrap; }
