@@ -38,7 +38,7 @@ export default async function handler(req,res) {
     try {
       response=await fetch(ORS,{method:"POST",headers:{"Authorization":key,"Content-Type":"application/json"},body:JSON.stringify({
         coordinates:[origin,destination],alternative_routes:{target_count:3,weight_factor:1.6,share_factor:0.6},
-        extra_info:["waytype"],instructions:true,language:"ko"
+        extra_info:["waytype"],instructions:true
       }),signal:controller.signal});
     } finally {clearTimeout(timer);}
     if(!response.ok) return res.status(502).json({error:"ORS 경로 생성 실패",upstream:response.status});
