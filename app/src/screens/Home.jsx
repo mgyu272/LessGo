@@ -7,10 +7,9 @@ import { MapView, FitSpots, FlyTo, HexLayer, SpotMarker, Me } from "../component
 import { CategoryIcon } from "../components/SpotIcons.jsx";
 import { LangPill } from "../components/Bits.jsx";
 import { Icon } from "./Auth.jsx";
+import { DISTANCES, MIN_PER_KM } from "../lib/routes.js"; // 3/5/10km, 예상 시간 1km 6분 30초
 
 const FILTERS = [["all", "filter_all"], ["history", "filter_history"], ["stream", "filter_stream"], ["park", "filter_park"]];
-const DISTANCES = [3, 5, 10];
-const MIN_PER_KM = 6.5;             // 예상 시간 기준: 1km 6분 30초
 // 바텀시트가 멈추는 높이 (px). 가운데(처음) 높이는 420인데, 낮은 화면(아이폰 SE 등)에서는
 // 지도에 핀 자리가 남도록 화면 높이에 맞춰 낮춰요 (최소 300)
 const snapsFor = (screenH) => [150, Math.max(300, Math.min(420, screenH - 330)), 640];
@@ -146,7 +145,7 @@ export default function Home() {
           <div className="segment" role="radiogroup" aria-label={t("distance")}>
             {DISTANCES.map((km) => (
               <button key={km} role="radio" aria-checked={settings.km === km} className={settings.km === km ? "on" : ""} onClick={() => setSettings({ ...settings, km })}>
-                <b>{km}</b>km
+                <b>{km}</b>km<small>{t("km_" + km)}</small>
               </button>
             ))}
           </div>

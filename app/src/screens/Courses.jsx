@@ -7,6 +7,7 @@ import { aiRecommend } from "../lib/ai.js";
 import { MapView, FitBounds, HexLayer, SpotMarker, Route, Dot } from "../components/MapView.jsx";
 import { ElevationChart, Seal, sealText } from "../components/Bits.jsx";
 import { speedParam } from "./Home.jsx";
+import { DISTANCES } from "../lib/routes.js";
 import { useEffect, useState } from "react";
 
 // ---------------- ② 설정 ----------------
@@ -14,7 +15,7 @@ export function Settings() {
   const app = useApp();
   const s = app.settings;
   const set = (patch) => app.setSettings({ ...s, ...patch });
-  const custom = ![3, 5, 10].includes(s.km);
+  const custom = !DISTANCES.includes(s.km);
   const toggleTheme = (k) => { const th = new Set(s.themes); th.has(k) ? th.delete(k) : th.add(k); set({ themes: th }); };
 
   return (
@@ -29,7 +30,7 @@ export function Settings() {
         <div className="scroll-y">
           <h4>{t("distance")}</h4>
           <div className="seg">
-            {[3, 5, 10].map((km) => <button key={km} className={s.km === km ? "on" : ""} onClick={() => set({ km })}>{km}km</button>)}
+            {DISTANCES.map((km) => <button key={km} className={s.km === km ? "on" : ""} onClick={() => set({ km })}>{km}km<small>{t("km_" + km)}</small></button>)}
             <button className={custom ? "on" : ""} onClick={() => set({ km: 4 })}>{t("custom")}</button>
           </div>
           {custom && <input type="number" className="input" min="1" max="21" step="0.5" value={s.km}
