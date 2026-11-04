@@ -72,7 +72,8 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
     r.trail.push([p.lat, p.lng]);
 
     // 실제 GPS 고도가 있으면 오르막 누적
-    if (p.altitude != null) {
+    if (Number.isFinite(p.altitude)) {
+      r.hasAltitude = true;
       if (r.lastAlt != null && p.altitude - r.lastAlt > 1) r.altUp += p.altitude - r.lastAlt;
       if (r.lastAlt == null || Math.abs(p.altitude - r.lastAlt) > 1) r.lastAlt = p.altitude;
     }
@@ -129,7 +130,7 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
     const simPath = course ? course.path : courses[0]?.path || [{ lat: HOME_CENTER[0], lng: HOME_CENTER[1] }];
     const r = ref.current = {
       course, demo, simPath, meters: 0, last: null, trail: [], newCells: [], visited: new Set(),
-      gpsReady: !!demo, gpsError: null, offRoute: false, offRouteCount: 0, remainingM: course?.len ?? 0,
+      gpsReady: !!demo, gpsError: null, offRoute: false, offRouteCount: 0, remainingM: course?.len ?? 0, hasAltitude: false,
       cuesFired: new Set(), paused: false, ended: false, altUp: 0, lastAlt: null, lastCell: null,
       cue: null, pill: demo ? "" : t("gps_waiting"), newStamps: 0, courseDone: false,
       me: [simPath[0].lat, simPath[0].lng], freeShops: [], voice: true,
@@ -215,7 +216,7 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish }) {
 }
 
 function currentAscent(r) {
-  if (!r.demo) return Math.round(r.altUp);
+  if (!r.demo) return r.hasAltitude ? Math.round(r.altUp) : null;
   if (r.altUp > 0 || !r.course) return Math.round(r.altUp);
   const frac = Math.min(1, r.meters / r.course.len);
   return ascentOf(r.course.properties.elevation || [], frac);
