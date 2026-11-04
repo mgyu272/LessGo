@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>로딩</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F7F2B}a:hover{color:#3E6A20}
+@keyframes flyin{0%{transform:translate(-300px,150px) rotate(-14deg) scale(.55);opacity:0}25%{opacity:1}100%{transform:none;opacity:1}}
+@keyframes hover{0%,100%{transform:translateY(4px) rotate(-3deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+@keyframes shadow{0%,100%{transform:scaleX(1);opacity:.55}50%{transform:scaleX(.78);opacity:.3}}
+@keyframes wind{from{transform:translateX(0)}to{transform:translateX(-520px)}}
+@keyframes cloud{from{transform:translateX(0)}to{transform:translateX(-560px)}}
+@keyframes draw{0%{stroke-dashoffset:700}70%,100%{stroke-dashoffset:0}}
+@keyframes glow{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.7;transform:scale(1.35)}}
+@keyframes sun{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes load{0%{width:4%}80%,100%{width:100%}}
+@keyframes trail{0%{stroke-dashoffset:100;opacity:1}75%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes goal{0%,70%{transform:scale(1);opacity:.6}82%{transform:scale(1.6);opacity:1}100%{transform:scale(1);opacity:.6}}
+.trail{stroke-dasharray:100;animation:trail 2.6s cubic-bezier(.45,0,.4,1) infinite}
+.goal{transform-box:fill-box;transform-origin:center;animation:goal 2.6s ease-out infinite}
+@keyframes twinkle{0%,100%{opacity:.2}50%{opacity:.95}}
+.star{animation:twinkle 3s ease-in-out infinite}
+.s2{animation-delay:-1s}.s3{animation-delay:-2s}.s4{animation-delay:-.5s}
+@keyframes fade{0%,100%{opacity:.6}50%{opacity:1}}
+.flyin{transform-box:fill-box;transform-origin:center;animation:flyin 1.7s cubic-bezier(.2,.8,.25,1) both}
+.hover{transform-box:fill-box;transform-origin:center;animation:hover 1.8s ease-in-out 1.7s infinite}
+.shadow{transform-box:fill-box;transform-origin:center;animation:shadow 1.8s ease-in-out 1.7s infinite}
+.wind{animation:wind 1.4s linear infinite}
+.w2{animation-delay:-.35s;animation-duration:1.2s}.w3{animation-delay:-.8s;animation-duration:1.6s}.w4{animation-delay:-1.1s}.w5{animation-delay:-.55s;animation-duration:1.3s}
+.cloud{animation:cloud 16s linear infinite}
+.c2{animation-delay:-6s;animation-duration:20s}.c3{animation-delay:-11s;animation-duration:13s}
+.route{stroke-dasharray:700;animation:draw 3s ease-out infinite}
+.halo{transform-box:fill-box;transform-origin:center;animation:glow 1.8s ease-in-out infinite}
+.sun{transform-box:fill-box;transform-origin:center;animation:sun 4s ease-in-out infinite}
+.bar{animation:load 3s ease-out infinite}
+.msg{animation:fade 1.6s ease-in-out infinite}
+.grain{position:absolute;inset:0;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.35;mix-blend-mode:luminosity;pointer-events:none}
+@media (prefers-reduced-motion: reduce){.flyin,.hover,.shadow,.wind,.cloud,.route,.halo,.sun,.bar,.msg,.trail,.goal,.star{animation:none}.bar{width:60%}.runner{display:none}.wind{display:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: linear-gradient(180deg, #EEF6E2 0%, #F5F9EE 50%, #FBFAF6 100%); font-family: 'Noto Sans KR', sans-serif; color: #1F3D14">
+  <div class="grain" aria-hidden="true"></div>
+  <svg width="390" height="440" viewBox="0 0 390 440" aria-hidden="true" style="position: absolute; left: 0; top: 170px">
+    <circle class="sun" cx="282" cy="96" r="13" fill="#FFF1C2"></circle>
+
+    <g fill="#E2EFD2">
+      <g class="cloud c1"><ellipse cx="420" cy="70" rx="34" ry="11"></ellipse><ellipse cx="440" cy="63" rx="20" ry="12"></ellipse></g>
+      <g class="cloud c2"><ellipse cx="470" cy="190" rx="40" ry="12"></ellipse><ellipse cx="494" cy="182" rx="22" ry="13"></ellipse></g>
+      <g class="cloud c3"><ellipse cx="430" cy="330" rx="28" ry="9"></ellipse><ellipse cx="446" cy="324" rx="16" ry="10"></ellipse></g>
+    </g>
+
+    <g stroke="#D3E6BC" stroke-width="3" stroke-linecap="round">
+      <line class="wind w1" x1="410" y1="150" x2="450" y2="150"></line>
+      <line class="wind w2" x1="420" y1="214" x2="476" y2="214"></line>
+      <line class="wind w3" x1="400" y1="262" x2="430" y2="262"></line>
+      <line class="wind w4" x1="430" y1="300" x2="480" y2="300"></line>
+      <line class="wind w5" x1="415" y1="122" x2="440" y2="122"></line>
+    </g>
+
+    <ellipse class="shadow" cx="190" cy="400" rx="96" ry="8" fill="#DCEBC8"></ellipse>
+
+    <g class="flyin">
+      <g class="hover">
+        <g transform="translate(36 96) scale(0.48) translate(-20 0)">
+          <path fill="{{bird}}" stroke="#5FA52A" stroke-opacity=".45" stroke-width="6" stroke-linejoin="round" d="M36 44 L70 22 L98 10 L118 30 L150 46 L185 70 L215 100 L250 130 L275 165 L296 196 L330 206 L372 204 L404 214 L416 236 L440 226 L470 206 L488 186 L500 160 L520 120 L532 96 L540 80 L558 88 L572 116 L590 148 L606 188 L632 186 L664 182 L676 196 L672 222 L650 252 L620 270 L600 300 L566 304 L530 300 L500 312 L474 330 L456 362 L440 396 L418 428 L384 452 L356 470 L330 488 L318 500 L304 478 L276 462 L246 446 L232 424 L216 400 L190 384 L150 370 L110 350 L64 340 L46 324 L52 298 L84 284 L112 276 L104 236 L96 180 L84 128 L66 90 Z">
+            <animate attributeName="d" dur=".9s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.4;1" keySplines=".45 0 .55 1;.45 0 .55 1" values="M36 44 L70 22 L98 10 L118 30 L150 46 L185 70 L215 100 L250 130 L275 165 L296 196 L330 206 L372 204 L404 214 L416 236 L440 226 L470 206 L488 186 L500 160 L520 120 L532 96 L540 80 L558 88 L572 116 L590 148 L606 188 L632 186 L664 182 L676 196 L672 222 L650 252 L620 270 L600 300 L566 304 L530 300 L500 312 L474 330 L456 362 L440 396 L418 428 L384 452 L356 470 L330 488 L318 500 L304 478 L276 462 L246 446 L232 424 L216 400 L190 384 L150 370 L110 350 L64 340 L46 324 L52 298 L84 284 L112 276 L104 236 L96 180 L84 128 L66 90 Z;M20 228 L56 222 L90 218 L118 216 L150 214 L185 214 L215 214 L250 214 L275 216 L296 218 L330 206 L372 204 L404 214 L416 236 L440 226 L470 206 L488 222 L506 226 L526 232 L544 236 L560 242 L572 238 L584 232 L596 222 L606 210 L632 186 L664 182 L676 196 L672 222 L650 252 L620 270 L600 300 L566 304 L530 300 L500 312 L474 330 L456 362 L440 396 L418 428 L384 452 L356 470 L330 488 L318 500 L304 478 L276 462 L246 446 L232 424 L216 400 L190 384 L150 370 L110 350 L64 340 L46 324 L52 298 L84 284 L112 276 L104 260 L80 250 L54 244 L30 238 Z;M36 44 L70 22 L98 10 L118 30 L150 46 L185 70 L215 100 L250 130 L275 165 L296 196 L330 206 L372 204 L404 214 L416 236 L440 226 L470 206 L488 186 L500 160 L520 120 L532 96 L540 80 L558 88 L572 116 L590 148 L606 188 L632 186 L664 182 L676 196 L672 222 L650 252 L620 270 L600 300 L566 304 L530 300 L500 312 L474 330 L456 362 L440 396 L418 428 L384 452 L356 470 L330 488 L318 500 L304 478 L276 462 L246 446 L232 424 L216 400 L190 384 L150 370 L110 350 L64 340 L46 324 L52 298 L84 284 L112 276 L104 236 L96 180 L84 128 L66 90 Z"></animate>
+          </path>
+          <path class="route" d="M96 330 C 200 318, 270 312, 340 286 C 420 256, 470 250, 540 236 C 590 226, 615 214, 636 206" fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round"></path>
+          <circle cx="96" cy="330" r="12" fill="#FFFFFF"></circle>
+          <circle class="halo" cx="636" cy="206" r="30" fill="#FFFFFF"></circle>
+          <circle cx="636" cy="206" r="17" fill="{{bird}}" stroke="#FFFFFF" stroke-width="9"></circle>
+        </g>
+      </g>
+    </g>
+  </svg>
+
+  <div role="progressbar" aria-label="불러오는 중" style="position: absolute; left: 0; right: 0; bottom: 92px; display: flex; justify-content: center">
+    <svg width="176" height="32" viewBox="0 0 176 32" aria-hidden="true">
+      <defs>
+        <linearGradient id="ltrail" gradientUnits="userSpaceOnUse" x1="8" y1="0" x2="168" y2="0"><stop offset="0" stop-color="#9CCB6B" stop-opacity="0"></stop><stop offset=".5" stop-color="#9CCB6B" stop-opacity=".7"></stop><stop offset="1" stop-color="#5E9634"></stop></linearGradient>
+      </defs>
+      <path d="M8 20 C 38 6, 62 28, 92 16 S 148 8, 168 14" fill="none" stroke="#D3E6BC" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 7"></path>
+      <path class="trail" pathLength="100" d="M8 20 C 38 6, 62 28, 92 16 S 148 8, 168 14" fill="none" stroke="url(#ltrail)" stroke-width="2.5" stroke-linecap="round"></path>
+      <circle class="goal" cx="168" cy="14" r="4" fill="none" stroke="#9CCB6B" stroke-width="1.5"></circle>
+      <g class="runner">
+        <circle r="8" fill="#9CCB6B" opacity=".22"></circle>
+        <circle r="3.6" fill="#FFFFFF" stroke="#5E9634" stroke-width="2"></circle>
+        <animateMotion dur="2.6s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.75;1" calcMode="spline" keySplines=".45 0 .4 1;0 0 1 1" path="M8 20 C 38 6, 62 28, 92 16 S 148 8, 168 14"></animateMotion>
+        <animate attributeName="opacity" dur="2.6s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;.06;.82;1"></animate>
+      </g>
+    </svg>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"bird":{"editor":"color","default":"#AEDA80","options":["#AEDA80","#C2E49C","#8CC05A"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { bird: this.props.bird ?? '#AEDA80' };
+  }
+}
+</script>
+</body>
+</html>

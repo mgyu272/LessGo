@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>장소 상세 · 심우장</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#3F7F1C}a:hover{color:#2F6512}
+.bg-grain{position:absolute;inset:0;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.35;mix-blend-mode:luminosity;pointer-events:none;z-index:0}
+.paper{position:relative;isolation:isolate}
+.paper::before{content:"";position:absolute;inset:0;border-radius:inherit;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.3;mix-blend-mode:luminosity;pointer-events:none;z-index:0}
+.paper>*{position:relative;z-index:1}
+.glass{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);border:1px solid rgba(255,255,255,.85);box-shadow:0 8px 24px -12px rgba(31,61,20,.35)}
+.soft{background:rgba(246,252,234,.7);box-shadow:inset 0 -3px 0 rgba(120,190,60,.22),inset 0 0 0 1px rgba(120,190,60,.14)}
+.card{background:#FFFFFF;box-shadow:0 1px 0 rgba(120,190,60,.12),0 10px 24px -18px rgba(63,127,28,.5)}
+.cta{background:rgba(190,236,130,.92);border:1px solid rgba(255,255,255,.6);box-shadow:0 14px 28px -12px rgba(150,215,80,.75),0 4px 10px -4px rgba(150,215,80,.5);color:#1C3A0C;transition:transform .15s ease}
+.cta:active,.tap:active{transform:scale(.98)}
+.tap{transition:transform .15s ease,background .2s ease;cursor:pointer;font-family:inherit}
+.scroll{scrollbar-width:none}.scroll::-webkit-scrollbar{display:none}
+.badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:11px;font:700 11px 'Noto Sans KR',sans-serif}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rise{animation:rise .3s ease both}
+@media (prefers-reduced-motion: reduce){.rise{animation:none}}
+.tab{position:relative;height:46px;border:0;background:transparent;font:700 15px 'Noto Sans KR',sans-serif;cursor:pointer}
+.tab[aria-selected="true"]{color:#1F3D14}.tab[aria-selected="false"]{color:#6B8259}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:18%;right:18%;bottom:0;height:3px;border-radius:2px;background:#5FA52A}
+.scrim{position:absolute;inset:0;background:rgba(31,61,20,.38);z-index:5}
+.row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid #EAF3DD}
+.row:first-child{border-top:0}
+.reason{height:44px;padding:0 14px;border:0;border-radius:22px;font:600 14px 'Noto Sans KR',sans-serif;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 1040px; position: relative; overflow: hidden; background: #E9F6D6; font-family: 'Noto Sans KR', sans-serif; color: #1F3D14">
+  <div class="bg-grain" aria-hidden="true"></div>
+  <div class="scroll" style="position: absolute; inset: 0; overflow-y: auto; padding-bottom: 110px">
+    <div style="position: relative; padding: 12px 18px 18px; background: linear-gradient(180deg, #DDF0C2 0%, rgba(233,246,214,0) 100%)">
+      <div style="display: flex; justify-content: space-between">
+        <a class="glass" href="Places.dc.html" aria-label="뒤로" style="width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #1F3D14; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+        <button class="glass tap" aria-label="공유" style="width: 44px; height: 44px; border-radius: 22px; color: #1F3D14; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5"></path><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"></path></svg></button>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: center; margin-top: 10px">
+        <span style="width: 88px; height: 88px; flex: none; border-radius: 26px; background: #FFFFFF; box-shadow: 0 12px 24px -16px rgba(63,127,28,.6); display: flex; align-items: center; justify-content: center"><svg width="64" height="64" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M25.6 3.2 a3.4 3.4 0 1 0 3.6 4.6 a2.8 2.8 0 1 1 -3.6 -4.6 z" fill="#7CC4A4"></path>
+        <rect x="4" y="27" width="24" height="2.2" rx="1" fill="#B3BAB6"></rect>
+        <rect x="8" y="17" width="16" height="10" fill="#F1F3EF"></rect>
+        <path d="M8 17v10M13.6 17v10M18.4 17v10M24 17v10" stroke="#7A5134" stroke-width="1.3"></path>
+        <rect x="14.4" y="18.6" width="3.2" height="8.4" fill="#D8B88A"></rect>
+        <path d="M16 18.6v8.4M14.4 21.4h3.2M14.4 24.2h3.2" stroke="#7A5134" stroke-width=".55"></path>
+        <rect x="9.4" y="19.4" width="2.9" height="3" fill="#F1F3EF" stroke="#7A5134" stroke-width=".6"></rect>
+        <path d="M10.85 19.4v3M9.4 20.9h2.9" stroke="#7A5134" stroke-width=".4"></path>
+        <rect x="19.7" y="19.4" width="2.9" height="3" fill="#F1F3EF" stroke="#7A5134" stroke-width=".6"></rect>
+        <path d="M21.15 19.4v3M19.7 20.9h2.9" stroke="#7A5134" stroke-width=".4"></path>
+        <path d="M1.5 15.8 C5 16.8 8 14.6 10 11.5 H22 C24 14.6 27 16.8 30.5 15.8 C28.4 18 25 18.2 22 17.4 H10 C7 18.2 3.6 18 1.5 15.8 Z" fill="#26302C"></path>
+        <path d="M9.4 11.7 Q16 9.2 22.6 11.7" fill="none" stroke="#26302C" stroke-width="2" stroke-linecap="round"></path>
+        <path d="M12 13v3.6M14.5 12.6v4M17.5 12.6v4M20 13v3.6" stroke="#3D4843" stroke-width=".8"></path>
+        <circle cx="9.4" cy="11.7" r=".9" fill="#FFFFFF"></circle>
+        <circle cx="22.6" cy="11.7" r=".9" fill="#FFFFFF"></circle>
+      </svg></span>
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <small style="font: 700 12px 'Noto Sans KR', sans-serif; color: #3F7F1C">독립운동 유적 · 한옥 · 성북동</small>
+          <h1 style="margin: 0; font: 800 28px 'Noto Sans KR', sans-serif; letter-spacing: -.02em">심우장</h1>
+          <span class="badge" style="align-self: flex-start; background: #FFFFFF; color: #2F6512; box-shadow: inset 0 0 0 1px #C6E59E"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>정보 확인 [YYYY.MM.DD]</span>
+        </div>
+      </div>
+    </div>
+
+    <div role="tablist" aria-label="장소 정보" style="position: sticky; top: 0; z-index: 2; display: grid; grid-template-columns: repeat(3, 1fr); padding: 0 12px; background: rgba(233,246,214,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid #DCEDC6">
+      <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+        <button class="tab" role="tab" aria-selected="{{t.on}}" onClick="{{t.pick}}">{{t.label}}</button>
+      </sc-for>
+    </div>
+
+    <div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
+      <sc-if value="{{tabStory}}" hint-placeholder-val="{{ true }}">
+        <div class="rise" style="display: flex; flex-direction: column; gap: 12px">
+          <button class="cta tap" style="height: 56px; border-radius: 18px; display: flex; align-items: center; gap: 12px; padding: 0 8px 0 16px; font: 800 15px 'Noto Sans KR', sans-serif; text-align: left"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16v-3a8 8 0 0 1 16 0v3"></path><rect x="3" y="15" width="4" height="6" rx="1.5"></rect><rect x="17" y="15" width="4" height="6" rx="1.5"></rect></svg><span style="flex: 1">해설 듣기 · 약 [시간]</span><span style="width: 40px; height: 40px; border-radius: 20px; background: #2F6512; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor" stroke="none"></path></svg></span></button>
+          <article class="card" style="border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px"><span style="font: 700 12px 'Noto Sans KR', sans-serif; color: #5FA52A">이야기 1</span><h3 style="margin: 0; font: 800 16px 'Noto Sans KR', sans-serif">북쪽을 향한 한옥</h3><p style="margin: 0; font: 400 14px/1.65 'Noto Sans KR', sans-serif; color: #3F5A2C">전통 한옥은 남향을 좋아하지만 심우장은 북쪽을 향해 지어졌어요. 남쪽에 있던 조선총독부를 바라보지 않으려 했다는 이야기가 전해져요.</p></article>
+          <article class="card" style="border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px"><span style="font: 700 12px 'Noto Sans KR', sans-serif; color: #5FA52A">이야기 2</span><h3 style="margin: 0; font: 800 16px 'Noto Sans KR', sans-serif">만해 한용운의 집</h3><p style="margin: 0; font: 400 14px/1.65 'Noto Sans KR', sans-serif; color: #3F5A2C">독립운동가이자 시인, 승려였던 한용운 선생이 1933년부터 1944년까지 살았던 집이에요.</p></article>
+          <article class="card" style="border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px"><span style="font: 700 12px 'Noto Sans KR', sans-serif; color: #5FA52A">이야기 3</span><h3 style="margin: 0; font: 800 16px 'Noto Sans KR', sans-serif">이름에 담긴 뜻</h3><p style="margin: 0; font: 400 14px/1.65 'Noto Sans KR', sans-serif; color: #3F5A2C">'심우'는 불교에서 깨달음을 찾는 과정을 잃어버린 소를 찾는 일에 빗댄 말에서 왔어요.</p></article>
+          <p style="margin: 2px 2px 0; display: flex; gap: 6px; font: 400 12px/1.5 'Noto Sans KR', sans-serif; color: #4F6B3B"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15 9.5a3.5 3.5 0 1 0 0 5"></path></svg><span>해설 원고: LessGo 팀 작성 · 참고 자료 [출처 기관], [이용 조건]</span></p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{tabVisit}}" hint-placeholder-val="{{ false }}">
+        <div class="rise" style="display: flex; flex-direction: column; gap: 12px">
+          <div class="card" style="border-radius: 20px; padding: 4px 16px">
+            <div class="row"><span style="width: 32px; height: 32px; flex: none; border-radius: 10px; background: #EAF7D8; color: #3F7F1C; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span><span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><small style="font: 600 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">관람 시간</small><b style="font: 700 15px 'Noto Sans KR', sans-serif">[관람 시간]</b><small style="font: 400 12px/1.5 'Noto Sans KR', sans-serif; color: #4F6B3B">휴관일 [휴관일]</small></span></div>
+            <div class="row"><span style="width: 32px; height: 32px; flex: none; border-radius: 10px; background: #EAF7D8; color: #3F7F1C; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"></path><path d="M14 6v12" stroke-dasharray="2 2"></path></svg></span><span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><small style="font: 600 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">관람료</small><b style="font: 700 15px 'Noto Sans KR', sans-serif">[관람료]</b></span></div>
+            <div class="row"><span style="width: 32px; height: 32px; flex: none; border-radius: 10px; background: #EAF7D8; color: #3F7F1C; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg></span><span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><small style="font: 600 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">주소</small><b style="font: 700 15px 'Noto Sans KR', sans-serif">[주소]</b><small style="font: 400 12px/1.5 'Noto Sans KR', sans-serif; color: #4F6B3B">입구와 관람 시간은 현장에서 한 번 더 확인하세요</small></span></div>
+            <div class="row"><span style="width: 32px; height: 32px; flex: none; border-radius: 10px; background: #EAF7D8; color: #3F7F1C; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="15" rx="3"></rect><path d="M5 11h14M8 21v-3M16 21v-3"></path><circle cx="8.5" cy="14.5" r="1" fill="currentColor"></circle><circle cx="15.5" cy="14.5" r="1" fill="currentColor"></circle></svg></span><span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><small style="font: 600 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">가는 길</small><b style="font: 700 15px 'Noto Sans KR', sans-serif">[가까운 역] 도보 [시간]</b><small style="font: 400 12px/1.5 'Noto Sans KR', sans-serif; color: #4F6B3B">주민이 사는 동네예요. 조용히 걸어 주세요</small></span></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+            <a class="soft" href="#" style="height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 700 14px 'Noto Sans KR', sans-serif; color: #2F6512; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"></path><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>공식 안내</a>
+            <a class="soft" href="#" style="height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 700 14px 'Noto Sans KR', sans-serif; color: #2F6512; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"></path><path d="M9 4v14M15 6v14"></path></svg>길찾기</a>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-radius: 16px; background: rgba(255,255,255,.5); box-shadow: inset 0 0 0 1px #DCEDC6">
+            <span style="color: #4F6B3B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 8h.01"></path></svg></span>
+            <small style="flex: 1; font: 400 12px/1.5 'Noto Sans KR', sans-serif; color: #3F5A2C">마지막 확인 [YYYY.MM.DD] · 출처 [기관 이름]</small>
+            <button class="tap" onClick="{{openReport}}" style="height: 36px; padding: 0 12px; border: 0; border-radius: 18px; background: #FFFFFF; color: #2F6512; font: 700 13px 'Noto Sans KR', sans-serif; box-shadow: inset 0 0 0 1px #C6E59E; display: flex; align-items: center; gap: 4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"></path></svg>정보가 달라요</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{tabEvents}}" hint-placeholder-val="{{ false }}">
+        <div class="rise" style="display: flex; flex-direction: column; gap: 10px">
+          <a class="card" href="Events.dc.html" style="border-radius: 18px; padding: 14px; display: flex; gap: 12px; text-decoration: none; color: #1F3D14"><span style="width: 52px; flex: none; border-radius: 14px; background: #EAF7D8; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 0"><small style="font: 700 11px 'Noto Sans KR', sans-serif; color: #3F7F1C">[월]</small><b style="font: 800 18px 'Noto Sans KR', sans-serif">[일]</b></span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px"><span class="badge" style="align-self: flex-start; background: #F2F9E6; color: #3F7F1C; box-shadow: inset 0 0 0 1px #DCEDC6">해설 투어</span><b style="font: 700 15px 'Noto Sans KR', sans-serif">(예시) 만해의 길 해설 산책</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">[시간] · 심우장 일대</small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7FA66B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></a>
+          <a class="card" href="Events.dc.html" style="border-radius: 18px; padding: 14px; display: flex; gap: 12px; text-decoration: none; color: #1F3D14"><span style="width: 52px; flex: none; border-radius: 14px; background: #EAF7D8; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 0"><small style="font: 700 11px 'Noto Sans KR', sans-serif; color: #3F7F1C">[월]</small><b style="font: 800 18px 'Noto Sans KR', sans-serif">[일]</b></span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px"><span class="badge" style="align-self: flex-start; background: #F2F9E6; color: #3F7F1C; box-shadow: inset 0 0 0 1px #DCEDC6">전시</span><b style="font: 700 15px 'Noto Sans KR', sans-serif">(예시) 님의 침묵 시 전시</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">[기간] · [장소]</small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7FA66B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></a>
+          <a href="Events.dc.html" style="align-self: center; min-height: 44px; display: flex; align-items: center; gap: 4px; font: 700 14px 'Noto Sans KR', sans-serif; text-decoration: none">문화 활동 전체 보기<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></a>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 24px 18px 22px; background: linear-gradient(180deg, rgba(233,246,214,0) 0%, #E9F6D6 40%)">
+    <a class="cta" href="Courses.dc.html" style="height: 58px; border-radius: 18px; display: flex; align-items: center; justify-content: center; gap: 8px; font: 800 16px 'Noto Sans KR', sans-serif; text-decoration: none">심우장까지 달리기<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+  </div>
+
+  <sc-if value="{{report}}" hint-placeholder-val="{{ false }}">
+    <div class="scrim" onClick="{{closeReport}}"></div>
+    <form class="paper rise" role="dialog" aria-label="정보 신고" style="position: absolute; left: 0; right: 0; bottom: 0; z-index: 6; margin: 0; border-radius: 28px 28px 0 0; background: #FBFBF4; padding: 12px 20px 22px; display: flex; flex-direction: column; gap: 14px">
+      <span aria-hidden="true" style="align-self: center; width: 44px; height: 5px; border-radius: 3px; background: #C6E59E"></span>
+      <sc-if value="{{notSent}}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 14px">
+          <div><h2 style="margin: 0 0 4px; font: 800 20px 'Noto Sans KR', sans-serif">어떤 정보가 다른가요?</h2><p style="margin: 0; font: 400 13px 'Noto Sans KR', sans-serif; color: #4F6B3B">확인 후 고칠게요. 알려주셔서 고마워요.</p></div>
+          <div role="radiogroup" aria-label="신고 이유" style="display: flex; flex-wrap: wrap; gap: 8px">
+            <sc-for list="{{reasons}}" as="r" hint-placeholder-count="5">
+              <button type="button" class="reason" role="radio" aria-checked="{{r.on}}" onClick="{{r.pick}}" style="{{r.style}}">{{r.label}}</button>
+            </sc-for>
+          </div>
+          <label style="display: flex; flex-direction: column; gap: 6px; font: 600 13px 'Noto Sans KR', sans-serif; color: #3F5A2C">자세히 (선택)
+            <textarea rows="3" placeholder="예: 월요일에도 문을 열어요" style="resize: none; border-radius: 14px; border: 0; padding: 12px 14px; background: #FFFFFF; box-shadow: inset 0 0 0 1px #DCEDC6; font: 400 15px 'Noto Sans KR', sans-serif; color: #1F3D14; outline: none"></textarea>
+          </label>
+          <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px">
+            <button type="button" class="soft tap" onClick="{{closeReport}}" style="height: 54px; border: 0; border-radius: 16px; font: 700 15px 'Noto Sans KR', sans-serif; color: #1F3D14">취소</button>
+            <button type="button" class="cta tap" onClick="{{send}}" style="height: 54px; border-radius: 16px; font: 800 15px 'Noto Sans KR', sans-serif">보내기</button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 12px 0 4px; text-align: center">
+          <span style="width: 56px; height: 56px; border-radius: 28px; background: #EAF7D8; color: #3F7F1C; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span>
+          <h2 style="margin: 0; font: 800 19px 'Noto Sans KR', sans-serif">받았어요!</h2>
+          <p style="margin: 0; font: 400 13px/1.6 'Noto Sans KR', sans-serif; color: #4F6B3B">운영팀이 확인하면 정보에 반영하고 알려드릴게요.</p>
+          <button type="button" class="cta tap" onClick="{{closeReport}}" style="width: 100%; height: 54px; margin-top: 6px; border-radius: 16px; font: 800 15px 'Noto Sans KR', sans-serif">확인</button>
+        </div>
+      </sc-if>
+    </form>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1040}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { tab: 'story', report: false, reason: 'hours', sent: false }; }
+  renderVals() {
+    const s = this.state;
+    const T = [['story', '이야기'], ['visit', '방문 정보'], ['events', '문화 활동']];
+    const R = [['hours', '관람 시간'], ['fee', '관람료'], ['entrance', '입구 위치'], ['closed', '문을 닫았어요'], ['story', '이야기 내용'], ['etc', '기타']];
+    const ON = 'background: #2F6512; color: #FFFFFF;';
+    const OFF = 'background: rgba(246,252,234,.8); color: #1F3D14; box-shadow: inset 0 -3px 0 rgba(120,190,60,.22), inset 0 0 0 1px rgba(120,190,60,.14);';
+    return {
+      tabs: T.map(([k, label]) => ({ label, on: s.tab === k ? 'true' : 'false', pick: () => this.setState({ tab: k }) })),
+      tabStory: s.tab === 'story', tabVisit: s.tab === 'visit', tabEvents: s.tab === 'events',
+      report: s.report, sent: s.sent, notSent: !s.sent,
+      openReport: () => this.setState({ report: true, sent: false }),
+      closeReport: () => this.setState({ report: false }),
+      send: () => this.setState({ sent: true }),
+      reasons: R.map(([k, label]) => ({ label, on: s.reason === k ? 'true' : 'false', style: s.reason === k ? ON : OFF, pick: () => this.setState({ reason: k }) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

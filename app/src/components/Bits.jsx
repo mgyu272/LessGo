@@ -47,19 +47,20 @@ export function FakeQr({ seed = "x" }) {
   return <svg viewBox={`-1 -1 ${n + 2} ${n + 2}`} shapeRendering="crispEdges"><g fill="#1C2321">{rects}</g></svg>;
 }
 
-const TABS = [
+// 하단 메뉴: 지도 · 장소·이야기 · 문화 활동 · 내 기록
+export const TABS = [
   ["home", "tab_map", <path key="p" d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z M12 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />],
-  ["settings", "tab_course", <path key="p" d="M5 19c3 0 3-6 7-6s4-8 7-8" />],
-  ["stars", "tab_stars", <path key="p" d="M12 21a9 9 0 100-18 9 9 0 000 18z M8 12l3 3 5-6" />],
-  ["records", "tab_records", <path key="p" d="M12 21a9 9 0 100-18 9 9 0 000 18z M12 7v5l3 2" />],
+  ["places", "tab_places", <path key="p" d="M4 19.5V6a2 2 0 012-2h11v14H6a2 2 0 00-2 1.5zM4 19.5A2 2 0 006 21h12 M9 8h5" />],
+  ["events", "tab_events", <path key="p" d="M5 5h14v15H5z M5 10h14 M9 3v4 M15 3v4" />],
+  ["stats", "tab_stats", <path key="p" d="M12 21a9 9 0 100-18 9 9 0 000 18z M12 7v5l3 2" />],
 ];
 
 export function TabBar() {
   const { screen, go } = useApp();
   return (
-    <nav className="tabbar">
+    <nav className="tabbar" aria-label={t("main_menu")}>
       {TABS.map(([id, key, icon]) => (
-        <button key={id} className={screen === id ? "on" : ""} onClick={() => go(id)}>
+        <button key={id} className={screen === id ? "on" : ""} aria-current={screen === id ? "page" : undefined} onClick={() => go(id)}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">{icon}</svg>
           <span>{t(key)}</span>
         </button>

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>코스 고르기</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#3F7F1C}a:hover{color:#2F6512}
+.bg-grain{position:absolute;inset:0;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.35;mix-blend-mode:luminosity;pointer-events:none;z-index:0}
+.paper{position:relative;isolation:isolate}
+.paper::before{content:"";position:absolute;inset:0;border-radius:inherit;background:url(/_blob/49dbc8c740a1947f87e920d5227f968c) center top/414px auto repeat;opacity:.3;mix-blend-mode:luminosity;pointer-events:none;z-index:0}
+.paper>*{position:relative;z-index:1}
+.glass{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);border:1px solid rgba(255,255,255,.85);box-shadow:0 8px 24px -12px rgba(31,61,20,.35)}
+.soft{background:rgba(246,252,234,.7);box-shadow:inset 0 -3px 0 rgba(120,190,60,.22),inset 0 0 0 1px rgba(120,190,60,.14)}
+.card{background:#FFFFFF;box-shadow:0 1px 0 rgba(120,190,60,.12),0 10px 24px -18px rgba(63,127,28,.5)}
+.cta{background:rgba(190,236,130,.92);border:1px solid rgba(255,255,255,.6);box-shadow:0 14px 28px -12px rgba(150,215,80,.75),0 4px 10px -4px rgba(150,215,80,.5);color:#1C3A0C;transition:transform .15s ease}
+.cta:active,.tap:active{transform:scale(.98)}
+.tap{transition:transform .15s ease,background .2s ease;cursor:pointer;font-family:inherit}
+.scroll{scrollbar-width:none}.scroll::-webkit-scrollbar{display:none}
+.badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:11px;font:700 11px 'Noto Sans KR',sans-serif}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rise{animation:rise .3s ease both}
+@media (prefers-reduced-motion: reduce){.rise{animation:none}}
+.grab{touch-action:none;cursor:grab}.grab:active{cursor:grabbing}
+@keyframes drawr{from{stroke-dashoffset:600}to{stroke-dashoffset:0}}
+.route-on{stroke-dasharray:600;animation:drawr .9s ease-out both}
+@media (prefers-reduced-motion: reduce){.route-on{animation:none}}
+.chip{flex:none;height:40px;padding:0 12px 0 14px;border:0;border-radius:20px;display:flex;align-items:center;gap:4px;font:700 14px 'Noto Sans KR',sans-serif;color:#1F3D14;cursor:pointer}
+.rc{flex:0 0 272px;scroll-snap-align:start;border:0;border-radius:20px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:8px;cursor:pointer;font-family:inherit;color:#1F3D14;background:#FFFFFF;transition:box-shadow .2s ease}
+.rail{scroll-snap-type:x mandatory}
+.cmp{display:grid;grid-template-columns:84px 1fr 1fr;align-items:center;padding:10px 0;border-top:1px solid #EAF3DD;font:400 14px 'Noto Sans KR',sans-serif}
+.cmp:first-child{border-top:0}
+.tl{position:relative;display:flex;gap:12px;padding-bottom:16px}.tl:last-child{padding-bottom:0}
+.tl::before{content:"";position:absolute;left:11px;top:24px;bottom:-2px;width:2px;background:#DCEDC6}.tl:last-child::before{display:none}
+.scrim{position:absolute;inset:0;background:rgba(31,61,20,.38);z-index:8}
+.ob{border:0;border-radius:16px;cursor:pointer;font-family:inherit;transition:background .2s ease,box-shadow .2s ease}
+</style>
+</helmet>
+<div style="width: 390px; height: 1440px; position: relative; overflow: hidden; background: #E9F6D6; font-family: 'Noto Sans KR', sans-serif; color: #1F3D14">
+  <img src="/_blob/e3d4db16423ae9a4bde553b1fb51662d" alt="의릉 주변 코스 지도" style="position: absolute; left: 0; top: 0; width: 390px; height: 520px; object-fit: cover; object-position: top">
+  <div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 390px; height: 520px; background: rgba(233,246,214,.22)"></div>
+  <svg width="390" height="520" viewBox="0 -40 390 520" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M280 122 L240 131 L176 164 L142 190 L122 232 L110 282 L97 312" stroke="#FFFFFF" stroke-width="{{hw2}}" opacity="{{ho}}"></path>
+      <path class="{{hc}}" d="M280 122 L240 131 L176 164 L142 190 L122 232 L110 282 L97 312" stroke="#E38B2C" stroke-width="{{hw}}" stroke-dasharray="{{hd}}" opacity="{{ho}}"></path>
+      <path d="M280 122 L300 170 L306 248 L244 298 L160 310 L110 313" stroke="#FFFFFF" stroke-width="{{lw2}}" opacity="{{lo}}"></path>
+      <path class="{{lc}}" d="M280 122 L300 170 L306 248 L244 298 L160 310 L110 313" stroke="#2F6512" stroke-width="{{lw}}" stroke-dasharray="{{ld}}" opacity="{{lo}}"></path>
+    </g>
+    <circle cx="110" cy="313" r="8" fill="#FFFFFF" stroke="#2F6512" stroke-width="3.5"></circle>
+    <g><rect x="254" y="76" width="52" height="38" rx="13" fill="#FFFFFF" stroke="#C6E59E" stroke-width="2"></rect><g transform="translate(267 82)"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M1.5 29 C9 24.5, 19 17.5, 30.5 15 V30 H1.5 Z" fill="#C5DCB1"></path>
+        <path d="M1.5 29 C9 24.5, 19 17.5, 30.5 15" fill="none" stroke="#7FA66B" stroke-width="1.2"></path>
+        <path d="M17 12.5 C17 5.8, 29 5.8, 29 12.5" fill="none" stroke="#939C97" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M18.2 13.4 C19.2 8.4, 26.8 8.4, 27.8 13.4 Z" fill="#7FA66B"></path>
+        <path d="M20.5 10.8 Q23 9.6 25.5 10.8" fill="none" stroke="#A9C995" stroke-width=".9" stroke-linecap="round"></path>
+        <rect x="18" y="12.9" width="10" height="2" rx=".5" fill="#DCE0DD" stroke="#939C97" stroke-width=".4"></rect>
+        <path d="M4.5 21 C4.5 14.3, 16.5 14.3, 16.5 21" fill="none" stroke="#939C97" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M5.7 21.9 C6.7 16.9, 14.3 16.9, 15.3 21.9 Z" fill="#7FA66B"></path>
+        <path d="M8 19.3 Q10.5 18.1 13 19.3" fill="none" stroke="#A9C995" stroke-width=".9" stroke-linecap="round"></path>
+        <rect x="5.5" y="21.4" width="10" height="2" rx=".5" fill="#DCE0DD" stroke="#939C97" stroke-width=".4"></rect>
+        <path d="M20.4 22.6 L22.5 20.6 L24.6 22.6 Z" fill="#858E89"></path>
+        <rect x="21.4" y="22.6" width="2.2" height="2.6" fill="#D3D8D5" stroke="#858E89" stroke-width=".4"></rect>
+        <rect x="22.1" y="23.3" width=".8" height="1.1" fill="#7CC4A4"></rect>
+        <rect x="21.7" y="25.2" width="1.6" height="1.8" fill="#B3BAB6"></rect>
+        <rect x="20.8" y="27" width="3.4" height=".9" fill="#858E89"></rect>
+      </svg></g><path d="M274 114 L280 122 L286 114 Z" fill="#FFFFFF" stroke="#C6E59E" stroke-width="2" stroke-linejoin="round"></path></g>
+  </svg>
+  <span style="position: absolute; right: 6px; top: {{credTop}}px; padding: 1px 5px; background: rgba(255,255,255,.75); font: 400 9px 'Noto Sans KR', sans-serif; color: #4A5640; transition: top .42s ease">© OpenStreetMap contributors</span>
+  <div style="position: absolute; left: 0; right: 0; top: 10px; display: flex; flex-direction: column; gap: 8px; z-index: 2">
+    <div style="display: flex; align-items: center; gap: 8px; padding: 0 14px">
+      <a class="glass" href="Main.dc.html" aria-label="홈으로" style="width: 44px; height: 44px; flex: none; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #1F3D14; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+      <h1 class="glass" style="margin: 0; height: 44px; padding: 0 16px; border-radius: 22px; display: flex; align-items: center; font: 800 16px 'Noto Sans KR', sans-serif">코스 고르기</h1>
+    </div>
+    <div class="scroll" role="toolbar" aria-label="코스 조건" style="display: flex; gap: 8px; overflow-x: auto; padding: 0 14px 4px">
+      <button class="chip glass tap" aria-haspopup="dialog" onClick="{{open_dest}}">{{destName}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+      <button class="chip glass tap" aria-haspopup="dialog" onClick="{{open_km}}">{{kmText}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+      <button class="chip glass tap" aria-haspopup="dialog" onClick="{{open_hill}}">{{hillName}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+      <button class="chip glass tap" aria-haspopup="dialog" onClick="{{open_theme}}">{{themeText}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+    </div>
+  </div>
+
+  <section class="paper" aria-label="코스" style="position: absolute; left: 0; right: 0; top: {{top}}px; height: 1440px; transition: {{ease}}; border-radius: 28px 28px 0 0; background: linear-gradient(180deg, #F2F9E6 0%, #FBFBF4 30%, #FFFFFF 100%); box-shadow: 0 -10px 30px rgba(30,43,23,.14); padding: 0 20px; box-sizing: border-box; display: flex; flex-direction: column; z-index: 3">
+    <button class="grab" aria-label="{{sheetLabel}}" aria-expanded="{{expanded}}" onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerCancel="{{onUp}}" onKeyDown="{{onKey}}" style="align-self: stretch; height: 28px; margin: 0 -20px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0"><span style="width: 44px; height: 5px; border-radius: 3px; background: #C6E59E"></span></button>
+    <div class="scroll" style="overflow-y: auto; height: {{scrollH}}px; display: flex; flex-direction: column; gap: 12px; padding: 0 0 24px">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px">
+        <h2 style="margin: 0; font: 800 20px 'Noto Sans KR', sans-serif; letter-spacing: -.02em">{{destName}}까지 {{kmText}} 코스</h2>
+        <button class="tap" onClick="{{toggleSheet}}" style="height: 36px; padding: 0 10px; border: 0; border-radius: 18px; background: #EAF7D8; color: #2F6512; font: 700 12px 'Noto Sans KR', sans-serif">{{moreText}}</button>
+      </div>
+      <div class="scroll rail" role="radiogroup" aria-label="길 고르기" style="display: flex; gap: 10px; overflow-x: auto; margin: 0 -20px; padding: 4px 20px 8px">
+        <button class="rc" role="radio" aria-checked="{{r0On}}" onClick="{{pick0}}" style="{{r0Ring}}">
+          <span style="display: flex; align-items: center; gap: 8px; width: 100%"><i aria-hidden="true" style="width: 12px; height: 12px; border-radius: 6px; background: #2F6512; box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 4px #2F6512"></i><b style="font: 800 17px 'Noto Sans KR', sans-serif">완만한 길</b><span style="flex: 1"></span><span class="badge" style="background: #EAF7D8; color: #2F6512">추천</span></span>
+          <small style="font: 500 13px 'Noto Sans KR', sans-serif; color: #4F6B3B">오르막이 적고 성북천을 따라가요</small>
+          <span style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; width: 100%"><span style="display: flex; flex-direction: column; gap: 1px; min-width: 0"><b style="font: 800 19px 'Noto Sans KR', sans-serif; white-space: nowrap">2.95km</b><small style="font: 600 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">거리</small></span><span style="display: flex; flex-direction: column; gap: 1px; min-width: 0"><b style="font: 800 19px 'Noto Sans KR', sans-serif; white-space: nowrap">19분</b><small style="font: 600 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">예상 시간</small></span><span style="display: flex; flex-direction: column; gap: 1px; min-width: 0"><b style="font: 800 19px 'Noto Sans KR', sans-serif; white-space: nowrap">+38m</b><small style="font: 600 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">오르막</small></span></span>
+          <span style="width: 100%"><svg width="100%" height="30" viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true" style="display: block"><polygon points="4,56 4,29 17,20 29,9 42,20 55,37 67,52 80,47 93,25 106,20 118,15 131,14 144,12 156,12 169,8 182,8 194,15 207,15 220,16 233,4 245,6 258,4 271,20 283,6 296,6 296,56" fill="#2F6512" opacity=".14"></polygon><polyline points="4,29 17,20 29,9 42,20 55,37 67,52 80,47 93,25 106,20 118,15 131,14 144,12 156,12 169,8 182,8 194,15 207,15 220,16 233,4 245,6 258,4 271,20 283,6 296,6" fill="none" stroke="#2F6512" stroke-width="3" stroke-linejoin="round"></polyline></svg></span>
+        </button>
+        <button class="rc" role="radio" aria-checked="{{r1On}}" onClick="{{pick1}}" style="{{r1Ring}}">
+          <span style="display: flex; align-items: center; gap: 8px; width: 100%"><i aria-hidden="true" style="width: 12px; height: 12px; border-radius: 6px; background: #E38B2C; box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 4px #E38B2C"></i><b style="font: 800 17px 'Noto Sans KR', sans-serif">언덕 허용</b><span style="flex: 1"></span><span class="badge" style="background: #FFF1DE; color: #8A4B0C">고도 추정값</span></span>
+          <small style="font: 500 13px 'Noto Sans KR', sans-serif; color: #4F6B3B">골목 언덕을 한 번 넘어요</small>
+          <span style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; width: 100%"><span style="display: flex; flex-direction: column; gap: 1px; min-width: 0"><b style="font: 800 19px 'Noto Sans KR', sans-serif; white-space: nowrap">2.97km</b><small style="font: 600 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">거리</small></span><span style="display: flex; flex-direction: column; gap: 1px; min-width: 0"><b style="font: 800 19px 'Noto Sans KR', sans-serif; white-space: nowrap">19분</b><small style="font: 600 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">예상 시간</small></span><span style="display: flex; flex-direction: column; gap: 1px; min-width: 0"><b style="font: 800 19px 'Noto Sans KR', sans-serif; white-space: nowrap">[오르막]</b><small style="font: 600 11px 'Noto Sans KR', sans-serif; color: #4F6B3B">오르막</small></span></span>
+          <span style="width: 100%"><svg width="100%" height="30" viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true" style="display: block"><polygon points="4,56 4,9 17,22 29,29 42,22 55,52 67,30 80,23 93,20 106,16 118,19 131,16 144,16 156,19 169,4 182,19 194,19 207,16 220,18 233,22 245,8 258,10 271,22 283,11 296,11 296,56" fill="#E38B2C" opacity=".14"></polygon><polyline points="4,9 17,22 29,29 42,22 55,52 67,30 80,23 93,20 106,16 118,19 131,16 144,16 156,19 169,4 182,19 194,19 207,16 220,18 233,22 245,8 258,10 271,22 283,11 296,11" fill="none" stroke="#E38B2C" stroke-width="3" stroke-linejoin="round"></polyline></svg></span>
+        </button>
+        <button class="rc" onClick="{{openDest}}" style="background: rgba(246,252,234,.8); box-shadow: inset 0 0 0 1.5px #DCEDC6; justify-content: center; align-items: flex-start">
+          <span style="display: flex; gap: -6px"><svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M25.6 3.2 a3.4 3.4 0 1 0 3.6 4.6 a2.8 2.8 0 1 1 -3.6 -4.6 z" fill="#7CC4A4"></path>
+        <rect x="4" y="27" width="24" height="2.2" rx="1" fill="#B3BAB6"></rect>
+        <rect x="8" y="17" width="16" height="10" fill="#F1F3EF"></rect>
+        <path d="M8 17v10M13.6 17v10M18.4 17v10M24 17v10" stroke="#7A5134" stroke-width="1.3"></path>
+        <rect x="14.4" y="18.6" width="3.2" height="8.4" fill="#D8B88A"></rect>
+        <path d="M16 18.6v8.4M14.4 21.4h3.2M14.4 24.2h3.2" stroke="#7A5134" stroke-width=".55"></path>
+        <rect x="9.4" y="19.4" width="2.9" height="3" fill="#F1F3EF" stroke="#7A5134" stroke-width=".6"></rect>
+        <path d="M10.85 19.4v3M9.4 20.9h2.9" stroke="#7A5134" stroke-width=".4"></path>
+        <rect x="19.7" y="19.4" width="2.9" height="3" fill="#F1F3EF" stroke="#7A5134" stroke-width=".6"></rect>
+        <path d="M21.15 19.4v3M19.7 20.9h2.9" stroke="#7A5134" stroke-width=".4"></path>
+        <path d="M1.5 15.8 C5 16.8 8 14.6 10 11.5 H22 C24 14.6 27 16.8 30.5 15.8 C28.4 18 25 18.2 22 17.4 H10 C7 18.2 3.6 18 1.5 15.8 Z" fill="#26302C"></path>
+        <path d="M9.4 11.7 Q16 9.2 22.6 11.7" fill="none" stroke="#26302C" stroke-width="2" stroke-linecap="round"></path>
+        <path d="M12 13v3.6M14.5 12.6v4M17.5 12.6v4M20 13v3.6" stroke="#3D4843" stroke-width=".8"></path>
+        <circle cx="9.4" cy="11.7" r=".9" fill="#FFFFFF"></circle>
+        <circle cx="22.6" cy="11.7" r=".9" fill="#FFFFFF"></circle>
+      </svg><svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M2 30 H30" stroke="#7FA66B" stroke-width="2.4" stroke-linecap="round"></path>
+        <path d="M4.5 16.5 C4.5 6.5, 27.5 6.5, 27.5 16.5" fill="none" stroke="#939C97" stroke-width="2.2" stroke-linecap="round"></path>
+        <path d="M7 18 C8 10.5, 24 10.5, 25 18 Z" fill="#7FA66B"></path>
+        <path d="M10.5 14.2 C13.5 12.4 18.5 12.4 21.5 14.2" fill="none" stroke="#A9C995" stroke-width="1.1" stroke-linecap="round"></path>
+        <rect x="6.5" y="17.4" width="19" height="2.6" rx=".6" fill="#DCE0DD" stroke="#939C97" stroke-width=".5"></rect>
+        <path d="M9.5 17.4v2.6M12.5 17.4v2.6M15.5 17.4v2.6M18.5 17.4v2.6M21.5 17.4v2.6" stroke="#B3BAB6" stroke-width=".5"></path>
+        <path d="M11.5 22.5V20.2M13.4 22.5V20.2M15.3 22.5V20.2M16.7 22.5V20.2M18.6 22.5V20.2M20.5 22.5V20.2" stroke="#D14B22" stroke-width=".7"></path>
+        <path d="M10 30V21.5M22 30V21.5" stroke="#D14B22" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M8.6 22.5H23.4M9.2 24.6H22.8" stroke="#D14B22" stroke-width="1.3" stroke-linecap="round"></path>
+        <circle cx="16" cy="20.6" r="1.1" fill="#7CC4A4" stroke="#D14B22" stroke-width=".4"></circle>
+      </svg></span>
+          <b style="font: 800 16px 'Noto Sans KR', sans-serif">다른 곳으로 달리기</b>
+          <small style="font: 500 13px 'Noto Sans KR', sans-serif; color: #4F6B3B">심우장 · 정릉 코스도 있어요</small>
+          <span style="font: 700 13px 'Noto Sans KR', sans-serif; color: #2F6512">목적지 바꾸기 →</span>
+        </button>
+      </div>
+
+      <p class="soft" style="margin: 0; border-radius: 14px; padding: 10px 12px; display: flex; gap: 8px; font: 600 13px/1.5 'Noto Sans KR', sans-serif; color: #2F6512"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 8h.01"></path></svg><span>{{reason}}</span></p>
+      <sc-if value="{{warn}}" hint-placeholder-val="{{ false }}">
+        <p style="margin: 0; border-radius: 14px; padding: 10px 12px; display: flex; gap: 8px; background: #FFF6E8; box-shadow: inset 0 0 0 1px #F5D9AE; font: 500 12px/1.5 'Noto Sans KR', sans-serif; color: #7A4A0C"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19z"></path><path d="M12 10v4M12 17h.01"></path></svg><span>고도 정보가 추정값이에요. 경사는 실제와 다를 수 있어요.</span></p>
+      </sc-if>
+      <section class="card" aria-label="두 길 비교" style="border-radius: 18px; padding: 4px 14px">
+        <div class="cmp"><span></span><b style="font: 700 12px 'Noto Sans KR', sans-serif; color: #2F6512">완만한 길</b><b style="font: 700 12px 'Noto Sans KR', sans-serif; color: #8A4B0C">언덕 허용</b></div>
+        <div class="cmp"><span style="font: 600 13px 'Noto Sans KR', sans-serif; color: #4F6B3B">거리</span><span style="{{cA}}">2.95km</span><span style="{{cB}}">2.97km</span></div>
+        <div class="cmp"><span style="font: 600 13px 'Noto Sans KR', sans-serif; color: #4F6B3B">예상 시간</span><span style="{{cA}}">약 19분</span><span style="{{cB}}">약 19분</span></div>
+        <div class="cmp"><span style="font: 600 13px 'Noto Sans KR', sans-serif; color: #4F6B3B">오르막</span><span style="{{cA}}">+38m</span><span style="{{cB}}">[오르막]</span></div>
+        <div class="cmp"><span style="font: 600 13px 'Noto Sans KR', sans-serif; color: #4F6B3B">급경사 구간</span><span style="{{cA}}">[수치]</span><span style="{{cB}}">[수치]</span></div>
+      </section>
+      <section aria-label="지나가는 곳">
+        <h3 style="margin: 4px 0 10px; font: 700 15px 'Noto Sans KR', sans-serif">지나가는 곳</h3>
+        <ol style="margin: 0; padding: 0; list-style: none">
+          <li class="tl"><span style="width: 24px; height: 24px; flex: none; border-radius: 12px; background: #2F6512; color: #FFFFFF; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor" stroke="none"></path></svg></span><span style="display: flex; flex-direction: column; gap: 2px"><b style="font: 700 14px 'Noto Sans KR', sans-serif">태릉입구역 1번 출구</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">출발</small></span></li>
+          <li class="tl"><span style="width: 24px; height: 24px; flex: none; border-radius: 12px; background: #8FCB4E; color: #FFFFFF; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg></span><span style="display: flex; flex-direction: column; gap: 2px"><b style="font: 700 14px 'Noto Sans KR', sans-serif">[중간 지점 이름]</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">1.2km 지점</small></span></li>
+          <li class="tl"><span style="width: 24px; height: 24px; flex: none; border-radius: 12px; background: #C9A227; color: #FFFFFF; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h16l-1.5 10a2 2 0 0 1-2 1.7h-9a2 2 0 0 1-2-1.7z"></path><path d="M8 9V7a4 4 0 0 1 8 0v2"></path></svg></span><span style="display: flex; flex-direction: column; gap: 2px"><b style="font: 700 14px 'Noto Sans KR', sans-serif">제휴 카페 A (예시)</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">2.1km 지점 · 들르면 쿠폰</small></span></li>
+          <li class="tl"><span style="width: 24px; height: 24px; flex: none; border-radius: 12px; background: #5FA52A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><span style="display: flex; flex-direction: column; gap: 2px"><b style="font: 700 14px 'Noto Sans KR', sans-serif">의릉</b><small style="font: 400 12px 'Noto Sans KR', sans-serif; color: #4F6B3B">도착 · 도장과 해설</small></span></li>
+        </ol>
+      </section>
+      <span style="height: 70px; flex: none"></span>
+    </div>
+  </section>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 20px 20px 22px; background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #FFFFFF 38%); z-index: 4; display: flex; gap: 10px">
+    <button class="soft tap" aria-label="{{saveLabel}}" aria-pressed="{{saved}}" onClick="{{toggleSave}}" style="width: 58px; height: 58px; flex: none; border: 0; border-radius: 18px; color: #2F6512; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="{{heartFill}}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg></button>
+    <a class="cta" href="Run.dc.html" style="flex: 1; height: 58px; border-radius: 18px; display: flex; align-items: center; justify-content: center; gap: 8px; font: 800 16px 'Noto Sans KR', sans-serif; text-decoration: none">{{ctaText}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor" stroke="none"></path></svg></a>
+  </div>
+
+  <sc-if value="{{chipOpen}}" hint-placeholder-val="{{ false }}">
+    <div class="scrim" onClick="{{closeChip}}"></div>
+    <section class="paper rise" role="dialog" aria-label="{{chipTitle}}" style="position: absolute; left: 0; right: 0; bottom: 0; z-index: 9; border-radius: 28px 28px 0 0; background: #FBFBF4; padding: 12px 20px 22px; display: flex; flex-direction: column; gap: 14px">
+      <span aria-hidden="true" style="align-self: center; width: 44px; height: 5px; border-radius: 3px; background: #C6E59E"></span>
+      <h2 style="margin: 0; font: 800 20px 'Noto Sans KR', sans-serif">{{chipTitle}}</h2>
+      <sc-if value="{{cDest}}" hint-placeholder-val="{{ false }}"><div role="radiogroup" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px"><sc-for list="{{destOpts}}" as="o" hint-placeholder-count="4"><button class="ob" role="{{o.role}}" aria-checked="{{o.on}}" aria-pressed="{{o.on}}" onClick="{{o.pick}}" style="min-height: 64px; padding: 8px; {{o.style}} display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><b style="font: 700 15px 'Noto Sans KR', sans-serif">{{o.label}}</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; opacity: .8">{{o.sub}}</small></button></sc-for></div></sc-if>
+      <sc-if value="{{cKm}}" hint-placeholder-val="{{ false }}"><div role="radiogroup" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px"><sc-for list="{{kmOpts}}" as="o" hint-placeholder-count="4"><button class="ob" role="{{o.role}}" aria-checked="{{o.on}}" aria-pressed="{{o.on}}" onClick="{{o.pick}}" style="min-height: 64px; padding: 8px; {{o.style}} display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><b style="font: 700 15px 'Noto Sans KR', sans-serif">{{o.label}}</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; opacity: .8">{{o.sub}}</small></button></sc-for></div></sc-if>
+      <sc-if value="{{cHill}}" hint-placeholder-val="{{ false }}"><div role="radiogroup" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px"><sc-for list="{{hillOpts}}" as="o" hint-placeholder-count="4"><button class="ob" role="{{o.role}}" aria-checked="{{o.on}}" aria-pressed="{{o.on}}" onClick="{{o.pick}}" style="min-height: 64px; padding: 8px; {{o.style}} display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><b style="font: 700 15px 'Noto Sans KR', sans-serif">{{o.label}}</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; opacity: .8">{{o.sub}}</small></button></sc-for></div></sc-if>
+      <sc-if value="{{cTheme}}" hint-placeholder-val="{{ false }}"><div role="radiogroup" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px"><sc-for list="{{themeOpts}}" as="o" hint-placeholder-count="4"><button class="ob" role="{{o.role}}" aria-checked="{{o.on}}" aria-pressed="{{o.on}}" onClick="{{o.pick}}" style="min-height: 56px; padding: 8px; {{o.style}} display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><b style="font: 700 15px 'Noto Sans KR', sans-serif">{{o.label}}</b><small style="font: 500 12px 'Noto Sans KR', sans-serif; opacity: .8">{{o.sub}}</small></button></sc-for></div></sc-if>
+      <button class="cta tap" onClick="{{closeChip}}" style="height: 54px; border-radius: 16px; font: 800 15px 'Noto Sans KR', sans-serif">적용하기</button>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1440}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { top: 470, dragging: false, sel: 0, saved: false, chip: '', dest: 'uiryeong', km: '3', hill: 'flat', themes: { river: true } };
+    this.snaps = [118, 470];
+    this.drag = null;
+    this.onDown = (e) => { try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {} this.drag = { y: e.clientY, top: this.state.top, moved: 0 }; this.setState({ dragging: true }); };
+    this.onMove = (e) => { if (!this.drag) return; const dy = e.clientY - this.drag.y; this.drag.moved = Math.max(this.drag.moved, Math.abs(dy)); const a = this.snaps[0], b = this.snaps[this.snaps.length - 1]; this.setState({ top: Math.min(b + 30, Math.max(a - 30, this.drag.top + dy)) }); };
+    this.onUp = () => { if (!this.drag) return; const d = this.drag; this.drag = null; let next; if (d.moved < 6) { const i = this.snaps.indexOf(d.top); next = i > 0 ? this.snaps[0] : this.snaps[1]; } else { next = this.snaps.reduce((a, b) => Math.abs(b - this.state.top) < Math.abs(a - this.state.top) ? b : a); } this.setState({ top: next, dragging: false }); };
+    this.onKey = (e) => { const i = this.snaps.indexOf(this.state.top); if (e.key === 'ArrowUp') { e.preventDefault(); this.setState({ top: this.snaps[Math.max(0, i - 1)] }); } if (e.key === 'ArrowDown') { e.preventDefault(); this.setState({ top: this.snaps[Math.min(this.snaps.length - 1, i + 1)] }); } };
+  }
+  renderVals() {
+    const s = this.state;
+    const ln = (on) => ({ w: on ? 7 : 3.5, w2: on ? 12 : 6.5, d: on ? 'none' : '2 7', o: on ? 1 : .7, c: on ? 'route-on' : '' });
+    const L = ln(s.sel === 0), H = ln(s.sel === 1);
+    const ring = (on) => on ? 'box-shadow: inset 0 0 0 2px #8FCB4E, 0 12px 26px -16px rgba(63,127,28,.6);' : 'box-shadow: 0 1px 0 rgba(120,190,60,.12), 0 10px 24px -18px rgba(63,127,28,.5);';
+    const ON = 'background: #2F6512; color: #FFFFFF;';
+    const OFF = 'background: rgba(246,252,234,.8); color: #1F3D14; box-shadow: inset 0 -3px 0 rgba(120,190,60,.22), inset 0 0 0 1px rgba(120,190,60,.14);';
+    const D = [['simujang', '심우장', '독립운동 유적'], ['jeongneung', '정릉', '왕릉 · 숲길'], ['uiryeong', '의릉', '왕릉 · 언덕'], ['any', '어디든', '가까운 곳으로']];
+    const K = [['3', '3km', '가볍게'], ['5', '5km', '보통'], ['10', '10km', '길게']];
+    const HL = [['flat', '평지 위주', '편안하게'], ['some', '약간 언덕', '운동 겸'], ['hard', '도전', '훈련용']];
+    const M = [['wall', '성곽길', '한양도성'], ['hanok', '한옥 골목', '성북동'], ['tomb', '왕릉 숲길', '정릉 · 의릉'], ['indep', '독립운동 유적', '심우장'], ['river', '하천길', '성북천 · 정릉천'], ['park', '공원 · 전망', '언덕 위 쉼터'], ['temple', '고요한 사찰길', '숲속 산책'], ['cafe', '동네 카페 거리', '쉬어 가기'], ['market', '전통시장', '먹거리'], ['night', '야경 명소', '저녁 러닝']];
+    const nm = (a, k) => a.find((x) => x[0] === k)[1];
+    const th = M.filter((m) => s.themes[m[0]]).map((m) => m[1]);
+    const radio = (arr, key) => arr.map(([k, label, sub]) => ({ label, sub, role: 'radio', on: s[key] === k ? 'true' : 'false', style: s[key] === k ? ON : OFF, pick: () => this.setState({ [key]: k }) }));
+    const T = { dest: '어디까지 달릴까요?', km: '얼마나 달릴까요?', hill: '언덕은 어느 정도?', theme: '어떤 길이 좋아요? · 여러 개' };
+    return {
+      top: s.top, ease: s.dragging ? 'none' : 'top .42s cubic-bezier(.22,1.2,.36,1)',
+      expanded: s.top === this.snaps[0] ? 'true' : 'false', sheetLabel: s.top === this.snaps[0] ? '시트 내리기' : '시트 올리기',
+      onDown: this.onDown, onMove: this.onMove, onUp: this.onUp, onKey: this.onKey,      lw: L.w, lw2: L.w2, ld: L.d, lo: L.o, lc: L.c, hw: H.w, hw2: H.w2, hd: H.d, ho: H.o, hc: H.c,
+      credTop: s.top - 22,
+      scrollH: 1440 - s.top - 28,
+      toggleSheet: () => this.setState({ top: s.top === this.snaps[0] ? this.snaps[1] : this.snaps[0] }),
+      moreText: s.top === this.snaps[0] ? '접기' : '자세히',
+      r0On: s.sel === 0 ? 'true' : 'false', r1On: s.sel === 1 ? 'true' : 'false',
+      r0Ring: ring(s.sel === 0), r1Ring: ring(s.sel === 1),
+      pick0: () => this.setState({ sel: 0 }), pick1: () => this.setState({ sel: 1 }),
+      cA: s.sel === 0 ? 'font-weight: 800; color: #1F3D14;' : 'color: #6B8259;', cB: s.sel === 1 ? 'font-weight: 800; color: #1F3D14;' : 'color: #6B8259;',
+      reason: s.sel === 0 ? '오르막이 가장 적고 성북천을 따라가요. 오늘 조건에 가장 잘 맞아요.' : '골목 언덕을 한 번 넘어요. 땀 나게 달리고 싶은 날에 좋아요.',
+      warn: s.sel === 1,
+      ctaText: (s.sel === 0 ? '완만한 길' : '언덕 허용 길') + '로 시작',
+      saved: s.saved ? 'true' : 'false', heartFill: s.saved ? '#9FD25E' : 'none', saveLabel: s.saved ? '저장 취소' : '코스 저장',
+      toggleSave: () => this.setState({ saved: !s.saved }),
+      destName: nm(D, s.dest), kmText: s.km + 'km', hillName: nm(HL, s.hill),
+      themeText: th.length ? (th.length > 1 ? th[0] + ' 외 ' + (th.length - 1) : th[0]) : '테마',
+      open_dest: () => this.setState({ chip: 'dest' }), open_km: () => this.setState({ chip: 'km' }), open_hill: () => this.setState({ chip: 'hill' }), open_theme: () => this.setState({ chip: 'theme' }),
+      openDest: () => this.setState({ chip: 'dest' }),
+      closeChip: () => this.setState({ chip: '' }),
+      chipOpen: !!s.chip, chipTitle: T[s.chip] || '',
+      cDest: s.chip === 'dest', cKm: s.chip === 'km', cHill: s.chip === 'hill', cTheme: s.chip === 'theme',
+      destOpts: radio(D, 'dest'), kmOpts: radio(K, 'km'), hillOpts: radio(HL, 'hill'),
+      themeOpts: M.map(([k, label, sub]) => { const on = !!s.themes[k]; return { label, sub, role: 'checkbox', on: on ? 'true' : 'false', style: on ? 'background: #5FA52A; color: #FFFFFF;' : OFF, pick: () => this.setState({ themes: { ...s.themes, [k]: !on } }) }; })
+    };
+  }
+}
+</script>
+</body>
+</html>
