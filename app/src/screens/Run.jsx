@@ -27,7 +27,7 @@ export default function Run() {
   const km = v.meters / 1000;
   const toNext = 1 - (km % 1);
   const dest = c && data.spotById[c.properties.dest];
-  const leftKm = c ? Math.max(0, (c.len - v.meters) / 1000) : 0;
+  const leftKm = c ? Math.max(0, (v.remainingM ?? (c.len - v.meters)) / 1000) : 0;
   const place = dest ? loc(dest.name).replace(/\s*\(.*\)/, "") : "";
   const status = v.paused ? t("run_paused") : c ? t("run_status_course", { name: place, time: fmtTime(v.seconds) }) : t("run_status_free", { time: fmtTime(v.seconds) });
   const openCoupon = (shop) => { app.setCouponShop(shop); app.go("coupon"); };
@@ -61,6 +61,9 @@ export default function Run() {
         <span className="glass run-status"><i className="live" aria-hidden="true" />{status}</span>
         {c && <span className="glass run-left"><PinIcon />{t("run_left", { name: place, km: leftKm.toFixed(1) })}</span>}
       </div>
+      {!v.demo && !v.gpsReady && <div className="cue" role="status">실제 GPS 신호를 기다리고 있어요. 위치 접근을 허용해 주세요.</div>}
+      {v.gpsError && <div className="cue" role="alert">{v.gpsError}</div>}
+      {v.offRoute && <div className="cue" role="alert">코스에서 벗어났어요. 지도를 확인하고 안전하게 복귀해 주세요.</div>}
       {v.cue && <div className="cue">{v.cue}</div>}
 
       <div className="run-panel2 hanji-sheet">
