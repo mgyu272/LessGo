@@ -124,7 +124,7 @@ export default function ToCourseStart() {
         {error && <p className="to-start-error" role="alert">{error}</p>}
         <div className="to-start-actions">
           <button type="button" className="btn btn-soft" onClick={openDirections} disabled={!directionUrl}>카카오맵 도보 길찾기</button>
-          <button type="button" className="btn btn-cta" onClick={run} disabled={!ready}>{t("gps_start")}</button>
+          <button type="button" className="btn btn-cta" onClick={run} disabled={!ready}>런닝 시작</button>
         </div>
         <button type="button" className="to-start-refresh" onClick={retry}>GPS 다시 확인</button>
         {opening && <p className="to-start-hint">길찾기 후 Less GO로 돌아오세요. 현재 위치를 확인해 러닝 시작 버튼이 활성화됩니다.</p>}
