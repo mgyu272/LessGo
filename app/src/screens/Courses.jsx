@@ -69,7 +69,8 @@ export default function CoursePicker() {
   const p = course.properties;
   const saved = favs.has(course.id);
   const toggleSave = () => { const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
-  const start = () => app.run.start(course, { demo: app.demo, speedup: speedParam() });
+  const start = () => { app.setCourse(course); app.go("toStart"); };
+  const startSimulation = () => app.run.start(course, { demo: true, speedup: speedParam() });
   const reason = reasons[course.id] || factualReason(course, pair);
   const themeText = pick.themes.length ? (pick.themes.length > 1 ? t("theme_more", { first: t("th2_" + pick.themes[0]), n: pick.themes.length - 1 }) : t("th2_" + pick.themes[0])) : t("theme");
 
@@ -137,7 +138,8 @@ export default function CoursePicker() {
         <button className="soft picker-heart" aria-label={t(saved ? "unsave_course" : "save_course")} aria-pressed={saved} onClick={toggleSave}>
           <svg viewBox="0 0 24 24" aria-hidden="true" fill={saved ? "#9FD25E" : "none"}><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
         </button>
-        <button className="btn btn-cta" onClick={start}>{t("start_with", { mode: loc(p.modeName) })}
+        <button className="btn btn-soft" onClick={startSimulation}>시뮬레이션</button>
+        <button className="btn btn-cta" onClick={start}>출발지 길찾기
           <svg viewBox="0 0 24 24" className="play" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" /></svg>
         </button>
       </div>
