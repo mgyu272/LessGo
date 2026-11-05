@@ -79,7 +79,7 @@ async function withExplanation(vision, evidence, lang, { testData = false, spotI
   const startedAt = performance.now();
   let storyVision = vision;
   let storyEvidence = evidence;
-  if (classifyExplanationType({ evidence, identificationStatus: vision.identificationStatus }) !== "grounded") {
+  if (vision.heritageRelevance !== "irrelevant" && evidence?.evidenceStatus !== "conflicting" && ["place", "general", "unknown"].includes(vision.subjectLevel || "unknown") && classifyExplanationType({ evidence, identificationStatus: vision.identificationStatus }) !== "grounded") {
     const destination = await getDestinationStoryEvidence(spotId, lang);
     if (destination) {
       storyEvidence = destination.evidence;
@@ -217,6 +217,12 @@ export default async function analyzeImage(req, res) {
           console.warn(`[api/analyze-image] phase=vision_reference outcome=failed code=${referenceError.code || "reference_compare_failed"} upstream_status=${referenceError.geminiStatus || "none"}`);
         }
       }
+    }
+    const scopedCandidates = await getPlaceVisualCandidates(spotId);
+    const normalizedCandidate = String(finalVision.candidateName || "").normalize("NFKC").toLowerCase().replace(/[\\s\\p{P}\\p{S}]+/gu, "");
+    const candidateInSite = scopedCandidates.some(item => [item.name, ...(item.aliases || [])].some(name => String(name || "").normalize("NFKC").toLowerCase().replace(/[\\s\\p{P}\\p{S}]+/gu, "") === normalizedCandidate));
+    if (finalVision.heritageRelevance !== "irrelevant" && finalVision.subjectLevel === "facility" && !candidateInSite) {
+      finalVision = { ...finalVision, identificationStatus: "uncertain", heritageRelevance: "uncertain", candidateName: "", reason: "Facility label is not in the selected heritage site's candidate list." };
     }
     const evidence = finalVision.heritageRelevance === "irrelevant" ? { evidenceStatus: "insufficient", sourceLevel: "none", factSources: [], supportedFacts: [], sources: [], limitations: [] } : await verifyImageEvidence({ spotId, ...finalVision, lang });
     if (deferExplanation) {
