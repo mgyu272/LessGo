@@ -2,7 +2,7 @@
 import { askGeminiJSON, hasKey, IMAGE_MODEL, supportsImageInput, VISION_RETRY_POLICY } from "./_lib/gemini.js";
 import { applyReferenceComparison, buildReferenceAssistedRequest, canSendReferencesToGemini, selectLocalReferenceImages } from "./_lib/heritage-reference.js";
 import { buildHistoryVerification, getOfficialVisualCandidates, verifyImageEvidence } from "./_lib/history-evidence.js";
-import { buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
+import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
 import { performance } from "node:perf_hooks";
 
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
@@ -81,7 +81,8 @@ async function withExplanation(vision, evidence, lang, { testData = false } = {}
   } catch (error) {
     const explanationError = explanationErrorResponse(error, lang);
     console.warn(`[api/analyze-image] phase=history_explanation outcome=failed code=${explanationError.code} elapsed_ms=${Math.round(performance.now() - startedAt)}`);
-    return { explanation: null, explanationError };
+    // Preserve a useful, source-grounded answer when optional text generation fails.
+    return { explanation: buildFallbackExplanation({ evidence, visualFeatures: vision.visualFeatures, identificationStatus: vision.identificationStatus, lang }), explanationError };
   }
 }
 
