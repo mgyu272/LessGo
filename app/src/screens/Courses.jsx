@@ -70,7 +70,6 @@ export default function CoursePicker() {
   const saved = favs.has(course.id);
   const toggleSave = () => { const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
   const start = () => { app.setCourse(course); app.go("toStart"); };
-  const startSimulation = () => app.run.start(course, { demo: true, speedup: speedParam() });
   const reason = reasons[course.id] || factualReason(course, pair);
   const themeText = pick.themes.length ? (pick.themes.length > 1 ? t("theme_more", { first: t("th2_" + pick.themes[0]), n: pick.themes.length - 1 }) : t("th2_" + pick.themes[0])) : t("theme");
 
@@ -128,8 +127,6 @@ export default function CoursePicker() {
 
           <CompareTable pair={pair} sel={course.id} />
           <Timeline course={course} />
-          {/* 디자인에는 없지만 PC에서 확인할 수 있게 시연 모드 스위치를 맨 아래에 둬요 */}
-          <Toggle className="demo-row" checked={app.demo} onChange={app.setDemo} title={t("demo_mode")} sub={t("demo_sub")} />
           <span className="picker-spacer" aria-hidden="true" />
         </div>
       </BottomSheet>
@@ -138,8 +135,7 @@ export default function CoursePicker() {
         <button className="soft picker-heart" aria-label={t(saved ? "unsave_course" : "save_course")} aria-pressed={saved} onClick={toggleSave}>
           <svg viewBox="0 0 24 24" aria-hidden="true" fill={saved ? "#9FD25E" : "none"}><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
         </button>
-        <button className="btn btn-soft" onClick={startSimulation}>시뮬레이션</button>
-        <button className="btn btn-cta" onClick={start} style={{ whiteSpace: "nowrap" }}>출발지 길찾기</button>
+        <button className="btn btn-cta" onClick={start} style={{ whiteSpace: "nowrap" }}>GPS로 달리기</button>
       </div>
 
       <DestSheet open={chip === "dest"} dest={dest} place={place} onClose={() => setChip("")} onPick={(v) => setPick({ ...pick, dest: v })} />

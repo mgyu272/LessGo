@@ -38,7 +38,8 @@ export function AppProvider({ children }) {
   const [finish, setFinish] = useState(null);
   const [shuffle, setShuffle] = useState(0);
   const [toastMsg, setToastMsg] = useState("");
-  const [demo, setDemoState] = useState(() => { try { return localStorage.getItem("runtrip.demo") !== "off"; } catch { return true; } });
+  // 시연 모드는 없앴어요. 항상 실제 GPS (예전 코드 호환용으로 값만 false로 남겨 둬요)
+  const demo = false;
 
   const user = useUserData();
   // 달리기 중 콜백이 항상 최신 값을 보게 ref로도 들고 있어요
@@ -76,7 +77,7 @@ export function AppProvider({ children }) {
   }, [screen, user.ready, user.profile, user.needsNickname]);
 
   const changeLang = (l) => { setLang(l); setLangState(l); };
-  const setDemo = (v) => { setDemoState(v); try { localStorage.setItem("runtrip.demo", v ? "on" : "off"); } catch {} };
+  const setDemo = () => {};
   const toastTimer = useRef(null);
   const toast = toastRef.current = (msg) => {
     setToastMsg(msg);

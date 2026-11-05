@@ -46,7 +46,8 @@ export default function Home() {
   const sheet = useBottomSheet({ snaps: snapsFor, initial: 1 });
   const shown = data.spots.filter((s) => filter === "all" || s.category === filter);
   const pick = todaysPick(data, settings.km);
-  const startFree = () => app.run.start(null, { demo: app.demo, speedup: speedParam() });
+  // 자유 달리기: 항상 실제 GPS, 지금 위치에서 바로 시작해요
+  const startFree = () => app.run.start(null);
 
   // 코스 고르기로 (목적지를 미리 골라 둘 수 있어요)
   const openCourses = (dest) => { app.setPick({ ...app.pick, km: settings.km, ...(dest ? { dest } : {}) }); app.go("courses"); };

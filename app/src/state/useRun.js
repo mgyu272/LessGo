@@ -28,7 +28,8 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish, toast }) {
       trail: r.trail.slice(), me: r.me, freeShops: r.freeShops, courseDone: r.courseDone, visited: [...r.visited],
       stars: r.stars.map((x) => ({ at: x.at, got: x.got })), starsGot: r.starsGot, starsTotal: r.stars.length,
       nextStarM: nextStarM(r), starBalance: userRef.current.getStarBalance(), couponsMade: r.coupons.length,
-      progress: r.course ? Math.min(1, r.meters / r.course.len) : null, voice: r.voice,
+      progress: r.course ? Math.min(1, r.courseM / r.course.len) : null, courseM: r.courseM,
+      approach: r.course && !r.joined, voice: r.voice,
     });
   }, []);
 
@@ -73,6 +74,15 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish, toast }) {
     r.last = p;
     r.trail.push([p.lat, p.lng]);
 
+    // 코스 위 진행 거리: 코스 선 40m 안에 있을 때만 코스 위 위치로 계산해요 (뒤로 가거나 튀는 값은 무시)
+    if (r.course) {
+      const on = alongPath(r.course.path, r.cum, p);
+      if (on.off <= 40) {
+        if (!r.joined) { r.joined = true; showCue(getLang() === "ko" ? "코스에 들어왔어요. 안내를 시작할게요." : "You're on the course. Guidance starts now."); }
+        if (on.along > r.courseM && on.along - r.courseM < 400) r.courseM = on.along;
+      }
+    }
+
     // 실제 GPS 고도가 있으면 오르막 누적
     if (p.altitude != null) {
       if (r.lastAlt != null && p.altitude - r.lastAlt > 1) r.altUp += p.altitude - r.lastAlt;
@@ -113,13 +123,15 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish, toast }) {
     const next = candidates.filter((s) => s && !r.visited.has(s.id))
       .map((s) => ({ s, d: distance(p, s) })).sort((a, b) => a.d - b.d)[0];
     if (next && next.d <= next.s.radius_m) return arrive(next.s);
-    if (r.course) r.pill = next ? t("next_spot", { d: fmtDist(next.d) }) : t("all_spots");
+    if (r.course && !r.joined) r.pill = (getLang() === "ko" ? "코스 출발지까지 " : "To course start ") + fmtDist(distance(p, r.course.path[0]));
+    else if (r.course) r.pill = next ? t("next_spot", { d: fmtDist(next.d) }) : t("all_spots");
     else r.freeShops = shops.filter((s) => s.partner).map((s) => ({ s, d: distance(p, s) }))
       .filter((x) => x.d < 600).sort((a, b) => a.d - b.d).slice(0, 3);
 
     // 코스 끝까지 가면(완주): 목적지 도착을 아직 못 했으면 도착 화면으로 넘어가요
     // (코스는 지하철 출구 → 목적지라 끝점이 목적지예요. 반경 판정이 빗나가도 완주하면 해설을 들을 수 있게)
-    if (info.progress >= 1 && !r.courseDone) {
+    const finished = info.progress >= 1 || (r.course && r.joined && r.courseM >= r.course.len - 30);
+    if (finished && !r.courseDone) {
       r.courseDone = true;
       const dest = r.course && spotById[r.course.properties.dest];
       if (dest && !r.visited.has(dest.id)) return arrive(dest);
@@ -128,7 +140,9 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish, toast }) {
     push();
   }, [dataRef, userRef, go, setSpot, push, showCue, pickStar]);
 
-  const start = useCallback((course, { demo, speedup }) => {
+  // 항상 실제 GPS로 달려요 (시연 모드 없음). here: 시작 전에 받은 현재 위치, approach: 코스 출발지에서 먼 곳에서 시작
+  const start = useCallback((course, { here = null, approach = false } = {}) => {
+    const demo = false, speedup = 1;
     voice.unlock();          // 아이폰: 버튼을 누른 이 순간에 음성을 깨워야 해요
     voice.keepScreenOn();
     const { courses } = dataRef.current;
@@ -139,7 +153,8 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish, toast }) {
       cuesFired: new Set(), paused: false, ended: false, altUp: 0, lastAlt: null,
       stars: course ? starPoints(course.path).map((at) => ({ at, got: false })) : [], starsGot: 0, coupons: [],
       cue: null, pill: demo ? "" : t("gps_waiting"), newStamps: 0, courseDone: false,
-      me: [simPath[0].lat, simPath[0].lng], freeShops: [], voice: true,
+      me: here ? [here.lat, here.lng] : null, freeShops: [], voice: true,
+      courseM: 0, joined: course ? !approach : true, cum: course ? cumulative(course.path) : null,
     };
     r.tracker = createTracker({
       demo, path: simPath, speedup, onPosition,
@@ -147,7 +162,8 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish, toast }) {
     });
     r.tracker.start();
     r.clock = setInterval(push, 1000);
-    if (course) { r.cuesFired.add(0); voice.speak(loc(course.cues[0]?.text) || "", { lang: getLang() }); }
+    if (course && !approach) { r.cuesFired.add(0); voice.speak(loc(course.cues[0]?.text) || "", { lang: getLang() }); }
+    if (course && approach) voice.speak(getLang() === "ko" ? "코스 출발지로 이동하세요. 가는 길도 기록돼요." : "Head to the course start. This part is recorded too.", { lang: getLang() });
     push();
     go("run");
   }, [dataRef, onPosition, push, go]);
@@ -235,6 +251,7 @@ function segmentDistance([lat, lng], a, b) {
 // 다음 별까지 (m): 코스는 안 주운 별 중 가장 가까운 별까지 직선거리, 자유 달리기는 다음 500m까지 남은 거리
 function nextStarM(r) {
   if (!r.course) return Math.round(STAR_RULES.everyM - (r.meters % STAR_RULES.everyM));
+  if (!r.me) return null;
   const here = { lat: r.me[0], lng: r.me[1] };
   const left = r.stars.filter((x) => !x.got).map((x) => distance(here, { lat: x.at[0], lng: x.at[1] }));
   return left.length ? Math.round(Math.min(...left)) : null;
@@ -246,6 +263,29 @@ function couponShop(r, data) {
   const kakao = data.shops.filter((s) => s.id.startsWith("kakao-"));
   const dest = r.course && data.spotById[r.course.properties.dest];
   const pool = dest ? kakao.filter((s) => s.near === dest.id) : kakao;
-  const from = dest || { lat: r.me[0], lng: r.me[1] };
+  const from = dest || (r.me ? { lat: r.me[0], lng: r.me[1] } : { lat: HOME_CENTER[0], lng: HOME_CENTER[1] });
   return pool.map((s) => ({ s, d: distance(from, s) })).sort((a, b) => a.d - b.d)[0]?.s || null;
+}
+
+// 코스 선의 시작점부터 각 점까지 누적 거리 (m)
+function cumulative(path) {
+  const out = [0];
+  for (let i = 1; i < path.length; i++) out.push(out[i - 1] + distance(path[i - 1], path[i]));
+  return out;
+}
+
+// 지금 위치를 코스 선 위에 내려 찍었을 때: 출발점부터 거리(along)와 코스 선까지 거리(off)
+function alongPath(path, cum, p) {
+  const k = 111320, kx = k * Math.cos((p.lat * Math.PI) / 180);
+  let best = { off: Infinity, along: 0 };
+  for (let i = 1; i < path.length; i++) {
+    const a = path[i - 1], b = path[i];
+    const bx = (b.lng - a.lng) * kx, by = (b.lat - a.lat) * k;
+    const px = (p.lng - a.lng) * kx, py = (p.lat - a.lat) * k;
+    const len2 = bx * bx + by * by;
+    const tt = len2 ? Math.max(0, Math.min(1, (px * bx + py * by) / len2)) : 0;
+    const off = Math.hypot(px - bx * tt, py - by * tt);
+    if (off < best.off) best = { off, along: cum[i - 1] + tt * (cum[i] - cum[i - 1]) };
+  }
+  return best;
 }

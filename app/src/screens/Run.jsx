@@ -6,7 +6,7 @@
 
 import { useMemo, useState } from "react";
 import { STAR_RULES } from "../state/useUserData.js";
-import { useApp } from "../state/AppContext.jsx";
+import { useApp, HOME_CENTER } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { fmtTime, fmtPace, distance } from "../lib/geo.js";
 import { MapView, SpotMarker, Route, Me, Follow, FlyTo, KmMark, StarMark } from "../components/MapView.jsx";
@@ -20,13 +20,15 @@ export default function Run() {
   const [confirm, setConfirm] = useState(false);
   const [recenter, setRecenter] = useState(null);
   const geo = useCourseGeometry(c);
-  const remaining = useMemo(() => remainingPath(geo, v?.me), [geo, v?.me?.[0], v?.me?.[1]]);
+  const remaining = useMemo(() => remainingPath(geo, v?.me, v?.approach), [geo, v?.me?.[0], v?.me?.[1], v?.approach]);
   if (!v) return null;
 
   const km = v.meters / 1000;
   const toNext = 1 - (km % 1);
   const dest = c && data.spotById[c.properties.dest];
-  const leftKm = c ? Math.max(0, (c.len - v.meters) / 1000) : 0;
+  const leftKm = c ? Math.max(0, (c.len - v.courseM) / 1000) : 0;
+  // 첫 GPS 신호 전에는 코스 출발점(없으면 성북구 중심)을 지도 중심으로 써요
+  const mapCenter = v.me || (c ? [c.path[0].lat, c.path[0].lng] : HOME_CENTER);
   const place = dest ? loc(dest.name).replace(/\s*\(.*\)/, "") : "";
   const status = v.paused ? t("run_paused") : c ? t("run_status_course", { name: place, time: fmtTime(v.seconds) }) : t("run_status_free", { time: fmtTime(v.seconds) });
   const per = STAR_RULES.perCoupon;
@@ -36,7 +38,7 @@ export default function Run() {
   return (
     <section className={`screen run-screen ${v.paused ? "is-paused" : ""}`}>
       <div className="run-map">
-        <MapView zoom={16} center={v.me}>
+        <MapView zoom={16} center={mapCenter}>
           {c && remaining.length > 1 && [
             <Route key="rem-case" path={remaining} color="#FFFFFF" weight={11} opacity={0.95} />,
             <Route key="rem" path={remaining} color="#9FD25E" weight={4} opacity={1} dashed />,
@@ -52,7 +54,7 @@ export default function Run() {
           <Follow pos={v.me} />{/* 내 위치를 따라 지도 이동 */}
           <FlyTo to={recenter} level={3} />
         </MapView>
-        <button className="round-btn glass run-locate" aria-label={t("my_location")} onClick={() => setRecenter([...v.me])}>
+        <button className="round-btn glass run-locate" aria-label={t("my_location")} onClick={() => v.me && setRecenter([...v.me])}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6.5" /><circle cx="12" cy="12" r="2" fill="currentColor" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /></svg>
         </button>
       </div>
@@ -133,9 +135,10 @@ function useCourseGeometry(course) {
 }
 
 // 남은 코스: 지금 위치에서 가장 가까운 코스 점부터 끝까지
-function remainingPath(geo, me) {
+function remainingPath(geo, me, approach) {
   if (!geo.path.length || !me) return [];
   const here = { lat: me[0], lng: me[1] };
+  if (approach) return [here, ...geo.path]; // 출발지로 가는 중: 지금 위치 → 출발지 → 코스 전체
   let best = 0, bestD = Infinity;
   geo.path.forEach((q, i) => { const d = distance(q, here); if (d < bestD) { bestD = d; best = i; } });
   return [here, ...geo.path.slice(best + 1)];

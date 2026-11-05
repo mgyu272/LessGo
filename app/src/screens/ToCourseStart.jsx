@@ -5,10 +5,9 @@ import { useApp } from "../state/AppContext.jsx";
 import { MapView, Route, Dot, Me, FitBounds } from "../components/MapView.jsx";
 import { distance } from "../lib/geo.js";
 import { loc, t } from "../lib/i18n.js";
-import { startSavedCourse } from "../lib/startSavedCourse.js";
+import { startSavedCourse, planStart, fmtM } from "../lib/startSavedCourse.js";
 
-const START_RADIUS_M = 150;
-const MAX_ACCURACY_M = 60;
+const MAX_ACCURACY_M = 100;
 
 function useStartLocation(enabled) {
   const [position, setPosition] = useState(null);
@@ -50,8 +49,9 @@ export default function ToCourseStart() {
   const startName = namedStart && !namedStart.startsWith("OSM ") ? namedStart : "선택한 러닝 코스 출발지";
   const meters = position && start ? distance(position, start) : null;
   const accurate = !!position && Number.isFinite(position.accuracy) && position.accuracy <= MAX_ACCURACY_M;
-  const near = meters != null && meters <= START_RADIUS_M;
-  const ready = accurate && near;
+  // 거리가 멀어도 막지 않아요. 지금 위치에 따라 시작 방식만 달라져요
+  const plan = position && start ? planStart(course, position) : null;
+  const ready = accurate && !!plan;
 
   const directionUrl = useMemo(() => {
     if (!position || !start) return null;
@@ -69,7 +69,7 @@ export default function ToCourseStart() {
 
   const run = async () => {
     if (!ready || !course) return;
-    await startSavedCourse(app, course);
+    await startSavedCourse(app, course, position);
   };
 
   if (!course || !start) return (
@@ -95,10 +95,10 @@ export default function ToCourseStart() {
       </MapView>
       <div className="to-start-top">
         <button type="button" className="round-btn glass" onClick={() => app.go("courses")} aria-label="코스 화면으로">←</button>
-        <strong className="glass">출발지까지 길찾기</strong>
+        <strong className="glass">GPS 러닝 준비</strong>
       </div>
       <div className="to-start-panel hanji-sheet">
-        <h2>먼저 출발지로 이동해요</h2>
+        <h2>지금 위치에서 시작해요</h2>
         <p className="to-start-course">{loc(course.properties.name)}</p>
         <div className="to-start-destination">
           <span>출발 위치</span>
@@ -116,19 +116,20 @@ export default function ToCourseStart() {
           </div>
         </div>
         <p className="to-start-status" role="status">
-          {ready ? "출발지 근처에 도착했어요. GPS 러닝을 시작할 수 있어요."
-            : !position ? "GPS 위치를 확인하고 있어요."
+          {!position ? "GPS 위치를 확인하고 있어요."
             : !accurate ? "GPS 신호가 부정확해요. 실외에서 위치를 다시 확인해 주세요."
-            : `출발지에서 ${Math.round(meters)}m 떨어져 있어요. 카카오맵 도보 길찾기를 이용해 주세요.`}
+            : plan.mode === "start" ? "출발지 근처예요. 코스 처음부터 시작해요."
+            : plan.mode === "join" ? "코스 중간이 가까워요. 가장 가까운 지점부터 남은 코스를 달려요."
+            : `출발지까지 ${fmtM(meters)}. 지금 바로 시작하면 출발지까지 가는 길도 기록돼요.`}
         </p>
         {error && <p className="to-start-error" role="alert">{error}</p>}
         <div className="to-start-actions">
           <button type="button" className="btn btn-soft" onClick={openDirections} disabled={!directionUrl}>카카오맵 도보 길찾기</button>
-          <button type="button" className="btn btn-cta" onClick={run} disabled={!ready}>런닝 시작</button>
+          <button type="button" className="btn btn-cta" onClick={run} disabled={!ready}>{plan?.mode === "approach" ? "여기서 바로 시작" : "런닝 시작"}</button>
         </div>
         <button type="button" className="to-start-refresh" onClick={retry}>GPS 다시 확인</button>
         {opening && <p className="to-start-hint">길찾기 후 Less GO로 돌아오세요. 현재 위치를 확인해 러닝 시작 버튼이 활성화됩니다.</p>}
-        <small className="to-start-hint">150m 이내 · GPS 오차 60m 이내일 때 시작할 수 있어요. 실제 출입구와 보행 가능 여부는 현장에서 확인하세요.</small>
+        <small className="to-start-hint">GPS 오차 100m 이내면 어디서든 시작할 수 있어요. 실제 출입구와 보행 가능 여부는 현장에서 확인하세요.</small>
       </div>
     </section>
   );
