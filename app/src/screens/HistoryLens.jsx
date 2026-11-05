@@ -534,10 +534,10 @@ export default function HistoryLens({ spotId, spotName }) {
                     <h4 id="history-lens-explanation-title" style={{fontSize:18,marginBottom:8}}>{analysis.explanation.title || t("history_lens_explanation_title")}</h4>
                     <p className="history-lens-story-text" style={{fontSize:16,lineHeight:1.95,whiteSpace:"pre-line",letterSpacing:"-.015em"}}>{analysis.explanation.text}</p>
                     {analysis.explanation.fallback && <p className="history-lens-visitor-status">{analysis.explanation.disclaimer}</p>}
-                    {Array.isArray(analysis.explanation.sources) && analysis.explanation.sources.length > 0 && (
+                    {(analysis.explanation.sources?.length > 0 || (analysis.evidence?.evidenceStatus === "supported" && analysis.evidence?.sources?.length > 0)) && (
                       <div className="history-lens-evidence-sources" style={{marginTop:14,padding:"12px 14px",background:"#f5f7f0",borderRadius:12}}>
                         <b>{lang === "ko" ? "해설 참고 자료" : "Sources for this explanation"}</b>
-                        <ul>{analysis.explanation.sources.map((source,index) => (
+                        <ul>{(analysis.explanation.sources?.length ? analysis.explanation.sources : analysis.evidence.sources).map((source,index) => (
                           <li key={`${source.url || source.title}-${index}`}>
                             <a href={source.url} target="_blank" rel="noopener noreferrer">{source.agency ? `${source.agency} · ` : ""}{source.title || source.url}</a>
                           </li>
@@ -577,7 +577,7 @@ export default function HistoryLens({ spotId, spotName }) {
                 </>)}
               </section>
 
-              <details className="history-lens-verification-details" style={{borderRadius:16,padding:"14px 18px"}}>
+              {false && <details className="history-lens-verification-details" style={{borderRadius:16,padding:"14px 18px"}}>
                 <summary>
                   <span>{t("history_lens_sources_details")}</span>
                   <small>{t("history_lens_evidence_details_hint")}</small>
@@ -636,7 +636,7 @@ export default function HistoryLens({ spotId, spotName }) {
                     {analysis.reason && <p><b>{t("history_lens_reason")}</b> {analysis.reason}</p>}
                   </div>
                 </div>
-              </details>
+              </details>}
 
             </div>
           )}
