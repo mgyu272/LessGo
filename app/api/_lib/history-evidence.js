@@ -4,18 +4,46 @@ import { readData } from "./gemini.js";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
+// Static module-relative reference helps Vercel trace and package this server-only JSON.
+// process.cwd() may differ between local dev and deployed serverless functions.
+const OFFICIAL_EVIDENCE_URL = new URL("../../server-data/heritage_evidence_4d.json", import.meta.url);
 let officialEvidencePromise;
 async function readOfficialEvidence() {
   if (!officialEvidencePromise) {
-    officialEvidencePromise = readFile(path.join(process.cwd(), "server-data", "heritage_evidence_4d.json"), "utf8")
-      .then(JSON.parse)
-      .catch(() => ({ objects: [] }));
+    officialEvidencePromise = (async () => {
+      let lastError;
+      for (const location of [OFFICIAL_EVIDENCE_URL, path.join(process.cwd(), "server-data", "heritage_evidence_4d.json")]) {
+        try {
+          const data = JSON.parse(await readFile(location, "utf8"));
+          if (!Array.isArray(data?.objects) || !data.objects.length) throw new Error("Invalid official heritage evidence format");
+          return data;
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      // Do not silently turn missing server assets into "no official facts".
+      console.error("[history-evidence] official heritage data unavailable; verify function file tracing", lastError?.code || "invalid_data");
+      return { objects: [], unavailable: true };
+    })();
   }
   return officialEvidencePromise;
 }
 
 // Return a small, place-scoped vocabulary for visual recognition. These labels
 // are suggestions only; they are never used as evidence that a photo depicts an object.
+const CANDIDATE_URLS = {simujang: new URL("../../server-data/heritage_candidates_simujang.json", import.meta.url), jeongneung: new URL("../../server-data/heritage_candidates_jeongneung.json", import.meta.url), uiryeong: new URL("../../server-data/heritage_candidates_uiryeong.json", import.meta.url)};
+export async function getPlaceVisualCandidates(spotId) {
+  const file = CANDIDATE_URLS[spotId];
+  if (!file) return [];
+  try {
+    const data = JSON.parse(await readFile(file, "utf8"));
+    return Array.isArray(data.objects) ? data.objects.map(({id,name,aliases,visualKeywords}) => ({id,name,aliases,visualKeywords})) : [];
+  } catch (error) {
+    console.warn("[history-evidence] visual candidates unavailable", spotId, error?.code || "invalid_data");
+    return [];
+  }
+}
+
 export async function getOfficialVisualCandidates(spotId, limit = 12) {
   if (typeof spotId !== "string" || !spotId || !Number.isInteger(limit) || limit < 1) return [];
   const officialData = await readOfficialEvidence();
@@ -292,6 +320,11 @@ export async function verifyImageEvidence({ spotId, candidateName, objectType, v
   // presence of a facility in a record is not treated as proof that it appears
   // in the submitted photograph.
   const officialData = await readOfficialEvidence();
+  if (officialData.unavailable) {
+    return result("insufficient", null, [], [], [phrase(lang,
+      "서버에서 공식 역사 자료를 불러오지 못해 역사 사실을 검증할 수 없습니다.",
+      "The server could not load the official heritage records; historical claims cannot currently be verified.")], "none", [], lang);
+  }
   const officialObject = (officialData.objects || []).find((entry) =>
     entry.spotId === spotId && exactAlias(candidateName, entry.aliases || [])
   );

@@ -411,8 +411,8 @@ export default function HistoryLens({ spotId, spotName }) {
   };
 
   return (
-    <div className="rise pd-col history-lens-page">
-      <article className="card history-lens-card">
+    <div className="rise pd-col history-lens-page" style={{maxWidth: 720, margin: "0 auto", paddingBottom: 28}}>
+      <article className="card history-lens-card" style={{padding: 22, borderRadius: 22}}>
         <div className="history-lens-art" aria-hidden="true">
           <span className="history-lens-art-orbit" />
           <svg viewBox="0 0 120 100" role="presentation">
@@ -423,6 +423,7 @@ export default function HistoryLens({ spotId, spotName }) {
           <span className="history-lens-art-spark">✦</span>
         </div>
         <div className="history-lens-intro-copy">
+          <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 12px",borderRadius:999,background:"rgba(65,148,107,.10)",fontWeight:700,fontSize:13,marginBottom:10}}>📍 {spotName}</div>
           <span className="history-lens-eyebrow"><span aria-hidden="true">✦</span> {t("history_lens_badge")}</span>
           <h2>{t("history_lens_intro")}</h2>
           <p>{t("history_lens_intro_detail")}</p>
@@ -474,8 +475,8 @@ export default function HistoryLens({ spotId, spotName }) {
       )}
 
       {photo && (
-        <section className="history-lens-preview card" aria-label={t("history_lens_preview_title")}>
-          <img className="history-lens-image" src={photo.previewUrl} alt={t("history_lens_preview_alt")} />
+        <section className="history-lens-preview card" style={{borderRadius:22,overflow:"hidden",padding:16}} aria-label={t("history_lens_preview_title")}>
+          <img className="history-lens-image" style={{width:"100%",maxHeight:380,objectFit:"cover",borderRadius:16}} src={photo.previewUrl} alt={t("history_lens_preview_alt")} />
           <p className="history-lens-size">
             {t("history_lens_file_size", {
               original: formatBytes(photo.originalSize),
@@ -506,8 +507,8 @@ export default function HistoryLens({ spotId, spotName }) {
             </div>
           )}
           {analysis && analysisLang === lang && !localizing && (
-            <div className="history-lens-analysis-stack" aria-live="polite">
-              <article className="history-lens-visitor-card history-lens-discovery" aria-labelledby="history-lens-vision-title">
+            <div className="history-lens-analysis-stack" style={{display:"grid",gap:16,marginTop:18}} aria-live="polite">
+              <article className="history-lens-visitor-card history-lens-discovery" style={{borderRadius:18,padding:20,background:"var(--surface,rgba(127,127,127,.05))"}} aria-labelledby="history-lens-vision-title">
                 <div className="history-lens-visitor-heading">
                   <span className="history-lens-visitor-icon" aria-hidden="true">✦</span>
                   <div>
@@ -515,12 +516,12 @@ export default function HistoryLens({ spotId, spotName }) {
                     <h3 id="history-lens-vision-title">{analysis.candidateName || t("history_lens_no_candidate")}</h3>
                   </div>
                 </div>
-                <p className="history-lens-visitor-status">{t(visitorStatusKey(analysis))}</p>
-                <p className="history-lens-visitor-visual">{visualFeatureSummary(analysis.visualFeatures, lang)}</p>
+                <p className="history-lens-visitor-status" style={{fontSize:13,fontWeight:600,marginTop:8}}>🔎 {t(visitorStatusKey(analysis))}</p>
+                <div style={{display:"flex",flexWrap:"wrap",gap:7,marginTop:12}}>{(analysis.visualFeatures || []).slice(0,5).map((feature,index)=><span key={index} style={{fontSize:12,borderRadius:999,padding:"6px 10px",background:"rgba(102,147,115,.12)"}}>{feature}</span>)}</div>
                 {analysis.testData && <p className="history-lens-voice-test-note">{t("history_lens_test_data")}</p>}
               </article>
 
-              <section className={`history-lens-visitor-card history-lens-visitor-story ${isOfficialGrounded(analysis) ? "official" : "visual-only"}`} aria-labelledby="history-lens-explanation-title">
+              <section className={`history-lens-visitor-card history-lens-visitor-story ${isOfficialGrounded(analysis) ? "official" : "visual-only"}`} style={{borderRadius:18,padding:20}} aria-labelledby="history-lens-explanation-title">
                 <div className="history-lens-visitor-heading">
                   <span className="history-lens-visitor-icon" aria-hidden="true">{isOfficialGrounded(analysis) ? "⌂" : "◉"}</span>
                   <div>
@@ -528,12 +529,13 @@ export default function HistoryLens({ spotId, spotName }) {
                     <h3>{t(isOfficialGrounded(analysis) ? "history_lens_history_title" : "history_lens_visual_story_title")}</h3>
                   </div>
                 </div>
-                {analysis.explanationError && <p className="note cream" role="status">{t("history_lens_explanation_error")}</p>}
+                {analysis.explanationError && !analysis.explanation?.fallback && <p className="note cream" role="status">{t("history_lens_explanation_error")}</p>}
                 {analysis.explanationPending && <p className="note cream">{t("history_lens_explanation_pending")}</p>}
                 {analysis.explanation ? (
                   <>
                     <h4 id="history-lens-explanation-title">{analysis.explanation.title || t("history_lens_explanation_title")}</h4>
-                    <p className="history-lens-story-text">{analysis.explanation.text}</p>
+                    <p className="history-lens-story-text" style={{fontSize:16,lineHeight:1.95,whiteSpace:"pre-line",letterSpacing:"-.015em"}}>{analysis.explanation.text}</p>
+                    {analysis.explanation.fallback && <p className="history-lens-visitor-status">{analysis.explanation.disclaimer}</p>}
                     {analysis.explanation.aiContext?.length > 0 && (
                       <div className="history-lens-ai-context" aria-label={analysis.explanation.aiContextLabel || t("history_lens_ai_context_title")}>
                         <b>{t("history_lens_ai_context_title")}</b>
@@ -573,7 +575,7 @@ export default function HistoryLens({ spotId, spotName }) {
                 ) : null}
               </section>
 
-              <details className="history-lens-verification-details">
+              <details className="history-lens-verification-details" style={{borderRadius:16,padding:"14px 18px"}}>
                 <summary>
                   <span>{t("history_lens_sources_details")}</span>
                   <small>{t("history_lens_evidence_details_hint")}</small>
@@ -639,7 +641,7 @@ export default function HistoryLens({ spotId, spotName }) {
         </section>
       )}
 
-      <section className="history-lens-guide" aria-labelledby="history-lens-guide-title">
+      <section className="history-lens-guide" aria-labelledby="history-lens-guide-title" style={{display: analysis ? "none" : undefined}}>
         <div className="history-lens-section-heading">
           <span className="history-lens-section-icon" aria-hidden="true">ⓘ</span>
           <div>

@@ -119,7 +119,10 @@ try {
   assert.equal(failedExplanationResponse.statusCode, 200);
   assert.equal(failedExplanationResponse.body.identificationStatus, "identified");
   assert.equal(failedExplanationResponse.body.evidence.sourceLevel, "official");
-  assert.equal(failedExplanationResponse.body.explanation, null);
+  assert.equal(failedExplanationResponse.body.explanation.type, "grounded");
+  assert.equal(failedExplanationResponse.body.explanation.fallback, true);
+  assert.ok(failedExplanationResponse.body.explanation.sources.length > 0, "official fallback keeps linked citations");
+  assert.ok(failedExplanationResponse.body.explanation.text.includes("공식"));
   assert.equal(failedExplanationResponse.body.explanationError.code, "explanation_failed");
   assert.equal(failedExplanationResponse.body.historyVerification.status, "verified", "historical evidence remains available if the optional explanation fails");
 } finally {

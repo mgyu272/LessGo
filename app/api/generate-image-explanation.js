@@ -1,7 +1,7 @@
 // POST /api/generate-image-explanation — second-stage explanation without resending the photo.
 import { hasKey } from "./_lib/gemini.js";
 import { buildHistoryVerification, verifyImageEvidence } from "./_lib/history-evidence.js";
-import { buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
+import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
 
 const SPOT_IDS = new Set(["simujang", "jeongneung", "uiryeong"]);
 function fail(status, code, error) { return Object.assign(new Error(error), { status, code }); }
@@ -40,7 +40,7 @@ export default async function generateImageExplanation(req, res) {
       return res.status(200).json({ explanation, explanationError: null, evidence,
         historyVerification: buildHistoryVerification({ evidence, identificationStatus: vision.identificationStatus, explanation }), testData: false });
     } catch (error) {
-      return res.status(200).json({ explanation: null, explanationError: explanationErrorResponse(error, lang), evidence,
+      return res.status(200).json({ explanation: buildFallbackExplanation({ evidence, visualFeatures: vision.visualFeatures, identificationStatus: vision.identificationStatus, lang }), explanationError: explanationErrorResponse(error, lang), evidence,
         historyVerification: buildHistoryVerification({ evidence, identificationStatus: vision.identificationStatus }), testData: false });
     }
   } catch (error) {

@@ -1,0 +1,134 @@
+{
+  "spotId": "uiryeong",
+  "spotName": "서울 의릉",
+  "source": "https://digital.khs.go.kr/heri/heriDetail.do?ctptUid=13898859675461300822",
+  "objects": [
+    {
+      "id": "uiryeong-1",
+      "name": "정자각",
+      "aliases": [
+        "의릉 정자각",
+        "Jeongjagak",
+        "ritual hall"
+      ],
+      "visualKeywords": [
+        "기와지붕",
+        "목조 기둥",
+        "제향 건물"
+      ],
+      "historicalContext": "경종과 선의왕후의 왕릉에서 제향을 지내는 건물이다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptUid=13898859675461300822"
+    },
+    {
+      "id": "uiryeong-2",
+      "name": "홍살문",
+      "aliases": [
+        "의릉 홍살문",
+        "Hongsalmun",
+        "red gate"
+      ],
+      "visualKeywords": [
+        "붉은 기둥",
+        "붉은 가로살"
+      ],
+      "historicalContext": "의릉의 제향 동선에 놓인 문이다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptUid=13898859675461300822"
+    },
+    {
+      "id": "uiryeong-3",
+      "name": "비각",
+      "aliases": [
+        "의릉 비각",
+        "Bigak",
+        "stele pavilion"
+      ],
+      "visualKeywords": [
+        "비석이 놓인 작은 건물"
+      ],
+      "historicalContext": "의릉의 비석을 보호하는 시설이다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptUid=13898859675461300822"
+    },
+    {
+      "id": "uiryeong-4",
+      "name": "경종 능침·봉분",
+      "aliases": [
+        "경종 능침",
+        "경종 봉분",
+        "king gyeongjong tomb"
+      ],
+      "visualKeywords": [
+        "봉분",
+        "주변 석물"
+      ],
+      "historicalContext": "의릉은 조선 20대 경종과 선의왕후의 무덤으로, 봉분을 앞뒤로 배치한 상하이봉릉이다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptUid=13898859675461300822"
+    },
+    {
+      "id": "uiryeong-5",
+      "name": "선의왕후 능침·봉분",
+      "aliases": [
+        "선의왕후 능침",
+        "선의왕후 봉분",
+        "queen seonui tomb"
+      ],
+      "visualKeywords": [
+        "봉분",
+        "주변 석물"
+      ],
+      "historicalContext": "선의왕후의 능침이다. 사진만으로 경종 능침과 구별하기 어려우면 어느 봉분인지 확정하지 않는다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptUid=13898859675461300822"
+    },
+    {
+      "id": "uiryeong-6",
+      "name": "문인석·무인석",
+      "aliases": [
+        "문인석",
+        "무인석",
+        "석인",
+        "stone official"
+      ],
+      "visualKeywords": [
+        "관복을 입은 사람 형태의 석상"
+      ],
+      "historicalContext": "의릉 능침의 석물이다. 석상의 세부 종류는 사진에 충분한 단서가 있을 때만 식별한다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptUid=13898859675461300822"
+    },
+    {
+      "id": "uiryeong-7",
+      "name": "석호·석양·석마",
+      "aliases": [
+        "석호",
+        "석양",
+        "석마",
+        "stone tiger",
+        "stone sheep",
+        "stone horse"
+      ],
+      "visualKeywords": [
+        "호랑이·양·말 형태의 석상"
+      ],
+      "historicalContext": "의릉 능침 주변의 동물 석물이다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptUid=13898859675461300822"
+    },
+    {
+      "id": "uiryeong-8",
+      "name": "장명등·망주석·난간석",
+      "aliases": [
+        "장명등",
+        "망주석",
+        "난간석",
+        "stone lantern",
+        "stone posts"
+      ],
+      "visualKeywords": [
+        "돌등",
+        "돌기둥",
+        "봉분 주위 돌난간"
+      ],
+      "historicalContext": "의릉 능침의 석조 시설이다. 의릉 난간석에는 십이지 방향을 나타내는 글자가 새겨져 있다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptUid=13898859675461300822"
+    }
+  ],
+  "schemaVersion": 1,
+  "notes": "visualKeywords are recognition hints, not proof. historicalContext is contextual guidance; source-grounded facts must come from heritage_evidence_4d.json. Do not assert sub-object identity from location alone."
+}
