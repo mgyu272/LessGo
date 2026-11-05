@@ -1,7 +1,7 @@
 // Re-localize saved Vision output after the app language changes; this route never receives an image.
 import { hasKey, MODEL, askGeminiJSON } from "./_lib/gemini.js";
 import { buildHistoryVerification, verifyImageEvidence } from "./_lib/history-evidence.js";
-import { buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
+import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
 
 const SCHEMA = {
   type: "OBJECT",
@@ -126,7 +126,7 @@ export default async function localizeImageAnalysis(req, res) {
         historyVerification: buildHistoryVerification({ evidence, identificationStatus: localizedVision.identificationStatus, explanation, referenceComparison }),
         explanationError: null, source: "gemini", testData: false });
     } catch (error) {
-      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation: null,
+      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation: buildFallbackExplanation({ evidence, visualFeatures: localizedVision.visualFeatures, identificationStatus: localizedVision.identificationStatus, lang }),
         historyVerification: buildHistoryVerification({ evidence, identificationStatus: localizedVision.identificationStatus, referenceComparison }),
         explanationError: explanationErrorResponse(error, lang), source: "gemini", testData: false });
     }
