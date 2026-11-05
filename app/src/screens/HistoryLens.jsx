@@ -184,6 +184,7 @@ export default function HistoryLens({ spotId, spotName }) {
         spotId,
         lang: targetLang,
         testData: savedAnalysis.testData === true,
+        referenceComparison: savedAnalysis.referenceComparison,
         vision: {
           candidateName: savedAnalysis.candidateName,
           objectType: savedAnalysis.objectType,

@@ -157,10 +157,12 @@ try {
   process.env.GEMINI_API_KEY = "offline-localization-test-key";
   delete process.env.GEMINI_IMAGE_MOCK;
   const localizedResponse = { statusCode: 0, body: null, status(code) { this.statusCode = code; return this; }, json(body) { this.body = body; return body; } };
-  await localizeImageAnalysis({ method: "POST", body: { spotId: "jeongneung", lang: "en", vision: { candidateName: "정자각", objectType: "건축물", subjectLevel: "facility", visualFeatures: ["기와지붕"], identificationStatus: "identified", reason: "지붕과 열린 건물 구조가 보입니다." } } }, localizedResponse);
+  const savedReferenceComparison = { status: "not_compared", attempted: false, referenceCount: 0, candidateChanged: false, identificationStatusBefore: "identified", identificationStatusAfter: "identified", visualEvidence: [], reasonCode: "external_use_not_authorized" };
+  await localizeImageAnalysis({ method: "POST", body: { spotId: "jeongneung", lang: "en", referenceComparison: savedReferenceComparison, vision: { candidateName: "정자각", objectType: "건축물", subjectLevel: "facility", visualFeatures: ["기와지붕"], identificationStatus: "identified", reason: "지붕과 열린 건물 구조가 보입니다." } } }, localizedResponse);
   assert.equal(localizedResponse.statusCode, 200);
   assert.equal(localizedResponse.body.candidateName, "Jeongjagak");
   assert.equal(localizedResponse.body.subjectLevel, "facility", "recognition specificity is preserved when changing language");
+  assert.deepEqual(localizedResponse.body.referenceComparison, savedReferenceComparison, "reference comparison status survives language changes");
   assert.equal(localizedResponse.body.evidence.factSources.some((entry) => entry.fact.includes("royal tomb")), true);
   assert.ok(localizedResponse.body.evidence.sources.every((source) => source.titleEn && /[A-Za-z]/u.test(source.title)));
   assert.ok(localizedResponse.body.evidence.limitations.every((line) => !/[가-힣]/u.test(line)), "English verification limitations are localized");

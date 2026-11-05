@@ -1,6 +1,6 @@
 // POST /api/analyze-image — visual identification plus a separate sourced/estimated explanation.
 import { askGeminiJSON, hasKey, IMAGE_MODEL, supportsImageInput, VISION_RETRY_POLICY } from "./_lib/gemini.js";
-import { buildReferenceAssistedRequest, canSendReferencesToGemini, selectLocalReferenceImages } from "./_lib/heritage-reference.js";
+import { applyReferenceComparison, buildReferenceAssistedRequest, canSendReferencesToGemini, selectLocalReferenceImages } from "./_lib/heritage-reference.js";
 import { getOfficialVisualCandidates, verifyImageEvidence } from "./_lib/history-evidence.js";
 import { buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
 import { performance } from "node:perf_hooks";
@@ -18,6 +18,21 @@ const RESULT_SCHEMA = {
     reason: { type: "STRING" },
   },
   required: ["candidateName", "objectType", "visualFeatures", "identificationStatus", "reason"],
+};
+const REFERENCE_RESULT_SCHEMA = {
+  ...RESULT_SCHEMA,
+  properties: {
+    ...RESULT_SCHEMA.properties,
+    comparison: {
+      type: "OBJECT",
+      properties: {
+        status: { type: "STRING", enum: ["matched", "mismatched", "inconclusive"] },
+        visualEvidence: { type: "ARRAY", items: { type: "STRING" } },
+      },
+      required: ["status", "visualEvidence"],
+    },
+  },
+  required: [...RESULT_SCHEMA.required, "comparison"],
 };
 
 function fail(status, code, error) { return Object.assign(new Error(error), { status, code }); }
@@ -99,7 +114,9 @@ export default async function analyzeImage(req, res) {
       const evidence = await verifyImageEvidence({ spotId, ...mockResult, lang });
       const { explanation, explanationError } = await withExplanation(mockResult, evidence, lang, { testData: true });
       return res.status(200).json({
-        ...mockResult, evidence, explanation, explanationError, source: "mock", testData: true, model: "mock",
+        ...mockResult, evidence, explanation, explanationError,
+        referenceComparison: { status: "not_compared", attempted: false, referenceCount: 0, candidateChanged: false, identificationStatusBefore: "uncertain", identificationStatusAfter: "uncertain", visualEvidence: [], reasonCode: "mock_mode" },
+        source: "mock", testData: true, model: "mock",
       });
     }
     if (!hasKey()) throw fail(503, "gemini_not_configured", "AI image analysis is being prepared. Please configure GEMINI_API_KEY on the server.");
@@ -130,42 +147,70 @@ export default async function analyzeImage(req, res) {
       throw error;
     }
     const baseline = normalizeResult(baselineRaw);
+    let finalVision = baseline;
+    let referenceComparison = {
+      status: "not_compared", attempted: false, referenceCount: 0, candidateChanged: false,
+      identificationStatusBefore: baseline.identificationStatus, identificationStatusAfter: baseline.identificationStatus,
+      visualEvidence: [], reasonCode: process.env.GEMINI_IMAGE_REFERENCE_MODE === "1" ? "not_available" : "disabled",
+    };
 
-    // References are an opt-in secondary pass. Until rights are explicitly confirmed,
-    // they may be selected/read locally but must never be sent to Gemini.
-    if (!deferExplanation && process.env.GEMINI_IMAGE_REFERENCE_MODE === "1") {
+    // References are an opt-in secondary pass. Local selection is safe, but external
+    // transmission requires explicit env consent AND confirmed rights in the manifest.
+    if (process.env.GEMINI_IMAGE_REFERENCE_MODE === "1") {
+      let references = [];
       try {
-        const references = await selectLocalReferenceImages({ spotId, candidateName: baseline.candidateName, objectType: baseline.objectType });
-        if (references.length >= 2 && await canSendReferencesToGemini()) {
+        references = await selectLocalReferenceImages({
+          spotId, spotName, candidateName: baseline.candidateName, objectType: baseline.objectType,
+          subjectLevel: baseline.subjectLevel,
+        });
+      } catch {
+        referenceComparison.reasonCode = "reference_data_unavailable";
+      }
+      if (!references.length && referenceComparison.reasonCode !== "reference_data_unavailable") {
+        referenceComparison.reasonCode = "no_usable_reference";
+      } else if (references.length && !(await canSendReferencesToGemini())) {
+        referenceComparison.reasonCode = "external_use_not_authorized";
+      } else if (references.length) {
+        referenceComparison.reasonCode = "comparison_failed";
+        referenceComparison.referenceCount = references.length;
+        try {
+          const officialCandidates = await getOfficialVisualCandidates(spotId);
           const assisted = buildReferenceAssistedRequest({
             spotId, spotName, lang, baseline,
             userImage: { mimeType, data: imageBytes.toString("base64") },
-            references,
+            references, officialCandidates,
           });
-          const assistedRaw = await askGeminiJSON({
-            system: assisted.system, user: assisted.user, schema: RESULT_SCHEMA, model, timeoutMs: 12000,
+          // Reserve time for this optional pass after the up-to-45s Vision budget.
+          // It is a single attempt; transient reference errors fall back to baseline.
+          const comparisonRaw = await askGeminiJSON({
+            system: assisted.system, user: assisted.user, schema: REFERENCE_RESULT_SCHEMA, model, timeoutMs: 12000,
+            maxAttempts: 1, retryStatuses: [],
             phase: "vision_reference",
             images: assisted.images,
           });
-          const assistedResult = normalizeResult(assistedRaw);
-          const evidence = await verifyImageEvidence({ spotId, ...assistedResult, lang });
-          const explanationResult = await withExplanation(assistedResult, evidence, lang);
-          return res.status(200).json({ ...assistedResult, evidence, ...explanationResult, source: "gemini", testData: false, model });
+          const assistedResult = normalizeResult(comparisonRaw);
+          const applied = applyReferenceComparison({
+            baseline, assisted: assistedResult, status: comparisonRaw.comparison?.status,
+            visualEvidence: comparisonRaw.comparison?.visualEvidence || [], officialCandidates,
+          });
+          finalVision = applied.result;
+          referenceComparison = { ...applied.comparison, attempted: true, referenceCount: references.length, reasonCode: null };
+        } catch (referenceError) {
+          // A failed optional pass never replaces the original Vision analysis.
+          referenceComparison.attempted = true;
+          console.warn(`[api/analyze-image] phase=vision_reference outcome=failed code=${referenceError.code || "reference_compare_failed"} upstream_status=${referenceError.geminiStatus || "none"}`);
         }
-      } catch (referenceError) {
-        // A missing/corrupt optional dataset or failed auxiliary pass falls back to baseline.
-        console.warn("[api/analyze-image] reference assist unavailable; returning baseline result");
       }
     }
-    const evidence = await verifyImageEvidence({ spotId, ...baseline, lang });
+    const evidence = await verifyImageEvidence({ spotId, ...finalVision, lang });
     if (deferExplanation) {
       return res.status(200).json({
-        ...baseline, evidence, explanation: null, explanationError: null,
+        ...finalVision, evidence, referenceComparison, explanation: null, explanationError: null,
         explanationPending: true, source: "gemini", testData: false, model,
       });
     }
-    const explanationResult = await withExplanation(baseline, evidence, lang);
-    return res.status(200).json({ ...baseline, evidence, ...explanationResult, source: "gemini", testData: false, model });
+    const explanationResult = await withExplanation(finalVision, evidence, lang);
+    return res.status(200).json({ ...finalVision, evidence, referenceComparison, ...explanationResult, source: "gemini", testData: false, model });
   } catch (error) {
     if (error.code === "gemini_timeout" || error.name === "AbortError") {
       const limitSeconds = error.phase === "vision" && body?.explanationMode === "deferred" ? 45 : 12;

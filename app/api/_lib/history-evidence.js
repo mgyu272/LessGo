@@ -22,7 +22,11 @@ export async function getOfficialVisualCandidates(spotId, limit = 12) {
   return (officialData.objects || [])
     .filter((entry) => entry.spotId === spotId && entry.verificationStatus === "official_verified")
     .slice(0, Math.min(limit, 12))
-    .map((entry) => ({ name: entry.objectName, types: Array.isArray(entry.objectType) ? entry.objectType.slice(0, 4) : [] }))
+    .map((entry) => ({
+      name: entry.objectName,
+      aliases: Array.isArray(entry.aliases) ? entry.aliases.slice(0, 8) : [],
+      types: Array.isArray(entry.objectType) ? entry.objectType.slice(0, 4) : [],
+    }))
     .filter((entry) => typeof entry.name === "string" && entry.name.trim());
 }
 

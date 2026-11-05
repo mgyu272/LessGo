@@ -33,6 +33,27 @@ const NAME_GUIDE = {
 
 function fail(status, code, error) { return Object.assign(new Error(error), { status, code }); }
 
+function safeReferenceComparison(value) {
+  if (!value || typeof value !== "object" || !["matched", "mismatched", "inconclusive", "not_compared"].includes(value.status) ||
+      typeof value.attempted !== "boolean" || !Number.isInteger(value.referenceCount) || value.referenceCount < 0 || value.referenceCount > 3 ||
+      typeof value.candidateChanged !== "boolean" ||
+      !["identified", "uncertain", "unknown"].includes(value.identificationStatusBefore) ||
+      !["identified", "uncertain", "unknown"].includes(value.identificationStatusAfter) ||
+      !Array.isArray(value.visualEvidence) || value.visualEvidence.length > 4 ||
+      !value.visualEvidence.every((item) => typeof item === "string" && item.length <= 200)) return null;
+  const reasonCodes = new Set(["disabled", "not_available", "reference_data_unavailable", "no_usable_reference", "external_use_not_authorized", "comparison_failed"]);
+  return {
+    status: value.status,
+    attempted: value.attempted,
+    referenceCount: value.referenceCount,
+    candidateChanged: value.candidateChanged,
+    identificationStatusBefore: value.identificationStatusBefore,
+    identificationStatusAfter: value.identificationStatusAfter,
+    visualEvidence: value.visualEvidence,
+    ...(reasonCodes.has(value.reasonCode) ? { reasonCode: value.reasonCode } : {}),
+  };
+}
+
 function validate(body) {
   const { spotId, lang, vision } = body;
   if (![
@@ -47,7 +68,7 @@ function validate(body) {
       !["identified", "uncertain", "unknown"].includes(vision.identificationStatus)) {
     throw fail(400, "invalid_request", "A valid place, language, and saved image analysis are required.");
   }
-  return { spotId, lang, vision };
+  return { spotId, lang, vision, referenceComparison: safeReferenceComparison(body.referenceComparison) };
 }
 
 async function localizeVision(vision, lang) {
@@ -84,7 +105,7 @@ export default async function localizeImageAnalysis(req, res) {
   if (req.method !== "POST") return res.status(405).json({ code: "method_not_allowed", error: "POST only" });
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
-    const { spotId, lang, vision } = validate(body);
+    const { spotId, lang, vision, referenceComparison } = validate(body);
     const mock = body.testData === true && process.env.GEMINI_IMAGE_MOCK === "1";
     if (!mock && !hasKey()) throw fail(503, "gemini_not_configured", "Language update is unavailable until the server API key is configured.");
 
@@ -92,13 +113,13 @@ export default async function localizeImageAnalysis(req, res) {
       ? { candidateName: lang === "ko" ? "테스트용 시각 대상" : "Test visual object", objectType: lang === "ko" ? "테스트 데이터" : "Test data", visualFeatures: [lang === "ko" ? "테스트 데이터: 실제 사진 분석 결과가 아닙니다." : "Test data: this is not a real photo analysis."], reason: lang === "ko" ? "개발 화면 확인용 테스트 데이터입니다." : "Development-only test data for checking the UI.", identificationStatus: "uncertain" }
       : await localizeVision(vision, lang);
     const evidence = await verifyImageEvidence({ spotId, ...localizedVision, lang });
-    if (mock) return res.status(200).json({ ...localizedVision, evidence, explanation: buildMockExplanation({ lang, visualFeatures: localizedVision.visualFeatures }), explanationError: null, source: "mock", testData: true });
+    if (mock) return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation: buildMockExplanation({ lang, visualFeatures: localizedVision.visualFeatures }), explanationError: null, source: "mock", testData: true });
 
     try {
       const explanation = await generateHistoryExplanation({ ...localizedVision, evidence, lang });
-      return res.status(200).json({ ...localizedVision, evidence, explanation, explanationError: null, source: "gemini", testData: false });
+      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation, explanationError: null, source: "gemini", testData: false });
     } catch (error) {
-      return res.status(200).json({ ...localizedVision, evidence, explanation: null, explanationError: explanationErrorResponse(error, lang), source: "gemini", testData: false });
+      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation: null, explanationError: explanationErrorResponse(error, lang), source: "gemini", testData: false });
     }
   } catch (error) {
     const status = error.status || (error.name === "AbortError" ? 504 : error.geminiStatus === 429 ? 429 : 502);

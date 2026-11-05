@@ -4,7 +4,7 @@ import path from "node:path";
 
 const DATASET_RELATIVE = path.join("server-data", "heritage_reference_4a");
 const MAX_REFERENCE_COUNT = 3;
-const MIN_REFERENCE_COUNT = 2;
+const MIN_REFERENCE_COUNT = 1;
 const MAX_REFERENCE_BYTES = 700 * 1024;
 const MAX_TOTAL_REFERENCE_BYTES = 1800 * 1024;
 const MIME_EXTENSIONS = { "image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp" };
@@ -13,6 +13,7 @@ const TYPE_ALIASES = new Map([
   ["royal tomb", "왕릉"], ["tomb mound", "봉분"], ["pavilion", "정자각"],
   ["stele", "비각"], ["stonework", "석물"], ["forest path", "숲길"],
   ["library", "도서관"], ["memorial hall", "재실"], ["kitchen building", "수라간"],
+  ["traditional house", "건물"], ["stone figure", "석물"], ["architectural feature", "건축 요소"],
 ]);
 let cachedManifest;
 
@@ -34,7 +35,15 @@ async function loadManifest() {
   return cachedManifest;
 }
 
-function nameScore(record, candidateName, objectType) {
+function inferredSubjectLevel(record, spotName = "") {
+  const name = normalize(record.objectName);
+  const type = normalize(record.objectType);
+  if (!name || name === normalize(spotName) || ["장소", "유적", "왕릉", "전경", "전체", "royaltomb", "heritagesite"].includes(name)) return "place";
+  if (["건물", "출입구", "전시공간", "숲길", "도서관"].includes(type) && ["건물", "입구", "전체"].includes(name)) return "general";
+  return "facility";
+}
+
+function nameScore(record, { candidateName, objectType, subjectLevel, spotName }) {
   const terms = [candidateName, TYPE_ALIASES.get(String(objectType || "").toLocaleLowerCase()), objectType]
     .map(normalize).filter((value) => value.length >= 2);
   const searchable = [record.objectName, record.objectType, record.filename].map(normalize).filter(Boolean);
@@ -48,16 +57,21 @@ function nameScore(record, candidateName, objectType) {
     if (searchable.some((field) => field === term)) score += 3;
     else if (searchable.some((field) => field.includes(term) || term.includes(field))) score += 1;
   }
+  if (["place", "facility", "feature", "general"].includes(subjectLevel)) {
+    const level = inferredSubjectLevel(record, spotName);
+    if (level === subjectLevel) score += 2;
+    else if (level === "general" || level === "place") score -= 1;
+  }
   return score;
 }
 
-export async function selectLocalReferenceImages({ spotId, candidateName, objectType, maxCount = MAX_REFERENCE_COUNT } = {}) {
+export async function selectLocalReferenceImages({ spotId, spotName = "", candidateName, objectType, subjectLevel, maxCount = MAX_REFERENCE_COUNT } = {}) {
   if (typeof spotId !== "string" || !spotId || !Number.isInteger(maxCount) || maxCount < MIN_REFERENCE_COUNT) return [];
   const manifest = await loadManifest();
   if (manifest.visibility !== "private_server_side_reference" || !Array.isArray(manifest.photos)) return [];
   const matches = manifest.photos
     .filter((record) => record.spotId === spotId && record.verificationStatus === "unverified_filename_only")
-    .map((record) => ({ record, score: nameScore(record, candidateName, objectType) }))
+    .map((record) => ({ record, score: nameScore(record, { candidateName, objectType, subjectLevel, spotName }) }))
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score || a.record.id.localeCompare(b.record.id));
 
@@ -81,10 +95,12 @@ export async function selectLocalReferenceImages({ spotId, candidateName, object
       const mimeType = fileMime(bytes);
       if (!mimeType || MIME_EXTENSIONS[mimeType] !== path.extname(actual).toLowerCase() || mimeType !== record.mimeType) continue;
       selected.push({
+        id: record.id,
         filenameCandidate: record.filename,
         objectNameCandidate: record.objectName,
         objectTypeCandidate: record.objectType,
         viewAngleCandidate: record.viewAngle,
+        verificationStatus: record.verificationStatus,
         mimeType,
         bytes,
       });
@@ -93,7 +109,7 @@ export async function selectLocalReferenceImages({ spotId, candidateName, object
       // Missing, unreadable, or invalid references are skipped; callers fall back to the user image only.
     }
   }
-  return selected.length >= MIN_REFERENCE_COUNT ? selected : [];
+  return selected;
 }
 
 export async function canSendReferencesToGemini() {
@@ -107,24 +123,49 @@ export async function canSendReferencesToGemini() {
   }
 }
 
-export function buildReferenceAssistedRequest({ spotName, spotId, lang, baseline, userImage, references }) {
-  const system = `Identify only what is visually observable in the USER PHOTO. Supporting reference photos may help compare visible objects, but their filename-derived labels are unverified candidates, not ground truth. Never force a match: if the user photo does not clearly correspond to a reference, or evidence is insufficient, use identificationStatus "uncertain" or "unknown". Do not infer or invent construction dates, people, historical events, or facts. Return ${lang === "ko" ? "Korean" : "English"}.`;
+export function buildReferenceAssistedRequest({ spotName, spotId, lang, baseline, userImage, references, officialCandidates = [] }) {
+  const system = `Compare the USER PHOTO with the SUPPORTING REFERENCE images using only visible geometry and features (roof silhouette, post arrangement, doors/windows, stone shape, background, and camera angle). The references are private supplied images with unverified filename-derived labels; neither the labels nor the references prove the user's subject identity. Do not force a match. Return comparison.status as matched only when multiple visible features correspond, mismatched only when comparable features clearly differ, otherwise inconclusive. A mismatch between photos is not proof that the user's candidate is historically wrong. Keep the baseline candidate unless the image comparison supports another name from officialCandidateNames; if you change a candidate, set identificationStatus to uncertain. A reference match must never upgrade the baseline identification status. Do not infer or invent construction dates, people, historical events, or facts. Return ${lang === "ko" ? "Korean" : "English"}.`;
   const user = [
     `Place context is a weak hint only: ${spotName} (place ID: ${spotId}).`,
     `Baseline visual candidate (not verified): ${baseline.candidateName}; object type: ${baseline.objectType}.`,
+    `Baseline subject level: ${baseline.subjectLevel || "unknown"}. Official candidate names scoped to this place (names only; these records do not prove photo identity): ${JSON.stringify(officialCandidates.map((candidate) => candidate.name))}.`,
     "The first image is the USER PHOTO to identify.",
     "Each following image is a PRIVATE SUPPORTING REFERENCE. A label is derived from an unverified filename and may be wrong.",
     "Compare visible shape and features. Do not treat a label or place context as proof. Describe only observable visual features.",
+    "Return the same vision fields plus comparison: {status: matched|mismatched|inconclusive, visualEvidence: string[]}. Keep user-photo observations separate from reference filename labels.",
   ].join("\n");
   const images = [
     { label: "USER PHOTO — image to identify", mimeType: userImage.mimeType, data: userImage.data },
     ...references.map((reference, index) => ({
-      label: `SUPPORTING REFERENCE ${index + 1} — UNVERIFIED FILENAME CANDIDATE: ${reference.filenameCandidate}`,
+      label: `SUPPORTING REFERENCE ${index + 1} — UNVERIFIED FILENAME/METADATA CANDIDATES: ${JSON.stringify({ filename: reference.filenameCandidate, objectName: reference.objectNameCandidate, objectType: reference.objectTypeCandidate, viewAngle: reference.viewAngleCandidate })}`,
       mimeType: reference.mimeType,
       data: reference.bytes.toString("base64"),
     })),
   ];
   return { system, user, images };
+}
+
+export function applyReferenceComparison({ baseline, assisted, status, visualEvidence = [], officialCandidates = [] }) {
+  const comparisonStatus = ["matched", "mismatched", "inconclusive"].includes(status) ? status : "inconclusive";
+  const sameCandidate = normalize(assisted?.candidateName) === normalize(baseline.candidateName);
+  const candidateAllowed = officialCandidates.some((candidate) => [candidate.name, ...(candidate.aliases || [])].some((name) => normalize(name) === normalize(assisted?.candidateName)));
+  const candidateChanged = comparisonStatus === "matched" && !sameCandidate && candidateAllowed;
+  const acceptedAssistedResult = comparisonStatus === "matched" && (sameCandidate || candidateChanged);
+  const result = acceptedAssistedResult ? { ...baseline, ...assisted } : { ...baseline };
+  // Reference similarity is not identity proof. A changed suggestion is always downgraded.
+  if (candidateChanged) result.identificationStatus = "uncertain";
+  else result.identificationStatus = baseline.identificationStatus;
+  return {
+    result,
+    comparison: {
+      status: comparisonStatus,
+      referenceCount: 0,
+      candidateChanged,
+      identificationStatusBefore: baseline.identificationStatus,
+      identificationStatusAfter: result.identificationStatus,
+      visualEvidence: visualEvidence.filter((item) => typeof item === "string").slice(0, 4).map((item) => item.slice(0, 200)),
+    },
+  };
 }
 
 export const referenceLimits = Object.freeze({ min: MIN_REFERENCE_COUNT, max: MAX_REFERENCE_COUNT, perImageBytes: MAX_REFERENCE_BYTES, totalBytes: MAX_TOTAL_REFERENCE_BYTES });
