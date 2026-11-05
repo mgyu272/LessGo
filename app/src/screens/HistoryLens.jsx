@@ -534,6 +534,17 @@ export default function HistoryLens({ spotId, spotName }) {
                     <h4 id="history-lens-explanation-title" style={{fontSize:18,marginBottom:8}}>{analysis.explanation.title || t("history_lens_explanation_title")}</h4>
                     <p className="history-lens-story-text" style={{fontSize:16,lineHeight:1.95,whiteSpace:"pre-line",letterSpacing:"-.015em"}}>{analysis.explanation.text}</p>
                     {analysis.explanation.fallback && <p className="history-lens-visitor-status">{analysis.explanation.disclaimer}</p>}
+                    {Array.isArray(analysis.explanation.sources) && analysis.explanation.sources.length > 0 && (
+                      <div className="history-lens-evidence-sources" style={{marginTop:14,padding:"12px 14px",background:"#f5f7f0",borderRadius:12}}>
+                        <b>{lang === "ko" ? "해설 참고 자료" : "Sources for this explanation"}</b>
+                        <ul>{analysis.explanation.sources.map((source,index) => (
+                          <li key={`${source.url || source.title}-${index}`}>
+                            <a href={source.url} target="_blank" rel="noopener noreferrer">{source.agency ? `${source.agency} · ` : ""}{source.title || source.url}</a>
+                          </li>
+                        ))}</ul>
+                        <small>{lang === "ko" ? "출처는 역사 내용의 참고 자료이며, 사진 속 대상의 식별을 보증하지 않습니다." : "These sources support historical context, not the identity of the photographed object."}</small>
+                      </div>
+                    )}
                     {analysis.testData && <p className="history-lens-voice-test-note">{t("history_lens_test_data")}</p>}
                     <div className="history-lens-voice-controls" aria-label={t("history_lens_voice_controls")}>
                       {!voice.speechSupported() ? (
