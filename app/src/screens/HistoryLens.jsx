@@ -65,6 +65,13 @@ function evidenceStatusKey(evidence = {}) {
   return "history_lens_evidence_insufficient";
 }
 
+function referenceComparisonKey(comparison = {}) {
+  if (comparison.status === "matched") return "history_lens_reference_matched";
+  if (comparison.status === "mismatched") return "history_lens_reference_mismatched";
+  if (comparison.status === "inconclusive") return "history_lens_reference_inconclusive";
+  return "history_lens_reference_not_compared";
+}
+
 function visitorStatusKey(analysis) {
   if (analysis?.evidence?.evidenceStatus === "conflicting") return "history_lens_visitor_conflict";
   if (analysis?.identificationStatus === "unknown" || !analysis?.candidateName?.trim()) return "history_lens_visitor_unknown";
@@ -184,9 +191,11 @@ export default function HistoryLens({ spotId, spotName }) {
         spotId,
         lang: targetLang,
         testData: savedAnalysis.testData === true,
+        referenceComparison: savedAnalysis.referenceComparison,
         vision: {
           candidateName: savedAnalysis.candidateName,
           objectType: savedAnalysis.objectType,
+          subjectLevel: savedAnalysis.subjectLevel,
           visualFeatures: savedAnalysis.visualFeatures,
           identificationStatus: savedAnalysis.identificationStatus,
           reason: savedAnalysis.reason,
@@ -361,6 +370,7 @@ export default function HistoryLens({ spotId, spotName }) {
                 vision: {
                   candidateName: result.candidateName,
                   objectType: result.objectType,
+                  subjectLevel: result.subjectLevel,
                   visualFeatures: result.visualFeatures,
                   identificationStatus: result.identificationStatus,
                   reason: result.reason,
@@ -524,6 +534,13 @@ export default function HistoryLens({ spotId, spotName }) {
                   <>
                     <h4 id="history-lens-explanation-title">{analysis.explanation.title || t("history_lens_explanation_title")}</h4>
                     <p className="history-lens-story-text">{analysis.explanation.text}</p>
+                    {analysis.explanation.aiContext?.length > 0 && (
+                      <div className="history-lens-ai-context" aria-label={analysis.explanation.aiContextLabel || t("history_lens_ai_context_title")}>
+                        <b>{t("history_lens_ai_context_title")}</b>
+                        <p>{analysis.explanation.aiContext.join(" ")}</p>
+                        <small>{t("history_lens_ai_context_notice")}</small>
+                      </div>
+                    )}
                     {!isOfficialGrounded(analysis) && <p className="history-lens-visitor-status">{t("history_lens_visual_only_notice")}</p>}
                     {analysis.testData && <p className="history-lens-voice-test-note">{t("history_lens_test_data")}</p>}
                     <div className="history-lens-voice-controls" aria-label={t("history_lens_voice_controls")}>
@@ -562,6 +579,16 @@ export default function HistoryLens({ spotId, spotName }) {
                   <small>{t("history_lens_evidence_details_hint")}</small>
                 </summary>
                 <div className="history-lens-verification-body">
+                  <div className="history-lens-verification-statuses" aria-label={t("history_lens_crosscheck_title")}>
+                    <p><b>{t("history_lens_identity_check_label")}</b> {t(`history_lens_status_${analysis.identificationStatus || "unknown"}`)}</p>
+                    <p><b>{t("history_lens_reference_check_label")}</b> {t(referenceComparisonKey(analysis.referenceComparison))}</p>
+                    <p><b>{t("history_lens_candidate_record_label")}</b> {t(evidenceStatusKey(analysis.evidence))}</p>
+                    <p><b>{t("history_lens_history_check_label")}</b> {analysis.historyVerification?.status === "verified"
+                      ? t("history_lens_verification_verified")
+                      : analysis.historyVerification?.sourceLevel === "internal" || analysis.evidence?.sourceLevel === "internal"
+                        ? t("history_lens_evidence_internal")
+                        : t("history_lens_evidence_insufficient")}</p>
+                  </div>
                   <span className={`history-lens-evidence-status ${analysis.evidence?.evidenceStatus || "insufficient"}`}>
                     {t(evidenceStatusKey(analysis.evidence))}
                   </span>
@@ -572,6 +599,9 @@ export default function HistoryLens({ spotId, spotName }) {
                       <ul>{(analysis.evidence.factSources?.length ? analysis.evidence.factSources : analysis.evidence.supportedFacts.map((fact) => ({ fact, sources: [] }))).map((entry, index) => (
                         <li key={`${index}-${entry.fact}`}>
                           {entry.fact}
+                          <small className="history-lens-claim-status">{entry.verificationStatus === "verified" && entry.sources?.some((source) => source.sourceLevel === "official")
+                            ? t("history_lens_claim_verified")
+                            : t(analysis.evidence?.sourceLevel === "internal" ? "history_lens_claim_internal" : "history_lens_verification_unverified")}</small>
                           {entry.sources?.length > 0 && <small className="history-lens-fact-sources">{entry.sources.map((source, sourceIndex) => (
                             <a key={`${source.sourceId || source.url}-${sourceIndex}`} href={source.url} target="_blank" rel="noreferrer">{source.title || source.agency || source.sourceId}</a>
                           ))}</small>}
@@ -596,6 +626,7 @@ export default function HistoryLens({ spotId, spotName }) {
                   <p className="history-lens-caveat">{t("history_lens_identity_separate")}</p>
                   <div className="history-lens-technical-details">
                     <p><b>{t("history_lens_object_type")}</b> {analysis.objectType || t("unknown")}</p>
+                    {analysis.subjectLevel && <p><b>{t("history_lens_subject_level")}</b> {t(`history_lens_subject_level_${analysis.subjectLevel}`)}</p>}
                     <p><b>{t("history_lens_status")}</b> {t(`history_lens_status_${analysis.identificationStatus}`)}</p>
                     <p><b>{t("history_lens_visual_features")}</b> {analysis.visualFeatures?.length ? analysis.visualFeatures.join(lang === "en" ? ", " : " · ") : t("history_lens_no_visual_features")}</p>
                     {analysis.reason && <p><b>{t("history_lens_reason")}</b> {analysis.reason}</p>}

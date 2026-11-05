@@ -14,6 +14,22 @@ async function readOfficialEvidence() {
   return officialEvidencePromise;
 }
 
+// Return a small, place-scoped vocabulary for visual recognition. These labels
+// are suggestions only; they are never used as evidence that a photo depicts an object.
+export async function getOfficialVisualCandidates(spotId, limit = 12) {
+  if (typeof spotId !== "string" || !spotId || !Number.isInteger(limit) || limit < 1) return [];
+  const officialData = await readOfficialEvidence();
+  return (officialData.objects || [])
+    .filter((entry) => entry.spotId === spotId && entry.verificationStatus === "official_verified")
+    .slice(0, Math.min(limit, 12))
+    .map((entry) => ({
+      name: entry.objectName,
+      aliases: Array.isArray(entry.aliases) ? entry.aliases.slice(0, 8) : [],
+      types: Array.isArray(entry.objectType) ? entry.objectType.slice(0, 4) : [],
+    }))
+    .filter((entry) => typeof entry.name === "string" && entry.name.trim());
+}
+
 const PLACE_ENTITIES = {
   simujang: [
     {
@@ -298,9 +314,15 @@ export async function verifyImageEvidence({ spotId, candidateName, objectType, v
       sourceLevel: "official",
     })]));
     const factSources = officialObject.facts.map((fact) => ({
+      factId: fact.factId,
       fact: fact[lang] || fact.ko || fact.en,
-      sources: (fact.sourceIds || []).map((sourceId) => sourceById.get(sourceId)).filter((source) => source?.url),
-    })).filter((entry) => entry.fact && entry.sources.length);
+      verificationStatus: "verified",
+      sources: (fact.sourceIds || []).map((sourceId) => sourceById.get(sourceId))
+        .filter((source) => source?.sourceLevel === "official" && source.url?.startsWith("https://") && source.supports?.trim()),
+    })).filter((entry) => entry.fact && entry.factId && entry.sources.length);
+    if (!factSources.length) {
+      return result("insufficient", localizedObjectName(officialObject.objectName, lang), [], [], [phrase(lang, "공식 자료와 개별 사실의 출처 연결을 확인하지 못했습니다.", "The links between the official records and the individual facts could not be confirmed.")], "none", [], lang);
+    }
     const officialFacts = factSources.map((entry) => entry.fact);
     const sources = [...new Map(factSources.flatMap((entry) => entry.sources).map((source) => [`${source.title}|${source.url}`, source])).values()];
     const limitations = [
@@ -346,3 +368,34 @@ export async function verifyImageEvidence({ spotId, candidateName, objectType, v
 }
 
 export const evidenceVocabulary = UNSOURCED_OBJECT_ALIASES;
+
+// This summary keeps photo identity, reference-image comparison, and historical
+// claim support independent. Only curated facts linked to a supporting official
+// source are marked verified; internal story text and Gemini context remain unverified.
+export function buildHistoryVerification({ evidence, identificationStatus, explanation, referenceComparison } = {}) {
+  const verifiedClaims = (evidence?.factSources || [])
+    .filter((entry) => entry.verificationStatus === "verified" && typeof entry.fact === "string" && Array.isArray(entry.sources) &&
+      entry.sources.some((source) => source?.sourceLevel === "official" && source.url?.startsWith("https://") && typeof source.supports === "string" && source.supports.trim()))
+    .map((entry) => ({
+      factId: entry.factId,
+      claim: entry.fact,
+      verificationStatus: "verified",
+      sourceIds: entry.sources.filter((source) => source?.sourceLevel === "official" && source.url?.startsWith("https://") && source.supports?.trim()).map((source) => source.sourceId).filter(Boolean),
+    }));
+  const internalClaims = evidence?.sourceLevel === "internal"
+    ? (evidence.supportedFacts || []).map((claim) => ({ claim, verificationStatus: "unverified", sourceLevel: "internal", sourceIds: [] }))
+    : [];
+  const aiClaims = (explanation?.aiContext || []).filter((claim) => typeof claim === "string" && claim.trim())
+    .map((claim) => ({ claim, verificationStatus: "unverified", sourceLevel: "ai_generated", sourceIds: [] }));
+  // This corpus does not yet contain a claim-by-claim contradiction registry.
+  // Therefore candidate mismatches are kept on candidateEvidenceStatus and are
+  // never mislabeled as contradictions between historical claims.
+  return {
+    status: verifiedClaims.length ? "verified" : "insufficient_evidence",
+    sourceLevel: verifiedClaims.length ? "official" : evidence?.sourceLevel === "internal" ? "internal" : "none",
+    photoIdentityStatus: ["identified", "uncertain", "unknown"].includes(identificationStatus) ? identificationStatus : "unknown",
+    candidateEvidenceStatus: ["supported", "insufficient", "conflicting"].includes(evidence?.evidenceStatus) ? evidence.evidenceStatus : "insufficient",
+    referenceComparisonStatus: ["matched", "mismatched", "inconclusive", "not_compared"].includes(referenceComparison?.status) ? referenceComparison.status : "not_compared",
+    claims: [...verifiedClaims, ...internalClaims, ...aiClaims],
+  };
+}

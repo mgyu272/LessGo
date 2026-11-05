@@ -7,3 +7,5 @@ dist/
 .DS_Store
 # Private source photos; do not add to Git or publish before rights are confirmed.
 /server-data/heritage_reference_4a/photos/
+/server-data/heritage_vision_eval_4a/images/
+/.local/heritage_vision_eval_4a/

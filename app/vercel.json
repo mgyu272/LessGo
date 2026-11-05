@@ -1,1 +1,5 @@
-{}
+{
+  "functions": {
+    "api/*.js": { "includeFiles": "{public/data/**,server-data/heritage_reference_4a/**,server-data/heritage_evidence_4d.json}", "maxDuration": 60 }
+  }
+}
