@@ -14,6 +14,18 @@ async function readOfficialEvidence() {
   return officialEvidencePromise;
 }
 
+// Return a small, place-scoped vocabulary for visual recognition. These labels
+// are suggestions only; they are never used as evidence that a photo depicts an object.
+export async function getOfficialVisualCandidates(spotId, limit = 12) {
+  if (typeof spotId !== "string" || !spotId || !Number.isInteger(limit) || limit < 1) return [];
+  const officialData = await readOfficialEvidence();
+  return (officialData.objects || [])
+    .filter((entry) => entry.spotId === spotId && entry.verificationStatus === "official_verified")
+    .slice(0, Math.min(limit, 12))
+    .map((entry) => ({ name: entry.objectName, types: Array.isArray(entry.objectType) ? entry.objectType.slice(0, 4) : [] }))
+    .filter((entry) => typeof entry.name === "string" && entry.name.trim());
+}
+
 const PLACE_ENTITIES = {
   simujang: [
     {

@@ -187,6 +187,7 @@ export default function HistoryLens({ spotId, spotName }) {
         vision: {
           candidateName: savedAnalysis.candidateName,
           objectType: savedAnalysis.objectType,
+          subjectLevel: savedAnalysis.subjectLevel,
           visualFeatures: savedAnalysis.visualFeatures,
           identificationStatus: savedAnalysis.identificationStatus,
           reason: savedAnalysis.reason,
@@ -361,6 +362,7 @@ export default function HistoryLens({ spotId, spotName }) {
                 vision: {
                   candidateName: result.candidateName,
                   objectType: result.objectType,
+                  subjectLevel: result.subjectLevel,
                   visualFeatures: result.visualFeatures,
                   identificationStatus: result.identificationStatus,
                   reason: result.reason,
@@ -524,6 +526,13 @@ export default function HistoryLens({ spotId, spotName }) {
                   <>
                     <h4 id="history-lens-explanation-title">{analysis.explanation.title || t("history_lens_explanation_title")}</h4>
                     <p className="history-lens-story-text">{analysis.explanation.text}</p>
+                    {analysis.explanation.aiContext?.length > 0 && (
+                      <div className="history-lens-ai-context" aria-label={analysis.explanation.aiContextLabel || t("history_lens_ai_context_title")}>
+                        <b>{t("history_lens_ai_context_title")}</b>
+                        <p>{analysis.explanation.aiContext.join(" ")}</p>
+                        <small>{t("history_lens_ai_context_notice")}</small>
+                      </div>
+                    )}
                     {!isOfficialGrounded(analysis) && <p className="history-lens-visitor-status">{t("history_lens_visual_only_notice")}</p>}
                     {analysis.testData && <p className="history-lens-voice-test-note">{t("history_lens_test_data")}</p>}
                     <div className="history-lens-voice-controls" aria-label={t("history_lens_voice_controls")}>
@@ -596,6 +605,7 @@ export default function HistoryLens({ spotId, spotName }) {
                   <p className="history-lens-caveat">{t("history_lens_identity_separate")}</p>
                   <div className="history-lens-technical-details">
                     <p><b>{t("history_lens_object_type")}</b> {analysis.objectType || t("unknown")}</p>
+                    {analysis.subjectLevel && <p><b>{t("history_lens_subject_level")}</b> {t(`history_lens_subject_level_${analysis.subjectLevel}`)}</p>}
                     <p><b>{t("history_lens_status")}</b> {t(`history_lens_status_${analysis.identificationStatus}`)}</p>
                     <p><b>{t("history_lens_visual_features")}</b> {analysis.visualFeatures?.length ? analysis.visualFeatures.join(lang === "en" ? ", " : " · ") : t("history_lens_no_visual_features")}</p>
                     {analysis.reason && <p><b>{t("history_lens_reason")}</b> {analysis.reason}</p>}

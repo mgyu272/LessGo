@@ -11,6 +11,7 @@ function validate(body) {
   if (!SPOT_IDS.has(spotId) || !["ko", "en"].includes(lang) || !vision || typeof vision !== "object" ||
       typeof vision.candidateName !== "string" || vision.candidateName.length > 160 ||
       typeof vision.objectType !== "string" || vision.objectType.length > 100 ||
+      (vision.subjectLevel !== undefined && !["place", "facility", "feature", "general", "unknown"].includes(vision.subjectLevel)) ||
       typeof vision.reason !== "string" || vision.reason.length > 500 ||
       !Array.isArray(vision.visualFeatures) || vision.visualFeatures.length > 8 ||
       !vision.visualFeatures.every((item) => typeof item === "string" && item.length <= 180) ||

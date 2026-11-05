@@ -911,6 +911,9 @@ small { font-size: 12px; }
 .history-lens-visitor-story.official { border-color: #D5E5C4; background: linear-gradient(145deg, #FFFFFF, #F0F6E7); }
 .history-lens-visitor-story.visual-only { background: #FBFCF8; }
 .history-lens-story-text { color: #354333; font-size: 14px; line-height: 1.8; white-space: pre-line; }
+.history-lens-ai-context { display: grid; gap: 5px; margin-top: 12px; padding: 12px 14px; border: 1px solid #DCE7CE; border-radius: 12px; background: #F1F6E9; color: #53664A; font-size: 12px; line-height: 1.65; }
+.history-lens-ai-context p { margin: 0; }
+.history-lens-ai-context small { color: #718065; }
 .history-lens-verification-details { overflow: hidden; border: 1px solid #E1E8D9; border-radius: 15px; background: #FAFBF7; color: var(--text); }
 .history-lens-verification-details summary { display: grid; gap: 4px; padding: 13px 15px; cursor: pointer; color: #405B32; font-size: 13px; font-weight: 800; list-style-position: inside; }
 .history-lens-verification-details summary small { padding-left: 20px; color: #72806A; font-size: 11px; font-weight: 500; line-height: 1.45; }

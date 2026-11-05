@@ -1,7 +1,7 @@
 // POST /api/analyze-image — visual identification plus a separate sourced/estimated explanation.
 import { askGeminiJSON, hasKey, IMAGE_MODEL, supportsImageInput, VISION_RETRY_POLICY } from "./_lib/gemini.js";
 import { buildReferenceAssistedRequest, canSendReferencesToGemini, selectLocalReferenceImages } from "./_lib/heritage-reference.js";
-import { verifyImageEvidence } from "./_lib/history-evidence.js";
+import { getOfficialVisualCandidates, verifyImageEvidence } from "./_lib/history-evidence.js";
 import { buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
 import { performance } from "node:perf_hooks";
 
@@ -12,6 +12,7 @@ const RESULT_SCHEMA = {
   properties: {
     candidateName: { type: "STRING" },
     objectType: { type: "STRING" },
+    subjectLevel: { type: "STRING", enum: ["place", "facility", "feature", "general", "unknown"] },
     visualFeatures: { type: "ARRAY", items: { type: "STRING" } },
     identificationStatus: { type: "STRING", enum: ["identified", "uncertain", "unknown"] },
     reason: { type: "STRING" },
@@ -48,6 +49,7 @@ function normalizeResult(value) {
   return {
     candidateName: value.candidateName.slice(0, 160),
     objectType: value.objectType.slice(0, 100),
+    ...(["place", "facility", "feature", "general", "unknown"].includes(value.subjectLevel) ? { subjectLevel: value.subjectLevel } : {}),
     visualFeatures: value.visualFeatures.filter((item) => typeof item === "string").slice(0, 8).map((item) => item.slice(0, 180)),
     identificationStatus: value.identificationStatus,
     reason: value.reason.slice(0, 500),
@@ -104,8 +106,9 @@ export default async function analyzeImage(req, res) {
 
     const model = IMAGE_MODEL();
     if (!supportsImageInput(model)) throw fail(503, "unsupported_image_model", `Configured image model '${model}' is not verified as supporting image input. Set GEMINI_IMAGE_MODEL to a supported model.`);
-    const system = `Identify only what is visually observable in the supplied image. The place context is a weak hint, not proof: if the image does not match it, do not force that identification. Do not infer or invent construction dates, people, historical events, or other historical facts. If uncertain, use identificationStatus "uncertain"; if no defensible candidate can be named, use "unknown". Return ${lang === "ko" ? "Korean" : "English"}. In English, use these consistent names when relevant: Simujang, Jeongneung Royal Tomb, Uireung Royal Tomb, Jeongjagak, Hongsalmun, and Queen Sindeok.`;
-    const user = `Possible location context (weak hint only): ${spotName} (place ID: ${spotId}). Describe the visible object and its visual features. Do not claim historical facts that cannot be seen in the photo.`;
+    const visualCandidates = await getOfficialVisualCandidates(spotId);
+    const system = `Identify the main subject visibly centered or most prominent in the supplied image. Distinguish a whole heritage place from an individual facility (such as a hall or gate) and from a smaller architectural feature. Use a specific facility name only when the image itself provides enough visible evidence; otherwise use a broad object category or the place level. The place context and the supplied candidate vocabulary are weak hints, never proof; candidates may be absent from the photo. Do not force a match. Do not infer or invent construction dates, people, historical events, or other historical facts. If uncertain, use identificationStatus "uncertain"; if no defensible candidate can be named, use "unknown". Set subjectLevel to place, facility, feature, general, or unknown according to the specificity of the visual candidate. Return ${lang === "ko" ? "Korean" : "English"}. In English, use these consistent names when relevant: Simujang, Jeongneung Royal Tomb, Uireung Royal Tomb, Jeongjagak, Hongsalmun, and Queen Sindeok.`;
+    const user = `Possible location context (weak hint only): ${spotName} (place ID: ${spotId}). Possible names of facilities recorded for this place (suggestions only; do not assume any is visible): ${JSON.stringify(visualCandidates)}. Identify the most prominent visible subject and list concrete visual clues supporting the candidate. Do not claim historical facts that cannot be seen in the photo.`;
     const visionStartedAt = performance.now();
     let baselineRaw;
     try {

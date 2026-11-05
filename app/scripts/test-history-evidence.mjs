@@ -56,10 +56,14 @@ const originalEnv = {
   GEMINI_IMAGE_REFERENCE_EXTERNAL_OK: process.env.GEMINI_IMAGE_REFERENCE_EXTERNAL_OK,
 };
 let upstreamCalls = 0;
-globalThis.fetch = async () => {
+globalThis.fetch = async (_url, init) => {
   upstreamCalls++;
-  const vision = { candidateName: "심우장", objectType: "한옥", visualFeatures: ["한옥 지붕"], identificationStatus: "identified", reason: "Mock vision response." };
-  const response = upstreamCalls === 1 ? vision : { title: "공식 자료로 보는 심우장", text: "국가유산포털은 심우장을 1933년의 생활유적으로 기록합니다. 한용운 생애 자료는 집의 방향에 관한 일화를 전합니다." };
+  const vision = { candidateName: "심우장", objectType: "한옥", subjectLevel: "place", visualFeatures: ["한옥 지붕"], identificationStatus: "identified", reason: "Mock vision response." };
+  const response = upstreamCalls === 1 ? vision : { title: "공식 자료로 보는 심우장", text: "국가유산포털은 심우장을 1933년의 생활유적으로 기록합니다. 한용운 생애 자료는 집의 방향에 관한 일화를 전합니다.", aiContext: ["전통 가옥은 지붕과 마당의 구성을 함께 살펴볼 수 있습니다."] };
+  if (upstreamCalls === 1) {
+    const prompt = JSON.parse(init.body).contents[0].parts[0].text;
+    assert.match(prompt, /Possible names of facilities recorded for this place/u);
+  }
   return { ok: true, status: 200, json: async () => ({ candidates: [{ content: { parts: [{ text: JSON.stringify(response) }] } }] }) };
 };
 try {
@@ -78,6 +82,9 @@ try {
   }
   assert.equal(response.body.evidence.evidenceStatus, "supported");
   assert.equal(response.body.explanation.type, "grounded");
+  assert.equal(response.body.subjectLevel, "place");
+  assert.equal(response.body.explanation.aiContext.length, 1);
+  assert.equal(response.body.explanation.aiContextVerification, "unverified_general_ai_context");
   assert.equal(response.body.explanation.sources.length, 2);
   assert.equal(response.body.explanationError, null);
 
@@ -150,9 +157,10 @@ try {
   process.env.GEMINI_API_KEY = "offline-localization-test-key";
   delete process.env.GEMINI_IMAGE_MOCK;
   const localizedResponse = { statusCode: 0, body: null, status(code) { this.statusCode = code; return this; }, json(body) { this.body = body; return body; } };
-  await localizeImageAnalysis({ method: "POST", body: { spotId: "jeongneung", lang: "en", vision: { candidateName: "정자각", objectType: "건축물", visualFeatures: ["기와지붕"], identificationStatus: "identified", reason: "지붕과 열린 건물 구조가 보입니다." } } }, localizedResponse);
+  await localizeImageAnalysis({ method: "POST", body: { spotId: "jeongneung", lang: "en", vision: { candidateName: "정자각", objectType: "건축물", subjectLevel: "facility", visualFeatures: ["기와지붕"], identificationStatus: "identified", reason: "지붕과 열린 건물 구조가 보입니다." } } }, localizedResponse);
   assert.equal(localizedResponse.statusCode, 200);
   assert.equal(localizedResponse.body.candidateName, "Jeongjagak");
+  assert.equal(localizedResponse.body.subjectLevel, "facility", "recognition specificity is preserved when changing language");
   assert.equal(localizedResponse.body.evidence.factSources.some((entry) => entry.fact.includes("royal tomb")), true);
   assert.ok(localizedResponse.body.evidence.sources.every((source) => source.titleEn && /[A-Za-z]/u.test(source.title)));
   assert.ok(localizedResponse.body.evidence.limitations.every((line) => !/[가-힣]/u.test(line)), "English verification limitations are localized");

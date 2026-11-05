@@ -8,6 +8,7 @@ const SCHEMA = {
   properties: {
     candidateName: { type: "STRING" },
     objectType: { type: "STRING" },
+    subjectLevel: { type: "STRING", enum: ["place", "facility", "feature", "general", "unknown"] },
     visualFeatures: { type: "ARRAY", items: { type: "STRING" } },
     reason: { type: "STRING" },
   },
@@ -39,6 +40,7 @@ function validate(body) {
   ].includes(spotId) || !["ko", "en"].includes(lang) || !vision || typeof vision !== "object" ||
       typeof vision.candidateName !== "string" || vision.candidateName.length > 160 ||
       typeof vision.objectType !== "string" || vision.objectType.length > 100 ||
+      (vision.subjectLevel !== undefined && !["place", "facility", "feature", "general", "unknown"].includes(vision.subjectLevel)) ||
       typeof vision.reason !== "string" || vision.reason.length > 500 ||
       !Array.isArray(vision.visualFeatures) || vision.visualFeatures.length > 8 ||
       !vision.visualFeatures.every((item) => typeof item === "string" && item.length <= 180) ||
@@ -55,6 +57,7 @@ async function localizeVision(vision, lang) {
     user: JSON.stringify({ targetLanguage: language, establishedNameGlossary: NAME_GUIDE, savedVisionFields: {
       candidateName: vision.candidateName,
       objectType: vision.objectType,
+      ...(vision.subjectLevel ? { subjectLevel: vision.subjectLevel } : {}),
       visualFeatures: vision.visualFeatures,
       reason: vision.reason,
       identificationStatus: vision.identificationStatus,
@@ -70,6 +73,7 @@ async function localizeVision(vision, lang) {
   return {
     candidateName: response.candidateName.slice(0, 160),
     objectType: response.objectType.slice(0, 100),
+    ...(vision.subjectLevel ? { subjectLevel: vision.subjectLevel } : {}),
     visualFeatures: response.visualFeatures.slice(0, 8).map((item) => item.slice(0, 180)),
     reason: response.reason.slice(0, 500),
     identificationStatus: vision.identificationStatus,
