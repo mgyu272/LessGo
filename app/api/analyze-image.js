@@ -2,7 +2,7 @@
 import { askGeminiJSON, hasKey, IMAGE_MODEL, supportsImageInput, VISION_RETRY_POLICY } from "./_lib/gemini.js";
 import { applyReferenceComparison, buildReferenceAssistedRequest, canSendReferencesToGemini, selectLocalReferenceImages } from "./_lib/heritage-reference.js";
 import { buildHistoryVerification, getOfficialVisualCandidates, getPlaceVisualCandidates, verifyImageEvidence } from "./_lib/history-evidence.js";
-import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
+import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation, getDestinationStoryEvidence, classifyExplanationType } from "./_lib/history-explanation.js";
 import { performance } from "node:perf_hooks";
 
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
@@ -71,18 +71,27 @@ function normalizeResult(value) {
   };
 }
 
-async function withExplanation(vision, evidence, lang, { testData = false } = {}) {
+async function withExplanation(vision, evidence, lang, { testData = false, spotId } = {}) {
   if (testData) return { explanation: buildMockExplanation({ lang, visualFeatures: vision.visualFeatures }), explanationError: null };
   const startedAt = performance.now();
+  let storyVision = vision;
+  let storyEvidence = evidence;
+  if (classifyExplanationType({ evidence, identificationStatus: vision.identificationStatus }) !== "grounded") {
+    const destination = await getDestinationStoryEvidence(spotId, lang);
+    if (destination) {
+      storyEvidence = destination.evidence;
+      storyVision = { ...vision, candidateName: destination.destinationName, objectType: "heritage destination", identificationStatus: "uncertain", visualFeatures: [] };
+    }
+  }
   try {
-    const explanation = await generateHistoryExplanation({ ...vision, evidence, lang });
+    const explanation = await generateHistoryExplanation({ ...storyVision, evidence: storyEvidence, lang });
     console.info(`[api/analyze-image] phase=history_explanation outcome=success elapsed_ms=${Math.round(performance.now() - startedAt)}`);
     return { explanation, explanationError: null };
   } catch (error) {
     const explanationError = explanationErrorResponse(error, lang);
     console.warn(`[api/analyze-image] phase=history_explanation outcome=failed code=${explanationError.code} elapsed_ms=${Math.round(performance.now() - startedAt)}`);
     // Preserve a useful, source-grounded answer when optional text generation fails.
-    return { explanation: buildFallbackExplanation({ evidence, visualFeatures: vision.visualFeatures, identificationStatus: vision.identificationStatus, lang }), explanationError };
+    return { explanation: buildFallbackExplanation({ evidence: storyEvidence, visualFeatures: storyVision.visualFeatures, identificationStatus: storyVision.identificationStatus, lang }), explanationError };
   }
 }
 
@@ -214,7 +223,7 @@ export default async function analyzeImage(req, res) {
         explanationPending: true, source: "gemini", testData: false, model,
       });
     }
-    const explanationResult = await withExplanation(finalVision, evidence, lang);
+    const explanationResult = await withExplanation(finalVision, evidence, lang, { spotId });
     return res.status(200).json({ ...finalVision, evidence, referenceComparison, ...explanationResult,
       historyVerification: buildHistoryVerification({ evidence, identificationStatus: finalVision.identificationStatus, explanation: explanationResult.explanation, referenceComparison }),
       source: "gemini", testData: false, model });
