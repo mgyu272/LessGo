@@ -5,7 +5,8 @@
   "sourceArchive": {
     "filename": "LessGo_사진자료.zip",
     "attributionStatus": "unknown",
-    "publicationAllowed": false
+    "publicationAllowed": false,
+    "externalGeminiUseAllowed": false
   },
   "verificationNote": "Filename-derived candidates only. No visual, historical, ownership, or license verification has been performed.",
   "photos": [
@@ -22,7 +23,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 118971,
-      "sha256": "ada2a7d87b63dfc591feaadd6e6e2b2aff68295ec6a89cf17338744c78672be0"
+      "sha256": "ada2a7d87b63dfc591feaadd6e6e2b2aff68295ec6a89cf17338744c78672be0",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-simujang-002",
@@ -37,7 +51,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 83624,
-      "sha256": "51f30c7d3b51ca42f7434924bbc6fcdb625eaee55dfee3114cfc486562a909d9"
+      "sha256": "51f30c7d3b51ca42f7434924bbc6fcdb625eaee55dfee3114cfc486562a909d9",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-simujang-003",
@@ -52,7 +79,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 99005,
-      "sha256": "f0a87495b426b0cc19bd83d30630b0ee170d3c164b6f09ec271f86d8af6b92d6"
+      "sha256": "f0a87495b426b0cc19bd83d30630b0ee170d3c164b6f09ec271f86d8af6b92d6",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-simujang-004",
@@ -67,7 +107,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 67919,
-      "sha256": "5c1e4ba3706ba479039186a3139ef363250c0671bdde6c7db2e4eba3c5801a47"
+      "sha256": "5c1e4ba3706ba479039186a3139ef363250c0671bdde6c7db2e4eba3c5801a47",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-simujang-005",
@@ -82,7 +135,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 612384,
-      "sha256": "9e88bcd32c2ee35b08c4cd83597e5200d7cfac6bba50e82f95b460109dab709d"
+      "sha256": "9e88bcd32c2ee35b08c4cd83597e5200d7cfac6bba50e82f95b460109dab709d",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-simujang-006",
@@ -97,7 +163,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 187466,
-      "sha256": "fd79e4500ac0e6455a8a0aebf1adf5a9a21935c80dd4c776a3ad674d2d1bc153"
+      "sha256": "fd79e4500ac0e6455a8a0aebf1adf5a9a21935c80dd4c776a3ad674d2d1bc153",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-simujang-007",
@@ -112,7 +191,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 120566,
-      "sha256": "2a2df5f174dc5269cb4590881110b933ada612f198261824358f727dafdd0ada"
+      "sha256": "2a2df5f174dc5269cb4590881110b933ada612f198261824358f727dafdd0ada",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-simujang-008",
@@ -127,7 +219,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 70765,
-      "sha256": "5bc291e1c0d10ec9765f8886506fa61d9949352e1ab2016b0b0521974a1519fa"
+      "sha256": "5bc291e1c0d10ec9765f8886506fa61d9949352e1ab2016b0b0521974a1519fa",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-simujang-009",
@@ -142,7 +247,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 49455,
-      "sha256": "cd10a675295bbc36df73a301ceaf80113b765931c8bc07c1aa7e28ce09fec5cf"
+      "sha256": "cd10a675295bbc36df73a301ceaf80113b765931c8bc07c1aa7e28ce09fec5cf",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-simujang-010",
@@ -157,7 +275,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 40423,
-      "sha256": "99811eefe47c058ad048e4e19af3c679b907893e66f80d40c2ca585fa0ec1843"
+      "sha256": "99811eefe47c058ad048e4e19af3c679b907893e66f80d40c2ca585fa0ec1843",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-uiryeong-001",
@@ -172,7 +303,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 104598,
-      "sha256": "271f0705e010f664c86d6f8ba064b3b0ca39865522f280b9bfe19d7153565810"
+      "sha256": "271f0705e010f664c86d6f8ba064b3b0ca39865522f280b9bfe19d7153565810",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-uiryeong-002",
@@ -187,7 +331,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 99076,
-      "sha256": "8e31f9cfe2612febd4121ca8f22118f29183e42c76c8ea1e485a9d4c4e931c1a"
+      "sha256": "8e31f9cfe2612febd4121ca8f22118f29183e42c76c8ea1e485a9d4c4e931c1a",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-uiryeong-003",
@@ -202,7 +359,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 33351,
-      "sha256": "c609c12ea1f573461e7ad99f31fd08ab01725f579aa3f6ec3fb3850fb2b33e83"
+      "sha256": "c609c12ea1f573461e7ad99f31fd08ab01725f579aa3f6ec3fb3850fb2b33e83",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-uiryeong-004",
@@ -217,7 +387,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 96329,
-      "sha256": "3d09f1fc981ddc359b663d192ac459274aa8aa1734ab337ea471e730f05072ff"
+      "sha256": "3d09f1fc981ddc359b663d192ac459274aa8aa1734ab337ea471e730f05072ff",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-uiryeong-005",
@@ -232,7 +415,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 213727,
-      "sha256": "4918e9d2ac0d207aed2eeff507f7fa02a8dd0be066e273e4eb44519e73fd1e9b"
+      "sha256": "4918e9d2ac0d207aed2eeff507f7fa02a8dd0be066e273e4eb44519e73fd1e9b",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-uiryeong-006",
@@ -247,7 +443,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 43053,
-      "sha256": "ffe363123da09e60f7b3d03df38372e87b1e8aca0dcfe8eb01e367a797424f7c"
+      "sha256": "ffe363123da09e60f7b3d03df38372e87b1e8aca0dcfe8eb01e367a797424f7c",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-uiryeong-007",
@@ -262,7 +471,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 168723,
-      "sha256": "e7b10e6007820822e73bc78f035df6b8567d082b406f7ebfce4230b1c1b1ffcd"
+      "sha256": "e7b10e6007820822e73bc78f035df6b8567d082b406f7ebfce4230b1c1b1ffcd",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-uiryeong-008",
@@ -277,7 +499,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 76406,
-      "sha256": "d5ffffeb65e55da511ef1f2050a9f7c38840ac7a8e2c9ed57b8758a9759a4bdb"
+      "sha256": "d5ffffeb65e55da511ef1f2050a9f7c38840ac7a8e2c9ed57b8758a9759a4bdb",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-001",
@@ -292,7 +527,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/png",
       "sizeBytes": 467493,
-      "sha256": "5665182e6d051dae6a426b14e3c27303c795b9ca136835caff59530451949366"
+      "sha256": "5665182e6d051dae6a426b14e3c27303c795b9ca136835caff59530451949366",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-002",
@@ -307,7 +555,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 63784,
-      "sha256": "af13fd6fd4f52a3ec9dbe34e78766df50348b6c3f5da7e4e9d228ac1ef904128"
+      "sha256": "af13fd6fd4f52a3ec9dbe34e78766df50348b6c3f5da7e4e9d228ac1ef904128",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-003",
@@ -322,7 +583,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 120285,
-      "sha256": "8d62e329adf195469c897e5ccfcd8f107ecd8d5dcca073c98ab9a5cb6a4224cc"
+      "sha256": "8d62e329adf195469c897e5ccfcd8f107ecd8d5dcca073c98ab9a5cb6a4224cc",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-004",
@@ -337,7 +611,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 247117,
-      "sha256": "c1b2b0aec18f21fa1959d445e8b9e4e2ded635b032ff2b3148b224bfdcf98a41"
+      "sha256": "c1b2b0aec18f21fa1959d445e8b9e4e2ded635b032ff2b3148b224bfdcf98a41",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-005",
@@ -352,7 +639,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 133456,
-      "sha256": "9ecf059e77905384f40e3928ade363ed9916dee077d3d711c5af3474a403dcf3"
+      "sha256": "9ecf059e77905384f40e3928ade363ed9916dee077d3d711c5af3474a403dcf3",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-006",
@@ -367,7 +667,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 76272,
-      "sha256": "01fad0d5abb97eca92db579dbd99f16291a37bbc4a74036a903bce010dead33d"
+      "sha256": "01fad0d5abb97eca92db579dbd99f16291a37bbc4a74036a903bce010dead33d",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-007",
@@ -382,7 +695,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 138037,
-      "sha256": "93e8fd4d0d29f057d98cf05dc0b0369a1bb0ca1f03b5e3cf12e650766a7394c1"
+      "sha256": "93e8fd4d0d29f057d98cf05dc0b0369a1bb0ca1f03b5e3cf12e650766a7394c1",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-008",
@@ -397,7 +723,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 81624,
-      "sha256": "af3cf2a0caebe7291b72d7d1fadfd725f32f1a4d0d6e78c91d07c4740b1ea3ac"
+      "sha256": "af3cf2a0caebe7291b72d7d1fadfd725f32f1a4d0d6e78c91d07c4740b1ea3ac",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-009",
@@ -412,7 +751,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 210311,
-      "sha256": "2a39bbfea6d49db8fdbdb5f26ed88d9669259da410698d2c910c9c9207107c41"
+      "sha256": "2a39bbfea6d49db8fdbdb5f26ed88d9669259da410698d2c910c9c9207107c41",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-010",
@@ -427,7 +779,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 118798,
-      "sha256": "d53126bc7720f638bc64e6d63e60becdbfb7e2f12df242bb78a8320059b026bf"
+      "sha256": "d53126bc7720f638bc64e6d63e60becdbfb7e2f12df242bb78a8320059b026bf",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-011",
@@ -442,7 +807,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 115659,
-      "sha256": "aebb85b153953b26cea80affb02b8ce13e6794b09ca8270b289d9ab7eab63a48"
+      "sha256": "aebb85b153953b26cea80affb02b8ce13e6794b09ca8270b289d9ab7eab63a48",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-012",
@@ -457,7 +835,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 170625,
-      "sha256": "b0f2204a1c7a948f6674236019a5fb929751f12da8887be5875534074dd38477"
+      "sha256": "b0f2204a1c7a948f6674236019a5fb929751f12da8887be5875534074dd38477",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-013",
@@ -472,7 +863,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 95089,
-      "sha256": "496c92ea3c26aa5c4e32dd3b78788952d11ddfcdab23166d6c02d01374b0493d"
+      "sha256": "496c92ea3c26aa5c4e32dd3b78788952d11ddfcdab23166d6c02d01374b0493d",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-014",
@@ -487,7 +891,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 155467,
-      "sha256": "bd6f7ad74d7760bd1d45fc183129657e3c6d462f0794bf9ebeff59358ce8e4c8"
+      "sha256": "bd6f7ad74d7760bd1d45fc183129657e3c6d462f0794bf9ebeff59358ce8e4c8",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     },
     {
       "id": "hlref-jeongneung-015",
@@ -502,7 +919,20 @@
       "verificationStatus": "unverified_filename_only",
       "mimeType": "image/jpeg",
       "sizeBytes": 191571,
-      "sha256": "4a27888e1b09084c060024d9524c438396cffdfe03b2726d4f63bd34da728ae0"
+      "sha256": "4a27888e1b09084c060024d9524c438396cffdfe03b2726d4f63bd34da728ae0",
+      "identityReview": {
+        "status": "unverified_filename_only",
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      },
+      "externalUseReview": {
+        "status": "not_confirmed",
+        "externalGeminiUseAllowed": false,
+        "reviewer": null,
+        "reviewedAt": null,
+        "basis": null
+      }
     }
   ]
 }

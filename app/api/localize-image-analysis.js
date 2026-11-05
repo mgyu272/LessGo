@@ -1,6 +1,6 @@
 // Re-localize saved Vision output after the app language changes; this route never receives an image.
 import { hasKey, MODEL, askGeminiJSON } from "./_lib/gemini.js";
-import { verifyImageEvidence } from "./_lib/history-evidence.js";
+import { buildHistoryVerification, verifyImageEvidence } from "./_lib/history-evidence.js";
 import { buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
 
 const SCHEMA = {
@@ -113,13 +113,22 @@ export default async function localizeImageAnalysis(req, res) {
       ? { candidateName: lang === "ko" ? "테스트용 시각 대상" : "Test visual object", objectType: lang === "ko" ? "테스트 데이터" : "Test data", visualFeatures: [lang === "ko" ? "테스트 데이터: 실제 사진 분석 결과가 아닙니다." : "Test data: this is not a real photo analysis."], reason: lang === "ko" ? "개발 화면 확인용 테스트 데이터입니다." : "Development-only test data for checking the UI.", identificationStatus: "uncertain" }
       : await localizeVision(vision, lang);
     const evidence = await verifyImageEvidence({ spotId, ...localizedVision, lang });
-    if (mock) return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation: buildMockExplanation({ lang, visualFeatures: localizedVision.visualFeatures }), explanationError: null, source: "mock", testData: true });
+    if (mock) {
+      const explanation = buildMockExplanation({ lang, visualFeatures: localizedVision.visualFeatures });
+      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation,
+        historyVerification: buildHistoryVerification({ evidence, identificationStatus: localizedVision.identificationStatus, explanation, referenceComparison }),
+        explanationError: null, source: "mock", testData: true });
+    }
 
     try {
       const explanation = await generateHistoryExplanation({ ...localizedVision, evidence, lang });
-      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation, explanationError: null, source: "gemini", testData: false });
+      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation,
+        historyVerification: buildHistoryVerification({ evidence, identificationStatus: localizedVision.identificationStatus, explanation, referenceComparison }),
+        explanationError: null, source: "gemini", testData: false });
     } catch (error) {
-      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation: null, explanationError: explanationErrorResponse(error, lang), source: "gemini", testData: false });
+      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation: null,
+        historyVerification: buildHistoryVerification({ evidence, identificationStatus: localizedVision.identificationStatus, referenceComparison }),
+        explanationError: explanationErrorResponse(error, lang), source: "gemini", testData: false });
     }
   } catch (error) {
     const status = error.status || (error.name === "AbortError" ? 504 : error.geminiStatus === 429 ? 429 : 502);

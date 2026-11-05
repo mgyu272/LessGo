@@ -918,8 +918,12 @@ small { font-size: 12px; }
 .history-lens-verification-details summary { display: grid; gap: 4px; padding: 13px 15px; cursor: pointer; color: #405B32; font-size: 13px; font-weight: 800; list-style-position: inside; }
 .history-lens-verification-details summary small { padding-left: 20px; color: #72806A; font-size: 11px; font-weight: 500; line-height: 1.45; }
 .history-lens-verification-body { display: grid; gap: 10px; padding: 0 15px 15px; font-size: 13px; line-height: 1.6; }
+.history-lens-verification-statuses { display: grid; gap: 5px; padding: 10px 12px; border: 1px solid #E1E9D8; border-radius: 12px; background: #F5F8F0; }
+.history-lens-verification-statuses p { color: #59694F; font-size: 12px; }
+.history-lens-verification-statuses b { color: #3F5C32; }
 .history-lens-verification-body p { margin: 0; }
 .history-lens-verification-body ul { margin: 5px 0 0; padding-left: 20px; }
+.history-lens-claim-status { display: inline-block; margin-left: 7px; padding: 1px 6px; border-radius: 999px; background: #E8F2DC; color: #49683B; font-size: 10px; font-weight: 700; }
 .history-lens-fact-sources { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 .history-lens-fact-sources a { color: #4E7137; font-size: 11px; font-weight: 700; overflow-wrap: anywhere; }
 .history-lens-technical-details { display: grid; gap: 5px; padding-top: 9px; border-top: 1px solid #E2E9DA; color: #68745F; font-size: 11px; overflow-wrap: anywhere; }

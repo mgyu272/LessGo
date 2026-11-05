@@ -65,6 +65,13 @@ function evidenceStatusKey(evidence = {}) {
   return "history_lens_evidence_insufficient";
 }
 
+function referenceComparisonKey(comparison = {}) {
+  if (comparison.status === "matched") return "history_lens_reference_matched";
+  if (comparison.status === "mismatched") return "history_lens_reference_mismatched";
+  if (comparison.status === "inconclusive") return "history_lens_reference_inconclusive";
+  return "history_lens_reference_not_compared";
+}
+
 function visitorStatusKey(analysis) {
   if (analysis?.evidence?.evidenceStatus === "conflicting") return "history_lens_visitor_conflict";
   if (analysis?.identificationStatus === "unknown" || !analysis?.candidateName?.trim()) return "history_lens_visitor_unknown";
@@ -572,6 +579,16 @@ export default function HistoryLens({ spotId, spotName }) {
                   <small>{t("history_lens_evidence_details_hint")}</small>
                 </summary>
                 <div className="history-lens-verification-body">
+                  <div className="history-lens-verification-statuses" aria-label={t("history_lens_crosscheck_title")}>
+                    <p><b>{t("history_lens_identity_check_label")}</b> {t(`history_lens_status_${analysis.identificationStatus || "unknown"}`)}</p>
+                    <p><b>{t("history_lens_reference_check_label")}</b> {t(referenceComparisonKey(analysis.referenceComparison))}</p>
+                    <p><b>{t("history_lens_candidate_record_label")}</b> {t(evidenceStatusKey(analysis.evidence))}</p>
+                    <p><b>{t("history_lens_history_check_label")}</b> {analysis.historyVerification?.status === "verified"
+                      ? t("history_lens_verification_verified")
+                      : analysis.historyVerification?.sourceLevel === "internal" || analysis.evidence?.sourceLevel === "internal"
+                        ? t("history_lens_evidence_internal")
+                        : t("history_lens_evidence_insufficient")}</p>
+                  </div>
                   <span className={`history-lens-evidence-status ${analysis.evidence?.evidenceStatus || "insufficient"}`}>
                     {t(evidenceStatusKey(analysis.evidence))}
                   </span>
@@ -582,6 +599,9 @@ export default function HistoryLens({ spotId, spotName }) {
                       <ul>{(analysis.evidence.factSources?.length ? analysis.evidence.factSources : analysis.evidence.supportedFacts.map((fact) => ({ fact, sources: [] }))).map((entry, index) => (
                         <li key={`${index}-${entry.fact}`}>
                           {entry.fact}
+                          <small className="history-lens-claim-status">{entry.verificationStatus === "verified" && entry.sources?.some((source) => source.sourceLevel === "official")
+                            ? t("history_lens_claim_verified")
+                            : t(analysis.evidence?.sourceLevel === "internal" ? "history_lens_claim_internal" : "history_lens_verification_unverified")}</small>
                           {entry.sources?.length > 0 && <small className="history-lens-fact-sources">{entry.sources.map((source, sourceIndex) => (
                             <a key={`${source.sourceId || source.url}-${sourceIndex}`} href={source.url} target="_blank" rel="noreferrer">{source.title || source.agency || source.sourceId}</a>
                           ))}</small>}

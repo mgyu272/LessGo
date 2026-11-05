@@ -8,6 +8,7 @@ import {
   selectLocalReferenceImages,
 } from "../api/_lib/heritage-reference.js";
 import { getOfficialVisualCandidates } from "../api/_lib/history-evidence.js";
+import { readFile } from "node:fs/promises";
 
 const single = await selectLocalReferenceImages({
   spotId: "jeongneung", spotName: "정릉", candidateName: "정자각", objectType: "정자각", subjectLevel: "facility", maxCount: 1,
@@ -16,6 +17,8 @@ assert.equal(referenceLimits.min, 1);
 assert.equal(single.length, 1, "one usable reference is sufficient for local selection");
 assert.equal(single[0].objectNameCandidate, "정자각", "specific facility candidate ranks first");
 assert.equal(single[0].verificationStatus, "unverified_filename_only");
+assert.equal(single[0].externalUseReview.status, "not_confirmed");
+assert.equal(single[0].externalUseReview.externalGeminiUseAllowed, false);
 assert.ok(Buffer.isBuffer(single[0].bytes));
 
 const multiple = await selectLocalReferenceImages({
@@ -63,6 +66,11 @@ const envBefore = {
   external: process.env.GEMINI_IMAGE_REFERENCE_EXTERNAL_OK,
   mock: process.env.GEMINI_IMAGE_MOCK,
 };
+const manifest = JSON.parse(await readFile(new URL("../server-data/heritage_reference_4a/manifest.json", import.meta.url), "utf8"));
+assert.equal(manifest.photos.length, 33);
+assert.ok(manifest.photos.every((photo) => photo.verificationStatus === "unverified_filename_only" && photo.identityReview.status === "unverified_filename_only" && photo.externalUseReview.status === "not_confirmed" && photo.externalUseReview.externalGeminiUseAllowed === false));
+assert.equal(await canSendReferencesToGemini(single), false, "unconfirmed per-photo rights block reference-image egress");
+assert.equal(await canSendReferencesToGemini([{ ...single[0], externalUseReview: { status: "confirmed", externalGeminiUseAllowed: true } }]), false, "archive-level rights remain an independent required gate");
 let outboundCalls = 0;
 const fetchBefore = globalThis.fetch;
 globalThis.fetch = async () => {
@@ -85,6 +93,8 @@ try {
   assert.equal(response.body.referenceComparison.status, "not_compared");
   assert.equal(response.body.referenceComparison.reasonCode, "external_use_not_authorized");
   assert.equal(response.body.referenceComparison.referenceCount, 0, "unauthorized local candidates are not reported as used");
+  assert.equal(response.body.historyVerification.referenceComparisonStatus, "not_compared");
+  assert.equal(response.body.historyVerification.photoIdentityStatus, "identified");
   assert.ok(!JSON.stringify(response.body).includes("hlref-"), "private manifest IDs and file paths are not returned");
 } finally {
   globalThis.fetch = fetchBefore;

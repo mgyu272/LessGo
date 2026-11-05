@@ -101,6 +101,7 @@ export async function selectLocalReferenceImages({ spotId, spotName = "", candid
         objectTypeCandidate: record.objectType,
         viewAngleCandidate: record.viewAngle,
         verificationStatus: record.verificationStatus,
+        externalUseReview: record.externalUseReview,
         mimeType,
         bytes,
       });
@@ -112,11 +113,14 @@ export async function selectLocalReferenceImages({ spotId, spotName = "", candid
   return selected;
 }
 
-export async function canSendReferencesToGemini() {
+export async function canSendReferencesToGemini(references = []) {
   if (process.env.GEMINI_IMAGE_REFERENCE_MODE !== "1" || process.env.GEMINI_IMAGE_REFERENCE_EXTERNAL_OK !== "1") return false;
+  if (!Array.isArray(references) || references.length < 1 || references.some((reference) =>
+    reference?.externalUseReview?.status !== "confirmed" || reference.externalUseReview.externalGeminiUseAllowed !== true
+  )) return false;
   try {
     const manifest = await loadManifest();
-    // Explicit use-specific permission is required; the current 4-A manifest has no approval and is blocked.
+    // Archive-level and per-photo approval are separate required gates.
     return manifest.sourceArchive?.attributionStatus === "confirmed" && manifest.sourceArchive?.externalGeminiUseAllowed === true;
   } catch {
     return false;

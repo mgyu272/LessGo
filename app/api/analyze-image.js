@@ -1,7 +1,7 @@
 // POST /api/analyze-image — visual identification plus a separate sourced/estimated explanation.
 import { askGeminiJSON, hasKey, IMAGE_MODEL, supportsImageInput, VISION_RETRY_POLICY } from "./_lib/gemini.js";
 import { applyReferenceComparison, buildReferenceAssistedRequest, canSendReferencesToGemini, selectLocalReferenceImages } from "./_lib/heritage-reference.js";
-import { getOfficialVisualCandidates, verifyImageEvidence } from "./_lib/history-evidence.js";
+import { buildHistoryVerification, getOfficialVisualCandidates, verifyImageEvidence } from "./_lib/history-evidence.js";
 import { buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
 import { performance } from "node:perf_hooks";
 
@@ -113,9 +113,11 @@ export default async function analyzeImage(req, res) {
       };
       const evidence = await verifyImageEvidence({ spotId, ...mockResult, lang });
       const { explanation, explanationError } = await withExplanation(mockResult, evidence, lang, { testData: true });
+      const referenceComparison = { status: "not_compared", attempted: false, referenceCount: 0, candidateChanged: false, identificationStatusBefore: "uncertain", identificationStatusAfter: "uncertain", visualEvidence: [], reasonCode: "mock_mode" };
       return res.status(200).json({
         ...mockResult, evidence, explanation, explanationError,
-        referenceComparison: { status: "not_compared", attempted: false, referenceCount: 0, candidateChanged: false, identificationStatusBefore: "uncertain", identificationStatusAfter: "uncertain", visualEvidence: [], reasonCode: "mock_mode" },
+        referenceComparison,
+        historyVerification: buildHistoryVerification({ evidence, identificationStatus: mockResult.identificationStatus, explanation, referenceComparison }),
         source: "mock", testData: true, model: "mock",
       });
     }
@@ -168,7 +170,7 @@ export default async function analyzeImage(req, res) {
       }
       if (!references.length && referenceComparison.reasonCode !== "reference_data_unavailable") {
         referenceComparison.reasonCode = "no_usable_reference";
-      } else if (references.length && !(await canSendReferencesToGemini())) {
+      } else if (references.length && !(await canSendReferencesToGemini(references))) {
         referenceComparison.reasonCode = "external_use_not_authorized";
       } else if (references.length) {
         referenceComparison.reasonCode = "comparison_failed";
@@ -206,11 +208,14 @@ export default async function analyzeImage(req, res) {
     if (deferExplanation) {
       return res.status(200).json({
         ...finalVision, evidence, referenceComparison, explanation: null, explanationError: null,
+        historyVerification: buildHistoryVerification({ evidence, identificationStatus: finalVision.identificationStatus, referenceComparison }),
         explanationPending: true, source: "gemini", testData: false, model,
       });
     }
     const explanationResult = await withExplanation(finalVision, evidence, lang);
-    return res.status(200).json({ ...finalVision, evidence, referenceComparison, ...explanationResult, source: "gemini", testData: false, model });
+    return res.status(200).json({ ...finalVision, evidence, referenceComparison, ...explanationResult,
+      historyVerification: buildHistoryVerification({ evidence, identificationStatus: finalVision.identificationStatus, explanation: explanationResult.explanation, referenceComparison }),
+      source: "gemini", testData: false, model });
   } catch (error) {
     if (error.code === "gemini_timeout" || error.name === "AbortError") {
       const limitSeconds = error.phase === "vision" && body?.explanationMode === "deferred" ? 45 : 12;
