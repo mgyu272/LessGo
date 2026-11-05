@@ -508,18 +508,6 @@ export default function HistoryLens({ spotId, spotName }) {
           )}
           {analysis && analysisLang === lang && !localizing && (
             <div className="history-lens-analysis-stack" style={{display:"grid",gap:16,marginTop:18}} aria-live="polite">
-              <article className="history-lens-visitor-card history-lens-discovery" style={{borderRadius:18,padding:20,background:"var(--surface,rgba(127,127,127,.05))"}} aria-labelledby="history-lens-vision-title">
-                <div className="history-lens-visitor-heading">
-                  <span className="history-lens-visitor-icon" aria-hidden="true">✦</span>
-                  <div>
-                    <span className="history-lens-result-source">{t("history_lens_visitor_discovery_title")}</span>
-                    <h3 id="history-lens-vision-title">{analysis.candidateName || t("history_lens_no_candidate")}</h3>
-                  </div>
-                </div>
-                <div style={{display:"flex",flexWrap:"wrap",gap:7,marginTop:12}}>{(analysis.visualFeatures || []).slice(0,5).map((feature,index)=><span key={index} style={{fontSize:12,borderRadius:999,padding:"6px 10px",background:"rgba(102,147,115,.12)"}}>{feature}</span>)}</div>
-                {analysis.testData && <p className="history-lens-voice-test-note">{t("history_lens_test_data")}</p>}
-              </article>
-
               <section className={`history-lens-visitor-card history-lens-visitor-story ${isOfficialGrounded(analysis) ? "official" : "visual-only"}`} style={{borderRadius:18,padding:20}} aria-labelledby="history-lens-explanation-title">
                 <div className="history-lens-visitor-heading">
                   <span className="history-lens-visitor-icon" aria-hidden="true">{isOfficialGrounded(analysis) ? "⌂" : "◉"}</span>
@@ -527,21 +515,18 @@ export default function HistoryLens({ spotId, spotName }) {
                     <h3>{t("history_lens_explanation_title")}</h3>
                   </div>
                 </div>
+                <div className="history-lens-visitor-discovery-inline" style={{padding:"12px 14px",borderRadius:14,background:"rgba(102,147,115,.08)",margin:"12px 0 16px"}}>
+                  <span className="history-lens-result-source">{t("history_lens_visitor_discovery_title")}</span>
+                  <h4 id="history-lens-vision-title" style={{fontSize:19,margin:"5px 0 0"}}>{analysis.candidateName || t("history_lens_no_candidate")}</h4>
+                  {(analysis.visualFeatures || []).length > 0 && <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:10}}>{analysis.visualFeatures.slice(0,3).map((feature,index)=><span key={index} style={{fontSize:12,borderRadius:999,padding:"5px 9px",background:"rgba(102,147,115,.12)"}}>{feature}</span>)}</div>}
+                </div>
                 {analysis.explanationError && !analysis.explanation?.fallback && <p className="note cream" role="status">{t("history_lens_explanation_error")}</p>}
                 {analysis.explanationPending && <p className="note cream">{t("history_lens_explanation_pending")}</p>}
                 {analysis.explanation ? (
                   <>
-                    <h4 id="history-lens-explanation-title">{analysis.explanation.title || t("history_lens_explanation_title")}</h4>
+                    <h4 id="history-lens-explanation-title" style={{fontSize:18,marginBottom:8}}>{analysis.explanation.title || t("history_lens_explanation_title")}</h4>
                     <p className="history-lens-story-text" style={{fontSize:16,lineHeight:1.95,whiteSpace:"pre-line",letterSpacing:"-.015em"}}>{analysis.explanation.text}</p>
                     {analysis.explanation.fallback && <p className="history-lens-visitor-status">{analysis.explanation.disclaimer}</p>}
-                    {analysis.explanation.aiContext?.length > 0 && (
-                      <div className="history-lens-ai-context" aria-label={analysis.explanation.aiContextLabel || t("history_lens_ai_context_title")}>
-                        <b>{t("history_lens_ai_context_title")}</b>
-                        <p>{analysis.explanation.aiContext.join(" ")}</p>
-                        <small>{t("history_lens_ai_context_notice")}</small>
-                      </div>
-                    )}
-                    {!isOfficialGrounded(analysis) && <p className="history-lens-visitor-status">{t("history_lens_visual_only_notice")}</p>}
                     {analysis.testData && <p className="history-lens-voice-test-note">{t("history_lens_test_data")}</p>}
                     <div className="history-lens-voice-controls" aria-label={t("history_lens_voice_controls")}>
                       {!voice.speechSupported() ? (
