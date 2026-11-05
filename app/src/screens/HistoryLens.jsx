@@ -516,7 +516,6 @@ export default function HistoryLens({ spotId, spotName }) {
                     <h3 id="history-lens-vision-title">{analysis.candidateName || t("history_lens_no_candidate")}</h3>
                   </div>
                 </div>
-                <p className="history-lens-visitor-status" style={{fontSize:13,fontWeight:600,marginTop:8}}>🔎 {t(visitorStatusKey(analysis))}</p>
                 <div style={{display:"flex",flexWrap:"wrap",gap:7,marginTop:12}}>{(analysis.visualFeatures || []).slice(0,5).map((feature,index)=><span key={index} style={{fontSize:12,borderRadius:999,padding:"6px 10px",background:"rgba(102,147,115,.12)"}}>{feature}</span>)}</div>
                 {analysis.testData && <p className="history-lens-voice-test-note">{t("history_lens_test_data")}</p>}
               </article>
@@ -525,8 +524,7 @@ export default function HistoryLens({ spotId, spotName }) {
                 <div className="history-lens-visitor-heading">
                   <span className="history-lens-visitor-icon" aria-hidden="true">{isOfficialGrounded(analysis) ? "⌂" : "◉"}</span>
                   <div>
-                    <span className="history-lens-result-source">{t(isOfficialGrounded(analysis) ? "history_lens_explanation_grounded" : "history_lens_explanation_estimated")}</span>
-                    <h3>{t(isOfficialGrounded(analysis) ? "history_lens_history_title" : "history_lens_visual_story_title")}</h3>
+                    <h3>{t("history_lens_explanation_title")}</h3>
                   </div>
                 </div>
                 {analysis.explanationError && !analysis.explanation?.fallback && <p className="note cream" role="status">{t("history_lens_explanation_error")}</p>}
