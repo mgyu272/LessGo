@@ -15,7 +15,8 @@ function validate(body) {
       typeof vision.reason !== "string" || vision.reason.length > 500 ||
       !Array.isArray(vision.visualFeatures) || vision.visualFeatures.length > 8 ||
       !vision.visualFeatures.every((item) => typeof item === "string" && item.length <= 180) ||
-      !["identified", "uncertain", "unknown"].includes(vision.identificationStatus)) {
+      !["identified", "uncertain", "unknown"].includes(vision.identificationStatus) ||
+      (vision.heritageRelevance !== undefined && !["relevant", "irrelevant", "uncertain"].includes(vision.heritageRelevance))) {
     throw fail(400, "invalid_request", "A valid place, language, and saved image analysis are required.");
   }
   return { spotId, lang, vision };
@@ -32,6 +33,7 @@ export default async function generateImageExplanation(req, res) {
       return res.status(200).json({ explanation, explanationError: null, evidence,
         historyVerification: buildHistoryVerification({ evidence, identificationStatus: vision.identificationStatus, explanation }), testData: true });
     }
+    if (vision.heritageRelevance === "irrelevant") return res.status(200).json({ explanation: null, explanationError: null, skipped: "unrelated_photo", testData: false });
     if (!hasKey()) throw fail(503, "gemini_not_configured", "AI explanation is not configured on the server.");
 
     const evidence = await verifyImageEvidence({ spotId, ...vision, lang });
