@@ -38,7 +38,11 @@ export const isMock = () => !hasKey() && process.env.GEMINI_MOCK === "1";
 // public/data 의 JSON 읽기 (데이터 담당이 고치는 그 파일)
 const cache = {};
 export async function readData(file) {
-  if (!cache[file]) cache[file] = JSON.parse(await readFile(path.join(process.cwd(), "public", "data", file), "utf8"));
+  if (!cache[file]) {
+    const localUrl = new URL(`../../public/data/${file}`, import.meta.url);
+    try { cache[file] = JSON.parse(await readFile(localUrl, "utf8")); }
+    catch (error) { cache[file] = JSON.parse(await readFile(path.join(process.cwd(), "public", "data", file), "utf8")); }
+  }
   return cache[file];
 }
 
