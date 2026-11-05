@@ -1,0 +1,479 @@
+{
+  "schemaVersion": "1.0",
+  "spotId": "jeongneung",
+  "spotName": "서울 정릉 (貞陵)",
+  "compiledAt": "2026-11-05",
+  "scope": "성북구 신덕왕후 정릉; 강남구 중종 정릉(靖陵)과 혼동 금지",
+  "sources": [
+    {
+      "id": "KHS",
+      "agency": "국가유산청",
+      "title": "국가유산포털 서울 정릉",
+      "url": "https://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1331102080000"
+    },
+    {
+      "id": "NRICH",
+      "agency": "국립문화유산연구원",
+      "title": "왕릉 살펴보기 정릉",
+      "url": "https://portal.nrich.go.kr/kor/royalTombView.do?menuIdx=1273&royal_idx=3"
+    },
+    {
+      "id": "SB",
+      "agency": "성북문화원",
+      "title": "서울 정릉",
+      "url": "https://www.isbcc.or.kr/seongbuk/cultural/detail/1173"
+    },
+    {
+      "id": "ARCH",
+      "agency": "성북마을아카이브",
+      "title": "정릉",
+      "url": "https://archive.sb.go.kr/story/871"
+    },
+    {
+      "id": "SEOUL",
+      "agency": "서울특별시 내 손안에 서울",
+      "title": "정릉 왕릉 탐방 기사",
+      "url": "https://mediahub.seoul.go.kr/archives/1261539"
+    },
+    {
+      "id": "AKS",
+      "agency": "한국학중앙연구원",
+      "title": "한국민족문화대백과사전 정릉(貞陵)",
+      "url": "https://encykorea.aks.ac.kr/Article/E0050145"
+    }
+  ],
+  "objects": [
+    {
+      "id": "site",
+      "name": "서울 정릉 전체",
+      "aliases": [
+        "정릉",
+        "서울 정릉",
+        "Jeongneung Royal Tomb"
+      ],
+      "visualKeywords": [
+        "왕릉",
+        "산림",
+        "능역"
+      ],
+      "factIds": [
+        "J01",
+        "J02",
+        "J03",
+        "J04",
+        "J05",
+        "J06",
+        "J07",
+        "J08",
+        "J09",
+        "J10",
+        "J11",
+        "J12",
+        "J13",
+        "J14"
+      ]
+    },
+    {
+      "id": "hongsalmun",
+      "name": "홍살문",
+      "aliases": [
+        "정릉 홍살문",
+        "Hongsalmun",
+        "홍살문"
+      ],
+      "visualKeywords": [
+        "붉은 기둥",
+        "홍살",
+        "입구"
+      ],
+      "factIds": [
+        "G01",
+        "G02"
+      ]
+    },
+    {
+      "id": "chamdo",
+      "name": "참도",
+      "aliases": [
+        "향로",
+        "어로",
+        "참도",
+        "ritual path"
+      ],
+      "visualKeywords": [
+        "박석",
+        "돌길",
+        "ㄱ자 길"
+      ],
+      "factIds": [
+        "P01",
+        "P02"
+      ]
+    },
+    {
+      "id": "jeongjagak",
+      "name": "정자각",
+      "aliases": [
+        "정릉 정자각",
+        "Jeongjagak",
+        "정자각"
+      ],
+      "visualKeywords": [
+        "T자형 건물",
+        "기와지붕",
+        "제례 건물"
+      ],
+      "factIds": [
+        "H01",
+        "H02"
+      ]
+    },
+    {
+      "id": "bigak",
+      "name": "비각",
+      "aliases": [
+        "정릉 비각",
+        "Bigak",
+        "비각"
+      ],
+      "visualKeywords": [
+        "비석",
+        "비각",
+        "기와지붕"
+      ],
+      "factIds": [
+        "B01",
+        "B02"
+      ]
+    },
+    {
+      "id": "tomb",
+      "name": "능침·봉분",
+      "aliases": [
+        "정릉 능침",
+        "봉분",
+        "burial mound"
+      ],
+      "visualKeywords": [
+        "봉분",
+        "무덤",
+        "석물"
+      ],
+      "factIds": [
+        "T01",
+        "T02"
+      ]
+    },
+    {
+      "id": "stone_figures",
+      "name": "석물",
+      "aliases": [
+        "문석인",
+        "석양",
+        "석호",
+        "석물",
+        "stone figures"
+      ],
+      "visualKeywords": [
+        "석상",
+        "돌조각",
+        "동물 석상"
+      ],
+      "factIds": [
+        "S01",
+        "S02"
+      ]
+    },
+    {
+      "id": "geumcheongyo",
+      "name": "금천교",
+      "aliases": [
+        "정릉 금천교",
+        "금천교",
+        "stone bridge"
+      ],
+      "visualKeywords": [
+        "돌다리",
+        "하천",
+        "돌기둥"
+      ],
+      "factIds": [
+        "W01",
+        "W02"
+      ]
+    },
+    {
+      "id": "jaesil",
+      "name": "재실",
+      "aliases": [
+        "정릉 재실",
+        "재실",
+        "Jaesil"
+      ],
+      "visualKeywords": [
+        "제례 준비 건물",
+        "한옥"
+      ],
+      "factIds": [
+        "R01"
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "J01",
+      "objectId": "site",
+      "ko": "서울 정릉(貞陵)은 조선 태조의 계비 신덕왕후 강씨의 능이다.",
+      "sourceIds": [
+        "KHS",
+        "NRICH",
+        "AKS"
+      ]
+    },
+    {
+      "id": "J02",
+      "objectId": "site",
+      "ko": "서울 정릉은 서울특별시 성북구 정릉동에 있다.",
+      "sourceIds": [
+        "KHS",
+        "SB"
+      ]
+    },
+    {
+      "id": "J03",
+      "objectId": "site",
+      "ko": "서울 정릉은 1970년 5월 26일 사적으로 지정되었다.",
+      "sourceIds": [
+        "KHS"
+      ]
+    },
+    {
+      "id": "J04",
+      "objectId": "site",
+      "ko": "조선왕릉은 2009년 유네스코 세계유산에 등재되었으며 서울 정릉도 포함된다.",
+      "sourceIds": [
+        "SB"
+      ]
+    },
+    {
+      "id": "J05",
+      "objectId": "site",
+      "ko": "신덕왕후는 1396년에 세상을 떠났다.",
+      "sourceIds": [
+        "NRICH",
+        "SB"
+      ]
+    },
+    {
+      "id": "J06",
+      "objectId": "site",
+      "ko": "정릉은 1397년 처음 조성되었으며 당시 위치는 현재 서울 정동 일대였다.",
+      "sourceIds": [
+        "NRICH",
+        "AKS"
+      ]
+    },
+    {
+      "id": "J07",
+      "objectId": "site",
+      "ko": "정릉은 1409년 현재 성북구 위치로 옮겨졌다.",
+      "sourceIds": [
+        "NRICH",
+        "AKS"
+      ]
+    },
+    {
+      "id": "J08",
+      "objectId": "site",
+      "ko": "1669년 신덕왕후의 지위가 회복되고 종묘에 부묘되면서 왕릉이 정비되었다.",
+      "sourceIds": [
+        "NRICH",
+        "AKS"
+      ]
+    },
+    {
+      "id": "J09",
+      "objectId": "site",
+      "ko": "신덕왕후와 태조 사이에는 이방번, 이방석, 경순공주가 있었다.",
+      "sourceIds": [
+        "NRICH"
+      ]
+    },
+    {
+      "id": "J10",
+      "objectId": "site",
+      "ko": "태조는 신덕왕후의 능을 조성한 뒤 인근에 원찰 흥천사를 세웠다.",
+      "sourceIds": [
+        "NRICH"
+      ]
+    },
+    {
+      "id": "J11",
+      "objectId": "site",
+      "ko": "정릉이 옮겨진 뒤 기존 능의 석재 일부가 청계천 광통교 복구에 사용되었다.",
+      "sourceIds": [
+        "SB",
+        "ARCH"
+      ]
+    },
+    {
+      "id": "J12",
+      "objectId": "site",
+      "ko": "정릉은 조선왕릉의 단릉 형식이다.",
+      "sourceIds": [
+        "NRICH"
+      ]
+    },
+    {
+      "id": "J13",
+      "objectId": "site",
+      "ko": "1669년 정릉의 복권 과정에는 송시열의 건의가 영향을 미쳤다.",
+      "sourceIds": [
+        "NRICH",
+        "ARCH"
+      ]
+    },
+    {
+      "id": "J14",
+      "objectId": "site",
+      "ko": "1899년 신덕왕후는 신덕고황후로 추존되었다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "G01",
+      "objectId": "hongsalmun",
+      "ko": "서울 정릉에는 홍살문이 있으며 국가유산포털은 정릉 홍살문 사진을 공식 대표 이미지로 소개한다.",
+      "sourceIds": [
+        "KHS"
+      ]
+    },
+    {
+      "id": "G02",
+      "objectId": "hongsalmun",
+      "ko": "홍살문은 정릉의 제례공간으로 들어가는 지점에 자리한다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "P01",
+      "objectId": "chamdo",
+      "ko": "정릉의 참도는 일반적인 직선형과 달리 ㄱ자로 꺾인 형태로 소개된다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "P02",
+      "objectId": "chamdo",
+      "ko": "정릉의 참도에는 향로와 어로에 해당하는 두 줄의 박석길이 있다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "H01",
+      "objectId": "jeongjagak",
+      "ko": "정릉에는 제례를 올리는 건물인 정자각이 있다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "H02",
+      "objectId": "jeongjagak",
+      "ko": "1669년 정릉의 왕릉 격식 회복 과정에서 정자각 등 제례 시설이 조성되었다.",
+      "sourceIds": [
+        "AKS"
+      ]
+    },
+    {
+      "id": "B01",
+      "objectId": "bigak",
+      "ko": "정릉 비각에는 신덕고황후정릉을 나타내는 표석이 있다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "B02",
+      "objectId": "bigak",
+      "ko": "비각의 표석은 1899년 신덕왕후가 신덕고황후로 추존된 역사와 연결된다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "T01",
+      "objectId": "tomb",
+      "ko": "정릉의 능침은 신덕왕후 한 사람의 무덤인 단릉이다.",
+      "sourceIds": [
+        "NRICH"
+      ]
+    },
+    {
+      "id": "T02",
+      "objectId": "tomb",
+      "ko": "정릉 능침의 장명등과 혼유석을 받치는 고석은 옛 정릉에서 옮겨온 석물로 설명된다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "S01",
+      "objectId": "stone_figures",
+      "ko": "정릉 능침에는 문석인과 석양·석호 등의 석물이 배치되어 있다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "S02",
+      "objectId": "stone_figures",
+      "ko": "정릉은 옛 석물 일부를 옮기고 나머지를 1669년 정비 과정에서 다시 조성한 것으로 소개된다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "W01",
+      "objectId": "geumcheongyo",
+      "ko": "정릉에는 금천을 건너는 금천교가 있다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "W02",
+      "objectId": "geumcheongyo",
+      "ko": "정릉 금천교는 자연석과 사선으로 놓인 돌기둥의 형태가 특징으로 소개된다.",
+      "sourceIds": [
+        "SEOUL"
+      ]
+    },
+    {
+      "id": "R01",
+      "objectId": "jaesil",
+      "ko": "정릉 재실은 1960년대 소실된 후 복원되어 2015년 공개되었다.",
+      "sourceIds": [
+        "SEOUL"
+      ],
+      "note": "이 사실은 서울시 탐방 기사보다 TBS 보도에 직접 근거가 있으므로 추가 확인 후 사용 권장"
+    }
+  ],
+  "usageRules": [
+    "Photo classification must match objectId before displaying object-specific facts.",
+    "Site-level facts may be used as explicitly labelled general background, not as proof of photographed object.",
+    "A photo of an unrelated building or another royal tomb must not be described as Jeongneung.",
+    "Visual keywords are recognition hints, not historical evidence.",
+    "When only a general structure type is recognizable, avoid claiming an exact site-specific identity.",
+    "Use historical source text as evidence; do not copy source photographs or long passages without permission."
+  ],
+  "limitations": [
+    "First-pass curated factual dataset; exact phrasing and individual fact-to-source links should be manually verified before production.",
+    "Some architectural details are documented in Seoul Metropolitan Government travel journalism, not primary royal-tomb records.",
+    "TBS-specific Jaesil restoration detail requires an additional direct source link before automated use."
+  ]
+}
