@@ -1,7 +1,5 @@
 {
   "functions": {
-    "api/*.js": { "includeFiles": "public/data/**" },
-    "api/analyze-image.js": { "includeFiles": "{public/data/**,server-data/heritage_reference_4a/**,server-data/heritage_evidence_4d.json}", "maxDuration": 60 },
-    "api/generate-image-explanation.js": { "includeFiles": "{public/data/**,server-data/heritage_evidence_4d.json}", "maxDuration": 60 }
+    "api/*.js": { "includeFiles": "{public/data/**,server-data/heritage_reference_4a/**,server-data/heritage_evidence_4d.json}", "maxDuration": 60 }
   }
 }
