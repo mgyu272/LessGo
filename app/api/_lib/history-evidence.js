@@ -151,6 +151,41 @@ const UNSOURCED_OBJECT_ALIASES = [
   { canonical: "봉분", aliases: ["봉분", "bongbun", "burial mound"] },
 ];
 
+
+const CURATED_EVIDENCE_URLS = {
+  simujang: new URL("../../server-data/heritage_simujang.json", import.meta.url),
+  jeongneung: new URL("../../server-data/heritage_jeongneung.json", import.meta.url),
+  uiryeong: new URL("../../server-data/heritage_uiryeong.json", import.meta.url),
+};
+async function getCuratedEvidence(spotId, candidateName, lang) {
+  const file = CURATED_EVIDENCE_URLS[spotId];
+  if (!file) return null;
+  try {
+    const data = JSON.parse(await readFile(file, "utf8"));
+    const object = (data.objects || []).find(item =>
+      exactAlias(candidateName, [item.name, ...(item.aliases || [])]));
+    if (!object) return null;
+    const bySource = new Map((data.sources || []).map(source => [source.id, source]));
+    const factSources = (data.facts || []).filter(fact =>
+      fact.objectId === object.id && (object.factIds || []).includes(fact.id))
+      .map(fact => ({
+        factId: fact.id, fact: fact[lang] || fact.ko,
+        verificationStatus: "source_linked",
+        sources: (fact.sourceIds || []).map(id => bySource.get(id))
+          .filter(source => source?.url?.startsWith("https://"))
+          .map(source => ({ sourceId: source.id, title: source.title, agency: source.agency,
+            url: source.url, sourceLevel: "official", supports: "자료에 연결된 출처" })),
+      })).filter(entry => entry.fact && entry.sources.length);
+    if (!factSources.length) return null;
+    const sources = [...new Map(factSources.flatMap(entry => entry.sources)
+      .map(source => [source.url, source])).values()];
+    return { object, factSources, sources };
+  } catch (error) {
+    console.warn("[history-evidence] curated evidence unavailable", spotId, error?.message);
+    return null;
+  }
+}
+
 const BASIC_LIMITATIONS = {
   ko: ["역사 자료에서 명칭이나 사실을 확인해도 사진 속 대상의 정체가 증명되는 것은 아닙니다.", "시각 특징은 대상 명칭이나 역사적 사실의 근거로 사용하지 않았습니다."],
   en: ["Finding a name or fact in historical records does not prove the identity of the object in the photo.", "Visual features were not used as evidence for an object's name or historical facts."],
@@ -319,6 +354,14 @@ export async function verifyImageEvidence({ spotId, candidateName, objectType, v
   // Official facts are searched first and are scoped to this exact spotId. The
   // presence of a facility in a record is not treated as proof that it appears
   // in the submitted photograph.
+  const curated = await getCuratedEvidence(spotId, candidateName, lang);
+  if (curated && identificationStatus !== "unknown") {
+    const notes = [phrase(lang,
+      "연결된 역사 자료의 출처를 표시합니다. 사진 속 대상의 식별은 AI 추정이며, 출처의 원문과 개별 사실을 추가 대조한 결과는 아닙니다.",
+      "Linked historical sources are shown. The photo identity is an AI estimate; each claim has not been independently checked against the source text.")];
+    return result("supported", curated.object.name, curated.factSources.map(entry => entry.fact),
+      curated.sources, notes, "official", curated.factSources, lang);
+  }
   const officialData = await readOfficialEvidence();
   if (officialData.unavailable) {
     return result("insufficient", null, [], [], [phrase(lang,
