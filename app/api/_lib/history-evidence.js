@@ -31,13 +31,12 @@ async function readOfficialEvidence() {
 
 // Return a small, place-scoped vocabulary for visual recognition. These labels
 // are suggestions only; they are never used as evidence that a photo depicts an object.
-const CANDIDATE_FILES = {simujang: "heritage_candidates_simujang.json", jeongneung: "heritage_candidates_jeongneung.json", uiryeong: "heritage_candidates_uiryeong.json"};
+const CANDIDATE_URLS = {simujang: new URL("../../server-data/heritage_candidates_simujang.json", import.meta.url), jeongneung: new URL("../../server-data/heritage_candidates_jeongneung.json", import.meta.url), uiryeong: new URL("../../server-data/heritage_candidates_uiryeong.json", import.meta.url)};
 export async function getPlaceVisualCandidates(spotId) {
-  const file = CANDIDATE_FILES[spotId];
+  const file = CANDIDATE_URLS[spotId];
   if (!file) return [];
   try {
-    const url = new URL(`../../server-data/${file}`, import.meta.url);
-    const data = JSON.parse(await readFile(url, "utf8"));
+    const data = JSON.parse(await readFile(file, "utf8"));
     return Array.isArray(data.objects) ? data.objects.map(({id,name,aliases,visualKeywords}) => ({id,name,aliases,visualKeywords})) : [];
   } catch (error) {
     console.warn("[history-evidence] visual candidates unavailable", spotId, error?.code || "invalid_data");
