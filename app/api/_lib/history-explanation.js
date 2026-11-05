@@ -1,5 +1,26 @@
 import { MODEL, askGeminiJSON } from "./gemini.js";
 
+import { readFile } from "node:fs/promises";
+const SITE_NAMES = {simujang:{ko:"심우장",en:"Simujang"},jeongneung:{ko:"서울 정릉",en:"Jeongneung Royal Tomb"},uiryeong:{ko:"서울 의릉",en:"Uireung Royal Tomb"}};
+export async function getDestinationStoryEvidence(spotId, lang="ko") {
+  if (!Object.hasOwn(SITE_NAMES,spotId)) return null;
+  try {
+    const data=JSON.parse(await readFile(new URL("../../server-data/heritage_evidence_4d.json",import.meta.url),"utf8"));
+    const factSources=[];
+    for(const entry of data.objects||[]) {
+      if(entry.spotId!==spotId||entry.verificationStatus!=="official_verified") continue;
+      const sources=new Map((entry.sources||[]).map(source=>[source.sourceId,source]));
+      for(const fact of entry.facts||[]) {
+        const linked=(fact.sourceIds||[]).map(id=>sources.get(id)).filter(source=>source?.url?.startsWith("https://")&&source.supports?.trim()).map(source=>({sourceId:source.sourceId,agency:source.agency,title:lang==="en"?(source.titleEn||source.title):source.title,url:source.url,supports:source.supports,sourceLevel:"official"}));
+        if(linked.length) factSources.push({factId:fact.factId,fact:fact[lang]||fact.ko||fact.en,verificationStatus:"verified",sources:linked});
+      }
+    }
+    if(!factSources.length)return null;
+    return {destinationName:SITE_NAMES[spotId][lang],evidence:{evidenceStatus:"supported",sourceLevel:"official",factSources:factSources.slice(0,8),supportedFacts:factSources.slice(0,8).map(x=>x.fact)}};
+  } catch(error) {console.warn("[history-explanation] destination evidence unavailable",error?.message);return null;}
+}
+
+
 const EXPLANATION_SCHEMA = {
   type: "OBJECT",
   properties: {
