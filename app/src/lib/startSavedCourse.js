@@ -1,12 +1,14 @@
 // 저장된 코스를 "실제 GPS"로 시작해요. 시연 모드는 없어요.
-// 출발지와의 거리에 따라 세 가지로 시작해요 (예전처럼 멀다고 막지 않아요):
-//   1) 출발지 150m 이내          → 코스 처음부터
-//   2) 코스 중간 지점 150m 이내  → 가장 가까운 코스 지점부터 (남은 코스만)
-//   3) 코스에서 멀리 있음        → 지금 위치에서 바로 시작, 출발지까지 가는 길도 기록에 포함
+// 코스 출발점 = 지금 내 위치.
+//   1) 원래 출발점 150m 이내 → 원래 코스 그대로
+//   2) 그 밖                  → 내 위치에서 코스까지 걷는 길을 앞에 이어 붙여 새 코스로 만들어요
+//      이어 붙일 지점: 코스에서 내 위치와 가장 가까운 점 (남은 코스가 너무 짧으면 원래 출발점)
+//      걷는 길은 OSM 도보 길찾기로 받고, 실패하면 직선으로 이어요.
 import { distance, lineLength } from "./geo.js";
 
 export const NEAR_M = 150;
 const MAX_ACCURACY_M = 100;
+const ROUTE_URL = "https://routing.openstreetmap.de/routed-foot/route/v1/foot/";
 
 export function getCurrentPosition() {
   return new Promise((resolve, reject) => {
@@ -24,25 +26,42 @@ export function nearestOnPath(path, here) {
   return { index, meters };
 }
 
-// 지금 위치 기준으로 어떻게 시작할지 정해요 (화면에 미리 보여줄 때도 써요)
+// 지금 위치 기준으로 어디에 이어 붙일지 정해요 (화면에 미리 보여줄 때도 써요)
 export function planStart(course, here) {
   const path = course.path;
   const fromStart = distance(here, path[0]);
-  if (fromStart <= NEAR_M) return { mode: "start", fromStart, course };
+  if (fromStart <= NEAR_M) return { mode: "start", fromStart, joinIndex: 0, joinM: fromStart };
   const near = nearestOnPath(path, here);
-  // 끝에서 200m 안쪽이면 남는 코스가 너무 짧아서 출발지 기준으로 가요
+  // 가까운 점 이후 남은 코스가 짧으면(코스의 절반 미만) 원래 출발점에 이어요
   const leftAfter = lineLength(path.slice(near.index));
-  if (near.meters <= NEAR_M && near.index > 0 && leftAfter > 200) {
-    return { mode: "join", fromStart, joinM: near.meters, course: trimCourse(course, near.index) };
-  }
-  return { mode: "approach", fromStart, course };
+  const useNear = leftAfter >= course.len * 0.5;
+  const joinIndex = useNear ? near.index : 0;
+  return { mode: "connect", fromStart, joinIndex, joinM: distance(here, path[joinIndex]) };
 }
 
-// 코스를 index 지점부터 잘라서 새 코스로 (원본 데이터는 그대로)
-function trimCourse(course, index) {
-  const path = course.path.slice(index);
-  const cues = (course.cues || []).filter((c) => c.pos && nearestOnPath(path, c.pos).meters < 30);
-  return { ...course, path, len: lineLength(path), cues, trimmed: true };
+// 내 위치 → 코스 이음점까지 걷는 길 (실패하면 직선)
+async function walkPath(from, to) {
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 6000);
+    const url = `${ROUTE_URL}${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson`;
+    const res = await fetch(url, { signal: ctrl.signal });
+    clearTimeout(timer);
+    const json = await res.json();
+    const coords = json?.routes?.[0]?.geometry?.coordinates;
+    if (Array.isArray(coords) && coords.length >= 2) return coords.map(([lng, lat]) => ({ lat, lng }));
+  } catch { /* 네트워크 실패 → 직선 */ }
+  return [from, to];
+}
+
+// 내 위치에서 시작하는 새 코스 만들기 (원본 코스 데이터는 그대로)
+export async function courseFromHere(course, here, plan = planStart(course, here)) {
+  if (plan.mode === "start") return course;
+  const rest = course.path.slice(plan.joinIndex);
+  const lead = await walkPath({ lat: here.lat, lng: here.lng }, rest[0]);
+  const path = [{ lat: here.lat, lng: here.lng }, ...lead.slice(1, -1), ...rest];
+  const cues = (course.cues || []).filter((c) => c.pos && nearestOnPath(rest, c.pos).meters < 30);
+  return { ...course, path, len: lineLength(path), cues, fromHere: true };
 }
 
 export async function startSavedCourse(app, course, known) {
@@ -59,9 +78,9 @@ export async function startSavedCourse(app, course, known) {
       return;
     }
     const plan = planStart(course, here);
-    if (plan.mode === "join") app.toast("가장 가까운 코스 지점부터 시작해요.");
-    if (plan.mode === "approach") app.toast(`출발지까지 약 ${fmtM(plan.fromStart)} — 가는 길도 기록돼요.`);
-    app.run.start(plan.course, { approach: plan.mode === "approach", here });
+    const mine = await courseFromHere(course, here, plan);
+    if (plan.mode === "connect") app.toast(`지금 위치에서 출발하는 ${fmtM(mine.len)} 코스로 시작해요.`);
+    app.run.start(mine, { here });
   } catch (e) {
     app.toast(e?.code === 1 ? "위치 권한이 거부됐어요. 휴대폰·브라우저 설정에서 허용해 주세요."
       : e?.code === 0 ? "실제 GPS는 HTTPS 주소에서만 동작해요."

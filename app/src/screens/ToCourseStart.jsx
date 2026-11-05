@@ -52,6 +52,11 @@ export default function ToCourseStart() {
   // 거리가 멀어도 막지 않아요. 지금 위치에 따라 시작 방식만 달라져요
   const plan = position && start ? planStart(course, position) : null;
   const ready = accurate && !!plan;
+  const [starting, setStarting] = useState(false);
+  // 미리보기: 내 위치에서 출발하는 코스 (걷는 길은 시작 버튼을 누를 때 받아요. 여기서는 직선으로 보여줘요)
+  const joinAt = plan ? course.path[plan.joinIndex] : null;
+  const restPath = plan ? course.path.slice(plan.joinIndex) : course?.path || [];
+  const previewLen = plan ? plan.joinM + lenOf(restPath) : null;
 
   const directionUrl = useMemo(() => {
     if (!position || !start) return null;
@@ -69,7 +74,9 @@ export default function ToCourseStart() {
 
   const run = async () => {
     if (!ready || !course) return;
+    setStarting(true);
     await startSavedCourse(app, course, position);
+    setStarting(false);
   };
 
   if (!course || !start) return (
@@ -84,11 +91,12 @@ export default function ToCourseStart() {
   return (
     <section className="screen to-start-screen">
       <MapView className="to-start-map" center={[start.lat, start.lng]} zoom={15}>
-        <Route path={course.path} color="#2F6512" weight={5} opacity={0.7} />
-        <Dot at={[start.lat, start.lng]} color="#E38B2C" radius={10} />
+        <Route path={plan ? restPath : course.path} color="#2F6512" weight={5} opacity={0.75} />
+        {plan?.mode === "connect" && <Route path={[position, joinAt]} color="#E38B2C" weight={4} opacity={0.9} dashed />}
+        {!position && <Dot at={[start.lat, start.lng]} color="#E38B2C" radius={10} />}
         {position && <Me at={[position.lat, position.lng]} />}
         <FitBounds
-          points={position ? [[position.lat, position.lng], [start.lat, start.lng]] : [[start.lat, start.lng]]}
+          points={position ? [[position.lat, position.lng], ...restPath.map((q) => [q.lat, q.lng])] : [[start.lat, start.lng]]}
           fitKey={position ? `${Math.round(position.lat*1000)}-${Math.round(position.lng*1000)}` : "start"}
           padTL={[22, 90]} padBR={[22, 270]}
         />
@@ -101,14 +109,14 @@ export default function ToCourseStart() {
         <h2>지금 위치에서 시작해요</h2>
         <p className="to-start-course">{loc(course.properties.name)}</p>
         <div className="to-start-destination">
-          <span>출발 위치</span>
-          <strong>{startName}</strong>
+          <span>코스 출발점</span>
+          <strong>{position ? "📍 지금 내 위치" : startName}</strong>
           <small>저장된 코스의 첫 좌표를 기준으로 안내해요.</small>
         </div>
         <div className="to-start-metrics">
           <div>
-            <small>출발지까지 직선거리</small>
-            <strong>{meters == null ? "측정 중" : meters >= 1000 ? `${(meters/1000).toFixed(2)} km` : `${Math.round(meters)} m`}</strong>
+            <small>예상 코스 길이</small>
+            <strong>{previewLen == null ? "측정 중" : fmtM(previewLen)}</strong>
           </div>
           <div>
             <small>GPS 예상 오차</small>
@@ -118,14 +126,13 @@ export default function ToCourseStart() {
         <p className="to-start-status" role="status">
           {!position ? "GPS 위치를 확인하고 있어요."
             : !accurate ? "GPS 신호가 부정확해요. 실외에서 위치를 다시 확인해 주세요."
-            : plan.mode === "start" ? "출발지 근처예요. 코스 처음부터 시작해요."
-            : plan.mode === "join" ? "코스 중간이 가까워요. 가장 가까운 지점부터 남은 코스를 달려요."
-            : `출발지까지 ${fmtM(meters)}. 지금 바로 시작하면 출발지까지 가는 길도 기록돼요.`}
+            : plan.mode === "start" ? "원래 출발점 근처예요. 코스 그대로 시작해요."
+            : `지금 위치에서 출발해요. 주황 점선(${fmtM(plan.joinM)})을 따라 코스에 합류해요.`}
         </p>
         {error && <p className="to-start-error" role="alert">{error}</p>}
         <div className="to-start-actions">
           <button type="button" className="btn btn-soft" onClick={openDirections} disabled={!directionUrl}>카카오맵 도보 길찾기</button>
-          <button type="button" className="btn btn-cta" onClick={run} disabled={!ready}>{plan?.mode === "approach" ? "여기서 바로 시작" : "런닝 시작"}</button>
+          <button type="button" className="btn btn-cta" onClick={run} disabled={!ready || starting}>{starting ? "코스 만드는 중…" : "여기서 런닝 시작"}</button>
         </div>
         <button type="button" className="to-start-refresh" onClick={retry}>GPS 다시 확인</button>
         {opening && <p className="to-start-hint">길찾기 후 Less GO로 돌아오세요. 현재 위치를 확인해 러닝 시작 버튼이 활성화됩니다.</p>}
@@ -133,4 +140,10 @@ export default function ToCourseStart() {
       </div>
     </section>
   );
+}
+
+function lenOf(path) {
+  let m = 0;
+  for (let i = 1; i < path.length; i++) m += distance(path[i - 1], path[i]);
+  return m;
 }
