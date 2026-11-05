@@ -528,12 +528,13 @@ export default function HistoryLens({ spotId, spotName }) {
                     <h3>{t(isOfficialGrounded(analysis) ? "history_lens_history_title" : "history_lens_visual_story_title")}</h3>
                   </div>
                 </div>
-                {analysis.explanationError && <p className="note cream" role="status">{t("history_lens_explanation_error")}</p>}
+                {analysis.explanationError && !analysis.explanation?.fallback && <p className="note cream" role="status">{t("history_lens_explanation_error")}</p>}
                 {analysis.explanationPending && <p className="note cream">{t("history_lens_explanation_pending")}</p>}
                 {analysis.explanation ? (
                   <>
                     <h4 id="history-lens-explanation-title">{analysis.explanation.title || t("history_lens_explanation_title")}</h4>
                     <p className="history-lens-story-text">{analysis.explanation.text}</p>
+                    {analysis.explanation.fallback && <p className="history-lens-visitor-status">{analysis.explanation.disclaimer}</p>}
                     {analysis.explanation.aiContext?.length > 0 && (
                       <div className="history-lens-ai-context" aria-label={analysis.explanation.aiContextLabel || t("history_lens_ai_context_title")}>
                         <b>{t("history_lens_ai_context_title")}</b>
