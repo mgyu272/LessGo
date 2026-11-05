@@ -483,17 +483,18 @@ export default function HistoryLens({ spotId, spotName }) {
               processed: formatBytes(photo.file.size),
             })}
           </p>
-          <div className="history-lens-actions">
-            <button type="button" className="btn btn-soft" onClick={() => galleryInput.current?.click()} disabled={busy}>
+          <div className="history-lens-actions" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,margin:"10px 0 12px"}}>
+            <button type="button" className="btn btn-soft" style={{minHeight:42,padding:"9px 12px",fontSize:14,borderRadius:12,boxShadow:"none"}} onClick={() => galleryInput.current?.click()} disabled={busy}>
               {t("history_lens_change")}
             </button>
-            <button type="button" className="btn btn-soft" onClick={removePhoto} disabled={busy}>
+            <button type="button" className="btn btn-soft" style={{minHeight:42,padding:"9px 12px",fontSize:14,borderRadius:12,boxShadow:"none"}} onClick={removePhoto} disabled={busy}>
               {t("history_lens_delete")}
             </button>
           </div>
           <button
             type="button"
             className="btn btn-cta history-lens-analyze"
+            style={{minHeight:48,borderRadius:13,boxShadow:"none",fontSize:15,fontWeight:700}}
             onClick={runAnalysis}
             disabled={analyzing}
           >
@@ -508,17 +509,17 @@ export default function HistoryLens({ spotId, spotName }) {
           )}
           {analysis && analysisLang === lang && !localizing && (
             <div className="history-lens-analysis-stack" style={{display:"grid",gap:16,marginTop:18}} aria-live="polite">
-              <section className={`history-lens-visitor-card history-lens-visitor-story ${isOfficialGrounded(analysis) ? "official" : "visual-only"}`} style={{borderRadius:18,padding:20}} aria-labelledby="history-lens-explanation-title">
+              <section className={`history-lens-visitor-card history-lens-visitor-story ${isOfficialGrounded(analysis) ? "official" : "visual-only"}`} style={{borderRadius:18,padding:"22px 20px",background:"#fff",border:"1px solid #e8ebe4",boxShadow:"none"}} aria-labelledby="history-lens-explanation-title">
                 <div className="history-lens-visitor-heading">
                   <span className="history-lens-visitor-icon" aria-hidden="true">{isOfficialGrounded(analysis) ? "⌂" : "◉"}</span>
                   <div>
                     <h3>{t("history_lens_explanation_title")}</h3>
                   </div>
                 </div>
-                <div className="history-lens-visitor-discovery-inline" style={{padding:"12px 14px",borderRadius:14,background:"rgba(102,147,115,.08)",margin:"12px 0 16px"}}>
+                <div className="history-lens-visitor-discovery-inline" style={{padding:"12px 0",borderRadius:0,background:"transparent",borderBottom:"1px solid #ecefe9",margin:"8px 0 16px"}}>
                   <span className="history-lens-result-source">{t("history_lens_visitor_discovery_title")}</span>
                   <h4 id="history-lens-vision-title" style={{fontSize:19,margin:"5px 0 0"}}>{analysis.candidateName || t("history_lens_no_candidate")}</h4>
-                  {(analysis.visualFeatures || []).length > 0 && <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:10}}>{analysis.visualFeatures.slice(0,3).map((feature,index)=><span key={index} style={{fontSize:12,borderRadius:999,padding:"5px 9px",background:"rgba(102,147,115,.12)"}}>{feature}</span>)}</div>}
+                  {(analysis.visualFeatures || []).length > 0 && <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:10}}>{analysis.visualFeatures.slice(0,3).map((feature,index)=><span key={index} style={{fontSize:12,borderRadius:999,padding:"5px 9px",background:"#f0f2ed"}}>{feature}</span>)}</div>}
                 </div>
                 {analysis.explanationError && !analysis.explanation?.fallback && <p className="note cream" role="status">{t("history_lens_explanation_error")}</p>}
                 {analysis.explanationPending && <p className="note cream">{t("history_lens_explanation_pending")}</p>}
