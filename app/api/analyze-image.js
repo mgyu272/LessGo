@@ -1,8 +1,8 @@
 // POST /api/analyze-image — visual identification plus a separate sourced/estimated explanation.
 import { askGeminiJSON, hasKey, IMAGE_MODEL, supportsImageInput, VISION_RETRY_POLICY } from "./_lib/gemini.js";
 import { applyReferenceComparison, buildReferenceAssistedRequest, canSendReferencesToGemini, selectLocalReferenceImages } from "./_lib/heritage-reference.js";
-import { buildHistoryVerification, getOfficialVisualCandidates, verifyImageEvidence } from "./_lib/history-evidence.js";
-import { buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
+import { buildHistoryVerification, getOfficialVisualCandidates, getPlaceVisualCandidates, verifyImageEvidence } from "./_lib/history-evidence.js";
+import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
 import { performance } from "node:perf_hooks";
 
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
@@ -81,7 +81,8 @@ async function withExplanation(vision, evidence, lang, { testData = false } = {}
   } catch (error) {
     const explanationError = explanationErrorResponse(error, lang);
     console.warn(`[api/analyze-image] phase=history_explanation outcome=failed code=${explanationError.code} elapsed_ms=${Math.round(performance.now() - startedAt)}`);
-    return { explanation: null, explanationError };
+    // Preserve a useful, source-grounded answer when optional text generation fails.
+    return { explanation: buildFallbackExplanation({ evidence, visualFeatures: vision.visualFeatures, identificationStatus: vision.identificationStatus, lang }), explanationError };
   }
 }
 
@@ -125,9 +126,10 @@ export default async function analyzeImage(req, res) {
 
     const model = IMAGE_MODEL();
     if (!supportsImageInput(model)) throw fail(503, "unsupported_image_model", `Configured image model '${model}' is not verified as supporting image input. Set GEMINI_IMAGE_MODEL to a supported model.`);
-    const visualCandidates = await getOfficialVisualCandidates(spotId);
-    const system = `Identify the main subject visibly centered or most prominent in the supplied image. Distinguish a whole heritage place from an individual facility (such as a hall or gate) and from a smaller architectural feature. Use a specific facility name only when the image itself provides enough visible evidence; otherwise use a broad object category or the place level. The place context and the supplied candidate vocabulary are weak hints, never proof; candidates may be absent from the photo. Do not force a match. Do not infer or invent construction dates, people, historical events, or other historical facts. If uncertain, use identificationStatus "uncertain"; if no defensible candidate can be named, use "unknown". Set subjectLevel to place, facility, feature, general, or unknown according to the specificity of the visual candidate. Return ${lang === "ko" ? "Korean" : "English"}. In English, use these consistent names when relevant: Simujang, Jeongneung Royal Tomb, Uireung Royal Tomb, Jeongjagak, Hongsalmun, and Queen Sindeok.`;
-    const user = `Possible location context (weak hint only): ${spotName} (place ID: ${spotId}). Possible names of facilities recorded for this place (suggestions only; do not assume any is visible): ${JSON.stringify(visualCandidates)}. Identify the most prominent visible subject and list concrete visual clues supporting the candidate. Do not claim historical facts that cannot be seen in the photo.`;
+    const visualCandidates = await getPlaceVisualCandidates(spotId);
+    const officialCandidates = await getOfficialVisualCandidates(spotId);
+    const system = `Identify the main subject visibly centered or most prominent in the supplied image. Compare its visible features to the provided place-scoped candidate names and visual keywords; prefer a specific matching candidate label when the visible evidence is adequate. If only a generic category is defensible, use the generic category and mark uncertain. Never identify a specific site solely from its location hint. Distinguish a whole heritage place from an individual facility (such as a hall or gate) and from a smaller architectural feature. Use a specific facility name only when the image itself provides enough visible evidence; otherwise use a broad object category or the place level. The place context and the supplied candidate vocabulary are weak hints, never proof; candidates may be absent from the photo. Do not force a match. Do not infer or invent construction dates, people, historical events, or other historical facts. If uncertain, use identificationStatus "uncertain"; if no defensible candidate can be named, use "unknown". Set subjectLevel to place, facility, feature, general, or unknown according to the specificity of the visual candidate. Return ${lang === "ko" ? "Korean" : "English"}. In English, use these consistent names when relevant: Simujang, Jeongneung Royal Tomb, Uireung Royal Tomb, Jeongjagak, Hongsalmun, and Queen Sindeok.`;
+    const user = `Possible location context (weak hint only): ${spotName} (place ID: ${spotId}). Place-scoped candidate names, aliases and distinguishing visual keywords (hints, not proof): ${JSON.stringify(visualCandidates)}. Officially sourced object names: ${JSON.stringify(officialCandidates)}. Identify the most prominent visible subject and list concrete visual clues supporting the candidate. Do not claim historical facts that cannot be seen in the photo.`;
     const visionStartedAt = performance.now();
     let baselineRaw;
     try {

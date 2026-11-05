@@ -4,6 +4,7 @@ import {
   buildExplanationPrompt,
   buildMockExplanation,
   classifyExplanationType,
+  buildFallbackExplanation,
   explanationErrorResponse,
   generateHistoryExplanation,
 } from "../api/_lib/history-explanation.js";
@@ -123,6 +124,18 @@ try {
   if (previousKey === undefined) delete process.env.GEMINI_API_KEY;
   else process.env.GEMINI_API_KEY = previousKey;
 }
+
+// A failed optional Gemini response must retain only verified, cited records.
+const fallbackOfficial = buildFallbackExplanation({ evidence: jeongneungEvidence, visualFeatures: ["기와지붕"], identificationStatus: "identified", lang: "ko" });
+assert.equal(fallbackOfficial.type, "grounded");
+assert.equal(fallbackOfficial.fallback, true);
+assert.ok(fallbackOfficial.text.includes("왕릉 제향"));
+assert.ok(fallbackOfficial.sources.some((source) => source.url?.startsWith("https://")));
+assert.deepEqual(fallbackOfficial.aiContext, []);
+const fallbackVisual = buildFallbackExplanation({ evidence: { evidenceStatus: "insufficient", sourceLevel: "none", factSources: [] }, visualFeatures: ["지붕"], identificationStatus: "uncertain", lang: "ko" });
+assert.equal(fallbackVisual.type, "estimated");
+assert.deepEqual(fallbackVisual.sources, []);
+assert.ok(!fallbackVisual.text.includes("왕릉 제향"));
 
 const testExplanation = buildMockExplanation({ lang: "en", visualFeatures: ["gray stone surface"] });
 assert.equal(testExplanation.type, "estimated");

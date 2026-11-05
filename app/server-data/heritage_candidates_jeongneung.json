@@ -1,0 +1,112 @@
+{
+  "spotId": "jeongneung",
+  "spotName": "서울 정릉",
+  "source": "https://digital.khs.go.kr/heri/heriDetail.do?ctptNo=1331102080000&ctptUid=13898859675510300826",
+  "objects": [
+    {
+      "id": "jeongneung-1",
+      "name": "정자각",
+      "aliases": [
+        "정릉 정자각",
+        "Jeongjagak",
+        "ritual hall"
+      ],
+      "visualKeywords": [
+        "기와지붕",
+        "목조 기둥",
+        "제향용 건물",
+        "계단"
+      ],
+      "historicalContext": "왕릉 제향을 지내는 공간. 신덕왕후의 왕릉과 관련된다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptNo=1331102080000&ctptUid=13898859675510300826"
+    },
+    {
+      "id": "jeongneung-2",
+      "name": "홍살문",
+      "aliases": [
+        "정릉 홍살문",
+        "Hongsalmun",
+        "red gate"
+      ],
+      "visualKeywords": [
+        "붉은 기둥",
+        "붉은 가로살"
+      ],
+      "historicalContext": "왕릉의 제향 공간으로 들어가는 경계를 알리는 문이다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptNo=1331102080000&ctptUid=13898859675510300826"
+    },
+    {
+      "id": "jeongneung-3",
+      "name": "비각",
+      "aliases": [
+        "정릉 비각",
+        "Bigak",
+        "stele pavilion"
+      ],
+      "visualKeywords": [
+        "비석을 보호하는 작은 건물",
+        "기와지붕"
+      ],
+      "historicalContext": "왕릉 관련 표석을 보호하는 건물이다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptNo=1331102080000&ctptUid=13898859675510300826"
+    },
+    {
+      "id": "jeongneung-4",
+      "name": "능침·봉분",
+      "aliases": [
+        "정릉 능침",
+        "봉분",
+        "무덤",
+        "burial mound",
+        "tomb"
+      ],
+      "visualKeywords": [
+        "흙으로 쌓은 봉분",
+        "능침 구역"
+      ],
+      "historicalContext": "태조의 계비 신덕왕후의 능이다. 1409년 현재 자리로 옮겨졌다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptNo=1331102080000&ctptUid=13898859675510300826"
+    },
+    {
+      "id": "jeongneung-5",
+      "name": "문인석·석물",
+      "aliases": [
+        "정릉 석물",
+        "문석인",
+        "석마",
+        "석양",
+        "석호",
+        "장명등",
+        "망주석",
+        "stone figures"
+      ],
+      "visualKeywords": [
+        "사람 모양 석상",
+        "동물 모양 석상",
+        "돌등",
+        "돌기둥"
+      ],
+      "historicalContext": "왕릉 능침 주변의 석조 조형물. 사진에서 종류가 불분명하면 석물로만 설명한다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptNo=1331102080000&ctptUid=13898859675510300826"
+    },
+    {
+      "id": "jeongneung-6",
+      "name": "참도",
+      "aliases": [
+        "향로",
+        "어로",
+        "참도",
+        "stone path",
+        "ritual path"
+      ],
+      "visualKeywords": [
+        "홍살문에서 정자각 방향의 길",
+        "돌로 구획된 통로"
+      ],
+      "historicalContext": "왕릉 제향 동선과 관련된 길이다. 현장 사진에서 확인되는 경우에만 후보로 제시한다.",
+      "sourceUrl": "https://digital.khs.go.kr/heri/heriDetail.do?ctptNo=1331102080000&ctptUid=13898859675510300826"
+    }
+  ],
+  "schemaVersion": 1,
+  "notes": "visualKeywords are recognition hints, not proof. historicalContext is contextual guidance; source-grounded facts must come from heritage_evidence_4d.json. Do not assert sub-object identity from location alone."
+}

@@ -1,0 +1,95 @@
+{
+  "spotId": "simujang",
+  "spotName": "심우장",
+  "source": "https://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1331105500000&pageNo=1_1_1_1",
+  "objects": [
+    {
+      "id": "simujang-1",
+      "name": "심우장 본채",
+      "aliases": [
+        "심우장",
+        "만해 한용운 심우장",
+        "Simujang",
+        "Simujang House",
+        "한옥",
+        "전통가옥"
+      ],
+      "visualKeywords": [
+        "단층 한옥",
+        "기와지붕",
+        "목조 기둥",
+        "대청과 온돌방"
+      ],
+      "historicalContext": "1933년에 지어진 한용운의 거주지. 한용운이 생애 마지막 시기를 보낸 장소다.",
+      "sourceUrl": "https://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1331105500000&pageNo=1_1_1_1"
+    },
+    {
+      "id": "simujang-2",
+      "name": "심우장 현판",
+      "aliases": [
+        "심우장 편액",
+        "현판",
+        "편액",
+        "심우장 글씨",
+        "signboard",
+        "plaque"
+      ],
+      "visualKeywords": [
+        "한자 글씨",
+        "건물에 걸린 나무판"
+      ],
+      "historicalContext": "심우장(尋牛莊)은 집의 이름이다. 현판 글씨의 필자 등 세부 사항은 별도 근거 확인이 필요하다.",
+      "sourceUrl": "https://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1331105500000&pageNo=1_1_1_1"
+    },
+    {
+      "id": "simujang-3",
+      "name": "대청",
+      "aliases": [
+        "대청",
+        "대청마루",
+        "마루",
+        "wooden hall"
+      ],
+      "visualKeywords": [
+        "집 중앙의 마루 공간",
+        "좌우 방"
+      ],
+      "historicalContext": "심우장은 중앙 대청과 좌우 온돌방으로 구성된 한옥이다.",
+      "sourceUrl": "https://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1331105500000&pageNo=1_1_1_1"
+    },
+    {
+      "id": "simujang-4",
+      "name": "온돌방",
+      "aliases": [
+        "온돌방",
+        "방",
+        "room",
+        "ondol room"
+      ],
+      "visualKeywords": [
+        "대청 좌우의 실내 공간"
+      ],
+      "historicalContext": "심우장 내부의 생활 공간이다.",
+      "sourceUrl": "https://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1331105500000&pageNo=1_1_1_1"
+    },
+    {
+      "id": "simujang-5",
+      "name": "기와지붕",
+      "aliases": [
+        "지붕",
+        "기와",
+        "팔작지붕",
+        "roof",
+        "tiles"
+      ],
+      "visualKeywords": [
+        "기와",
+        "팔작지붕"
+      ],
+      "historicalContext": "심우장 본채의 건축적 특징이다. 지붕만으로 특정 건물임을 확정할 수 없다.",
+      "sourceUrl": "https://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1331105500000&pageNo=1_1_1_1"
+    }
+  ],
+  "schemaVersion": 1,
+  "notes": "visualKeywords are recognition hints, not proof. historicalContext is contextual guidance; source-grounded facts must come from heritage_evidence_4d.json. Do not assert sub-object identity from location alone."
+}
