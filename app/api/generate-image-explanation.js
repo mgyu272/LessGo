@@ -1,7 +1,7 @@
 // POST /api/generate-image-explanation — second-stage explanation without resending the photo.
 import { hasKey } from "./_lib/gemini.js";
 import { buildHistoryVerification, verifyImageEvidence } from "./_lib/history-evidence.js";
-import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
+import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation, getDestinationStoryEvidence, classifyExplanationType } from "./_lib/history-explanation.js";
 
 const SPOT_IDS = new Set(["simujang", "jeongneung", "uiryeong"]);
 function fail(status, code, error) { return Object.assign(new Error(error), { status, code }); }
@@ -35,12 +35,21 @@ export default async function generateImageExplanation(req, res) {
     if (!hasKey()) throw fail(503, "gemini_not_configured", "AI explanation is not configured on the server.");
 
     const evidence = await verifyImageEvidence({ spotId, ...vision, lang });
+    let storyEvidence = evidence;
+    let storyVision = vision;
+    if (classifyExplanationType({ evidence, identificationStatus: vision.identificationStatus }) !== "grounded") {
+      const destination = await getDestinationStoryEvidence(spotId, lang);
+      if (destination) {
+        storyEvidence = destination.evidence;
+        storyVision = { ...vision, candidateName: destination.destinationName, objectType: "heritage destination", identificationStatus: "uncertain", visualFeatures: [] };
+      }
+    }
     try {
-      const explanation = await generateHistoryExplanation({ ...vision, evidence, lang });
+      const explanation = await generateHistoryExplanation({ ...storyVision, evidence: storyEvidence, lang });
       return res.status(200).json({ explanation, explanationError: null, evidence,
         historyVerification: buildHistoryVerification({ evidence, identificationStatus: vision.identificationStatus, explanation }), testData: false });
     } catch (error) {
-      return res.status(200).json({ explanation: buildFallbackExplanation({ evidence, visualFeatures: vision.visualFeatures, identificationStatus: vision.identificationStatus, lang }), explanationError: explanationErrorResponse(error, lang), evidence,
+      return res.status(200).json({ explanation: buildFallbackExplanation({ evidence: storyEvidence, visualFeatures: storyVision.visualFeatures, identificationStatus: storyVision.identificationStatus, lang }), explanationError: explanationErrorResponse(error, lang), evidence,
         historyVerification: buildHistoryVerification({ evidence, identificationStatus: vision.identificationStatus }), testData: false });
     }
   } catch (error) {
