@@ -39,7 +39,7 @@ export default async function generateImageExplanation(req, res) {
     const evidence = await verifyImageEvidence({ spotId, ...vision, lang });
     let storyEvidence = evidence;
     let storyVision = vision;
-    if (classifyExplanationType({ evidence, identificationStatus: vision.identificationStatus }) !== "grounded") {
+    if (vision.heritageRelevance !== "irrelevant" && evidence?.evidenceStatus !== "conflicting" && ["place", "general", "unknown"].includes(vision.subjectLevel || "unknown") && classifyExplanationType({ evidence, identificationStatus: vision.identificationStatus }) !== "grounded") {
       const destination = await getDestinationStoryEvidence(spotId, lang);
       if (destination) {
         storyEvidence = destination.evidence;
