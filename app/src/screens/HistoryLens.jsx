@@ -516,6 +516,12 @@ export default function HistoryLens({ spotId, spotName }) {
                     <h3>{t("history_lens_explanation_title")}</h3>
                   </div>
                 </div>
+                {analysis.heritageRelevance === "irrelevant" ? (
+                  <div role="status" style={{padding:"18px 4px",lineHeight:1.7}}>
+                    <h4 style={{margin:"0 0 8px",fontSize:18}}>{lang === "ko" ? "문화유산을 촬영해 주세요" : "Please photograph a heritage site"}</h4>
+                    <p style={{margin:0,color:"#66716a"}}>{lang === "ko" ? "사진에서 역사문화유산과 관련된 대상을 찾지 못했어요. 건축물이나 유적이 잘 보이도록 다시 촬영해 주세요." : "We couldn't find a heritage subject in this photo. Please try again with a historic building or monument clearly visible."}</p>
+                  </div>
+                ) : (<>
                 <div className="history-lens-visitor-discovery-inline" style={{padding:"12px 0",borderRadius:0,background:"transparent",borderBottom:"1px solid #ecefe9",margin:"8px 0 16px"}}>
                   <span className="history-lens-result-source">{t("history_lens_visitor_discovery_title")}</span>
                   <h4 id="history-lens-vision-title" style={{fontSize:19,margin:"5px 0 0"}}>{analysis.candidateName || t("history_lens_no_candidate")}</h4>
@@ -557,6 +563,7 @@ export default function HistoryLens({ spotId, spotName }) {
                 ) : !analysis.explanationError && !analysis.explanationPending ? (
                   <p className="history-lens-visitor-status">{t(visitorStatusKey(analysis))}</p>
                 ) : null}
+                </>)}
               </section>
 
               <details className="history-lens-verification-details" style={{borderRadius:16,padding:"14px 18px"}}>
