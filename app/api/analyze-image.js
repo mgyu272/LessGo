@@ -2,7 +2,7 @@
 import { askGeminiJSON, hasKey, IMAGE_MODEL, supportsImageInput, VISION_RETRY_POLICY } from "./_lib/gemini.js";
 import { applyReferenceComparison, buildReferenceAssistedRequest, canSendReferencesToGemini, selectLocalReferenceImages } from "./_lib/heritage-reference.js";
 import { buildHistoryVerification, getOfficialVisualCandidates, getPlaceVisualCandidates, verifyImageEvidence } from "./_lib/history-evidence.js";
-import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation, getDestinationStoryEvidence, classifyExplanationType } from "./_lib/history-explanation.js";
+import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation, getDestinationStoryEvidence, enrichStoryEvidence, classifyExplanationType } from "./_lib/history-explanation.js";
 import { performance } from "node:perf_hooks";
 
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
@@ -86,6 +86,7 @@ async function withExplanation(vision, evidence, lang, { testData = false, spotI
       storyVision = { ...vision, candidateName: destination.destinationName, objectType: "heritage destination", identificationStatus: "uncertain", visualFeatures: [] };
     }
   }
+  storyEvidence = await enrichStoryEvidence({ spotId, candidateName: storyVision.candidateName, evidence: storyEvidence, lang, siteOnly: storyVision.objectType === "heritage destination" });
   try {
     const explanation = await generateHistoryExplanation({ ...storyVision, evidence: storyEvidence, lang });
     console.info(`[api/analyze-image] phase=history_explanation outcome=success elapsed_ms=${Math.round(performance.now() - startedAt)}`);
