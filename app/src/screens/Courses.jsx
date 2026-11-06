@@ -69,8 +69,13 @@ export default function CoursePicker() {
   const p = course.properties;
   const saved = favs.has(course.id);
   const toggleSave = () => { const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
-  const start = () => { app.setCourse(course); app.go("toStart"); };
-  const startSimulation = () => app.run.start(course, { demo: true, speedup: speedParam() });
+  // 코스 달리기: 시연 모드면 코스를 따라 자동으로, 아니면 원래처럼 출발지 확인 후 실제 GPS
+  const runCourse = () => {
+    if (app.demo) return app.run.start(course, { demo: true, speedup: speedParam() });
+    app.setCourse(course); app.go("toStart");
+  };
+  // 현재 위치에서 달리기: 내 위치 → 이 코스의 목적지까지 러닝 최적 코스를 새로 찾아요
+  const runFromHere = () => { app.setCourse(course); app.go("fromHere"); };
   const reason = reasons[course.id] || factualReason(course, pair);
   const themeText = pick.themes.length ? (pick.themes.length > 1 ? t("theme_more", { first: t("th2_" + pick.themes[0]), n: pick.themes.length - 1 }) : t("th2_" + pick.themes[0])) : t("theme");
 
@@ -138,8 +143,8 @@ export default function CoursePicker() {
         <button className="soft picker-heart" aria-label={t(saved ? "unsave_course" : "save_course")} aria-pressed={saved} onClick={toggleSave}>
           <svg viewBox="0 0 24 24" aria-hidden="true" fill={saved ? "#9FD25E" : "none"}><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
         </button>
-        <button className="btn btn-soft" onClick={startSimulation}>시뮬레이션</button>
-        <button className="btn btn-cta" onClick={start} style={{ whiteSpace: "nowrap" }}>출발지 길찾기</button>
+        <button className="btn btn-soft" onClick={runCourse} style={{ whiteSpace: "nowrap" }}>코스 달리기</button>
+        <button className="btn btn-cta" onClick={runFromHere} style={{ whiteSpace: "nowrap" }}>현재위치에서 달리기</button>
       </div>
 
       <DestSheet open={chip === "dest"} dest={dest} place={place} onClose={() => setChip("")} onPick={(v) => setPick({ ...pick, dest: v })} />

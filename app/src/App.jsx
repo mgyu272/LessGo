@@ -17,6 +17,7 @@ import PlaceDetail from "./screens/PlaceDetail.jsx";
 import Events from "./screens/Events.jsx";
 import Stats from "./screens/Stats.jsx";
 import ToCourseStart from "./screens/ToCourseStart.jsx";
+import FromHere from "./screens/FromHere.jsx";
 
 const SCREENS = {
   onboarding: [Login],             // 시작 화면 = 로그인
@@ -30,6 +31,7 @@ const SCREENS = {
   events: [Events],                // 문화 활동
   run: [Run],
   toStart: [ToCourseStart],
+  fromHere: [FromHere],            // 현재 위치 → 목적지 러닝 코스 찾기
   spot: [Spot],
   shops: [Spot, Shops],            // 스팟 화면 위에 가게 시트
   coupon: [Coupon],

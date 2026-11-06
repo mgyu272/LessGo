@@ -1174,3 +1174,10 @@ small { font-size: 12px; }
 .to-start-refresh { align-self: center; color: var(--link); font-weight: 700; font-size: 12px; padding: 5px; text-decoration: underline; }
 .to-start-hint { margin: 0; font-size: 11px; line-height: 1.4; color: var(--muted); }
 
+
+/* 현재 위치에서 달리기: 일반 길찾기 vs LessGo 비교표 */
+.here-compare { width: 100%; border-collapse: collapse; font-size: 12px; }
+.here-compare th, .here-compare td { padding: 5px 6px; text-align: right; border-bottom: 1px solid var(--border); }
+.here-compare th:first-child, .here-compare td:first-child { text-align: left; color: var(--muted); }
+.here-compare th { font-size: 11px; color: var(--muted); font-weight: 700; }
+.here-compare th:last-child, .here-compare td:last-child { color: #2F6512; }
