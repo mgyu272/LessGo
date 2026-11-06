@@ -5,12 +5,27 @@
    - 메인 연두 #5FA52A, 밝은 CTA(연두 단색 + 연두 그림자), 연한 연두 바탕
    - 유리(.glass): 반투명 흰색 + 블러 / 음영(.soft): 반투명 연두 + 안쪽 선
    - 한지 질감(.hanji-layer): 화면 맨 뒤 배경에만 깔아요. 버튼·글씨 위에는 덮지 않아요
-   - 글꼴 = Noto Sans KR
+   - 글꼴 = 한글누리체 (못 불러오면 Noto Sans KR)
 
    색을 바꾸고 싶으면 :root 값만 고치면 전체가 바뀌어요.
    (--ink, --vermilion, --ginkgo 같은 이름은 예전 테마에서 쓰던 이름을 그대로 두고 값만 바꿨어요)
    --safe-top / --safe-bottom : 다이내믹 아일랜드·홈 바에 가리지 않게 두는 여백
    ============================================================ */
+@font-face {
+  font-family: "HangeulNuri";
+  src: url("/fonts/HangeulNuriR.ttf") format("truetype");
+  font-weight: 100 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "HangeulNuri";
+  src: url("/fonts/HangeulNuriB.ttf") format("truetype");
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* ---- 새 디자인 토큰 ---- */
   --text: #1F3D14;         /* 본문 */
@@ -51,8 +66,8 @@
   --verdigris-soft: var(--bg-soft);
   --indigo: #34508C;       /* 쪽빛 */
 
-  --display: "Noto Sans KR", system-ui, -apple-system, sans-serif;
-  --sans: "Noto Sans KR", system-ui, -apple-system, sans-serif;
+  --display: "HangeulNuri", "Noto Sans KR", system-ui, sans-serif;
+  --sans: "HangeulNuri", "Noto Sans KR", system-ui, sans-serif;
   --r-lg: 26px;
   --r-md: 16px;
   --r-sm: 10px;
