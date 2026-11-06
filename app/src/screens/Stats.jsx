@@ -50,7 +50,7 @@ export default function Stats() {
           {tab === "week" && <Week days={days} />}
           {tab === "badge" && <Badges />}
         </div>
-        <button className="st-logout" onClick={() => setConfirmLogout(true)}>{t("logout")}</button>
+        <button className="st-logout-footer" onClick={() => setConfirmLogout(true)}>{t("logout")}</button>
       </div>
       <ConfirmDialog open={confirmLogout} title={t("logout_confirm_title")} cancelLabel={t("cancel")} confirmLabel={t("logout")}
         onCancel={() => setConfirmLogout(false)} onConfirm={logout} />

@@ -1071,7 +1071,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .st-tile.done .st-medal { background: radial-gradient(circle at 35% 30%, #E8F8D2, #9FD25E); color: var(--text); box-shadow: 0 8px 16px -10px rgba(63, 127, 28, .7); }
 .st-tile b { font-size: 13px; font-weight: 700; }
 .st-tile small { font-size: 11px; font-weight: 500; color: var(--muted); }
-.st-logout { display: block; width: 100%; height: 44px; margin: 8px 0 0; padding: 0; background: transparent; border: 0; color: #5C6F54; font-size: 14px; text-align: center; text-decoration: none; }
+.st-logout-footer { display: block; width: 100%; height: 44px; margin: 8px 0 0; padding: 0; background: transparent; border: 0; color: #5C6F54; font-size: 14px; text-align: center; text-decoration: none; }
 
 /* 문화 활동: 달력으로 보기 버튼 (Events.dc.html), 누르면 이번 주 날짜 영역으로 */
 .ev-cal { color: var(--strong); }
@@ -1355,3 +1355,5 @@ div:has(> .spot-pin) { pointer-events: none; }
 .screen.pd-popup.pd-full { top: calc(44px + var(--safe-top)); }
 .screen.pd-popup.pd-dragging { transition: none; }
 .pd-popup .pd-hero { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+
+/* 내 기록 첫 화면 오른쪽 위 로그아웃 */
