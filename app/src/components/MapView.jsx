@@ -287,6 +287,18 @@ export function RangeCircle({ at, radius }) {
   return <Circle center={toLatLng(at)} radius={radius} strokeWeight={2} strokeColor="#2F6512" strokeOpacity={0.7} strokeStyle="shortdash" fillColor="#9FD25E" fillOpacity={0.16} />;
 }
 
+// 아이콘 없는 기본 핀 (상권 탭에서 고른 가게)
+export function PlainPin({ at, label }) {
+  return at ? (
+    <CustomOverlayMap position={toLatLng(at)} xAnchor={0.5} yAnchor={1} zIndex={8}>
+      <svg className="plain-pin" viewBox="0 0 28 38" width="28" height="38" role="img" aria-label={label}>
+        <path d="M14 37s12-12.6 12-22.5A12 12 0 002 14.5C2 24.4 14 37 14 37z" fill="#E5483B" stroke="#FFFFFF" strokeWidth="2" />
+        <circle cx="14" cy="14.5" r="4.5" fill="#FFFFFF" />
+      </svg>
+    </CustomOverlayMap>
+  ) : null;
+}
+
 export function Me({ at }) {
   return at ? (
     <CustomOverlayMap position={toLatLng(at)} xAnchor={0.5} yAnchor={0.5} zIndex={5}>

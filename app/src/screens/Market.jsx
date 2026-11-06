@@ -1,6 +1,6 @@
 // ⑧ 상권: 코스 근처 동네 가게(식당 · 카페 · 술집 등) 목록 (shops.json의 카카오맵 조사 자료)
 // 장소와 이야기 화면과 같은 카드 모양. 왼쪽에 카카오맵 대표 사진, 아래로 쭉 스크롤해서 봐요.
-// "카카오맵 보기"는 가게 페이지를 열고, "여기로 달리기"는 그 가게와 가까운 코스 목적지로 코스 고르기를 열어요.
+// 사진·이름을 누르면 홈 지도에서 그 가게를 핀으로 보여주고, 오른쪽 노란 지도 아이콘은 카카오맵 가게 페이지를 열어요.
 
 import { useMemo, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
@@ -49,7 +49,8 @@ export default function Market() {
       .filter((s) => !qq || [s.name.ko, s.name.en, s.category, s.address].some((x) => (x || "").toLowerCase().includes(qq)));
   }, [stores, kind, q]);
 
-  const runHere = (s) => { app.setPick({ ...app.pick, dest: s.near }); app.go("courses"); };
+  // 사진·이름을 누르면 홈 지도로 가서 그 가게를 핀으로 보여줘요
+  const showOnMap = (s) => { app.setMapShop(s); app.go("home"); };
 
   return (
     <section className="screen places-screen market-screen">
@@ -74,30 +75,28 @@ export default function Market() {
         </div>
 
         <p className="pl-count">{list.length
-          ? loc({ ko: `코스 근처 가게 ${list.length}곳 · 달린 뒤 들러 보세요`, en: `${list.length} shops near the courses` })
+          ? loc({ ko: `코스 근처 가게 ${list.length}곳`, en: `${list.length} shops near the courses` })
           : loc({ ko: "조건에 맞는 가게가 없어요", en: "No shops match" })}</p>
 
         {list.map((s) => {
           const near = s.near && data.spotById[s.near] ? destName(data, s.near) : null;
           const meta = [catLabel(s), near && loc({ ko: `${near} 근처`, en: `Near ${near}` }), here ? t("from_me", { km: (distance(here, s) / 1000).toFixed(1) }) : null].filter(Boolean).join(" · ");
           return (
-            <article key={s.id} className="card pl-card mk-card">
-              <div className="pl-card-top">
+            <article key={s.id} className="card mk-card">
+              <button type="button" className="mk-main" onClick={() => showOnMap(s)} aria-label={loc({ ko: `${loc(s.name)} 지도에서 보기`, en: `Show ${loc(s.name)} on the map` })}>
                 <ShopPhoto shop={s} />
-                <div className="pl-text">
-                  <div className="pl-name"><h2>{loc(s.name)}</h2>{s.partner && <Badge>{loc({ ko: "제휴", en: "Partner" })}</Badge>}</div>
+                <span className="mk-text">
+                  <b>{loc(s.name)}{s.partner && <Badge>{loc({ ko: "제휴", en: "Partner" })}</Badge>}</b>
                   <small>{meta}</small>
-                  {s.address && <p>{s.address}</p>}
-                </div>
-              </div>
-              <div className="pl-actions">
-                {s.kakao_url
-                  ? <a className="btn btn-soft" href={s.kakao_url.replace(/^http:/, "https:")} target="_blank" rel="noreferrer">{loc({ ko: "카카오맵 보기", en: "Kakao Map" })}</a>
-                  : <span />}
-                {s.near && data.spotById[s.near]
-                  ? <button className="btn btn-cta" onClick={() => runHere(s)}>{t("run_here")} →</button>
-                  : <span />}
-              </div>
+                  {s.address && <span className="mk-addr">{s.address}</span>}
+                </span>
+              </button>
+              {s.kakao_url && (
+                <a className="mk-kakao" href={s.kakao_url.replace(/^http:/, "https:")} target="_blank" rel="noreferrer"
+                  aria-label={loc({ ko: "카카오맵에서 보기", en: "Open in Kakao Map" })} title={loc({ ko: "카카오맵에서 보기", en: "Open in Kakao Map" })}>
+                  <KakaoMapIcon />
+                </a>
+              )}
             </article>
           );
         })}
@@ -117,4 +116,15 @@ function ShopPhoto({ shop }) {
     );
   }
   return <img className="mk-photo" src={shop.image} alt="" loading="lazy" referrerPolicy="no-referrer" onError={() => setBroken(true)} />;
+}
+
+// 카카오맵으로 가는 작은 아이콘 (노란 바탕 + 지도 핀)
+function KakaoMapIcon() {
+  return (
+    <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
+      <rect width="32" height="32" rx="9" fill="#FEE500" />
+      <path d="M16 25s7-6.7 7-11.6A7 7 0 009 13.4C9 18.3 16 25 16 25z" fill="#3C1E1E" />
+      <circle cx="16" cy="13.4" r="2.6" fill="#FEE500" />
+    </svg>
+  );
 }

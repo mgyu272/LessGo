@@ -9,7 +9,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp, HOME_CENTER, HOME_LEVEL } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
-import { MapView, FitSpots, FlyTo, FocusOn, SpotMarker, Me, ExploreLayer, MapWatch, Route, FitBounds } from "../components/MapView.jsx";
+import { MapView, FitSpots, FlyTo, FocusOn, SpotMarker, Me, PlainPin, ExploreLayer, MapWatch, Route, FitBounds } from "../components/MapView.jsx";
 import { LangPill } from "../components/Bits.jsx";
 import { getCourse } from "../lib/data.js";
 import { GroupIcon } from "../components/SpotIcons.jsx";
@@ -41,7 +41,9 @@ export default function Home() {
   const [saved] = useState(() => app.homeMap.current);
   const [filter, setFilter] = useState(saved?.filter ?? "all");
   const [query, setQuery] = useState("");
-  const [flyTo, setFlyTo] = useState(null); // { at: [lat, lng], level }
+  // 상권 탭에서 고른 가게가 있으면 그곳으로 날아가 핀 하나로 보여줘요
+  const shop = app.mapShop;
+  const [flyTo, setFlyTo] = useState(() => (shop ? { at: [shop.lat, shop.lng], level: 3 } : null)); // { at: [lat, lng], level }
   const [focusTo, setFocusTo] = useState(null); // 고른 아이콘으로: { at, level }
   const [refit, setRefit] = useState(0);
   const [me, setMe] = useState(null);
@@ -138,9 +140,10 @@ export default function Home() {
         ]}
         {popupSpot?.preparing && !popupCourse && <FitBounds points={[[popupSpot.lat + 0.0025, popupSpot.lng], [popupSpot.lat - 0.0025, popupSpot.lng]]} padTL={[30, 70]} padBR={[30, halfPad()]} fitKey={popupSpot.id} />}
         <Me at={me} />
+        {shop && <PlainPin at={[shop.lat, shop.lng]} label={loc(shop.name)} />}
         {/* 위쪽 검색·칩과 아래 하단 탭에 배지·이름표가 가리지 않게 맞춰요 */}
         {/* 남겨 둔 확대 범위로 돌아왔으면 처음 맞춤은 건너뛰고, 전체 지도·내 위치 실패 때만 다시 맞춰요 */}
-        {(!saved?.view || refit > 0) && <FitSpots spots={data.spots} safe={homeSafeArea} refitKey={refit} />}
+        {((!saved?.view && !shop) || refit > 0) && <FitSpots spots={data.spots} safe={homeSafeArea} refitKey={refit} />}
         <FlyTo to={flyTo?.at} level={flyTo?.level} />
         <FocusOn to={focusTo?.at} level={focusTo?.level} pad={focusPad} />
         <MapWatch onChange={setView} />

@@ -1548,33 +1548,17 @@ div:has(> .spot-pin) { pointer-events: none; }
 .cx-rail .cx-item-top { flex-wrap: wrap; gap: 4px 6px; }
 .cx-rail .cx-item .elev { height: 20px; margin: 6px 0 0; }
 
-/* 상권 탭: 장소와 이야기 카드 모양 + 왼쪽에 카카오맵 대표 사진 (장소 아이콘 64px보다 크게) */
-.mk-card .pl-card-top { align-items: center; }
-.mk-photo { width: 88px; height: 88px; flex: none; border-radius: 18px; object-fit: cover; background: #F2F9E6; box-shadow: inset 0 0 0 1px var(--border); }
+/* 상권 탭: 한 줄짜리 낮은 카드. 왼쪽 카카오맵 사진, 오른쪽 끝 카카오맵 아이콘 */
+.mk-card { flex: none; display: flex; align-items: center; gap: 8px; padding: 10px 10px 10px 10px; border-radius: 18px; }
+.mk-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 0; border: 0; background: none; text-align: left; color: inherit; font: inherit; cursor: pointer; }
+.mk-photo { width: 64px; height: 64px; flex: none; border-radius: 14px; object-fit: cover; background: #F2F9E6; box-shadow: inset 0 0 0 1px var(--border); }
 .mk-photo-empty { display: grid; place-items: center; color: var(--link); }
-.mk-photo-empty svg { width: 40px; height: 40px; }
-.mk-card .pl-name h2 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-.mk-card .pl-text p { -webkit-line-clamp: 1; color: var(--muted); }
-.mk-card .pl-actions a.btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
-
-
-/* 홈 지도 하단 코스 선택 패널: 기존 탭바 위에 배치 */
-.home-course-panel{position:absolute;z-index:8;left:0;right:0;bottom:calc(82px + var(--safe-bottom));height:min(315px,43%);overflow-y:auto;overscroll-behavior:contain;background:rgba(250,252,244,.97);border-radius:24px 24px 0 0;padding:0 14px 16px;box-shadow:0 -5px 20px rgba(36,66,22,.09);scrollbar-width:none}
-.home-course-panel::-webkit-scrollbar{display:none}
-.home-course-grip{height:23px;display:flex;justify-content:center;align-items:center}
-.home-course-grip span{width:38px;height:5px;border-radius:10px;background:#d2e6b3}
-.home-km-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;border-radius:16px;background:#eaf1dd}
-.home-km-options button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;background:transparent;border:0;border-radius:13px;color:#536e40}
-.home-km-options button.selected{background:#fff;color:#29441f;box-shadow:0 3px 12px rgba(46,71,27,.10)}
-.home-km-options strong{font-size:18px;line-height:1}
-.home-km-options strong small{font-size:11px;margin-left:2px}
-.home-km-options button>span{font-size:10px}
-.home-free-run,.home-destination-list button{display:flex;align-items:center;gap:11px;width:100%;border:0;background:#fff;color:#30452a;text-align:left;border-radius:14px;padding:10px 12px;min-height:52px}
-.home-free-run{margin-top:10px}
-.home-free-run strong,.home-destination-list strong{flex:1;font-size:13px}
-.home-free-run>span:last-child,.home-destination-list button>span:last-child{color:#78a65c;font-size:22px}
-.home-run-symbol,.home-destination-symbol{display:grid;place-items:center;flex:none;width:32px;height:32px;border-radius:11px;background:#edf6e3;color:#6e9d4d;font-size:21px}
-.home-course-heading{font-size:13px;font-weight:800;margin:14px 0 9px;color:#4b6737}
-.home-destination-list{display:flex;flex-direction:column;gap:7px}
-.home-destination-symbol{border-radius:50%}
-.home-screen:has(.home-course-panel) .locate-btn{bottom:calc(min(315px,43%) + 96px + var(--safe-bottom)) !important}
+.mk-photo-empty svg { width: 30px; height: 30px; }
+.mk-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.mk-text b { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 800; color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mk-text small { font-size: 12px; font-weight: 600; color: var(--link); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mk-addr { font-size: 12px; color: var(--muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mk-kakao { flex: none; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; }
+.mk-kakao:active { transform: scale(.94); }
+.mk-kakao:focus-visible, .mk-main:focus-visible { outline: 2px solid #2F6512; outline-offset: 2px; }
+.plain-pin { display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,.3)); }
