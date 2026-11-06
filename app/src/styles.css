@@ -1029,7 +1029,9 @@ div:has(> .spot-pin) { pointer-events: none; }
 .stats-screen { background: var(--bg-soft); }
 .stats-screen .pd-scroll { padding-bottom: calc(110px + var(--safe-bottom)); }
 .st-top { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: calc(12px + var(--safe-top)) 18px 0; }
-.st-top h1 { flex: 1; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+.st-heading { flex: 1; min-width: 0; }
+.st-top h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+.st-heading p { margin: 2px 0 0; color: #4A5E42; font-size: 14px; }
 .st-top .round-btn svg { fill: none; }
 .st-links { display: flex; gap: 8px; padding: 8px 18px 0; }
 .st-links button { min-height: 40px; padding: 0 14px; border-radius: 20px; font-size: 13px; font-weight: 700; color: var(--strong); }
@@ -1069,6 +1071,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .st-tile.done .st-medal { background: radial-gradient(circle at 35% 30%, #E8F8D2, #9FD25E); color: var(--text); box-shadow: 0 8px 16px -10px rgba(63, 127, 28, .7); }
 .st-tile b { font-size: 13px; font-weight: 700; }
 .st-tile small { font-size: 11px; font-weight: 500; color: var(--muted); }
+.st-logout { display: block; width: 100%; height: 44px; margin: 8px 0 0; padding: 0; background: transparent; border: 0; color: #5C6F54; font-size: 14px; text-align: center; text-decoration: none; }
 
 /* 문화 활동: 달력으로 보기 버튼 (Events.dc.html), 누르면 이번 주 날짜 영역으로 */
 .ev-cal { color: var(--strong); }
