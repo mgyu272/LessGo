@@ -197,6 +197,9 @@ export function Spot() {
           <button className="btn btn-teal" onClick={() => { stopAudio(); setConfirmFinish(true); }}>달리기 종료</button>
         </div>
 </BottomSheet>
+      <ConfirmDialog open={confirmFinish} title={t("stop_title")} cancelLabel={t("stop_cancel")} confirmLabel={t("stop_save")}
+        body={t("stop_body_stars", { km: ((app.run.view?.meters || 0) / 1000).toFixed(2), time: fmtTime(app.run.view?.seconds || 0), n: app.run.view?.starsGot || 0 })}
+        onCancel={() => setConfirmFinish(false)} onConfirm={() => { setConfirmFinish(false); app.run.finish(); }} />
     </section>
   );
 }
