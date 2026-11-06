@@ -7,7 +7,6 @@
 // 실제 계산은 state/useRun.js 에 있어요.
 
 import { useMemo, useState } from "react";
-import { STAR_RULES } from "../state/useUserData.js";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { fmtTime, fmtPace, distance } from "../lib/geo.js";
@@ -35,8 +34,6 @@ export default function Run() {
   const status = v.paused ? t("run_paused")
     : c ? t(walk ? "walk_status" : "run_status_course", { name: place, time: fmtTime(v.seconds) })
     : t("run_status_free", { time: fmtTime(v.seconds) });
-  const per = STAR_RULES.perCoupon;
-  const hold = v.starBalance % per;      // 쿠폰까지 모은 별 (10개가 되면 바로 쿠폰으로 바뀌어요)
   const finish = () => { setConfirm(false); app.run.finish(); };
 
   return (
@@ -104,10 +101,10 @@ export default function Run() {
               </>
             )}
           </div>
-          <div className="soft rp-card">
-            <small><BagIcon />{t("to_coupon")}</small>
-            <span><b>{t("stars_more", { n: per - hold })}</b><em className="rp-hold">{hold}/{per}</em></span>
-            <span className="gold-bar" role="progressbar" aria-valuemin={0} aria-valuemax={per} aria-valuenow={hold} aria-label={t("to_coupon")}><i style={{ width: `${(hold / per) * 100}%` }} /></span>
+          <div className="soft rp-card" aria-live="polite">
+            <small>🌡 러너 온도</small>
+            <span><b>{Math.min(99.9, 36.5 + (app.user.starsEarned || 0) * 0.15).toFixed(1)}°C</b></span>
+            <small>별을 모을수록 온도가 올라가요</small>
           </div>
         </div>
         <div className="rp-ctl">
