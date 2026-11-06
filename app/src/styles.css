@@ -1534,3 +1534,22 @@ div:has(> .spot-pin) { pointer-events: none; }
 /* Keep the free-run completion actions close to the summary cards. */
 .done-screen .done-cta{padding-top:10px;padding-bottom:calc(12px + var(--safe-bottom));background:linear-gradient(180deg,rgba(233,246,214,0),var(--bg-soft) 18%)}
 .done-screen .done-scroll{padding-bottom:calc(138px + var(--safe-bottom))}
+
+
+/* Restored compact course sheet on the home map */
+.home-course-sheet{position:absolute;z-index:9;left:0;right:0;bottom:calc(77px + var(--safe-bottom));max-height:38%;overflow-y:auto;overscroll-behavior:contain;background:rgba(250,253,243,.97);border-radius:26px 26px 0 0;padding:4px 16px 16px;box-shadow:0 -5px 24px rgba(41,69,25,.10)}
+.home-course-sheet.expanded{max-height:68%}
+.home-sheet-handle{display:flex;align-items:center;justify-content:center;width:100%;height:21px;background:transparent;border:0}
+.home-sheet-handle span{width:38px;height:5px;border-radius:8px;background:#cfe9a6}
+.home-distance-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:#eaf2dc;border-radius:15px;padding:4px}
+.home-distance-tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50px;border:0;border-radius:13px;background:transparent;color:#557344}
+.home-distance-tabs button.on{background:white;box-shadow:0 3px 12px rgba(49,75,25,.12);color:#2c451d}
+.home-distance-tabs b{font-size:18px;line-height:1.1}.home-distance-tabs b small{font-size:11px;margin-left:2px}
+.home-distance-tabs button>small{font-size:10px;margin-top:3px}
+.home-free-entry{width:100%;display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 12px;border:0;border-radius:14px;background:#fff;color:#304827;text-align:left;box-shadow:0 2px 10px rgba(44,70,30,.07)}
+.home-free-entry b{flex:1;font-size:13px}.home-free-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:#edf7e1;color:#508535;font-size:23px}.home-free-arrow{font-size:22px;color:#7ba85a}
+.home-course-sheet h3{font-size:13px;font-weight:800;color:#4c6938;margin:15px 0 9px}
+.home-course-list{display:flex;flex-direction:column;gap:7px}
+.home-course-list button{display:flex;align-items:center;gap:10px;min-height:53px;border:0;border-radius:15px;padding:8px 12px;background:white;color:#2f4625;text-align:left}
+.home-course-list b{flex:1;font-size:14px}.home-course-list button>span:last-child{font-size:22px;color:#80aa5c}
+.home-course-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#f0f7e6;color:#6b9e43}
