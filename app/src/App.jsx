@@ -45,15 +45,18 @@ const WITH_TABS = new Set(["home", "places", "events", "stats", "stars", "record
 const DARK = new Set(["stars", "coupon"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
 
 export default function App() {
-  const { screen, data, spot } = useApp();
+  const { screen, data, spot, placeFrom } = useApp();
   if (screen === "loading" || !data) {
     return <PhoneFrame><Loading /></PhoneFrame>;
   }
   let layers = SCREENS[screen] || [Home];
   if (screen === "shops" && !spot) layers = [Shops];
+  // 홈 지도 핀으로 연 장소 상세는 홈 위에 팝업으로 띄워요 (홈은 그대로 두고 X로 닫기)
+  const popup = screen === "place" && placeFrom === "home";
+  if (popup) layers = [Home, PlaceDetail];
   return (
     <PhoneFrame dark={DARK.has(screen)}>
-      {layers.map((C, i) => <C key={screen + i} />)}
+      {layers.map((C, i) => <C key={popup && i === 0 ? "home0" : screen + i} />)}
       {WITH_TABS.has(screen) && <TabBar />}
       <Toast />
     </PhoneFrame>

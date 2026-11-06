@@ -45,14 +45,21 @@ export default function PlaceDetail() {
   const openExplore = (p) => { voice.stop(); app.setExplore({ place: p, from: "place" }); app.go("explore"); };
   const runHere = () => { voice.stop(); app.setPick({ ...app.pick, dest: spot.id }); app.go("courses"); };
   const back = () => { voice.stop(); app.go(app.placeFrom || "places"); };
+  // 홈 지도 핀으로 열면 팝업: 위 왼쪽 버튼이 X(닫기), 바깥 덮개를 눌러도 닫혀요
+  const popup = app.placeFrom === "home";
 
   return (
-    <section className="screen pd-screen">
+    <>
+    {popup && <div className="ui-scrim pd-scrim" onClick={back} aria-hidden="true" />}
+    <section className={`screen pd-screen ${popup ? "pd-popup rise" : ""}`} {...(popup ? { role: "dialog", "aria-modal": true, "aria-label": name } : {})}>
       <div className="hanji-layer" aria-hidden="true" />
       <div className="pd-scroll">
         <div className="pd-hero">
+          {popup && <span className="grip" aria-hidden="true" />}
           <div className="pd-bar">
-            <button className="round-btn glass" onClick={back} aria-label={t("back")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
+            {popup
+              ? <button className="round-btn glass" onClick={back} aria-label={t("close")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+              : <button className="round-btn glass" onClick={back} aria-label={t("back")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>}
             <button className="round-btn glass" onClick={share} aria-label={t("share")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg></button>
           </div>
           <div className="pd-id">
@@ -142,6 +149,7 @@ export default function PlaceDetail() {
 
       {report && <ReportSheet spot={spot} onClose={() => setReport(false)} />}
     </section>
+    </>
   );
 }
 
