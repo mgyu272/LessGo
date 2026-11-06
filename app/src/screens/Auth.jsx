@@ -94,12 +94,11 @@ export function Login() {
     <section className="screen login-screen">
       <div className="hanji-layer" aria-hidden="true" />
       <header className="login-top">
-        <Brand subtitle={false} />
         <LangPill glass expanded />
       </header>
-      <div className="login-title">
-        <h1>{t("login_title1")}<br />{t("login_title2")}</h1>
-        <p className="login-subtitle">{t("login_subtitle")}</p>
+      <div className="login-brand">
+        <Brand size={108} name="성북런" subtitle={false} className="login-brand-mark" />
+        <span>SEONGBUK RUN</span>
       </div>
       <LoginScene />
       <form className="login-form" onSubmit={submit} noValidate>
