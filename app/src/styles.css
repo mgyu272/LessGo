@@ -1514,10 +1514,10 @@ div:has(> .spot-pin) { pointer-events: none; }
   font-family: "Kkakdugi Drafting", "Pretendard", system-ui, sans-serif;
   font-weight: 700;
   letter-spacing: 0;
-  /* 도면체라 Bold도 획이 가늘어서, 같은 색 테두리로 더 두껍게 */
-  -webkit-text-stroke: .7px currentColor;
+  /* 도면체라 Bold도 획이 가늘어서, 같은 색 테두리로 아주 살짝만 두껍게 (ㄹ 획이 붙지 않을 만큼) */
+  -webkit-text-stroke: .35px currentColor;
   paint-order: stroke fill;
 }
-.login-brand .brand-name b { -webkit-text-stroke-width: 1.5px; }
-/* 장소 카드 이름(심우장·정릉·의릉)은 테두리 없이 원래 두께 */
+/* 로그인 "성북런" 로고와 장소 카드 이름(심우장·정릉·의릉)은 테두리 없이 글꼴 원래 두께 */
+.login-brand .brand-name b,
 .pl-name h2 { -webkit-text-stroke-width: 0; }
