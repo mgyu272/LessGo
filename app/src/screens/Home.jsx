@@ -9,7 +9,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp, HOME_CENTER, HOME_LEVEL } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
-import { MapView, FitSpots, FlyTo, FocusOn, SpotMarker, Me, PlainPin, ExploreLayer, MapWatch, Route, FitBounds } from "../components/MapView.jsx";
+import { MapView, FlyTo, FocusOn, SpotMarker, Me, PlainPin, ExploreLayer, MapWatch, Route } from "../components/MapView.jsx";
+import SeongbukBoundary from "../components/SeongbukBoundary.jsx";
 import { LangPill } from "../components/Bits.jsx";
 import { getCourse } from "../lib/data.js";
 import { GroupIcon } from "../components/SpotIcons.jsx";
@@ -94,10 +95,9 @@ export default function Home() {
   const openExplore = (p) => { app.setExplore({ place: p, from: "home" }); app.go("explore"); };
   // 칩을 바꾸면 고른 곳과 확대 상태를 처음으로 (고르기 전 확대 단계로 돌아가요)
   const pickFilter = (k) => { if (k === filter) return; backToAll(); setFilter(k); };
-  // 장소 팝업(홈 위 절반 시트)이 열려 있으면: 코스가 있는 곳은 코스를, 준비 중인 곳은 그 자리를 지도 위쪽 절반에 보여줘요
+  // 장소 모달이 열려 있으면 코스 경로만 더 그려요. 닫았을 때 그대로이도록 지도 위치와 확대는 건드리지 않아요
   const popupSpot = app.screen === "place" && app.placeFrom === "home" ? app.spot : null;
   const popupCourse = popupSpot ? courseFor(data, popupSpot.id, settings.km) : null;
-  const halfPad = () => (document.querySelector(".home-map")?.offsetHeight || 700) * 0.5 + 24;
   // 새로 추가된 장소(둘러볼 곳): 코스 목적지와 같은 팝업 형식으로, 내용은 "준비 중"
   const openPreparing = (p) => { app.setSpot(data.spotById[p.id] || preparingSpot(p)); app.setPlaceFrom("home"); app.go("place"); };
 
@@ -124,7 +124,7 @@ export default function Home() {
   };
 
   return (
-    <section className="screen home-screen">
+    <section className="screen home-screen" inert={popupSpot ? "" : undefined}>
       <MapView className="home-map" center={saved?.view ? [saved.view.center.lat, saved.view.center.lng] : HOME_CENTER} level={saved?.view?.level ?? HOME_LEVEL}>
         {/* 둘러볼 곳 아이콘은 코스 목적지 핀 아래에. 칩을 바꾸면 묶음을 새로 만들어요 */}
         <ExploreLayer key={filter} cluster={false}
@@ -136,14 +136,14 @@ export default function Home() {
         {popupCourse && [
           <Route key="pc-case" path={popupCourse.path} color="#FFFFFF" weight={11} opacity={1} zIndex={5} />,
           <Route key="pc" path={popupCourse.path} color={MODE_COLOR[popupCourse.properties.mode]} weight={6} opacity={1} zIndex={6} />,
-          <FitBounds key="pc-fit" points={popupCourse.path.map((q) => [q.lat, q.lng])} padTL={[30, 70]} padBR={[30, halfPad()]} fitKey={popupCourse.id} />,
         ]}
-        {popupSpot?.preparing && !popupCourse && <FitBounds points={[[popupSpot.lat + 0.0025, popupSpot.lng], [popupSpot.lat - 0.0025, popupSpot.lng]]} padTL={[30, 70]} padBR={[30, halfPad()]} fitKey={popupSpot.id} />}
         <Me at={me} />
         {shop && <PlainPin at={[shop.lat, shop.lng]} label={loc(shop.name)} />}
-        {/* 위쪽 검색·칩과 아래 하단 탭에 배지·이름표가 가리지 않게 맞춰요 */}
-        {/* 남겨 둔 확대 범위로 돌아왔으면 처음 맞춤은 건너뛰고, 전체 지도·내 위치 실패 때만 다시 맞춰요 */}
-        {((!saved?.view && !shop) || refit > 0) && <FitSpots spots={data.spots} safe={homeSafeArea} refitKey={refit} />}
+        {/* 성북구 경계·바깥 막과 지도 범위. 위쪽 검색·칩과 아래 하단 탭에 가리지 않게 맞춰요 */}
+        {/* 남겨 둔 확대 범위로 돌아왔거나 가게로 날아가는 중이면 처음 맞춤은 건너뛰고, 전체 지도·내 위치 실패 때만 다시 맞춰요 */}
+        {/* 성북구 밖의 내 위치·고른 장소·가게로 간 지도는 되돌리지 않아요 */}
+        <SeongbukBoundary spots={data.spots} safe={homeSafeArea} refitKey={refit} keepView={(!!saved?.view || !!shop) && refit === 0}
+          extra={() => [me, sel && [sel.lat, sel.lng], shop && [shop.lat, shop.lng]].filter(Boolean)} />
         <FlyTo to={flyTo?.at} level={flyTo?.level} />
         <FocusOn to={focusTo?.at} level={focusTo?.level} pad={focusPad} />
         <MapWatch onChange={setView} />

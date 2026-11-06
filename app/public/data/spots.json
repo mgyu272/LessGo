@@ -163,6 +163,10 @@
     },
     {
       "id": "simujang",
+      "summary": {
+        "ko": "만해 한용운이 말년을 보낸 한옥이에요. 성북동 언덕 골목 끝에 있어요.",
+        "en": "Poet Han Yong-un (Manhae) spent his final years in this hanok at the end of a hillside lane in Seongbuk-dong."
+      },
       "name": {
         "ko": "심우장",
         "en": "Simujang"
@@ -218,6 +222,10 @@
     },
     {
       "id": "jeongneung",
+      "summary": {
+        "ko": "조선 태조의 왕비 신덕왕후의 능이에요. 울창한 숲길을 따라 걸을 수 있어요.",
+        "en": "Forest paths wind around the tomb of Queen Sindeok, wife of King Taejo, the founder of Joseon."
+      },
       "name": {
         "ko": "정릉",
         "en": "Jeongneung"
@@ -273,6 +281,10 @@
     },
     {
       "id": "uiryeong",
+      "summary": {
+        "ko": "조선 경종과 선의왕후의 능이에요. 두 능이 한 언덕에 위아래로 놓여 있어요.",
+        "en": "King Gyeongjong and Queen Seonui of Joseon are buried here. Their tombs sit one above the other on the same hillside."
+      },
       "name": {
         "ko": "의릉",
         "en": "Uireung"

@@ -8,10 +8,58 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
-import { GROUPS, groupOf, PLACE_TOPICS, exploreColor, exploreMeta, fromCourseEnd, byNearest, destName } from "../lib/places.js";
+import { GROUPS, groupOf, PLACE_TOPICS, kindLabel, exploreMeta, fromCourseEnd, byNearest, destName, round10 } from "../lib/places.js";
 import { MapView, FitBounds, SpotMarker, ExploreLayer } from "../components/MapView.jsx";
 import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
-import { Badge } from "../components/ui.jsx";
+import PlacePhoto from "../components/PlacePhoto.jsx";
+
+const chipIcons = {
+  all: "M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z",
+  exhibit: "M3 4h18v14H3z M6 15l4-5 3 3 3-4 3 6 M9 21l1-3m5 3-1-3",
+  heritage: "M2 9l10-6 10 6H2z M5 10v9m5-9v9m4-9v9m5-9v9 M3 20h18",
+  religion: "M5 16h14l-2-3V9a5 5 0 00-10 0v4z M10 19a2 2 0 004 0",
+  park: "M12 2l6 8h-3l5 7H4l5-7H6z M12 17v5",
+};
+
+function PhotoIcon() {
+  return <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>;
+}
+
+// 공공누리 3유형은 변경 금지라 자르지 않고 보여줘요. 사진을 못 불러오면 회색 아이콘으로 바뀌어요.
+function ExplorePhoto({ place }) {
+  const [failed, setFailed] = useState(false);
+  if (!place.photo_url || failed) return <PhotoIcon />;
+  return (
+    <>
+      <img className={place.photo_license === "KOGL-3" ? "contain" : undefined} src={place.photo_url} alt={t("photo_alt", { name: loc(place.name) })} loading="lazy" onError={() => setFailed(true)} />
+      <span className="explore-credit">{t("photo_credit", { credit: place.photo_credit })}</span>
+    </>
+  );
+}
+
+function ExploreCard({ place, data, onOpen }) {
+  const name = loc(place.name);
+  const [badge, ...tags] = kindLabel(place).split(/[·,\s]+/).filter(Boolean);
+  const meters = place.nearest_course?.straight_m;
+  const from = place.nearest_course?.dest && t("explore_distance_from", { name: destName(data, place.nearest_course.dest) });
+  const distanceText = Number.isFinite(meters) ? (meters < 1000 ? `${round10(meters)}m` : `${(meters / 1000).toFixed(1)}km`) : "";
+  return (
+    <button type="button" className="explore-tile" data-places-theme={groupOf(place)} onClick={() => onOpen(place)}
+      aria-label={from && distanceText ? `${name}, ${from} ${distanceText}` : name}>
+      <span className="explore-photo">
+        <ExplorePhoto place={place} />
+        <span className="explore-badge">{badge}</span>
+      </span>
+      <span className="explore-caption">
+        <b>{name}</b><small>{tags.filter((tag) => tag !== badge).join(" · ")}</small>
+        {from && distanceText && <span className="explore-distance">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 22s8-9 8-14a8 8 0 00-16 0c0 5 8 14 8 14z"/><circle cx="12" cy="9" r="2"/></svg>
+          {from} <strong>{distanceText}</strong>
+        </span>}
+      </span>
+    </button>
+  );
+}
 
 export default function Places() {
   const app = useApp();
@@ -69,7 +117,9 @@ export default function Places() {
 
         <div className="pl-topics scroll" role="radiogroup" aria-label={t("topic")}>
           {GROUPS.map((k) => (
-            <button key={k} role="radio" aria-checked={topic === k} className={`pl-topic ${topic === k ? "on" : "soft"}`} onClick={() => setTopic(k)}>{t("grp_" + k)}</button>
+            <button key={k} role="radio" data-places-theme={k} aria-checked={topic === k} className={`pl-topic ${topic === k ? "on" : ""}`} onClick={() => setTopic(k)}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d={chipIcons[k]} /></svg>{t("grp_" + k)}
+            </button>
           ))}
         </div>
 
@@ -83,36 +133,45 @@ export default function Places() {
           </div>
         )}
 
-        <p className="pl-count">{list.length ? t("dest_places_n", { n: list.length }) : t("dest_places_none")}</p>
+        {list.length ? <section className="pl-destinations" data-places-theme={topic}>
+          <h2>{t("dest_title")} <span>{list.length}</span></h2>
+          <p>{t("dest_description")}</p>
+          <div className="explore-rail" role="list" aria-label={t("dest_title")} key={topic}>
+            {list.map((s) => (
+              <article key={s.id} className="pl-card" role="listitem">
+                <div className="pl-card-photo">
+                  <PlacePhoto spot={s} fallback={<PhotoIcon />} />
+                  <span className="pl-course-count">{t("courses_n", { n: courseCount(s.id) })}</span>
+                  <span className="pl-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
+                </div>
+                <div className="pl-text" data-places-theme={groupOf(s)}>
+                  <h3>{loc(s.name)}</h3>
+                  <small>{[...(PLACE_TOPICS[s.id] || []).map((k) => t("topic_" + k)), here ? t("from_me", { km: (distance(here, s) / 1000).toFixed(1) }) : null].filter(Boolean).join(" · ")}</small>
+                  <p>{loc(s.summary)}</p>
+                </div>
+                <div className="pl-actions">
+                  <button type="button" aria-label={t("dest_visit_label", { name: loc(s.name) })} onClick={() => openPlace(s)}>{t("story_visit")}</button>
+                  <button type="button" aria-label={t("dest_run_label", { name: loc(s.name) })} onClick={() => runHere(s)}>{t("run_here")} →</button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section> : <p className="pl-count">{t("dest_places_none")}</p>}
 
-        {list.map((s) => (
-          <article key={s.id} className="card pl-card">
-            <div className="pl-card-top">
-              <span className="pl-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
-              <div className="pl-text">
-                <div className="pl-name"><h2>{loc(s.name)}</h2><Badge>{t("courses_n", { n: courseCount(s.id) })}</Badge></div>
-                <small>{[...(PLACE_TOPICS[s.id] || []).map((k) => t("topic_" + k)), here ? t("from_me", { km: (distance(here, s) / 1000).toFixed(1) }) : null].filter(Boolean).join(" · ")}</small>
-                <p>{loc(s.cards[0]?.body)}</p>
-              </div>
-            </div>
-            <div className="pl-actions">
-              <button className="btn btn-soft" onClick={() => openPlace(s)}>{t("story_visit")}</button>
-              <button className="btn btn-cta" onClick={() => runHere(s)}>{t("run_here")} →</button>
-            </div>
-          </article>
-        ))}
-
-        {(explore.length > 0 || near) && (
-          <section className="pl-explore" ref={exploreRef} aria-label={t("explore_n", { n: explore.length })}>
-            <h2>{t("explore_n", { n: explore.length })}</h2>
+          <section className="pl-explore" data-places-theme={topic} ref={exploreRef} aria-label={t("explore_n", { n: explore.length })}>
+            <h2>{t("explore_n", { n: "" }).trim()} <span>{explore.length}</span></h2>
             <p>{t("explore_sub")}</p>
             {near && (
               <button type="button" className="pl-near" onClick={() => app.setPlacesNear(null)} aria-label={t("near_clear_label", { name: destName(data, near) })}>
                 {t("near_chip", { name: destName(data, near) })}<span aria-hidden="true">· {t("near_clear")}</span>
               </button>
             )}
-            {explore.length > 0 && <ul className="card">
-              {(allExplore ? explore : explore.slice(0, 6)).map((p) => (
+            {!explore.length ? <p>{t("explore_empty")}</p> : !allExplore ? (
+              <div className="explore-rail" key={topic + q}>
+                {explore.map((p) => <ExploreCard key={p.id} place={p} data={data} onOpen={openExplore} />)}
+              </div>
+            ) : <ul className="card">
+              {explore.map((p) => (
                 <li key={p.id}>
                   <button type="button" onClick={() => openExplore(p)}>
                     <GroupIcon group={groupOf(p)} size={30} className="grp-icon list" />
@@ -123,19 +182,13 @@ export default function Places() {
                 </li>
               ))}
             </ul>}
-            {explore.length > 6 && (
+            {explore.length > 0 && (
               <button type="button" className="btn btn-soft ple-more" aria-expanded={allExplore} onClick={() => setAllExplore(!allExplore)}>
                 {allExplore ? t("show_less") : t("see_all_n", { n: explore.length })}
               </button>
             )}
           </section>
-        )}
 
-        <button className="soft pl-events" onClick={() => app.go("events")}>
-          <span className="pl-ev-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 5h14v15H5z M5 10h14 M9 3v4 M15 3v4" /></svg></span>
-          <span className="pl-ev-text"><b>{t("linked_events")}</b><small>{t("linked_events_sub")}</small></span>
-          <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
-        </button>
       </div>
     </section>
   );
