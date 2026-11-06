@@ -427,6 +427,9 @@ async function scoreAndPick(cands, ctx, osm, orsKey) {
     const alt = byHigh.find((c) => c !== best && sharedShare(c.samples, best.samples) <= 0.7 && c.ev.score_high >= 30);
     if (alt) bestHigh = alt;
   }
+  // 완만한 길은 언제나 오르막이 더 적은 쪽 (점수가 비슷해 반대로 뽑히면 서로 바꿔요)
+  let low = best, high = bestHigh;
+  if (low !== high && (low.ev.ascent_m ?? 0) > (high.ev.ascent_m ?? 0)) [low, high] = [high, low];
   const direct = ev.find((c) => c.kind === "direct") || null;
   const pack = (c) => c && ({
     kind: c.kind,
@@ -434,8 +437,8 @@ async function scoreAndPick(cands, ctx, osm, orsKey) {
     metrics: c.ev,
   });
   return {
-    best: pack(best), low: pack(best), high: pack(bestHigh), direct: pack(direct),
-    same: best === bestHigh,
+    best: pack(low), low: pack(low), high: pack(high), direct: pack(direct),
+    same: low === high,
     tried: cands.length,
     osm: osm ? { rivers: osm.water.length, riverside_paths: osm.river.length, friendly_paths: osm.friendly.length, crossings: osm.crossings.length } : null,
     engine: orsKey ? "ors" : "osrm+open-meteo",
