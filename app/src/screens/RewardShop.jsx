@@ -16,6 +16,6 @@ export function RewardShop() {
         <span>↗</span>
       </a>
     ) : <p className="muted">등록된 주변 가게가 없습니다.</p>}
-    <p className="muted">가게 정보는 참고용이며, 실제 제휴 및 할인 혜택은 제공되지 않습니다.</p>
+
   </section>;
 }
