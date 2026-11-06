@@ -39,7 +39,11 @@
     "dest": "simujang",
     "straight_m": 770
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/31/3540431_image2_1.jpg",
+   "photo_license": "KOGL-1",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 1395270"
   },
   {
    "id": "kansong",
@@ -77,7 +81,11 @@
     "dest": "simujang",
     "straight_m": 450
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/43/3464643_image2_1.jpg",
+   "photo_license": "KOGL-3",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 130511"
   },
   {
    "id": "sb-art-museum",
@@ -115,7 +123,11 @@
     "dest": "simujang",
     "straight_m": 310
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/86/3417686_image2_1.jpg",
+   "photo_license": "KOGL-3",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 3058449"
   },
   {
    "id": "suyeonsanbang",
@@ -153,7 +165,11 @@
     "dest": "simujang",
     "straight_m": 310
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/81/3445681_image2_1.JPEG",
+   "photo_license": "KOGL-1",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 1664105"
   },
   {
    "id": "seonjam-museum",
@@ -191,7 +207,11 @@
     "dest": "simujang",
     "straight_m": 570
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "simujang",
@@ -229,7 +249,11 @@
     "dest": "simujang",
     "straight_m": 0
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/15/3503015_image2_1.jpg",
+   "photo_license": "KOGL-1",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 1395466"
   },
   {
    "id": "bukjeong-village",
@@ -268,7 +292,11 @@
     "dest": "simujang",
     "straight_m": 130
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/30/3551330_image2_1.jpg",
+   "photo_license": "KOGL-1",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 2661492"
   },
   {
    "id": "naksan-wall",
@@ -313,7 +341,11 @@
     "dest": "simujang",
     "straight_m": 1310
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "gilsangsa",
@@ -350,7 +382,11 @@
     "dest": "simujang",
     "straight_m": 590
    },
-   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요.",
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/72/3376572_image2_1.jpg",
+   "photo_license": "KOGL-1",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 128866"
   },
   {
    "id": "leejongseok-villa",
@@ -384,7 +420,11 @@
     "dest": "simujang",
     "straight_m": 270
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/54/3043954_image2_1.jpg",
+   "photo_license": "KOGL-3",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 3043967"
   },
   {
    "id": "korean-stone-museum",
@@ -418,7 +458,11 @@
     "dest": "simujang",
     "straight_m": 820
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/15/3503215_image2_1.jpg",
+   "photo_license": "KOGL-3",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 2372228"
   },
   {
    "id": "furniture-museum",
@@ -455,7 +499,11 @@
     "dest": "simujang",
     "straight_m": 720
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "samcheonggak",
@@ -487,7 +535,11 @@
     "dest": "simujang",
     "straight_m": 760
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "martyrs-monastery",
@@ -519,7 +571,11 @@
     "dest": "simujang",
     "straight_m": 350
    },
-   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요.",
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "myeongwol-museum",
@@ -554,7 +610,11 @@
     "dest": "jeongneung",
     "straight_m": 1280
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "kwonjingyu-atelier",
@@ -588,7 +648,11 @@
     "dest": "jeongneung",
     "straight_m": 1470
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "sukjeongmun",
@@ -624,7 +688,11 @@
     "dest": "simujang",
     "straight_m": 1110
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "hyehwamun",
@@ -660,7 +728,11 @@
     "dest": "simujang",
     "straight_m": 1220
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "sb-literature",
@@ -692,7 +764,11 @@
     "dest": "simujang",
     "straight_m": 490
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "choemanrin-museum",
@@ -726,7 +802,11 @@
     "dest": "jeongneung",
     "straight_m": 1090
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "sb-art-factory",
@@ -758,7 +838,11 @@
     "dest": "simujang",
     "straight_m": 1170
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "jeongbeopsa",
@@ -792,7 +876,11 @@
     "dest": "simujang",
     "straight_m": 900
    },
-   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요.",
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/81/4002281_image2_1.jpg",
+   "photo_license": "KOGL-1",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 479778"
   },
   {
    "id": "jeongneung",
@@ -830,7 +918,11 @@
     "dest": "jeongneung",
     "straight_m": 70
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/96/3530496_image2_1.jpg",
+   "photo_license": "KOGL-1",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 127616"
   },
   {
    "id": "jeongneungcheon",
@@ -864,7 +956,11 @@
     "2026-10-18 1차 자료조사(주변 상권)"
    ],
    "nearest_course": null,
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "gyeongguksa",
@@ -901,7 +997,11 @@
     "dest": "jeongneung",
     "straight_m": 1520
    },
-   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요.",
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/81/3571681_image2_1.jpg",
+   "photo_license": "KOGL-1",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 294505"
   },
   {
    "id": "bukhansan-jeongneung-trail",
@@ -935,7 +1035,11 @@
     "dest": "jeongneung",
     "straight_m": 2070
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "heungcheonsa",
@@ -972,7 +1076,11 @@
     "dest": "jeongneung",
     "straight_m": 360
    },
-   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요.",
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/09/4002309_image2_1.jpg",
+   "photo_license": "KOGL-1",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 126506"
   },
   {
    "id": "bongguksa",
@@ -1006,7 +1114,11 @@
     "dest": "jeongneung",
     "straight_m": 470
    },
-   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요.",
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/43/3524143_image2_1.jpg",
+   "photo_license": "KOGL-1",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 316295"
   },
   {
    "id": "bomunsa",
@@ -1040,7 +1152,11 @@
     "dest": "jeongneung",
     "straight_m": 1980
    },
-   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요.",
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/19/3393219_image2_1.JPG",
+   "photo_license": "KOGL-3",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 316104"
   },
   {
    "id": "gaeunsan",
@@ -1072,7 +1188,11 @@
     "2026-10-30 성북구 장소 정리"
    ],
    "nearest_course": null,
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "uiryeong",
@@ -1106,7 +1226,11 @@
     "dest": "uiryeong",
     "straight_m": 260
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "samgunbu-chongmudang",
@@ -1140,7 +1264,11 @@
     "dest": "simujang",
     "straight_m": 1860
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "knua",
@@ -1174,7 +1302,11 @@
     "dest": "uiryeong",
     "straight_m": 260
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "seongbukcheon",
@@ -1215,7 +1347,11 @@
     "2026-10-18 1차 자료조사(주변 상권)"
    ],
    "nearest_course": null,
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "bukak-skyway",
@@ -1249,7 +1385,11 @@
     "dest": "simujang",
     "straight_m": 1350
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "sb-history-park",
@@ -1283,7 +1423,11 @@
     "dest": "simujang",
     "straight_m": 550
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": "https://tong.visitkorea.or.kr/cms/resource/15/3043915_image2_1.jpg",
+   "photo_license": "KOGL-3",
+   "photo_credit": "한국관광공사",
+   "photo_source": "TourAPI contentid 3043953"
   },
   {
    "id": "samseon-park",
@@ -1315,7 +1459,11 @@
     "dest": "simujang",
     "straight_m": 1860
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "sb-history-center",
@@ -1347,7 +1495,11 @@
     "dest": "simujang",
     "straight_m": 480
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "sb-eco-center",
@@ -1379,7 +1531,11 @@
     "dest": "jeongneung",
     "straight_m": 2200
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "yehyangjae",
@@ -1411,7 +1567,11 @@
     "dest": "simujang",
     "straight_m": 270
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "kimjungup-house",
@@ -1443,7 +1603,11 @@
     "dest": "uiryeong",
     "straight_m": 1740
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "leeyuksa-space",
@@ -1477,7 +1641,11 @@
     "dest": "jeongneung",
     "straight_m": 2230
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "donam-cathedral",
@@ -1509,7 +1677,11 @@
     "dest": "jeongneung",
     "straight_m": 1490
    },
-   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요.",
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   },
   {
    "id": "odong-park",
@@ -1541,7 +1713,11 @@
     "dest": "uiryeong",
     "straight_m": 1620
    },
-   "visitor_note": null
+   "visitor_note": null,
+   "photo_url": null,
+   "photo_license": null,
+   "photo_credit": null,
+   "photo_source": null
   }
  ]
 }

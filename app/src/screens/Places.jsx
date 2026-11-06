@@ -25,6 +25,18 @@ function PhotoIcon() {
   return <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>;
 }
 
+// 공공누리 3유형은 변경 금지라 자르지 않고 보여줘요. 사진을 못 불러오면 회색 아이콘으로 바뀌어요.
+function ExplorePhoto({ place }) {
+  const [failed, setFailed] = useState(false);
+  if (!place.photo_url || failed) return <PhotoIcon />;
+  return (
+    <>
+      <img className={place.photo_license === "KOGL-3" ? "contain" : undefined} src={place.photo_url} alt={t("photo_alt", { name: loc(place.name) })} loading="lazy" onError={() => setFailed(true)} />
+      <span className="explore-credit">{t("photo_credit", { credit: place.photo_credit })}</span>
+    </>
+  );
+}
+
 function ExploreCard({ place, data, onOpen }) {
   const name = loc(place.name);
   const [badge, ...tags] = kindLabel(place).split(/[·,\s]+/).filter(Boolean);
@@ -35,8 +47,7 @@ function ExploreCard({ place, data, onOpen }) {
     <button type="button" className="explore-tile" data-places-theme={groupOf(place)} onClick={() => onOpen(place)}
       aria-label={from && distanceText ? `${name}, ${from} ${distanceText}` : name}>
       <span className="explore-photo">
-        {place.photo_url ? <img src={place.photo_url} alt="" loading="lazy" /> :
-          <PhotoIcon />}
+        <ExplorePhoto place={place} />
         <span className="explore-badge">{badge}</span>
       </span>
       <span className="explore-caption">
