@@ -1346,3 +1346,9 @@ div:has(> .spot-pin) { pointer-events: none; }
 .screen.pd-popup { top: 50%; }
 .pd-scrim { background: rgba(31, 61, 20, .06); }
 .pd-prep { opacity: .9; }
+
+/* 장소 팝업 끌기: 위로 = 전체 화면, 아래로 = 절반 / 닫기 */
+.screen.pd-popup { transition: top .28s var(--ease-out, ease); }
+.screen.pd-popup.pd-full { top: calc(44px + var(--safe-top)); }
+.screen.pd-popup.pd-dragging { transition: none; }
+.pd-popup .pd-hero { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
