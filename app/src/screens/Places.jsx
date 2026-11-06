@@ -10,7 +10,7 @@ import { t, loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
 import { GROUPS, groupOf, PLACE_TOPICS, exploreColor, exploreMeta, fromCourseEnd, byNearest, destName } from "../lib/places.js";
 import { MapView, FitBounds, SpotMarker, ExploreLayer } from "../components/MapView.jsx";
-import { spotIconSvg } from "../components/SpotIcons.jsx";
+import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
 import { Badge } from "../components/ui.jsx";
 
 export default function Places() {
@@ -115,7 +115,7 @@ export default function Places() {
               {(allExplore ? explore : explore.slice(0, 6)).map((p) => (
                 <li key={p.id}>
                   <button type="button" onClick={() => openExplore(p)}>
-                    <i style={{ background: exploreColor(p) }} aria-hidden="true" />
+                    <GroupIcon group={groupOf(p)} size={30} className="grp-icon list" />
                     <span className="ple-text"><b>{loc(p.name)}</b><small>{exploreMeta(p)}</small></span>
                     <span className="ple-near">{fromCourseEnd(data, p)}</span>
                     <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>

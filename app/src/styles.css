@@ -1357,3 +1357,28 @@ div:has(> .spot-pin) { pointer-events: none; }
 .pd-popup .pd-hero { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
 
 /* 내 기록 첫 화면 오른쪽 위 로그아웃 */
+
+/* ---------- 테마 아이콘 (역사·전시·종교·공원) ---------- */
+/* 지도: 코스 목적지처럼 큰 흰 원 아이콘 */
+.th-pin { width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; background: var(--paper, #FFFDF8); display: grid; place-items: center; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 3.5px rgba(47, 101, 18, .55), 0 5px 12px rgba(28, 43, 38, .28); cursor: pointer; transform: translate(0, 0); transition: transform .12s; }
+.th-pin svg { width: 30px; height: 30px; }
+.th-pin.on { transform: scale(1.18); box-shadow: 0 0 0 2.5px #FFFFFF, 0 0 0 5px var(--brand, #5FA52A), 0 6px 14px rgba(28, 43, 38, .35); }
+/* 지도: 같은 테마 묶음 "아이콘 + 역사 5" */
+.th-cluster { display: inline-flex; align-items: center; gap: 5px; height: 38px; padding: 0 10px 0 4px; border: 0; border-radius: 19px; background: #FFFFFF; color: #1F3D14; font: 700 12.5px var(--sans, sans-serif); white-space: nowrap; box-shadow: 0 0 0 2px rgba(47, 101, 18, .55), 0 6px 14px -6px rgba(31, 61, 20, .5); cursor: pointer; }
+.th-cluster-ic { width: 30px; height: 30px; border-radius: 50%; background: #F2F9E6; display: grid; place-items: center; }
+.th-cluster-ic svg { width: 24px; height: 24px; }
+.th-cluster b { min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: #2F6512; color: #FFFFFF; font-size: 12px; display: grid; place-items: center; }
+/* 칩·목록 */
+.grp-icon { flex: none; }
+.chip .grp-icon { margin-right: 2px; vertical-align: -4px; }
+.grp-icon.list { border-radius: 10px; background: #F2F9E6; padding: 3px; box-sizing: content-box; }
+.ex-ic .grp-icon { width: 44px; height: 44px; }
+
+/* 장소 정보 탭: 3개 탭 가운데 정렬 */
+.pd-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.stats-screen .pd-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* 장소 정보: 항목 이름은 크게·굵게, 내용은 보통 굵기 */
+.pd-row .pd-row-k { font-size: 16px; font-weight: 800; color: var(--strong); }
+.pd-row .pd-row-v { font-size: 14px; font-weight: 400; color: var(--text); line-height: 1.45; }
+.pd-row .pd-row-v.pd-pending { color: var(--muted); }
+.pd-row .pd-row-v + small, .pd-row small { font-weight: 400; }

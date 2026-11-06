@@ -3,11 +3,11 @@
 // 지도를 쓰는 화면(홈·코스 상세·달리기·내 기록)은 모두 이 파일의 부품만 써요.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Map, CustomOverlayMap, Polygon, Polyline, Circle, MarkerClusterer, useMap } from "react-kakao-maps-sdk";
-import { spotIconSvg, LABEL_OFFSETS } from "./SpotIcons.jsx";
+import { Map, CustomOverlayMap, Polygon, Polyline, Circle, useMap } from "react-kakao-maps-sdk";
+import { spotIconSvg, groupIconSvg, LABEL_OFFSETS } from "./SpotIcons.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { CENTER } from "../state/AppContext.jsx";
-import { exploreColor, areaLabel, iconTypeOf } from "../lib/places.js";
+import { groupOf } from "../lib/places.js";
 
 const KAKAO_MAP_KEY = import.meta.env.NEXT_PUBLIC_KAKAO_MAP_KEY;
 
@@ -312,102 +312,96 @@ export function MapWatch({ onChange }) {
   return null;
 }
 
-// ---------- 둘러볼 곳 아이콘 ----------
-// 종류별 선 아이콘 (viewBox 0 0 24 24, places.js의 iconTypeOf와 짝)
-const EXPLORE_ICONS = {
-  hanok: "M2 11c3 .5 5-1 6.5-3.5h7C17 10 19 11.5 22 11M5 11v8h14v-8M10 19v-5h4v5",
-  temple: "M12 2v3M8 5h8M8 5L5.5 9h13L16 5M7 9v4h10V9M5 13h14M8 13v7h8v-7M10.5 20v-3h3v3",
-  church: "M12 2v6M9.5 4.5h5M7 21V12l5-4 5 4v9M4 21h16M10 21v-4h4v4",
-  literature: "M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19a2 2 0 0 1 2-2h13",
-  museum: "M3 9l9-5 9 5M5 9v9M9.5 9v9M14.5 9v9M19 9v9M3 20h18",
-  art: "M4 5h16v14H4zM7 16l4-5 3 3 2-2 2 4M15 8.5h.01",
-  wall: "M3 20V9h3v3h3V9h6v3h3V9h3v11M10 20v-4a2 2 0 0 1 4 0v4",
-  park: "M12 3L6 11h4l-4 6h12l-4-6h4zM12 17v4",
-  info: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01",
-};
-// 흰 원 + 1.5px 분류 색 테두리 + 가운데 선 아이콘. size: "sm"(22px, 단계 6 이상) · "lg"(28px, 5 이하).
-// 고르면 36px로 커지고 원이 분류 색으로 채워지고(아이콘은 흰색) 아래에 이름 알약이 떠요. 누르는 칸은 최소 30px
-export function ExploreDot({ place, selected = false, size = "sm", onClick }) {
-  const name = loc(place.name);
-  return (
-    <CustomOverlayMap position={{ lat: place.lat, lng: place.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 2 : 1} clickable>
-      <div className={`ex-pin ${size} ${selected ? "on" : ""}`} style={{ "--c": exploreColor(place) }}>
-        <button type="button" className="ex-dot" aria-label={name} aria-pressed={selected} onClick={onClick}>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d={EXPLORE_ICONS[iconTypeOf(place)]} /></svg>
-        </button>
-        {selected && <span className="ex-name" onClick={onClick} aria-hidden="true">{name}</span>}
-      </div>
-    </CustomOverlayMap>
-  );
-}
-
-const posKey = (lat, lng) => `${lat.toFixed(6)},${lng.toFixed(6)}`;
-const esc = (x) => String(x).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-// 묶음 글자는 아래 relabel에서 직접 넣어요. 카카오 기본 모양(파란 원)은 지워요
-const CLUSTER_STYLE = { width: "auto", height: "auto", background: "none", border: "0", lineHeight: "normal", textAlign: "left", color: "inherit" };
-
-// 둘러볼 곳 아이콘 여러 개. 서울 동북부 전체처럼 아주 멀리 볼 때(확대 단계 9 이상)만 카카오 MarkerClusterer로 묶고,
-// 성북구 전체(휴대폰 홈 첫 화면 단계 8)나 그보다 가까우면 장소마다 하나씩 보여요.
-// 묶음은 "성북동 18"처럼 가장 많은 동네 이름 + 개수(섞여 있으면 숫자만), 누르면 그 범위로 확대해요.
+// ---------- 둘러볼 곳 아이콘 (테마별) ----------
+// 장소마다 테마 아이콘(역사·전시·종교·공원, SpotIcons.jsx의 GROUP_SVG)을 코스 목적지처럼 크게 보여줘요.
+// 화면에서 가까워 겹치는 같은 테마 장소는 "아이콘 + 역사 5"처럼 한 알약으로 묶어요 (축소하면 묶이고, 확대하면 풀려요).
+// 다른 테마끼리 겹치면 살짝 밀어서 안 겹치게 둬요. 묶음을 누르면 그 장소들이 다 보이게 확대해요.
 //   pad(): 확대할 때 비워 둘 지도 가장자리 px [위, 오른쪽, 아래, 왼쪽] (홈은 위 검색·칩, 아래 시트)
-// level: 지금 확대 단계 (아이콘 크기를 정해요). 고른 아이콘은 묶음에 들어가지 않게 밖에 따로 그려요.
-export const CLUSTER_MIN_LEVEL = 9;
-const ZOOM_IN_MAX = 3; // 가까운 장소 2개짜리 묶음도 너무 깊이 들어가지 않게
-export function ExploreLayer({ places, selectedId, cluster = true, level = 6, onSelect, pad }) {
-  const byPos = useMemo(() => {
-    const m = {};
-    places.forEach((p) => { m[posKey(p.lat, p.lng)] = p; });
-    return m;
-  }, [places]);
-  const relabel = useCallback((_, clusters) => {
-    clusters.forEach((c) => {
-      const marker = c.getClusterMarker?.();
-      marker?.setZIndex?.(1); // 코스 목적지 핀(3)보다 아래
-      const el = marker?.getContent?.();
-      if (!el || typeof el === "string") return;
-      const count = {};
-      c.getMarkers().forEach((m) => {
-        const pos = m.getPosition();
-        const p = byPos[posKey(pos.getLat(), pos.getLng())];
-        if (p) count[p.area] = (count[p.area] || 0) + 1;
+const MERGE_PX = 50;   // 같은 테마가 이보다 가까우면 묶어요 (아이콘 지름 + 여유)
+const APART_PX = 46;   // 서로 다른 테마 아이콘 사이 최소 간격
+export function ExploreLayer({ places, selectedId, onSelect, pad }) {
+  const map = useMap();
+  const [items, setItems] = useState([]);
+  const latest = useRef(places);
+  latest.current = places;
+
+  const compute = useCallback(() => {
+    const { kakao } = window;
+    const proj = map.getProjection?.();
+    if (!kakao || !proj) return;
+    const pts = latest.current.map((p) => {
+      const pt = proj.containerPointFromCoords(new kakao.maps.LatLng(p.lat, p.lng));
+      return { p, x: pt.x, y: pt.y, g: groupOf(p) };
+    }).sort((a, b) => a.y - b.y || a.x - b.x);
+    // 1) 같은 테마끼리 가까우면 묶기
+    const used = new Set(), out = [];
+    pts.forEach((a, i) => {
+      if (used.has(i)) return;
+      const members = [];
+      pts.forEach((b, j) => {
+        if (used.has(j) || b.g !== a.g || Math.hypot(a.x - b.x, a.y - b.y) > MERGE_PX) return;
+        used.add(j); members.push(b);
       });
-      // 한 동네가 절반을 넘을 때만 동네 이름을 붙여요 (여러 동네가 섞인 큰 묶음은 숫자만)
-      const n = c.getSize();
-      const [area, top = 0] = Object.entries(count).sort((a, b) => b[1] - a[1])[0] || [];
-      const label = area && top * 2 > n ? areaLabel({ area }) : "";
-      el.innerHTML = `<span class="ex-cluster">${label ? `<span>${esc(label)}</span>` : ""}<b>${n}</b></span>`;
-      // 카카오는 기본 묶음 크기로 위치를 잡아서, 알약 가운데가 실제 위치에 오게 다시 맞춰요
-      el.style.transform = "translate(-50%, -50%)";
-      requestAnimationFrame(() => { if (el.parentElement) el.parentElement.style.margin = "0"; });
-      el.setAttribute("role", "button");
-      el.setAttribute("aria-label", t(label ? "cluster_label" : "cluster_label_n", { area: label, n }));
+      const x = members.reduce((n, m) => n + m.x, 0) / members.length;
+      const y = members.reduce((n, m) => n + m.y, 0) / members.length;
+      out.push({ g: a.g, members: members.map((m) => m.p), x, y });
     });
-  }, [byPos]);
+    // 2) 다른 테마끼리 겹치면 조금씩 밀어내기
+    for (let k = 0; k < 10; k++) {
+      let moved = false;
+      for (let i = 0; i < out.length; i++) for (let j = i + 1; j < out.length; j++) {
+        const a = out[i], b = out[j];
+        const need = APART_PX + (a.members.length > 1 ? 18 : 0) + (b.members.length > 1 ? 18 : 0);
+        let dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
+        if (d >= need) continue;
+        if (d < 0.01) { dx = 1; dy = 0; d = 1; }
+        const push = (need - d) / 2;
+        a.x -= (dx / d) * push; a.y -= (dy / d) * push;
+        b.x += (dx / d) * push; b.y += (dy / d) * push;
+        moved = true;
+      }
+      if (!moved) break;
+    }
+    setItems(out.map((it) => {
+      const ll = proj.coordsFromContainerPoint(new kakao.maps.Point(it.x, it.y));
+      return { ...it, lat: ll.getLat(), lng: ll.getLng(), key: it.members.map((m) => m.id).join("|") };
+    }));
+  }, [map]);
 
-  // 칩을 바꿔 이 층이 사라질 때 묶음 표시가 지도에 남지 않게 지워요
-  const clusterer = useRef(null);
-  useEffect(() => () => { clusterer.current?.clear(); clusterer.current = null; }, []);
-  const zoomIn = useCallback((clusterer, c) => {
-    const map = clusterer.getMap();
-    // 확대하면 묶음이 다시 계산돼 비니까, 범위를 먼저 꺼내 둬요
-    const bounds = c.getBounds(), center = c.getCenter();
-    const [top, right, bottom, left] = pad?.() || [40, 40, 40, 40];
+  useEffect(() => {
+    const { kakao } = window;
+    compute();
+    kakao.maps.event.addListener(map, "idle", compute);
+    return () => kakao.maps.event.removeListener(map, "idle", compute);
+  }, [map, compute, places]);
+
+  const zoomTo = (members) => {
+    const { kakao } = window;
+    const bounds = new kakao.maps.LatLngBounds();
+    members.forEach((m) => bounds.extend(new kakao.maps.LatLng(m.lat, m.lng)));
+    const [top, right, bottom, left] = pad?.() || [60, 40, 60, 40];
+    const before = map.getLevel();
     map.setBounds(bounds, top, right, bottom, left);
-    // 그래도 묶이는 단계면 묶음이 풀리는 단계까지 들어가요
-    if (map.getLevel() >= CLUSTER_MIN_LEVEL) map.setLevel(CLUSTER_MIN_LEVEL - 1, { anchor: center });
-    if (map.getLevel() < ZOOM_IN_MAX) map.setLevel(ZOOM_IN_MAX, { anchor: center });
-  }, [pad]);
+    // 거의 같은 자리라 확대가 안 됐으면 한 단계 들어가요
+    if (map.getLevel() >= before && before > 1) map.setLevel(before - 1);
+  };
 
-  const sel = places.find((p) => p.id === selectedId);
-  const size = level >= 6 ? "sm" : "lg";
-  const dots = places.filter((p) => p.id !== selectedId)
-    .map((p) => <ExploreDot key={p.id} place={p} size={size} onClick={() => onSelect?.(p)} />);
-  return (
-    <>
-      {cluster
-        ? <MarkerClusterer averageCenter minLevel={CLUSTER_MIN_LEVEL} gridSize={64} styles={[CLUSTER_STYLE]} disableClickZoom onClusterclick={zoomIn} onClustered={relabel} onCreate={(c) => { clusterer.current = c; }}>{dots}</MarkerClusterer>
-        : dots}
-      {sel && <ExploreDot place={sel} selected size={size} onClick={() => onSelect?.(sel)} />}
-    </>
-  );
+  return items.map((it) => {
+    const one = it.members.length === 1;
+    const p = it.members[0];
+    const selected = one && p.id === selectedId;
+    return (
+      <CustomOverlayMap key={it.key} position={{ lat: it.lat, lng: it.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 2 : 1} clickable>
+        {one ? (
+          <button type="button" className={`th-pin ${selected ? "on" : ""}`} aria-label={loc(p.name)} aria-pressed={selected}
+            onClick={() => onSelect?.(p)} dangerouslySetInnerHTML={{ __html: groupIconSvg(it.g) }} />
+        ) : (
+          <button type="button" className="th-cluster" aria-label={`${t("grp_" + it.g)} ${it.members.length}`} onClick={() => zoomTo(it.members)}>
+            <span className="th-cluster-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: groupIconSvg(it.g) }} />
+            <span>{t("grp_" + it.g)}</span><b>{it.members.length}</b>
+          </button>
+        )}
+      </CustomOverlayMap>
+    );
+  });
 }

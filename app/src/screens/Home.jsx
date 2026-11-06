@@ -4,7 +4,7 @@
 // 둘러볼 곳(explore.json): 장소마다 종류 아이콘. 서울 전체처럼 아주 멀리 볼 때만 "성북동 18"처럼 묶어요.
 //   아이콘을 누르면 그곳을 가운데에 두고 한 단계 확대하고, 시트 바로 위 카드 줄에 그곳부터 가까운 순 8곳이 떠요.
 //   왼쪽 위 "← 성북구 전체 · {장소} 주변"을 누르면 고르기 전 확대 단계로 돌아가요.
-//   칩(전체 · 전시 · 역사·한옥 · 사찰·성당 · 공원·전망, places.js의 groupOf)은 둘러볼 곳 아이콘만 걸러요.
+//   칩(전체 · 전시 · 역사 · 종교 · 공원, places.js의 groupOf)은 둘러볼 곳 아이콘만 걸러요.
 // 칩·고른 곳·확대 범위·시트 높이는 AppContext(app.homeMap)에 남겨서, 둘러볼 곳 상세에 갔다 와도 그대로예요.
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -15,18 +15,11 @@ import { LangPill, ElevationChart } from "../components/Bits.jsx";
 import { useBottomSheet, BottomSheet, Segment, Badge } from "../components/ui.jsx";
 import { DISTANCES, DESTINATIONS } from "../lib/routes.js";
 import { getCourse } from "../lib/data.js";
-import { spotIconSvg, CategoryIcon } from "../components/SpotIcons.jsx";
+import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
 import { MODE_COLOR } from "./Courses.jsx";
 import { distance } from "../lib/geo.js";
 import { exploreColor, exploreMeta, fromCourseEnd, GROUPS, groupOf } from "../lib/places.js";
 
-// 장소 종류 칩 아이콘 (선 아이콘, 글자색을 따라가요): 전시=액자, 역사·한옥=한옥 지붕, 사찰·성당=탑, 공원·전망=나무
-const GROUP_ICONS = {
-  exhibit: "M4 5h16v14H4zM7 16l4-5 3 3 2-2 2 4M15 8.5h.01",
-  heritage: "M2 11c3 .5 5-1 6.5-3.5h7C17 10 19 11.5 22 11M5 11v8h14v-8M10 19v-5h4v5",
-  religion: "M12 2v3M8 5h8l1.5 3h-11zM9 8v3h6V8M6.5 11h11l1.5 3H5zM9 14v6h6v-6M5 20h14",
-  park: "M12 3L6 11h4l-4 6h12l-4-6h4zM12 17v4",
-};
 // 바텀시트가 멈추는 높이 (px). 가운데(처음) 높이는 380(제목·거리 탭·코스 고르기·자유 달리기가 하단 탭 위에 다 보이는 높이)인데, 낮은 화면(아이폰 SE 등)에서는
 // 지도에 핀 자리가 남도록 화면 높이에 맞춰 낮춰요 (최소 300)
 // 아이콘을 누르면 아래 카드 줄에 보여줄 장소 수 (고른 곳 포함)
@@ -174,7 +167,7 @@ export default function Home() {
         <div className="chips scroll home-chips">
           {GROUPS.map((k) => (
             <button key={k} className={`chip ${filter === k ? "on" : "glass"}`} aria-pressed={filter === k} onClick={() => pickFilter(k)}>
-              {k !== "all" && <svg className="grp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d={GROUP_ICONS[k]} /></svg>}
+              {k !== "all" && <GroupIcon group={k} size={18} />}
               {t("grp_" + k)}<span className="chip-n">{groupCount[k] || 0}</span>
             </button>
           ))}
@@ -216,7 +209,7 @@ export default function Home() {
             <PrepCard key={s.id} name={loc(s.name)} sub={loc({ ko: "역사·문화", en: "History" })} icon={<span dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />} onOpen={() => openSpot(s)} />
           ))}
           {data.explore.filter((p) => !data.spotById[p.spot_id]).map((p) => (
-            <PrepCard key={p.id} name={loc(p.name)} sub={[p.kind, p.area_ko].filter(Boolean).join(" · ")} icon={<CategoryIcon category={p.chip} size={26} />} onOpen={() => openPreparing(p)} />
+            <PrepCard key={p.id} name={loc(p.name)} sub={[p.kind, p.area_ko].filter(Boolean).join(" · ")} icon={<GroupIcon group={groupOf(p)} size={30} />} onOpen={() => openPreparing(p)} />
           ))}
         </div>
       </BottomSheet>
@@ -233,7 +226,7 @@ function courseFor(data, dest, km) {
 function preparingSpot(p) {
   return {
     id: p.id, preparing: true, name: { ko: p.name.ko, en: p.name.en || p.name.ko },
-    lat: p.lat, lng: p.lng, category: ["history", "stream", "park"].includes(p.chip) ? p.chip : "history",
+    lat: p.lat, lng: p.lng, category: ["history", "stream", "park"].includes(p.chip) ? p.chip : "history", group: groupOf(p),
     kindLabel: [p.kind, p.area_ko].filter(Boolean).join(" · "),
     cards: [], narration: { ko: "", en: "" }, sources: [],
   };
@@ -283,7 +276,7 @@ function ExploreCards({ cards, selId, bottom, onSelect, onOpen }) {
       {cards.slice(0, 12).map((p) => (
         <article key={p.id} className={`ex-card glass ${p.id === selId ? "on" : ""}`}>
           <button type="button" className="ex-card-name" onClick={() => p.id !== selId && onSelect(p)} aria-pressed={p.id === selId}>
-            <i style={{ background: exploreColor(p) }} aria-hidden="true" /><b>{loc(p.name)}</b>
+            <GroupIcon group={groupOf(p)} size={20} /><b>{loc(p.name)}</b>
           </button>
           <small>{exploreMeta(p)}</small>
           <div className="ex-card-foot">

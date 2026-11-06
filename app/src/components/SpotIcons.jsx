@@ -20,8 +20,26 @@ const CATEGORY_SVG = {
   park: `<path d="M1.5 17L7.5 7L11 12.4L13.4 9.4L18.5 17Z" fill="#B9D3C6"/><path d="M6 9.4L7.5 7L9 9.4Z" fill="#FBF9F5"/><path d="M14.5 4.2C12.2 4.2 11.2 6.6 12.2 8.2C10.8 8.8 11 11.4 13 11.6H16C18 11.4 18.2 8.8 16.8 8.2C17.8 6.6 16.8 4.2 14.5 4.2Z" fill="#2F6E5E"/><path d="M14.5 11.6V17" stroke="#7A5134" stroke-width="1.5" stroke-linecap="round"/><path d="M1.5 17H18.5" stroke="#2F6E5E" stroke-width="1.5" stroke-linecap="round"/>`,
 };
 
+// 장소 테마 아이콘 (viewBox 0 0 32 32, 코스 목적지 그림과 같은 느낌)
+// 역사 = 심우장 한옥, 전시 = 이젤 위 액자, 종교 = 범종(절·성당 모두 종을 울려요), 공원 = 나무와 언덕
+export const GROUP_SVG = {
+  heritage: SPOT_SVG.simujang,
+  exhibit: `<path d="M10.5 23.5L8 30M21.5 23.5L24 30M16 23.5V29" stroke="#7A5134" stroke-width="1.6" stroke-linecap="round"/><rect x="3.5" y="4" width="25" height="19.5" rx="1.6" fill="#C9A24B" stroke="#9C7A2E" stroke-width=".8"/><rect x="6.2" y="6.7" width="19.6" height="14.1" fill="#FBF0DC"/><path d="M6.2 20.8L12.3 12.6L16.4 17.6L19.4 14.4L25.8 20.8Z" fill="#7FA66B"/><path d="M10.4 15.2L12.3 12.6L14.2 14.9Z" fill="#FBF9F5"/><circle cx="21.8" cy="10.4" r="2" fill="#E04A2F"/><path d="M3.5 23.5H28.5" stroke="#9C7A2E" stroke-width=".8"/>`,
+  religion: `<path d="M16 2v3.4" stroke="#7A5134" stroke-width="1.8" stroke-linecap="round"/><path d="M10.5 5.6H21.5" stroke="#5B3A22" stroke-width="2.2" stroke-linecap="round"/><path d="M11.6 6.8C9.4 8.4 8.6 12 8.6 17.4V24H23.4V17.4C23.4 12 22.6 8.4 20.4 6.8Z" fill="#B87A3D"/><path d="M10 10.4H22M9.2 13.4H22.8" stroke="#D9A066" stroke-width=".9"/><path d="M11 8.2v1.4M13.6 8.2v1.4M16 8.2v1.4M18.4 8.2v1.4M21 8.2v1.4" stroke="#8C5A2B" stroke-width=".8" stroke-linecap="round"/><circle cx="16" cy="18.6" r="2.3" fill="#ECB22E" stroke="#8C5A2B" stroke-width=".6"/><path d="M14.6 18.6Q16 17 17.4 18.6" fill="none" stroke="#8C5A2B" stroke-width=".5"/><path d="M7.2 24.2H24.8" stroke="#8C5A2B" stroke-width="2.4" stroke-linecap="round"/><path d="M4 29H28" stroke="#B8AE9C" stroke-width="2" stroke-linecap="round"/>`,
+  park: `<circle cx="27" cy="4.6" r="2.1" fill="#ECB22E"/><path d="M1.5 30C6 25.6 11.5 24.2 16 24.2S26 25.6 30.5 30Z" fill="#C5DCB1"/><path d="M1.5 30H30.5" stroke="#7FA66B" stroke-width="1.6" stroke-linecap="round"/><path d="M11 25.4V17" stroke="#7A5134" stroke-width="2.2" stroke-linecap="round"/><circle cx="11" cy="12.2" r="7.2" fill="#4E8A3A"/><circle cx="8.4" cy="10" r="2.4" fill="#7FB35E"/><circle cx="13.2" cy="14.6" r="1.4" fill="#7FB35E"/><path d="M23 25V19.2" stroke="#7A5134" stroke-width="1.7" stroke-linecap="round"/><path d="M23 6.4L28.2 19.4H17.8Z" fill="#2F6E5E"/><path d="M23 9.6L25.6 15.4H20.4Z" fill="#3E8A6B"/>`,
+};
+export const groupIconSvg = (group) => `<svg viewBox="0 0 32 32" aria-hidden="true">${GROUP_SVG[group] || GROUP_SVG.heritage}</svg>`;
+// 리액트 화면용 테마 아이콘 (칩·목록)
+export function GroupIcon({ group, size = 18, className = "grp-icon" }) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 32 32" aria-hidden="true"
+      dangerouslySetInnerHTML={{ __html: GROUP_SVG[group] || GROUP_SVG.heritage }} />
+  );
+}
+
 export function spotIconSvg(spot) {
   if (SPOT_SVG[spot.id]) return `<svg viewBox="0 0 32 32" aria-hidden="true">${SPOT_SVG[spot.id]}</svg>`;
+  if (spot.group) return groupIconSvg(spot.group); // 준비 중인 새 장소: 테마 아이콘
   return `<svg viewBox="0 0 20 20" aria-hidden="true">${CATEGORY_SVG[spot.category] || CATEGORY_SVG.history}</svg>`;
 }
 

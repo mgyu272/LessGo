@@ -9,8 +9,8 @@ import { useApp } from "../state/AppContext.jsx";
 import { t, loc, getLang } from "../lib/i18n.js";
 import { fmtTime } from "../lib/geo.js";
 import * as voice from "../lib/voice.js";
-import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections, exploreColor, byNearest, round10, CHECKED_DATE } from "../lib/places.js";
-import { spotIconSvg } from "../components/SpotIcons.jsx";
+import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections, byNearest, round10, CHECKED_DATE, groupOf } from "../lib/places.js";
+import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
 import HistoryLens from "./HistoryLens.jsx";
 import NearbyShops from "../components/NearbyShops.jsx";
 
@@ -140,8 +140,7 @@ export default function PlaceDetail() {
               <div className="card pd-rows">
                 {Object.keys(visit).map((k) => (
                   <div className="pd-row" key={k}>
-                    <span className="pd-row-ic" aria-hidden="true" />
-                    <span><small>{t("visit_" + k)}</small><b className={visit[k] ? "" : "pd-pending"}>{visit[k] || t("info_pending")}</b>{k === "address" && <small>{t("visit_check_site")}</small>}{k === "access" && <small>{t("visit_quiet")}</small>}</span>
+                    <span><b className="pd-row-k">{t("visit_" + k)}</b><span className={`pd-row-v ${visit[k] ? "" : "pd-pending"}`}>{visit[k] || t("info_pending")}</span>{k === "address" && <small>{t("visit_check_site")}</small>}{k === "access" && <small>{t("visit_quiet")}</small>}</span>
                   </div>
                 ))}
               </div>
@@ -158,7 +157,7 @@ export default function PlaceDetail() {
                     {nearby.slice(0, 4).map((p) => (
                       <li key={p.id}>
                         <button type="button" onClick={() => openExplore(p)}>
-                          <i style={{ background: exploreColor(p) }} aria-hidden="true" />
+                          <GroupIcon group={groupOf(p)} size={28} className="grp-icon list" />
                           <b>{loc(p.name)}</b>
                           <small>{t("about_m", { m: round10(p.nearest_course.straight_m) })}</small>
                         </button>
