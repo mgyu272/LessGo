@@ -12,14 +12,15 @@ import * as voice from "../lib/voice.js";
 import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections, byNearest, round10, CHECKED_DATE, groupOf } from "../lib/places.js";
 import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
 import HistoryLens from "./HistoryLens.jsx";
+import PlacePhoto from "../components/PlacePhoto.jsx";
 import NearbyShops from "../components/NearbyShops.jsx";
 
-const TABS = ["story", "visit", "history_lens"]; // 문화 활동 탭은 뺐어요
+const TABS = ["visit", "story", "history_lens"]; // 장소 정보 → 이야기 → AI 역사 렌즈 (문화 활동 탭은 뺐어요)
 
 export default function PlaceDetail() {
   const app = useApp();
   const spot = app.spot;
-  const [tab, setTab] = useState("story");
+  const [tab, setTab] = useState("visit");
   const [playing, setPlaying] = useState(false);
   const [report, setReport] = useState(false);
   // 홈 팝업: 처음엔 화면 절반, 위로 끌면 전체, 아래로 끌면 다시 절반 → 한 번 더 내리면 닫기
@@ -107,6 +108,7 @@ export default function PlaceDetail() {
         <div className="pd-body">
           {prep && (
             <div className="rise pd-col">
+              {tab === "visit" && <PlacePhoto spot={spot} />}
               <article className="card pd-story pd-prep">
                 <span>{loc({ ko: "준비 중", en: "Coming soon" })}</span>
                 <h3>{loc({ ko: "곧 이야기가 채워져요", en: "Stories are on the way" })}</h3>
@@ -137,6 +139,8 @@ export default function PlaceDetail() {
 
           {!prep && tab === "visit" && (
             <div className="rise pd-col">
+              {/* 대표 사진을 먼저 보여주고, 아래로 내리면 관람 시간·휴관일 등 */}
+              <PlacePhoto spot={spot} />
               <div className="card pd-rows">
                 {Object.keys(visit).map((k) => (
                   <div className="pd-row" key={k}>

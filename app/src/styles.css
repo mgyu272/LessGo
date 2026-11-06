@@ -1404,3 +1404,12 @@ div:has(> .spot-pin) { pointer-events: none; }
 .pd-row .pd-row-v.pd-pending { color: var(--muted); }
 .pd-row .pd-row-v + small, .pd-row small { font-weight: 400; }
 .spot-pin .pin-badge.th-badge.on { box-shadow: 0 0 0 3px var(--brand, #5FA52A), 0 6px 14px rgba(28,43,38,.3); }
+
+/* 장소 정보 탭 맨 위 대표 사진 */
+.pd-photo { margin: 0; position: relative; border-radius: 20px; overflow: hidden; background: #E6EFDA; aspect-ratio: 4 / 3; box-shadow: 0 10px 24px -16px rgba(31, 61, 20, .6); }
+.pd-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pd-photo figcaption { position: absolute; right: 8px; bottom: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(0, 0, 0, .45); font-size: 10.5px; }
+.pd-photo figcaption a { color: #FFFFFF; text-decoration: none; }
+.pd-photo-empty { display: grid; place-items: center; color: var(--muted); font-size: 13px; font-weight: 600; aspect-ratio: 16 / 7; }
+.pd-photo-empty.loading { animation: pd-photo-pulse 1.2s ease-in-out infinite; }
+@keyframes pd-photo-pulse { 50% { opacity: .55; } }

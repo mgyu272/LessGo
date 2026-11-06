@@ -319,7 +319,7 @@ export function MapWatch({ onChange }) {
 // - 서로 다른 테마끼리 겹치면 아이콘을 살짝 밀어서 안 겹치게 둬요 (점선이 실제 위치를 가리켜요)
 //   pad(): 확대할 때 비워 둘 지도 가장자리 px [위, 오른쪽, 아래, 왼쪽]
 const MERGE_PX = 50;      // 같은 테마가 이보다 가까우면 묶어요
-const LABEL_LEVEL = 4;    // 이 단계 이하(확대)일 때만 이름표·점선 핀
+const LABEL_LEVEL = 6;    // 이 단계 이하(성북구 전체 정도부터 확대)일 때 이름표·점선 핀을 기본으로
 const LIFT_PX = 44;       // 이름표 핀: 아이콘을 실제 위치보다 이만큼 위에
 const LABEL_MERGE_PX = 80; // 확대해도 이만큼 붙어 있는 같은 테마는 이름표 대신 묶음으로 (더 확대하면 풀려요)
 export function ExploreLayer({ places = [], spots = [], selectedId, onSelect, onSpot, pad }) {
