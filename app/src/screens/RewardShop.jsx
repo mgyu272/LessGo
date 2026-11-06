@@ -35,7 +35,7 @@ export function RewardShop({ spot }) {
               if (codes.length) {
                 const value = codes[0].rawValue;
                 if (value === "LESSGO:STORE:" + selected.id) {
-                  setResult("매장 QR 인식 완료 · 제휴 할인 적용은 준비 중입니다.");
+                  setResult("success");
                   stop();
                   return;
                 }
@@ -53,15 +53,15 @@ export function RewardShop({ spot }) {
   return <section className="reward-content">
     {selected ? <>
       <button type="button" className="link" onClick={() => { stop(); setSelected(null); setResult(""); setError(""); }}>← 가게 목록</button>
-      <div className="reward-card"><h3>{loc(selected.name)}</h3><p>매장에 비치된 Less GO QR을 스캔하세요.</p></div>
-      <div className="reward-camera"><video ref={videoRef} muted playsInline aria-label="매장 QR 스캔 카메라" />{!scanning && <span>카메라 대기 중</span>}</div>
+      {result === "success" ? <div className="reward-card" role="status" aria-live="polite"><h3>✓ QR 스캔 완료</h3><p>{loc(selected.name)}</p><h2 style={{fontSize: "30px", color: "#527e2f", margin: "16px 0 8px"}}>500원 할인 쿠폰</h2><p>할인 혜택이 확인되었습니다.</p><small>시연용 쿠폰 · 실제 결제 할인은 적용되지 않습니다.</small></div> : <div className="reward-card"><h3>{loc(selected.name)}</h3><p>매장에 비치된 Less GO QR을 스캔하세요.</p></div>}
+      {result !== "success" && <div className="reward-camera"><video ref={videoRef} muted playsInline aria-label="매장 QR 스캔 카메라" />{!scanning && <span>카메라 대기 중</span>}</div>}
       {error && <p className="reward-error" role="alert">{error}</p>}
-      {result && <p role="status">{result}</p>}
-      <button className="btn btn-teal" onClick={() => { setResult(""); setError(""); setScanning(true); }}>QR 스캔 카메라 켜기</button>
-      <p className="muted">매장별 등록 QR만 인식합니다. 현재는 실제 할인 발급이나 결제 연동을 제공하지 않습니다.</p>
+
+      {result !== "success" && <button className="btn btn-teal" onClick={() => { setResult(""); setError(""); setScanning(true); }}>QR 스캔 카메라 켜기</button>}
+
     </> : <>
       <h3>주변 제휴 가게</h3>
-      <p className="muted">가게를 선택하고 매장 QR을 스캔해 보세요. 제휴와 할인은 시연 단계입니다.</p>
+      <p className="muted">가게를 선택하고 매장 QR을 스캔해 보세요.</p>
       {near.map(({s,d}) => <button type="button" className="reward-store" key={s.id} onClick={() => { setSelected(s); setError(""); setResult(""); }}>
         <span>{shopKind(s.category) === "cafe" ? "☕" : "🍴"}</span><span><b>{loc(s.name)}</b><small>약 {d}m · QR 스캔하기</small></span><span>›</span>
       </button>)}
