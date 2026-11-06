@@ -9,9 +9,9 @@ import * as voice from "../lib/voice.js";
 import { ShopRow, FakeQr, LangPill } from "../components/Bits.jsx";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { LogoBird } from "../components/LogoBird.jsx";
-import { useBottomSheet, BottomSheet } from "../components/ui.jsx";
-import NearbyShops from "../components/NearbyShops.jsx";
+import { useBottomSheet, BottomSheet, ConfirmDialog } from "../components/ui.jsx";
 import HistoryLens from "./HistoryLens.jsx";
+import { RewardShop } from "./RewardShop.jsx";
 import { CENTER } from "../state/AppContext.jsx";
 
 const CAT = { history: ["History spot", "역사문화 스팟"], stream: ["Stream spot", "하천길 스팟"], park: ["Park & view spot", "공원·전망 스팟"] };
@@ -28,6 +28,8 @@ export function Spot() {
   const [playing, setPlaying] = useState(false);
   const [cur, setCur] = useState(0); // 지금까지 읽은 시간(초)
   const [showScript, setShowScript] = useState(false);
+  const [activeTab, setActiveTab] = useState("lens");
+  const [confirmFinish, setConfirmFinish] = useState(false);
   const [q, setQ] = useState("");
   const [answer, setAnswer] = useState(null); // {loading} | {text, sources, cached} | {none}
   const timer = useRef(null);
@@ -101,9 +103,17 @@ export function Spot() {
       <div className="spot-title"><b>{loc(spot.name)}</b><small>{t("stamped")}</small></div>
       <BottomSheet sheet={sheet} className="spot-sheet2">
         <div className="scroll-y spot-body">
+          <nav className="spot-tabs" aria-label="도착 후 기능" role="tablist">
+            {[["lens","AI 렌즈"],["history","역사 해설"],["shops","주변 가게"],["record","내 기록"]].map(([id,label]) =>
+              <button key={id} type="button" role="tab" aria-selected={activeTab === id} className={activeTab === id ? "active" : ""} onClick={() => { if (id !== "history") stopAudio(); setActiveTab(id); }}>{label}</button>
+            )}
+          </nav>
+          <div hidden={activeTab !== "lens"}>
           {/* 도착 직후 AI 역사 렌즈: 사진 촬영 → 공식 근거 대조 → 해설 */}
           <HistoryLens spotId={spot.id} spotName={loc(spot.name)} />
 
+          </div>
+          <div hidden={activeTab !== "history"}>
           {/* 역사 질문은 AI 렌즈 바로 아래에 배치 */}
           <div className="ask">
             <h4>{t("ask_title")}</h4>
@@ -170,19 +180,26 @@ export function Spot() {
           {showScript && <div className="script">{text}</div>}
           <button className="link" onClick={() => setShowScript(!showScript)}>{t(showScript ? "hide_script" : "show_script")}</button>
 
-          {/* 근처에서 쉬어 가기: 카카오맵 가게 가까운 순 4곳 (제휴 아님) */}
-          <NearbyShops spot={spot} variant="arrival" />
-
-          <p className="note cream">{loc(spot.notice)}</p>
+          </div>
+          <div hidden={activeTab !== "shops"}><RewardShop /></div>
+          <div hidden={activeTab !== "record"} className="spot-run-record">
+            <h3>나의 러닝 기록</h3>
+            <p>이동 거리: {((app.run.view?.meters || 0) / 1000).toFixed(2)}km</p>
+            <p>러닝 시간: {fmtTime(app.run.view?.seconds || 0)}</p>
+            <p>획득한 도장: {app.run.view?.visited?.length || 0}개</p>
+            <small>현재 러닝 진행 기록입니다. 최종 기록은 러닝 종료 후 저장됩니다.</small>
+          </div>
+<p className="note cream">{loc(spot.notice)}</p>
 
 
         </div>
-        <div className="cta-row two">
-          <button className="btn btn-teal" onClick={() => { stopAudio(); app.run.resume(); }}>{t("keep_running")}</button>
-          <button className="btn btn-outline" onClick={() => { stopAudio(); app.go("shops"); }}>{t("nearby_shops")}</button>
+        <div className="cta-row">
+          <button className="btn btn-teal" onClick={() => { stopAudio(); setConfirmFinish(true); }}>달리기 종료</button>
         </div>
-        <p className="foot">{t("partner_note")}</p>
-      </BottomSheet>
+</BottomSheet>
+      <ConfirmDialog open={confirmFinish} title={t("stop_title")} cancelLabel={t("stop_cancel")} confirmLabel={t("stop_save")}
+        body={t("stop_body_stars", { km: ((app.run.view?.meters || 0) / 1000).toFixed(2), time: fmtTime(app.run.view?.seconds || 0), n: app.run.view?.starsGot || 0 })}
+        onCancel={() => setConfirmFinish(false)} onConfirm={() => { setConfirmFinish(false); app.run.finish(); }} />
     </section>
   );
 }

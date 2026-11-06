@@ -1,7 +1,7 @@
 // 달리기 진행 (시작 → 위치 받기 → 길 안내 → 별 줍기 → 스팟 도착 → 완주)
 // 별: 코스는 출발점에서 500m마다 경로 위에 별을 놓고 30m 안에 들어오면 주워요 (시연 모드도 같은 방식).
 //     자유 달리기는 달린 거리 500m마다 1개. 한 번 달리기에서 같은 별은 한 번만.
-//     별 10개가 모이면 바로 쿠폰 1장(제휴 협의 중)을 만들고 별 10개를 빼요.
+//     별은 러너 활동 지수에만 사용하며 쿠폰으로 자동 교환하지 않아요.
 // 걷기 모드(move: "walk")도 같은 흐름이에요. 별·쿠폰·음성 안내·일시정지는 똑같고, 화면 표시와 기록의 move만 달라요.
 // 달리기는 화면을 옮겨 다녀도(스팟·가게·쿠폰 화면) 계속 이어져야 해서, 화면 밖(여기)에서 관리해요.
 
@@ -47,14 +47,7 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
     r.starsGot++;
     user.addBonus(1, "run_star");
     toast(t("star_plus"));
-    while (user.getStarBalance() >= STAR_RULES.perCoupon) {
-      const shop = couponShop(r, dataRef.current);
-      const coupon = { id: "c" + Date.now() + "-" + r.coupons.length, shopId: shop?.id || null, issued: Date.now(), pending: true, title: null };
-      user.addCoupon(coupon);
-      user.addBonus(-STAR_RULES.perCoupon, "coupon");
-      r.coupons.push(coupon);
-      toast(t("coupon_made"));
-    }
+
   }, [dataRef, userRef, toast]);
 
   const onPosition = useCallback((p, info = {}) => {
