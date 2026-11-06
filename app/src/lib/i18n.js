@@ -359,7 +359,7 @@ const STRINGS = {
     exchange: "별로 바꾸기 (후보 · 협의 필요)",
     reward_foot: "교환 항목과 별 개수는 아이디어 예시예요. 실제 제휴 가게와 협의해서 정해야 해요.",
     tab_map: "지도", tab_course: "코스", tab_stars: "스탬프·별", tab_records: "내 기록",
-    tab_places: "장소·이야기", tab_events: "문화 활동", tab_stats: "내 기록", main_menu: "주 메뉴",
+    tab_places: "장소와 이야기", tab_events: "문화 활동", tab_stats: "내 기록", main_menu: "주 메뉴",
     grp_all: "전체", grp_exhibit: "전시", grp_heritage: "역사", grp_religion: "종교", grp_park: "공원",
     whole_district: "성북구 전체", around_place: "{name} 주변",
     near_chip: "{name} 근처", near_clear: "해제", near_clear_label: "{name} 근처 거르기 해제",
