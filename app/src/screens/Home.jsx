@@ -172,7 +172,8 @@ export default function Home() {
         </div>
       </div>
 
-      {!showCards && <div className={`home-course-shecate-btn glass ${locating ? "busy" : ""}`} style={{ bottom: aboveTabbar(14) }} onClick={locate} aria-label={t("my_location")}>
+      {!showCards && (
+        <button className={`locate-btn glass ${locating ? "busy" : ""}`} style={{ bottom: aboveTabbar(14) }} onClick={locate} aria-label={t("my_location")}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="6.5" /><circle cx="12" cy="12" r="2" fill="currentColor" /><path d="M12 2v3 M12 19v3 M2 12h3 M19 12h3" />
           </svg>
