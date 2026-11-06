@@ -82,7 +82,7 @@ export function useUserData() {
     const u = me.data();
     const runList = r.docs.map((d) => {
       const x = d.data();
-      return { id: d.id, date: millis(x.created_at), courseId: x.course_id, name: x.name, meters: x.meters, seconds: x.seconds, stamps: x.stamps, starsGot: x.stars_got || 0 };
+      return { id: d.id, date: millis(x.created_at), courseId: x.course_id, name: x.name, meters: x.meters, seconds: x.seconds, stamps: x.stamps, starsGot: x.stars_got || 0, move: x.move === "walk" ? "walk" : "run" };
     });
     setRuns(runList); writeLS(LS.runs, runList);
     stampsRef.current = new Set(s.docs.map((d) => d.id)); setStamps(stampsRef.current); writeLS(LS.stamps, [...stampsRef.current]);
@@ -267,7 +267,7 @@ export function useUserData() {
     const uid = remoteUid();
     if (uid) addDoc(collection(db, "users", uid, "runs"), {
       course_id: run.courseId ?? null, name: run.name ?? null,
-      meters: run.meters, seconds: run.seconds, stamps: run.stamps, stars_got: run.starsGot || 0, created_at: serverTimestamp(),
+      meters: run.meters, seconds: run.seconds, stamps: run.stamps, stars_got: run.starsGot || 0, move: run.move === "walk" ? "walk" : "run", created_at: serverTimestamp(),
     }).catch(warn("runs"));
   }, []);
 

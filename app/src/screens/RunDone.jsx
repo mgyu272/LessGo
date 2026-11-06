@@ -27,8 +27,9 @@ export default function RunDone() {
       else { await navigator.clipboard.writeText(text); app.toast(t("shared")); }
     } catch {}
   };
-  const openPlace = (spot) => { app.setSpot(spot); app.go("place"); };
-  const title = f.course ? t("done_course", { name: loc(f.course.properties.title || f.course.properties.name) }) : t("done_free");
+  const openPlace = (spot) => { app.setSpot(spot); app.setPlaceFrom("places"); app.go("place"); };
+  // 걷기로 끝낸 코스는 "의릉 걷기 완주"
+  const title = f.course ? t(f.move === "walk" ? "done_course_walk" : "done_course", { name: loc(f.course.properties.title || f.course.properties.name) }) : t("done_free");
 
   return (
     <section className="screen done-screen">

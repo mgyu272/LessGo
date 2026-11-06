@@ -35,9 +35,10 @@ export function shopsNear(spot, shops) {
 }
 
 // variant: "arrival"(도착 화면, 4곳) · "detail"(장소 상세, 거르기 칩 + 모두 보기)
-export default function NearbyShops({ spot, variant = "arrival" }) {
+// list: 미리 고른 가게 [{ s, d, kind }] (둘러볼 곳 상세는 places.js의 shopsNearPlace로 골라서 넘겨요)
+export default function NearbyShops({ spot, variant = "arrival", list: given }) {
   const { data } = useApp();
-  const all = useMemo(() => shopsNear(spot, data.shops), [spot, data.shops]);
+  const all = useMemo(() => given || shopsNear(spot, data.shops), [given, spot, data.shops]);
   const [filter, setFilter] = useState("all");
   const [open, setOpen] = useState(false);
   if (!all.length) return null; // 근처 가게가 없으면 영역 전체를 숨겨요

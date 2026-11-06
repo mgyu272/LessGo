@@ -2,6 +2,7 @@
 // 별: 코스는 출발점에서 500m마다 경로 위에 별을 놓고 30m 안에 들어오면 주워요 (시연 모드도 같은 방식).
 //     자유 달리기는 달린 거리 500m마다 1개. 한 번 달리기에서 같은 별은 한 번만.
 //     별 10개가 모이면 바로 쿠폰 1장(제휴 협의 중)을 만들고 별 10개를 빼요.
+// 걷기 모드(move: "walk")도 같은 흐름이에요. 별·쿠폰·음성 안내·일시정지는 똑같고, 화면 표시와 기록의 move만 달라요.
 // 달리기는 화면을 옮겨 다녀도(스팟·가게·쿠폰 화면) 계속 이어져야 해서, 화면 밖(여기)에서 관리해요.
 
 import { useCallback, useRef, useState } from "react";
@@ -13,7 +14,7 @@ import * as voice from "../lib/voice.js";
 import { STAR_RULES } from "./useUserData.js";
 import { HOME_CENTER } from "./AppContext.jsx";
 
-export function useRun({ dataRef, userRef, go, setSpot, setFinish, toast }) {
+export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toast }) {
   const ref = useRef(null);        // 달리는 중 계속 바뀌는 값 (화면을 다시 그리지 않아도 되는 것)
   const [view, setView] = useState(null); // 화면에 보여줄 숫자들
 
@@ -23,7 +24,7 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish, toast }) {
     let pill = r.pill;
     if (!r.course) pill = t("no_spot", { km: (r.meters / 1000).toFixed(1), t: fmtTime(seconds) });
     setView({
-      course: r.course, demo: r.demo, meters: r.meters, seconds, ascent: currentAscent(r),
+      course: r.course, demo: r.demo, move: r.move, meters: r.meters, seconds, ascent: currentAscent(r),
       pill, cue: r.cue, paused: r.paused,
       trail: r.trail.slice(), me: r.me, freeShops: r.freeShops, courseDone: r.courseDone, visited: [...r.visited],
       stars: r.stars.map((x) => ({ at: x.at, got: x.got })), starsGot: r.starsGot, starsTotal: r.stars.length,
@@ -128,14 +129,15 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish, toast }) {
     push();
   }, [dataRef, userRef, go, setSpot, push, showCue, pickStar]);
 
-  const start = useCallback((course, { demo, speedup }) => {
+  // move: "run" | "walk". 안 넘기면 코스는 코스 고르기에서 고른 값, 자유 달리기는 달리기
+  const start = useCallback((course, { demo, speedup, move }) => {
     voice.unlock();          // 아이폰: 버튼을 누른 이 순간에 음성을 깨워야 해요
     voice.keepScreenOn();
     const { courses } = dataRef.current;
     // 자유 달리기 시연은 첫 코스 길을 따라가요 (코스 데이터가 없으면 성북구 중심에서 제자리)
     const simPath = course ? course.path : courses[0]?.path || [{ lat: HOME_CENTER[0], lng: HOME_CENTER[1] }];
     const r = ref.current = {
-      course, demo, simPath, meters: 0, last: null, trail: [], visited: new Set(),
+      course, demo, simPath, move: (move || (course && moveRef?.current)) === "walk" ? "walk" : "run", meters: 0, last: null, trail: [], visited: new Set(),
       cuesFired: new Set(), paused: false, ended: false, altUp: 0, lastAlt: null,
       stars: course ? starPoints(course.path).map((at) => ({ at, got: false })) : [], starsGot: 0, coupons: [],
       cue: null, pill: demo ? "" : t("gps_waiting"), newStamps: 0, courseDone: false,
@@ -150,7 +152,7 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish, toast }) {
     if (course) { r.cuesFired.add(0); voice.speak(loc(course.cues[0]?.text) || "", { lang: getLang() }); }
     push();
     go("run");
-  }, [dataRef, onPosition, push, go]);
+  }, [dataRef, moveRef, onPosition, push, go]);
 
   const togglePause = useCallback(() => {
     const r = ref.current; if (!r) return;
@@ -187,10 +189,10 @@ export function useRun({ dataRef, userRef, go, setSpot, setFinish, toast }) {
     const record = {
       id: "r" + Date.now(), date: Date.now(), courseId: r.course?.id || null,
       name: r.course ? r.course.properties.name : { en: "Free run", ko: "자유 달리기" },
-      meters: Math.round(r.meters), seconds: Math.round(seconds), stamps: r.visited.size, starsGot: r.starsGot,
+      meters: Math.round(r.meters), seconds: Math.round(seconds), stamps: r.visited.size, starsGot: r.starsGot, move: r.move,
     };
     user.addRun(record);
-    setFinish({ record, coupons: r.coupons.slice(), trail: r.trail.slice(), course: r.course, starsGot: r.starsGot });
+    setFinish({ record, coupons: r.coupons.slice(), trail: r.trail.slice(), course: r.course, starsGot: r.starsGot, move: r.move });
     ref.current = null;
     setView(null);
     go("finish");

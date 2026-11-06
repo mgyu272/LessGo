@@ -61,8 +61,9 @@ export function Records() {
           <div className="record" key={r.id}>
             <div className="date"><b>{new Date(r.date).getDate()}</b><small>{new Date(r.date).toLocaleDateString(app.lang === "ko" ? "ko-KR" : "en-US", { month: "short" })}</small></div>
             <div className="body">
-              <b>{loc(r.name)}</b>
-              <div className="meta"><span>{(r.meters / 1000).toFixed(2)}km</span><span>{fmtTime(r.seconds)}</span><span>{fmtPace(r.seconds, r.meters)}</span><span>★ {r.starsGot || 0}</span><span>📍 {r.stamps}</span></div>
+              <b>{loc(r.name)}{r.move === "walk" && <em className="rec-walk">{t("move_walk")}</em>}</b>
+              {/* 걷기 기록은 페이스를 보여주지 않아요 */}
+              <div className="meta"><span>{(r.meters / 1000).toFixed(2)}km</span><span>{fmtTime(r.seconds)}</span>{r.move !== "walk" && <span>{fmtPace(r.seconds, r.meters)}</span>}<span>★ {r.starsGot || 0}</span><span>📍 {r.stamps}</span></div>
             </div>
           </div>
         ))}

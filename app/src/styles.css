@@ -261,6 +261,8 @@ small { font-size: 12px; }
 .map-dot { display: block; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 1px 4px rgba(28,43,38,.3); }
 /* 스팟 마커: 장소 그림 배지 + 이름표. 빈 영역은 지도를 가리지 않게 클릭이 통과해요 */
 .spot-pin { position: relative; pointer-events: none; --ring: #1C2B26; }
+/* 카카오가 핀을 감싸는 200px 상자도 누르기를 통과시켜요 (아래 둘러볼 곳 점·묶음이 눌리게). 배지·이름표는 그대로 눌려요 */
+div:has(> .spot-pin) { pointer-events: none; }
 .spot-pin.sm { width: 36px; height: 36px; }
 .spot-pin button.pin-badge { border: 0; padding: 0; font: inherit; color: inherit; }
 .spot-pin .pin-lead { position: absolute; left: 0; top: 0; overflow: visible; }
@@ -423,7 +425,7 @@ small { font-size: 12px; }
 
 /* ---------- 하단 내비 (흰 반투명 유리 · 디자인 원본 Places/Events/Stats 화면 기준) ---------- */
 /* 비선택은 #4F6B3B 보통 굵기, 선택은 진초록 #2F6512 굵게. 알약 배경 없이 글자색으로만 구분해요 */
-.tabbar { position: absolute; left: 14px; right: 14px; bottom: calc(12px + var(--safe-bottom)); z-index: 20; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+.tabbar { position: absolute; left: 14px; right: 14px; bottom: calc(12px + var(--safe-bottom)); z-index: 20; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   background: rgba(255, 255, 255, .58); -webkit-backdrop-filter: blur(14px) saturate(150%); backdrop-filter: blur(14px) saturate(150%); border: 1px solid rgba(255, 255, 255, .8);
   border-radius: 22px; padding: 8px 6px; box-shadow: 0 8px 24px -12px rgba(31, 61, 20, .35); }
 .tabbar button { min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 4px; font-size: 11px; font-weight: 500; color: #4F6B3B; background: none; border-radius: 16px; }
@@ -1054,14 +1056,6 @@ small { font-size: 12px; }
 
 /* 코스 고르기 위쪽: 뒤로 48px + 목적지 버튼 (조건 칩 줄 대신) */
 .picker-back { width: 48px; height: 48px; border-radius: 24px; }
-.dest-btn { flex: 1; min-width: 0; height: 56px; padding: 0 10px 0 11px; border-radius: 20px; display: flex; align-items: center; gap: 10px; text-align: left; color: var(--text);
-  background: #FFFFFF; box-shadow: inset 0 0 0 1.5px #C6E59E, 0 10px 24px -12px rgba(31, 61, 20, .45); }
-.dest-ic { width: 34px; height: 34px; flex: none; border-radius: 12px; background: #EAF7D8; color: #2F6512; display: grid; place-items: center; }
-.dest-ic svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.dest-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-.dest-text small { font-size: 11px; color: #4F6B3B; }
-.dest-text b { font-size: 17px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.dest-change { flex: none; height: 36px; padding: 0 12px; border-radius: 18px; background: #2F6512; color: #FFFFFF; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; white-space: nowrap; }
 .picker-km { flex: none; }
 
 
@@ -1088,3 +1082,145 @@ small { font-size: 12px; }
 .to-start-refresh { align-self: center; color: var(--link); font-weight: 700; font-size: 12px; padding: 5px; text-decoration: underline; }
 .to-start-hint { margin: 0; font-size: 11px; line-height: 1.4; color: var(--muted); }
 
+
+/* ---------- 걷기 모드 · 출발 → 도착 카드 · 출발지로 이동 ---------- */
+.picker-title:has(.trip-card) { align-items: flex-start; }
+.trip-card { flex: 1; min-width: 0; padding: 0 8px 0 12px; border-radius: 20px; background: #FFFFFF; box-shadow: inset 0 0 0 1.5px #C6E59E, 0 10px 24px -12px rgba(31, 61, 20, .45); }
+.trip-row { width: 100%; height: 44px; display: flex; align-items: center; gap: 8px; text-align: left; color: var(--text); }
+.trip-row + .trip-row { border-top: 1px solid #EAF3DD; }
+.trip-from { width: 16px; height: 16px; flex: none; border-radius: 8px; background: #3B82C4; border: 3px solid #FFFFFF; box-shadow: 0 0 0 1px rgba(59, 130, 196, .35); box-sizing: border-box; }
+.trip-pin { width: 16px; height: 16px; flex: none; fill: none; stroke: #2F6512; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.trip-row small { flex: none; font-size: 11px; color: #4F6B3B; }
+.trip-row b { flex: 1; min-width: 0; font-size: 15px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.trip-change { flex: none; height: 32px; padding: 0 10px; border-radius: 16px; background: #EAF7D8; color: #2F6512; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; white-space: nowrap; }
+.trip-near { flex: none; height: 26px; padding: 0 9px; border-radius: 13px; background: #EAF2FA; color: #2C4F7A; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; white-space: nowrap; }
+.picker-move { flex: none; }
+.picker-move .seg-main { display: inline-flex; align-items: center; gap: 6px; font-size: 16px; }
+.mv-ic { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.picker-walk { margin: 0; flex: none; border-radius: 14px; padding: 10px 12px; display: flex; gap: 8px; font-size: 12px; line-height: 1.5; font-weight: 600; color: var(--strong); }
+.picker-walk svg { width: 16px; height: 16px; flex: none; margin-top: 1px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.picker-sim { flex: none; border-radius: 16px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; text-align: left; color: var(--text); }
+.picker-sim > span { display: flex; flex-direction: column; gap: 2px; }
+.picker-sim b { font-size: 14px; font-weight: 700; }
+.picker-sim small { font-size: 12px; color: var(--muted); }
+.picker-sim svg { width: 16px; height: 16px; flex: none; color: var(--strong); }
+.picker-cta .btn { min-width: 0; padding: 0 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* 걷는 중 */
+.rp-label { display: inline-flex; align-items: center; gap: 8px; }
+.rp-walk { font-style: normal; height: 22px; padding: 0 8px; border-radius: 11px; background: #EAF2FA; color: #2C4F7A; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; }
+.rec-walk { font-style: normal; margin-left: 6px; padding: 1px 7px; border-radius: 10px; background: #EAF2FA; color: #2C4F7A; font-size: 11px; font-weight: 700; vertical-align: 2px; }
+
+/* 출발지로 이동 (ToCourseStart) */
+.to-start-top .ts-title { flex: 1; min-width: 0; height: 44px; display: flex; align-items: center; border-radius: 22px; padding: 0 16px; font-size: 15px; font-weight: 800; }
+.ts-mode { flex: none; height: 32px; padding: 0 12px; border-radius: 16px; display: inline-flex; align-items: center; font-size: 12px; font-weight: 800; background: #EAF7D8; color: #2F6512; box-shadow: 0 6px 16px -10px rgba(31, 61, 20, .5); }
+.ts-mode.walk { background: #EAF2FA; color: #2C4F7A; }
+.ts-head { display: flex; flex-direction: column; gap: 4px; }
+.ts-head small { font-size: 13px; font-weight: 700; color: var(--muted); }
+.ts-big { font-size: 44px; font-weight: 800; line-height: 1.05; letter-spacing: -.02em; }
+.ts-big em { font-style: normal; font-size: 18px; font-weight: 700; margin-left: 3px; color: var(--muted); }
+.ts-walk { font-size: 13px; font-weight: 600; color: #2C4F7A; }
+.ts-bar { display: block; height: 6px; border-radius: 3px; background: #E3EDF7; overflow: hidden; margin-top: 4px; }
+.ts-bar i { display: block; height: 100%; border-radius: 3px; background: #3B82C4; transition: width .4s; }
+.ts-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.ts-gps, .ts-course { min-height: 28px; padding: 4px 10px; border-radius: 14px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; }
+.ts-gps i { width: 8px; height: 8px; border-radius: 4px; background: currentColor; }
+.ts-gps.good { background: #EAF7D8; color: #2F6512; }
+.ts-gps.low { background: #FFF1DE; color: #8A4B0C; }
+.ts-gps.wait { background: #F1F3EE; color: var(--muted); }
+.ts-course { background: #FFFFFF; color: var(--text); box-shadow: inset 0 0 0 1px var(--border); }
+.ts-kakao { margin: 0; min-height: 48px; border-radius: 16px; font-size: 14px; font-weight: 700; color: var(--strong); }
+.ts-note { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.ts-start { margin: 0; min-height: 56px; border-radius: 18px; font-size: 15px; font-weight: 800; }
+.ts-start:disabled { opacity: .55; cursor: not-allowed; }
+.here-dot { width: 24px; height: 24px; border-radius: 12px; background: rgba(59, 130, 196, .22); display: grid; place-items: center; position: relative; }
+.here-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #3B82C4; animation: pulse 1.8s ease-out infinite; }
+.here-dot i { width: 12px; height: 12px; border-radius: 6px; background: #3B82C4; box-shadow: 0 0 0 2px #FFFFFF; }
+.start-flag { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.start-flag svg { margin-left: 18px; }
+.sf-label { height: 26px; padding: 0 10px; border-radius: 13px; background: #FFFFFF; color: var(--text); font-size: 12px; font-weight: 800; white-space: nowrap; display: flex; align-items: center; box-shadow: 0 4px 12px -4px rgba(31, 61, 20, .35); }
+@media (prefers-reduced-motion: reduce) { .here-dot::after { animation: none; } }
+
+/* ---------- 둘러볼 곳 (explore.json) ---------- */
+/* 지도 점: 14px · 흰 테두리 2.5px · 분류 색(--c). 고르면 22px + 위에 이름 알약 */
+.ex-pin { position: relative; width: 0; height: 0; --c: #2F6512; }
+.ex-dot { position: absolute; left: 0; top: 0; width: 14px; height: 14px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--c); border: 2.5px solid #FFFFFF; box-shadow: 0 1px 4px rgba(28, 43, 38, .35); padding: 0; cursor: pointer; transition: width .15s, height .15s; }
+.ex-dot::before { content: ""; position: absolute; inset: -12px; } /* 누르기 쉬운 칸 */
+.ex-pin.on .ex-dot { width: 22px; height: 22px; box-shadow: 0 0 0 3px rgba(255, 255, 255, .5), 0 4px 10px rgba(28, 43, 38, .35); }
+.ex-name { position: absolute; left: 0; bottom: 12px; transform: translateX(-50%); padding: 3px 10px; border-radius: 999px; background: #FFFFFF; color: var(--text); font-size: 12px; font-weight: 700; white-space: nowrap; box-shadow: 0 4px 12px -4px rgba(31, 61, 20, .4); cursor: pointer; }
+.ex-pin.on .ex-name { bottom: 17px; font-size: 13px; background: var(--c); color: #FFFFFF; }
+/* 묶음: 흰 알약 · 진초록 테두리 2px · 숫자는 진초록 원 안 흰 글자 */
+.ex-cluster { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 4px 0 11px; border-radius: 15px; background: #FFFFFF; border: 2px solid #1F3D14; color: #1F3D14; font: 700 12px var(--sans); white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(31, 61, 20, .5); cursor: pointer; }
+.ex-cluster:not(:has(span)) { padding-left: 4px; }
+.ex-cluster b { min-width: 22px; height: 22px; padding: 0 5px; box-sizing: border-box; border-radius: 11px; background: #1F3D14; color: #FFFFFF; font-size: 12px; display: grid; place-items: center; }
+
+/* 하천길 안내 카드 (지도 가운데) */
+.stream-soon { position: absolute; left: 50%; top: 33%; transform: translate(-50%, -50%); z-index: 6; width: min(300px, calc(100% - 48px)); padding: 14px 16px; border-radius: 18px; display: flex; flex-direction: column; gap: 4px; text-align: center; }
+.stream-soon b { font-size: 15px; font-weight: 800; color: #2C4F7A; }
+.stream-soon small { font-size: 12px; line-height: 1.5; color: var(--muted); }
+
+/* 확대 상태: 왼쪽 위 "← 전체 지도 · 성북동 둘러볼 곳 18" */
+.ex-back { position: absolute; left: 14px; top: calc(118px + var(--safe-top)); z-index: 6; height: 40px; padding: 0 14px 0 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; color: var(--text); font-size: 13px; font-weight: 800; max-width: calc(100% - 28px); }
+.ex-back svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.ex-back span { white-space: nowrap; }
+.ex-back small { font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ex-back small::before { content: "·"; margin-right: 6px; }
+
+/* 카드 줄 (시트 바로 위, 가로로 넘김) */
+.ex-cards { position: absolute; left: 0; right: 0; z-index: 6; display: flex; gap: 10px; overflow-x: auto; padding: 4px 14px; scroll-snap-type: x mandatory; scroll-padding: 0 14px; scrollbar-width: none; transition: bottom .3s var(--ease-out); }
+.ex-cards::-webkit-scrollbar { display: none; }
+.ex-card { flex: none; width: 264px; scroll-snap-align: start; border-radius: 18px; padding: 12px 12px 10px 14px; display: flex; flex-direction: column; gap: 4px; }
+.ex-card.on { box-shadow: inset 0 0 0 2px #2F6512, var(--glass-shadow); }
+.ex-card-name { display: flex; align-items: center; gap: 8px; text-align: left; color: var(--text); min-height: 28px; padding: 0; }
+.ex-card-name i, .pl-explore i, .pd-explore i { width: 10px; height: 10px; flex: none; border-radius: 50%; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 3px rgba(28, 43, 38, .12); }
+.ex-card-name b { font-size: 15px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ex-card > small { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ex-card-foot { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+.ex-card-foot span { flex: 1; min-width: 0; font-size: 12px; font-weight: 700; color: var(--link); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ex-card-foot .btn { width: auto; margin: 0; flex: none; min-height: 36px; padding: 0 14px; border-radius: 18px; font-size: 13px; font-weight: 700; color: var(--strong); }
+
+/* 장소와 이야기: 둘러볼 곳 목록 */
+.pl-explore { display: flex; flex-direction: column; gap: 8px; flex: none; margin-top: 6px; }
+.pl-explore h2 { margin: 0; font-size: 18px; font-weight: 800; }
+.pl-explore > p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.pl-explore ul, .pd-explore ul { list-style: none; margin: 0; padding: 2px 12px; border-radius: 20px; }
+.pl-explore li + li, .pd-explore li + li { border-top: 1px solid #EAF3DD; }
+.pl-explore li button, .pd-explore li button { width: 100%; min-height: 60px; display: flex; align-items: center; gap: 10px; text-align: left; color: var(--text); padding: 8px 0; }
+.ple-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ple-text b { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ple-text small { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ple-near { flex: none; max-width: 38%; font-size: 11px; font-weight: 700; color: var(--link); text-align: right; line-height: 1.35; }
+.pl-explore .chev, .pd-explore .chev { width: 16px; height: 16px; flex: none; fill: none; stroke: var(--muted); stroke-width: 2; }
+.ple-more, .pd-explore-all { margin: 0; min-height: 44px; border-radius: 14px; color: var(--strong); font-size: 14px; }
+
+/* 장소 상세: 근처 둘러볼 곳 · 값 없는 방문 정보 */
+.pd-pending { color: var(--muted); font-weight: 600; }
+.pd-explore { display: flex; flex-direction: column; gap: 8px; }
+.pd-explore h3 { margin: 4px 2px 0; font-size: 16px; font-weight: 800; }
+.pd-explore li button b { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; }
+.pd-explore li button small { flex: none; font-size: 12px; font-weight: 700; color: var(--link); }
+
+/* 둘러볼 곳 상세 (ExplorePlace) */
+.ex-ic { background: #FFFFFF; color: var(--c); }
+.ex-ic .cat-icon { width: 44px; height: 44px; }
+.ex-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.ex-screen .pd-id h1 { font-size: 26px; }
+.ex-screen .pd-body { padding-top: 4px; }
+.ex-story { border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.ex-story h3 { margin: 0; font-size: 16px; font-weight: 800; }
+.ex-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.ex-tags span { padding: 6px 11px; border-radius: 14px; background: #EAF7D8; color: #2F6512; font-size: 13px; font-weight: 700; }
+.ex-story .note { margin: 0; }
+.ex-links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ex-links .btn { text-decoration: none; margin: 0; min-height: 48px; border-radius: 14px; color: var(--strong); font-size: 14px; padding: 0 8px; }
+.ex-run { border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; box-shadow: inset 0 0 0 2px #9FD25E; }
+.ex-run > small { font-size: 12px; font-weight: 700; color: var(--link); }
+.ex-run h3 { margin: 0; font-size: 17px; font-weight: 800; }
+.ex-run p { margin: 0; font-size: 13px; line-height: 1.5; color: #3F5A2C; }
+.ex-km { display: flex; gap: 8px; margin-top: 8px; }
+.ex-km button { flex: 1; min-height: 44px; border-radius: 22px; font-size: 15px; font-weight: 800; color: var(--strong); }
+.ex-survey { list-style: none; margin: 0; padding: 4px 16px; border-radius: 18px; }
+.ex-survey li { padding: 12px 0; font-size: 15px; font-weight: 700; }
+.ex-survey li + li { border-top: 1px solid #EAF3DD; }
+.pl-near { align-self: flex-start; min-height: 36px; padding: 0 14px; border-radius: 18px; background: var(--strong); color: #FFFFFF; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+.pl-near span { font-weight: 600; opacity: .85; }

@@ -31,9 +31,19 @@ export function AppProvider({ children }) {
   });
   const [weather, setWeather] = useState(null);
   const [course, setCourse] = useState(null);
-  // 코스 고르기 조건 (목적지·거리·언덕·테마). 홈·장소 화면에서 목적지를 미리 골라 넘겨요
-  const [pick, setPick] = useState({ dest: "uiryeong", km: 5, hill: "flat", themes: [] });
+  // 코스 고르기 조건 (목적지·거리·언덕·테마·이동 방식). 홈·장소 화면에서 목적지를 미리 골라 넘겨요
+  // move: "run"(달리기) | "walk"(걷기)
+  const [pick, setPick] = useState({ dest: "uiryeong", km: 5, hill: "flat", themes: [], move: "run" });
   const [spot, setSpot] = useState(null);
+  // 둘러볼 곳 상세: { place, from } — from은 뒤로 갈 화면(home · places · place)
+  const [explore, setExplore] = useState(null);
+  // 장소 상세에서 뒤로 갈 화면 (홈 지도 핀으로 들어오면 home, 그 밖에는 places)
+  const [placeFrom, setPlaceFrom] = useState("places");
+  // 장소와 이야기를 "{장소} 근처"로 걸러 열기 (장소 상세의 "근처 N곳 모두 보기"). 값은 코스 목적지 id.
+  // 장소와 이야기 · 둘러볼 곳 상세 밖으로 나가면 풀려요
+  const [placesNear, setPlacesNear] = useState(null);
+  // 홈 지도 상태 { filter, selId, view, focus, sheet }: 둘러볼 곳 상세에 갔다 와도 그대로예요. 앱을 새로 열 때만 처음으로
+  const homeMap = useRef(null);
   const [couponShop, setCouponShop] = useState(null);
   const [finish, setFinish] = useState(null);
   const [shuffle, setShuffle] = useState(0);
@@ -45,9 +55,14 @@ export function AppProvider({ children }) {
   const dataRef = useRef(data); dataRef.current = data;
   const userRef = useRef(user); userRef.current = user;
 
-  const go = useCallback((s) => setScreen(s), []);
+  const go = useCallback((s) => {
+    setScreen(s);
+    if (s !== "places" && s !== "explore") setPlacesNear(null);
+  }, []);
   const toastRef = useRef(null); // 아래에서 만든 toast를 달리기 쪽(별 +1 알림)에서도 쓰게
-  const run = useRun({ dataRef, userRef, go, setSpot, setFinish, toast: useCallback((m) => toastRef.current?.(m), []) });
+  // 코스로 시작할 때 move를 따로 넘기지 않으면(출발지 화면의 startSavedCourse) 코스 고르기에서 고른 값을 써요
+  const moveRef = useRef("run"); moveRef.current = pick.move === "walk" ? "walk" : "run";
+  const run = useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toast: useCallback((m) => toastRef.current?.(m), []) });
 
   // 데이터 + 날씨 불러오기
   useEffect(() => {
@@ -86,7 +101,7 @@ export function AppProvider({ children }) {
 
   const value = {
     lang, changeLang, screen, go, data, settings, setSettings, weather, course, setCourse, pick, setPick,
-    spot, setSpot, couponShop, setCouponShop, finish, shuffle, setShuffle, toastMsg, toast,
+    spot, setSpot, explore, setExplore, placeFrom, setPlaceFrom, placesNear, setPlacesNear, homeMap, couponShop, setCouponShop, finish, shuffle, setShuffle, toastMsg, toast,
     demo, setDemo, user, run,
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
