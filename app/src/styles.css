@@ -1348,12 +1348,21 @@ div:has(> .spot-pin) { pointer-events: none; }
 .pl-near { align-self: flex-start; min-height: 36px; padding: 0 14px; border-radius: 18px; background: var(--strong); color: #FFFFFF; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
 .pl-near span { font-weight: 600; opacity: .85; }
 
-/* 홈 지도 핀으로 연 장소 상세: 홈 위 팝업 (X로 닫기) */
-.pd-scrim { z-index: 25; }
-.screen.pd-popup { top: calc(44px + var(--safe-top)); z-index: 26; border-radius: 28px 28px 0 0; overflow: hidden; box-shadow: 0 -16px 40px -12px rgba(31, 61, 20, .45); }
-.pd-popup .pd-hero { padding-top: 8px; }
-.pd-popup .grip { display: block; width: 40px; height: 5px; margin: 0 auto 6px; border-radius: 3px; background: var(--handle); }
-.pd-popup .pd-tabs { top: 0; }
+/* 홈 지도 핀으로 연 장소 상세: 가운데 모달. 머리·탭과 달리기 버튼은 고정, 내용만 스크롤 */
+.pd-scrim { z-index: 25; background: rgba(20, 35, 15, .35); }
+.screen.pd-popup { inset: 0; z-index: 26; width: min(100% - 32px, 380px); height: fit-content; max-height: min(72vh, 100% - 32px); margin: auto; border-radius: 24px; overflow: hidden; outline: none; box-shadow: 0 24px 60px -18px rgba(20, 35, 15, .6); animation: pd-modal-in .18s ease-out both; }
+@keyframes pd-modal-in { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .screen.pd-popup { animation: none; } }
+.pd-popup .pd-scroll { position: static; flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 0; }
+.pd-popup .pd-hero { flex: none; padding: 12px 14px 10px; }
+.pd-popup .pd-id { margin-top: 6px; gap: 12px; }
+.pd-popup .pd-ic { width: 56px; height: 56px; border-radius: 16px; }
+.pd-popup .pd-ic svg { width: 40px; height: 40px; }
+.pd-popup .pd-id h1 { font-size: 22px; }
+.pd-popup .pd-tabs { position: static; flex: none; }
+.pd-popup .pd-body { flex: 0 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 14px; }
+.pd-popup .pd-cta { position: static; flex: none; padding: 10px 14px 14px; background: var(--bg-soft); border-top: 1px solid var(--border); }
+.pd-popup .pd-cta .btn { min-height: 50px; }
 /* 현재 위치에서 달리기: 일반 길찾기 vs LessGo 비교표 */
 .here-compare { width: 100%; border-collapse: collapse; font-size: 12px; }
 .here-compare th, .here-compare td { padding: 5px 6px; text-align: right; border-bottom: 1px solid var(--border); }
@@ -1390,16 +1399,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .prep-card .tc-text b { font-size: 15px; }
 .prep-card .tc-text small { font-size: 12px; }
 .prep-card .ui-badge { flex: none; }
-/* 홈 지도에서 연 장소 팝업: 화면 절반 이하만 차지하고 위쪽 지도(코스)가 보이게 */
-.screen.pd-popup { top: 50%; }
-.pd-scrim { background: rgba(31, 61, 20, .06); }
 .pd-prep { opacity: .9; }
-
-/* 장소 팝업 끌기: 위로 = 전체 화면, 아래로 = 절반 / 닫기 */
-.screen.pd-popup { transition: top .28s var(--ease-out, ease); }
-.screen.pd-popup.pd-full { top: calc(44px + var(--safe-top)); }
-.screen.pd-popup.pd-dragging { transition: none; }
-.pd-popup .pd-hero { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
 
 /* 내 기록 첫 화면 오른쪽 위 로그아웃 */
 .st-logout { flex: none; height: 44px; margin-right: -4px; padding: 0 10px; background: none; color: #3E6B30; font-size: 13px; font-weight: 600; white-space: nowrap; text-decoration: none; }

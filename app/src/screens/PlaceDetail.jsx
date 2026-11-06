@@ -5,6 +5,7 @@
 // 방문 정보 탭 아래에 "근처 둘러볼 곳": 이 목적지가 가장 가까운 둘러볼 곳 4곳 + 모두 보기(장소와 이야기).
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc, getLang } from "../lib/i18n.js";
 import { fmtTime } from "../lib/geo.js";
@@ -16,6 +17,8 @@ import PlacePhoto from "../components/PlacePhoto.jsx";
 import NearbyShops from "../components/NearbyShops.jsx";
 
 const TABS = ["visit", "story", "history_lens"]; // 장소 정보 → 이야기 → AI 역사 렌즈 (문화 활동 탭은 뺐어요)
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const focusableIn = (root) => [...root.querySelectorAll(FOCUSABLE)].filter((el) => el.offsetParent !== null);
 
 export default function PlaceDetail() {
   const app = useApp();
@@ -23,11 +26,51 @@ export default function PlaceDetail() {
   const [tab, setTab] = useState("visit");
   const [playing, setPlaying] = useState(false);
   const [report, setReport] = useState(false);
-  // 홈 팝업: 처음엔 화면 절반, 위로 끌면 전체, 아래로 끌면 다시 절반 → 한 번 더 내리면 닫기
-  const [full, setFull] = useState(false);
-  const [dragY, setDragY] = useState(0);
-  const drag = useRef(null);
+  // 홈 지도 핀으로 열면 가운데 모달: X, 바깥 막, Esc로 닫고 눌렀던 핀으로 포커스를 돌려줘요
+  const popup = app.placeFrom === "home";
+  const dialogRef = useRef(null);
+  const reportRef = useRef(null);
+  const openerRef = useRef(document.activeElement);
+  const back = () => { voice.stop(); app.go(app.placeFrom || "places"); };
+  const closePopup = () => {
+    const opener = openerRef.current;
+    const label = loc(spot.name);
+    back();
+    // 닫은 뒤 다른 핀이 다시 그려지므로 다음 차례에 포커스를 옮겨요. 핀이 새로 만들어졌으면 이름으로 찾아요
+    setTimeout(() => {
+      const pin = opener?.isConnected && opener !== document.body ? opener : document.querySelector(`.home-map button[aria-label="${CSS.escape(label)}"]`);
+      pin?.focus({ preventScroll: true });
+    }, 0);
+  };
   useEffect(() => () => voice.stop(), []);
+  // 열리면 포커스를 모달 안으로. 신고 시트가 열려 있으면 그 안으로
+  useEffect(() => {
+    if (!popup) return;
+    if (report) focusableIn(reportRef.current || document.body)[0]?.focus();
+    else dialogRef.current?.focus({ preventScroll: true });
+  }, [popup, report]);
+  // Esc로 닫기, Tab은 모달 안에서만 돌게
+  useEffect(() => {
+    if (!popup) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        if (report) setReport(false); else closePopup();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const root = report ? reportRef.current : dialogRef.current;
+      if (!root) return;
+      const items = focusableIn(root);
+      if (!items.length) { e.preventDefault(); return; }
+      const first = items[0], last = items[items.length - 1], now = document.activeElement;
+      if (e.shiftKey && (now === first || now === root || !root.contains(now))) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && (now === last || !root.contains(now))) { e.preventDefault(); first.focus(); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [popup, report]);
   if (!spot) return null;
 
   const name = loc(spot.name);
@@ -52,44 +95,18 @@ export default function PlaceDetail() {
   const nearby = app.data.explore.filter((p) => p.nearest_course?.dest === spot.id).sort(byNearest);
   const openExplore = (p) => { voice.stop(); app.setExplore({ place: p, from: "place" }); app.go("explore"); };
   const runHere = () => { voice.stop(); app.setPick({ ...app.pick, dest: spot.id }); app.go("courses"); };
-  const back = () => { voice.stop(); app.go(app.placeFrom || "places"); };
-  // 홈 지도 핀으로 열면 팝업: 위 왼쪽 버튼이 X(닫기), 바깥 덮개를 눌러도 닫혀요
-  const popup = app.placeFrom === "home";
-  // 끌기: 누른 뒤에는 창 전체에서 움직임을 받아요 (손가락이 시트 밖으로 나가도 이어지게)
-  const onDown = (e) => {
-    if (!popup || e.target.closest("button")) return;
-    e.preventDefault(); // 글자 선택·끌어 놓기가 시작되지 않게
-    const y0 = e.clientY;
-    let dy = 0;
-    const move = (ev) => { dy = ev.clientY - y0; setDragY(dy || 0.01); };
-    const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-      window.removeEventListener("pointercancel", up);
-      setDragY(0);
-      if (dy < -40) setFull(true);
-      else if (dy > 60) { if (drag.current?.full) setFull(false); else back(); }
-    };
-    drag.current = { full };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
-    window.addEventListener("pointercancel", up);
-  };
-  const dragHandlers = popup ? { onPointerDown: onDown } : {};
 
   return (
     <>
-    {popup && <div className="ui-scrim pd-scrim" onClick={back} aria-hidden="true" />}
-    <section className={`screen pd-screen ${popup ? `pd-popup rise ${full ? "pd-full" : ""} ${dragY ? "pd-dragging" : ""}` : ""}`}
-      style={popup && dragY ? { top: `calc(${full ? "44px + var(--safe-top)" : "50%"} + ${full ? Math.max(0, dragY) : dragY}px)` } : undefined}
-      {...(popup ? { role: "dialog", "aria-modal": true, "aria-label": name } : {})}>
+    {popup && <div className="ui-scrim pd-scrim" onClick={closePopup} aria-hidden="true" />}
+    <section ref={dialogRef} className={`screen pd-screen ${popup ? "pd-popup" : ""}`}
+      {...(popup ? { role: "dialog", "aria-modal": true, "aria-labelledby": "pd-modal-title", tabIndex: -1 } : {})}>
       <div className="hanji-layer" aria-hidden="true" />
       <div className="pd-scroll">
-        <div className="pd-hero" {...dragHandlers}>
-          {popup && <span className="grip" aria-hidden="true" />}
+        <div className="pd-hero">
           <div className="pd-bar">
             {popup
-              ? <button className="round-btn glass" onClick={back} aria-label={t("close")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+              ? <button className="round-btn glass" onClick={closePopup} aria-label={t("close")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
               : <button className="round-btn glass" onClick={back} aria-label={t("back")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>}
             <button className="round-btn glass" onClick={share} aria-label={t("share")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg></button>
           </div>
@@ -97,7 +114,7 @@ export default function PlaceDetail() {
             <span className="pd-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(spot) }} />
             <div>
               <small>{spot.kindLabel || (PLACE_TOPICS[spot.id] || []).map((k) => t("topic_" + k)).join(" · ") || t("filter_" + spot.category)}</small>
-              <h1>{name}</h1>
+              <h1 id={popup ? "pd-modal-title" : undefined}>{name}</h1>
             </div>
           </div>
         </div>
@@ -193,7 +210,10 @@ export default function PlaceDetail() {
           : <button className="btn btn-cta" onClick={runHere}>{t("run_to", { name: name.replace(/\s*\(.*\)/, "") })} →</button>}
       </div>
 
-      {report && <ReportSheet spot={spot} onClose={() => setReport(false)} />}
+      {/* 모달 안에서는 잘리니 신고 시트는 폰 화면 위에 띄워요 */}
+      {report && (popup
+        ? createPortal(<div ref={reportRef}><ReportSheet spot={spot} onClose={() => setReport(false)} /></div>, document.querySelector(".phone"))
+        : <ReportSheet spot={spot} onClose={() => setReport(false)} />)}
     </section>
     </>
   );
