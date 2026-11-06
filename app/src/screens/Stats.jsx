@@ -36,6 +36,7 @@ export default function Stats() {
       <div className="pd-scroll">
         <div className="st-top">
           <div className="st-heading"><h1>{t("tab_stats")}</h1><p>{t("hello", { name: user.profile?.nickname || "" })}</p></div>
+          <button className="st-logout" onClick={() => setConfirmLogout(true)}>{t("logout")}</button>
           <button className="round-btn glass" onClick={share} aria-label={t("share")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg></button>
         </div>
         <div className="st-links">
@@ -50,7 +51,6 @@ export default function Stats() {
           {tab === "week" && <Week days={days} />}
           {tab === "badge" && <Badges />}
         </div>
-        <button className="st-logout-footer" onClick={() => setConfirmLogout(true)}>{t("logout")}</button>
       </div>
       <ConfirmDialog open={confirmLogout} title={t("logout_confirm_title")} cancelLabel={t("cancel")} confirmLabel={t("logout")}
         onCancel={() => setConfirmLogout(false)} onConfirm={logout} />
