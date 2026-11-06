@@ -91,7 +91,8 @@
    "address": "서울 성북구 성북로31길 9",
    "kakao_url": "http://place.map.kakao.com/8218085",
    "near": "simujang",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2F108628fdb4cce928d57b2c2fa4409c815c4e6464%3Foriginal"
   },
   {
    "id": "kakao-7953468",
@@ -109,7 +110,8 @@
    "address": "서울 성북구 성북로 134-4",
    "kakao_url": "http://place.map.kakao.com/7953468",
    "near": "simujang",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Fmystore%2F7D419C5EC9E74F048AE88E0B6BFDC9BD"
   },
   {
    "id": "kakao-8238823",
@@ -134,7 +136,8 @@
     "seonjam-museum",
     "simujang",
     "bukjeong-village"
-   ]
+   ],
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Fmystore%2F580DBB48D2E84E2296E71C8A2F126555"
   },
   {
    "id": "kakao-23300753",
@@ -155,7 +158,8 @@
    "source": "2026-11-02 상권 2차 자료조사",
    "near_places": [
     "kansong"
-   ]
+   ],
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=https%3A%2F%2Fthumb.kakaocdn.net%2Fdna%2Fkamp%2Fsource%2Frvml8sh49hgcb68tqg7x3o3fb%2Fthumbs%2F1.jpg%3Fcredential%3DTuMuFGKUIcirOSjFzOpncbomGFEIdZWK%26expires%3D33346735616%26kamp_tidx%3D0%26signature%3Dpqx8kmgLQvykxsBWYpGjKr5ZpME%253D%26ts%3D1789826816"
   },
   {
    "id": "kakao-7940056",
@@ -177,7 +181,8 @@
    "near_places": [
     "suyeonsanbang",
     "seonjam-museum"
-   ]
+   ],
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Fmystore%2FF9B7F1267F3542739B6A2D13CA7C680B"
   },
   {
    "id": "kakao-13324245",
@@ -195,7 +200,8 @@
    "address": "서울 성북구 성북로31길 65",
    "kakao_url": "http://place.map.kakao.com/13324245",
    "near": "simujang",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2Fe7a7e5eaf2c3b2c2e8ce76d6a228bf6114a462d3%3Foriginal"
   },
   {
    "id": "kakao-834781338",
@@ -213,7 +219,8 @@
    "address": "서울 성북구 성북로28길 10",
    "kakao_url": "http://place.map.kakao.com/834781338",
    "near": "simujang",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Ffiy_reboot%2Fplace%2FA207638320214BDE945FDE5F45EA9090"
   },
   {
    "id": "kakao-10380858",
@@ -231,7 +238,8 @@
    "address": "서울 성북구 아리랑로19길 46-2",
    "kakao_url": "http://place.map.kakao.com/10380858",
    "near": "jeongneung",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2F99d257e6d7d8a2f9f27166c58886e8fe5331675d%3Foriginal"
   },
   {
    "id": "kakao-1962671869",
@@ -249,7 +257,8 @@
    "address": "서울 성북구 아리랑로19길 9-8",
    "kakao_url": "http://place.map.kakao.com/1962671869",
    "near": "jeongneung",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2F1c32d263f0175be6edefc7c0cc21c95080ebc5ba%3Foriginal"
   },
   {
    "id": "kakao-1408988111",
@@ -267,7 +276,8 @@
    "address": "서울 성북구 정릉로26길 32",
    "kakao_url": "http://place.map.kakao.com/1408988111",
    "near": "jeongneung",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Fmystore%2FF8EFFE07EB694AD591C34FB5F9AC0297"
   },
   {
    "id": "kakao-869837159",
@@ -285,7 +295,8 @@
    "address": "서울 성북구 아리랑로19길 30",
    "kakao_url": "http://place.map.kakao.com/869837159",
    "near": "jeongneung",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2F4a6cc29d7e0c3ede08eb3f7d1ed7b6b3a3a04f3c%3Foriginal"
   },
   {
    "id": "kakao-26940135",
@@ -303,7 +314,8 @@
    "address": "서울 성북구 정릉로36길 88",
    "kakao_url": "http://place.map.kakao.com/26940135",
    "near": "jeongneung",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2Fc2a15ccfdc8cb465b55f62b16b87b9922400cd44%3Foriginal"
   },
   {
    "id": "kakao-15834471",
@@ -321,7 +333,8 @@
    "address": "서울 성북구 돌곶이로 21",
    "kakao_url": "http://place.map.kakao.com/15834471",
    "near": "uiryeong",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2F04e0983408337c4ac5c0717f245cec925af14daa%3Foriginal"
   },
   {
    "id": "kakao-1023280262",
@@ -339,7 +352,8 @@
    "address": "서울 성북구 화랑로32길 38",
    "kakao_url": "http://place.map.kakao.com/1023280262",
    "near": "uiryeong",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Fmystore%2F0DE1B8D735CB446C923CD8EC28CA0695"
   },
   {
    "id": "kakao-795904388",
@@ -357,7 +371,8 @@
    "address": "서울 성북구 돌곶이로22길 14",
    "kakao_url": "http://place.map.kakao.com/795904388",
    "near": "uiryeong",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Ffiy_reboot%2Fplace%2FF94EE10E09B94217A7848A85DEF7F019"
   },
   {
    "id": "kakao-1129136524",
@@ -375,7 +390,8 @@
    "address": "서울 성북구 화랑로32길 21",
    "kakao_url": "http://place.map.kakao.com/1129136524",
    "near": "uiryeong",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Fmystore%2F7DC2BEC40A6B479FB2DA64C5D2B7EFC7"
   },
   {
    "id": "kakao-2072595213",
@@ -397,7 +413,8 @@
     "choisunu-house",
     "naksan-wall"
    ],
-   "source": "2026-10-18 1차 자료조사(주변 상권)"
+   "source": "2026-10-18 1차 자료조사(주변 상권)",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2Faa4e1a377b8ab9633c00c2b32514842779e80151%3Foriginal"
   },
   {
    "id": "kakao-22752158",
@@ -418,7 +435,8 @@
    "near_places": [
     "choisunu-house"
    ],
-   "source": "2026-10-18 1차 자료조사(주변 상권)"
+   "source": "2026-10-18 1차 자료조사(주변 상권)",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2F4a9d6f5e42f49ce27d44159ad6129154913da85c%3Foriginal"
   },
   {
    "id": "kakao-1132361647",
@@ -439,7 +457,8 @@
    "near_places": [
     "choisunu-house"
    ],
-   "source": "2026-10-18 1차 자료조사(주변 상권)"
+   "source": "2026-10-18 1차 자료조사(주변 상권)",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2F5b8b537093fd13e14e8d98745b530c333e70d137%3Foriginal"
   },
   {
    "id": "kakao-369820538",
@@ -460,7 +479,8 @@
    "near_places": [
     "kansong"
    ],
-   "source": "2026-10-18 1차 자료조사(주변 상권)"
+   "source": "2026-10-18 1차 자료조사(주변 상권)",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2F8b0d2281267e3d87474f23d1add4d8528e0e7c27%3Foriginal"
   },
   {
    "id": "kakao-767790604",
@@ -502,7 +522,8 @@
    "near_places": [
     "gilsangsa"
    ],
-   "source": "2026-10-18 1차 자료조사(주변 상권)"
+   "source": "2026-10-18 1차 자료조사(주변 상권)",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=https%3A%2F%2Fpostfiles.pstatic.net%2FMjAyNjA1MjdfMjk0%2FMDAxNzc5ODQ3Njg3ODc5.Hg_9A5K95LfFd2U1JBTDnFRRG5hrXopchZTw0nknuIwg.4xUS0FvisJc1z4SjkCZXJJeVVBNStL4lLY0L7GVIByYg.JPEG%2FKakaoTalk_20260527_095514881_26.jpg%3Ftype%3Dw386"
   },
   {
    "id": "kakao-871464618",
@@ -524,7 +545,8 @@
     "jeongneung",
     "heungcheonsa"
    ],
-   "source": "2026-10-18 1차 자료조사(주변 상권)"
+   "source": "2026-10-18 1차 자료조사(주변 상권)",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Fmystore%2F1C6848D682044FDFB391177EB6975801"
   },
   {
    "id": "kakao-13092182",
@@ -545,7 +567,8 @@
    "near_places": [
     "gyeongguksa"
    ],
-   "source": "2026-10-18 1차 자료조사(주변 상권)"
+   "source": "2026-10-18 1차 자료조사(주변 상권)",
+   "image": "https://img1.kakaocdn.net/cthumb/local/C240x240.q60/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Flocal%2FkakaomapPhoto%2Freview%2F033749adef2bae9e44e0fe5f65b5bfa5437c3242%3Foriginal"
   }
  ]
 }

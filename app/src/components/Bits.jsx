@@ -47,10 +47,11 @@ export function FakeQr({ seed = "x" }) {
   return <svg viewBox={`-1 -1 ${n + 2} ${n + 2}`} shapeRendering="crispEdges"><g fill="#1C2321">{rects}</g></svg>;
 }
 
-// 하단 메뉴: 지도 · 장소·이야기 · 내 기록 (문화 활동은 장소와 이야기 화면의 "이어진 문화 활동"으로 들어가요)
+// 하단 메뉴: 지도 · 장소·이야기 · 상권 · 내 기록 (문화 활동은 장소와 이야기 화면의 "이어진 문화 활동"으로 들어가요)
 export const TABS = [
   ["home", "tab_map", <path key="p" d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z M12 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />],
   ["places", "tab_places", <path key="p" d="M4 19.5V6a2 2 0 012-2h11v14H6a2 2 0 00-2 1.5zM4 19.5A2 2 0 006 21h12 M9 8h5" />],
+  ["market", "tab_market", <path key="p" d="M4 9l1.5-5h13L20 9 M4 9h16v11H4z M4 9a2.7 2.7 0 005.3 0 2.7 2.7 0 005.4 0 2.7 2.7 0 005.3 0 M10 20v-5h4v5" />],
   ["stats", "tab_stats", <path key="p" d="M12 21a9 9 0 100-18 9 9 0 000 18z M12 7v5l3 2" />],
 ];
 
