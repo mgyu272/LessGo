@@ -17,7 +17,7 @@ import { getCourse } from "../lib/data.js";
 import { MapView, FitBounds, SpotMarker, Route, Dot, Me } from "../components/MapView.jsx";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { ElevationChart } from "../components/Bits.jsx";
-import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet, Segment } from "../components/ui.jsx";
+import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet, Segment, Toggle } from "../components/ui.jsx";
 import { speedParam } from "./Home.jsx";
 import { buildCourseFromHere } from "../lib/fromHere.js";
 
@@ -87,7 +87,6 @@ export default function CoursePicker() {
   const saved = favs.has(course.id);
   const toggleSave = () => { const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
   const start = () => { app.setCourse(course); app.go("toStart"); };
-  const startSimulation = () => app.run.start(course, { demo: true, speedup: speedParam(), move });
   const reason = reasons[course.id] || factualReason(course, pair, move);
   const fromName = startNameOf(course);
   const fromM = here ? distance(here, course.path[0]) : null;
@@ -183,15 +182,10 @@ export default function CoursePicker() {
           </div>
 
           <p className="soft picker-reason"><InfoIcon /><span>{reason}</span></p>
-          {p.status === "review_required" && <p className="picker-warn"><WarnIcon /><span>{t("warn_review")}</span></p>}
-          {p.elevationLow && <p className="picker-warn"><WarnIcon /><span>{t("warn_elev")}</span></p>}
 
-          <CompareTable pair={pair} sel={course.id} move={move} />
           <Timeline course={course} />
           {/* 디자인에는 없지만 PC·실내에서 확인할 수 있게 시뮬레이션(GPS 없이 코스를 따라 움직임)을 맨 아래에 둬요 */}
-          <button className="soft picker-sim" onClick={startSimulation}>
-            <span><b>{t("simulate")}</b><small>{t("demo_sub")}</small></span><PlayIcon />
-          </button>
+          <Toggle className="demo-row" checked={app.demo} onChange={app.setDemo} title={t("demo_mode")} sub={t("demo_sub")} />
           <span className="picker-spacer" aria-hidden="true" />
         </div>
       </BottomSheet>}
