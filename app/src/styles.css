@@ -1514,4 +1514,8 @@ div:has(> .spot-pin) { pointer-events: none; }
   font-family: "Kkakdugi Drafting", "Pretendard", system-ui, sans-serif;
   font-weight: 700;
   letter-spacing: 0;
+  /* 도면체라 Bold도 획이 가늘어서, 같은 색 테두리로 더 두껍게 */
+  -webkit-text-stroke: 1.1px currentColor;
+  paint-order: stroke fill;
 }
+.login-brand .brand-name b { -webkit-text-stroke-width: 2px; }
