@@ -196,7 +196,7 @@ export function Signup() {
             onChange={set("username")} />
           <Field label={t("email")} type="email" value={f.email} placeholder={t("email_ph")} hint={t("email_hint")} autoComplete="email" inputMode="email"
             autoCapitalize="none" spellCheck={false} onChange={set("email")} />
-          <Field label={t("password")} type="password" value={f.password} placeholder={t("password_ph")} autoComplete="new-password" onChange={set("password")} />
+          <Field label={t("password")} type="password" value={f.password} placeholder={t("signup_password_ph")} autoComplete="new-password" onChange={set("password")} />
           <Field label={t("password2")} type="password" value={f.password2} placeholder={t("password2_ph")} autoComplete="new-password" onChange={set("password2")} />
           <Field label={t("nickname")} value={f.nickname} placeholder={t("nickname_ph")} hint={t("nickname_hint")} maxLength={NICKNAME_MAX} onChange={set("nickname")} />
           {err && <p className="note cream" role="alert">{err}</p>}
