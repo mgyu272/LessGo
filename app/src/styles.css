@@ -1181,3 +1181,6 @@ small { font-size: 12px; }
 .here-compare th:first-child, .here-compare td:first-child { text-align: left; color: var(--muted); }
 .here-compare th { font-size: 11px; color: var(--muted); font-weight: 700; }
 .here-compare th:last-child, .here-compare td:last-child { color: #2F6512; }
+/* 완주 아이콘: 목적지 장소 아이콘 (도장과 같은 모션) */
+.done-stamp.done-place { width: 60px; height: 60px; border-radius: 18px; background: #FFFFFF; border: 2px solid #CFE6B8; align-items: center; justify-content: center; }
+.done-stamp.done-place svg { width: 38px; height: 38px; }

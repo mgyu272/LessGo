@@ -18,6 +18,7 @@ import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { ElevationChart } from "../components/Bits.jsx";
 import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet, Toggle, Segment } from "../components/ui.jsx";
 import { speedParam } from "./Home.jsx";
+import { buildCourseFromHere } from "../lib/fromHere.js";
 
 // 지도 선 색: 완만한 길(low) = 초록, 언덕 허용(high) = 주황 (단색)
 export const MODE_COLOR = { low: "#2F6512", high: "#E38B2C" };
@@ -38,6 +39,7 @@ export default function CoursePicker() {
   const pair = MODES.map((m) => getCourse(data, dest, km, m)).filter(Boolean);
   const [sel, setSel] = useState(pick.hill === "flat" ? "low" : "high");
   const [chip, setChip] = useState("");
+  const [finding, setFinding] = useState(false); // 현재위치 코스 찾는 중
   const [favs, setFavs] = useState(readFavs);
   const sheet = useBottomSheet({ snaps: snapsFor, initial: 0 });
   const course = pair.find((c) => c.properties.mode === sel) || pair[0];
@@ -69,13 +71,19 @@ export default function CoursePicker() {
   const p = course.properties;
   const saved = favs.has(course.id);
   const toggleSave = () => { const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
-  // 코스 달리기: 시연 모드면 코스를 따라 자동으로, 아니면 원래처럼 출발지 확인 후 실제 GPS
-  const runCourse = () => {
-    if (app.demo) return app.run.start(course, { demo: true, speedup: speedParam() });
-    app.setCourse(course); app.go("toStart");
+  // 코스 달리기: 저장된 코스로 바로 시작 (시연 모드면 자동으로 움직이고, 아니면 실제 GPS)
+  const runCourse = () => { app.setCourse(course); app.run.start(course, { demo: app.demo, speedup: speedParam() }); };
+  // 현재 위치에서 달리기: 내 위치 → 이 코스의 목적지까지 러닝 최적 코스를 찾아서 바로 시작
+  const runFromHere = async () => {
+    if (finding) return;
+    const dest = data.spotById[course.properties.dest];
+    setFinding(true);
+    const mine = await buildCourseFromHere(course, dest, app.demo);
+    setFinding(false);
+    if (mine.error) return app.toast(mine.error);
+    app.setCourse(mine);
+    app.run.start(mine, { demo: app.demo, speedup: speedParam() });
   };
-  // 현재 위치에서 달리기: 내 위치 → 이 코스의 목적지까지 러닝 최적 코스를 새로 찾아요
-  const runFromHere = () => { app.setCourse(course); app.go("fromHere"); };
   const reason = reasons[course.id] || factualReason(course, pair);
   const themeText = pick.themes.length ? (pick.themes.length > 1 ? t("theme_more", { first: t("th2_" + pick.themes[0]), n: pick.themes.length - 1 }) : t("th2_" + pick.themes[0])) : t("theme");
 
@@ -128,10 +136,6 @@ export default function CoursePicker() {
           </div>
 
           <p className="soft picker-reason"><InfoIcon /><span>{reason}</span></p>
-          {p.status === "review_required" && <p className="picker-warn"><WarnIcon /><span>{t("warn_review")}</span></p>}
-          {p.elevationLow && <p className="picker-warn"><WarnIcon /><span>{t("warn_elev")}</span></p>}
-
-          <CompareTable pair={pair} sel={course.id} />
           <Timeline course={course} />
           {/* 디자인에는 없지만 PC에서 확인할 수 있게 시연 모드 스위치를 맨 아래에 둬요 */}
           <Toggle className="demo-row" checked={app.demo} onChange={app.setDemo} title={t("demo_mode")} sub={t("demo_sub")} />
@@ -144,7 +148,7 @@ export default function CoursePicker() {
           <svg viewBox="0 0 24 24" aria-hidden="true" fill={saved ? "#9FD25E" : "none"}><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
         </button>
         <button className="btn btn-soft" onClick={runCourse} style={{ whiteSpace: "nowrap" }}>코스 달리기</button>
-        <button className="btn btn-cta" onClick={runFromHere} style={{ whiteSpace: "nowrap" }}>현재위치에서 달리기</button>
+        <button className="btn btn-cta" onClick={runFromHere} disabled={finding} style={{ whiteSpace: "nowrap" }}>{finding ? "코스 찾는 중…" : "현재위치에서 달리기"}</button>
       </div>
 
       <DestSheet open={chip === "dest"} dest={dest} place={place} onClose={() => setChip("")} onPick={(v) => setPick({ ...pick, dest: v })} />
