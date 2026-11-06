@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { verifyImageEvidence } from "../api/_lib/history-evidence.js";
+import { buildHistoryVerification, verifyImageEvidence } from "../api/_lib/history-evidence.js";
 import analyzeImage from "../api/analyze-image.js";
 import localizeImageAnalysis from "../api/localize-image-analysis.js";
 
@@ -31,11 +31,23 @@ for (const item of cases) {
 const sourceStatus = await verifyImageEvidence(cases[0].input);
 assert.equal(sourceStatus.sourceLevel, "official");
 assert.ok(sourceStatus.sources.every((source) => source.url?.startsWith("https://")));
+assert.ok(sourceStatus.factSources.every((entry) => entry.factId && entry.verificationStatus === "verified" && entry.sources.length > 0 && entry.sources.every((source) => source.sourceLevel === "official" && source.supports?.trim())));
 assert.ok(sourceStatus.limitations.some((item) => item.includes("사진 속 대상이 그 시설이라고 확정하지는 않습니다")));
 const internalStatus = await verifyImageEvidence(cases[3].input);
 assert.equal(internalStatus.evidenceStatus, "supported");
 assert.equal(internalStatus.sourceLevel, "internal");
 assert.ok(internalStatus.limitations.some((item) => item.includes("공식 출처 URL")));
+const internalSummary = buildHistoryVerification({ evidence: internalStatus, identificationStatus: "identified" });
+assert.equal(internalSummary.status, "insufficient_evidence", "internal story text is not an official historical verification");
+assert.equal(internalSummary.sourceLevel, "internal");
+assert.ok(internalSummary.claims.every((claim) => claim.verificationStatus === "unverified" && claim.sourceLevel === "internal"));
+const candidateConflictSummary = buildHistoryVerification({ evidence: await verifyImageEvidence(cases[2].input), identificationStatus: "identified" });
+assert.equal(candidateConflictSummary.candidateEvidenceStatus, "conflicting");
+assert.equal(candidateConflictSummary.status, "insufficient_evidence", "a photo-candidate mismatch is not mislabeled as a historical-claim conflict");
+const aiContextSummary = buildHistoryVerification({ evidence: sourceStatus, identificationStatus: "uncertain", explanation: { aiContext: ["An unverified general context statement."] } });
+assert.equal(aiContextSummary.photoIdentityStatus, "uncertain");
+assert.equal(aiContextSummary.claims.at(-1).verificationStatus, "unverified");
+assert.equal(aiContextSummary.claims.at(-1).sourceLevel, "ai_generated");
 const spotScopedJeongjagak = await verifyImageEvidence({ ...cases.find((item) => item.label === "jeongneung official facility").input, spotId: "uiryeong" });
 assert.equal(spotScopedJeongjagak.evidenceStatus, "supported");
 assert.equal(spotScopedJeongjagak.sourceLevel, "official");
@@ -56,10 +68,14 @@ const originalEnv = {
   GEMINI_IMAGE_REFERENCE_EXTERNAL_OK: process.env.GEMINI_IMAGE_REFERENCE_EXTERNAL_OK,
 };
 let upstreamCalls = 0;
-globalThis.fetch = async () => {
+globalThis.fetch = async (_url, init) => {
   upstreamCalls++;
-  const vision = { candidateName: "심우장", objectType: "한옥", visualFeatures: ["한옥 지붕"], identificationStatus: "identified", reason: "Mock vision response." };
-  const response = upstreamCalls === 1 ? vision : { title: "공식 자료로 보는 심우장", text: "국가유산포털은 심우장을 1933년의 생활유적으로 기록합니다. 한용운 생애 자료는 집의 방향에 관한 일화를 전합니다." };
+  const vision = { candidateName: "심우장", objectType: "한옥", subjectLevel: "place", visualFeatures: ["한옥 지붕"], identificationStatus: "identified", reason: "Mock vision response." };
+  const response = upstreamCalls === 1 ? vision : { title: "공식 자료로 보는 심우장", text: "국가유산포털은 심우장을 1933년의 생활유적으로 기록합니다. 한용운 생애 자료는 집의 방향에 관한 일화를 전합니다.", aiContext: ["전통 가옥은 지붕과 마당의 구성을 함께 살펴볼 수 있습니다."] };
+  if (upstreamCalls === 1) {
+    const prompt = JSON.parse(init.body).contents[0].parts[0].text;
+    assert.match(prompt, /Possible names of facilities recorded for this place/u);
+  }
   return { ok: true, status: 200, json: async () => ({ candidates: [{ content: { parts: [{ text: JSON.stringify(response) }] } }] }) };
 };
 try {
@@ -73,13 +89,20 @@ try {
   await analyzeImage({ method: "POST", body: { spotId: "simujang", spotName: "심우장", lang: "ko", mimeType: "image/png", imageBase64: image } }, response);
   assert.equal(response.statusCode, 200);
   assert.equal(upstreamCalls, 2);
-  for (const key of ["candidateName", "objectType", "visualFeatures", "identificationStatus", "reason", "evidence", "explanation", "explanationError", "source", "testData", "model"]) {
+  for (const key of ["candidateName", "objectType", "visualFeatures", "identificationStatus", "reason", "evidence", "explanation", "explanationError", "source", "testData", "model", "historyVerification"]) {
     assert.ok(Object.hasOwn(response.body, key), `API response is missing '${key}'`);
   }
   assert.equal(response.body.evidence.evidenceStatus, "supported");
   assert.equal(response.body.explanation.type, "grounded");
+  assert.equal(response.body.subjectLevel, "place");
+  assert.equal(response.body.explanation.aiContext.length, 1);
+  assert.equal(response.body.explanation.aiContextVerification, "unverified_general_ai_context");
   assert.equal(response.body.explanation.sources.length, 2);
   assert.equal(response.body.explanationError, null);
+  assert.equal(response.body.historyVerification.status, "verified");
+  assert.equal(response.body.historyVerification.photoIdentityStatus, "identified");
+  assert.equal(response.body.historyVerification.referenceComparisonStatus, "not_compared");
+  assert.ok(response.body.historyVerification.claims.every((claim) => claim.verificationStatus === "verified" || claim.verificationStatus === "unverified"));
 
   // A failure during the separate explanation pass leaves the original vision and evidence intact.
   const failedExplanationResponse = { statusCode: 0, body: null, status(code) { this.statusCode = code; return this; }, json(body) { this.body = body; return body; } };
@@ -96,8 +119,12 @@ try {
   assert.equal(failedExplanationResponse.statusCode, 200);
   assert.equal(failedExplanationResponse.body.identificationStatus, "identified");
   assert.equal(failedExplanationResponse.body.evidence.sourceLevel, "official");
-  assert.equal(failedExplanationResponse.body.explanation, null);
+  assert.equal(failedExplanationResponse.body.explanation.type, "grounded");
+  assert.equal(failedExplanationResponse.body.explanation.fallback, true);
+  assert.ok(failedExplanationResponse.body.explanation.sources.length > 0, "official fallback keeps linked citations");
+  assert.ok(failedExplanationResponse.body.explanation.text.includes("공식"));
   assert.equal(failedExplanationResponse.body.explanationError.code, "explanation_failed");
+  assert.equal(failedExplanationResponse.body.historyVerification.status, "verified", "historical evidence remains available if the optional explanation fails");
 } finally {
   globalThis.fetch = previousFetch;
   for (const [key, value] of Object.entries(originalEnv)) {
@@ -150,13 +177,18 @@ try {
   process.env.GEMINI_API_KEY = "offline-localization-test-key";
   delete process.env.GEMINI_IMAGE_MOCK;
   const localizedResponse = { statusCode: 0, body: null, status(code) { this.statusCode = code; return this; }, json(body) { this.body = body; return body; } };
-  await localizeImageAnalysis({ method: "POST", body: { spotId: "jeongneung", lang: "en", vision: { candidateName: "정자각", objectType: "건축물", visualFeatures: ["기와지붕"], identificationStatus: "identified", reason: "지붕과 열린 건물 구조가 보입니다." } } }, localizedResponse);
+  const savedReferenceComparison = { status: "not_compared", attempted: false, referenceCount: 0, candidateChanged: false, identificationStatusBefore: "identified", identificationStatusAfter: "identified", visualEvidence: [], reasonCode: "external_use_not_authorized" };
+  await localizeImageAnalysis({ method: "POST", body: { spotId: "jeongneung", lang: "en", referenceComparison: savedReferenceComparison, vision: { candidateName: "정자각", objectType: "건축물", subjectLevel: "facility", visualFeatures: ["기와지붕"], identificationStatus: "identified", reason: "지붕과 열린 건물 구조가 보입니다." } } }, localizedResponse);
   assert.equal(localizedResponse.statusCode, 200);
   assert.equal(localizedResponse.body.candidateName, "Jeongjagak");
+  assert.equal(localizedResponse.body.subjectLevel, "facility", "recognition specificity is preserved when changing language");
+  assert.deepEqual(localizedResponse.body.referenceComparison, savedReferenceComparison, "reference comparison status survives language changes");
   assert.equal(localizedResponse.body.evidence.factSources.some((entry) => entry.fact.includes("royal tomb")), true);
   assert.ok(localizedResponse.body.evidence.sources.every((source) => source.titleEn && /[A-Za-z]/u.test(source.title)));
   assert.ok(localizedResponse.body.evidence.limitations.every((line) => !/[가-힣]/u.test(line)), "English verification limitations are localized");
   assert.equal(localizedResponse.body.explanation.language, "en");
+assert.equal(localizedResponse.body.historyVerification.referenceComparisonStatus, "not_compared");
+assert.equal(localizedResponse.body.historyVerification.photoIdentityStatus, "identified");
   assert.equal(localizationCalls, 2, "localization plus explanation use saved text and never submit an image");
 } finally {
   globalThis.fetch = previousLocalizationFetch;

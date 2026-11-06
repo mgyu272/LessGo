@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { verifyImageEvidence } from "../api/_lib/history-evidence.js";
+import { getOfficialVisualCandidates, verifyImageEvidence } from "../api/_lib/history-evidence.js";
 import { classifyExplanationType, buildExplanationPrompt } from "../api/_lib/history-explanation.js";
 
 const verify = (input) => verifyImageEvidence({ lang: "ko", visualFeatures: ["기와지붕", "목조 기둥"], ...input });
@@ -14,6 +14,11 @@ assert.ok(simujangTraditionalHouse.sources.length >= 2);
 assert.ok(simujangTraditionalHouse.sources.every((source) => source.url?.startsWith("https://")));
 assert.ok(simujangTraditionalHouse.factSources.every((fact) => fact.sources.length > 0));
 assert.equal(classifyExplanationType({ evidence: simujangTraditionalHouse, identificationStatus: "identified" }), "grounded");
+
+const jeongneungVisualCandidates = await getOfficialVisualCandidates("jeongneung");
+assert.ok(jeongneungVisualCandidates.some((candidate) => candidate.name === "정자각"));
+assert.ok(jeongneungVisualCandidates.some((candidate) => candidate.name === "홍살문"));
+assert.ok(!(await getOfficialVisualCandidates("simujang")).some((candidate) => candidate.name === "홍살문"), "visual candidates stay scoped to the selected place");
 
 // A type from a clearly incompatible family remains a real conflict.
 for (const objectType of ["사람", "음식", "나무", "자동차"]) {
@@ -53,7 +58,8 @@ const estimatedPrompt = buildExplanationPrompt({
   identificationStatus: "identified", evidence: { evidenceStatus: "insufficient", supportedFacts: ["가짜 역사 사실"], factSources: [] },
 });
 assert.doesNotMatch(estimatedPrompt.user, /가짜 역사 사실/u);
-assert.match(estimatedPrompt.system, /Do not assert an object name, historical role, date, person, event/u);
+assert.match(estimatedPrompt.system, /Do not assert an object's identity, historical role, date, person, event/u);
+assert.match(estimatedPrompt.system, /Never mix aiContext into text/u);
 
 // Uncertain identity may use official place facts, but must remain explicitly uncertain.
 const uncertain = await verify({ spotId: "simujang", candidateName: "심우장", objectType: "전통 가옥", identificationStatus: "uncertain" });

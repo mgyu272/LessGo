@@ -1,13 +1,14 @@
 // Re-localize saved Vision output after the app language changes; this route never receives an image.
 import { hasKey, MODEL, askGeminiJSON } from "./_lib/gemini.js";
-import { verifyImageEvidence } from "./_lib/history-evidence.js";
-import { buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
+import { buildHistoryVerification, verifyImageEvidence } from "./_lib/history-evidence.js";
+import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation } from "./_lib/history-explanation.js";
 
 const SCHEMA = {
   type: "OBJECT",
   properties: {
     candidateName: { type: "STRING" },
     objectType: { type: "STRING" },
+    subjectLevel: { type: "STRING", enum: ["place", "facility", "feature", "general", "unknown"] },
     visualFeatures: { type: "ARRAY", items: { type: "STRING" } },
     reason: { type: "STRING" },
   },
@@ -32,6 +33,27 @@ const NAME_GUIDE = {
 
 function fail(status, code, error) { return Object.assign(new Error(error), { status, code }); }
 
+function safeReferenceComparison(value) {
+  if (!value || typeof value !== "object" || !["matched", "mismatched", "inconclusive", "not_compared"].includes(value.status) ||
+      typeof value.attempted !== "boolean" || !Number.isInteger(value.referenceCount) || value.referenceCount < 0 || value.referenceCount > 3 ||
+      typeof value.candidateChanged !== "boolean" ||
+      !["identified", "uncertain", "unknown"].includes(value.identificationStatusBefore) ||
+      !["identified", "uncertain", "unknown"].includes(value.identificationStatusAfter) ||
+      !Array.isArray(value.visualEvidence) || value.visualEvidence.length > 4 ||
+      !value.visualEvidence.every((item) => typeof item === "string" && item.length <= 200)) return null;
+  const reasonCodes = new Set(["disabled", "not_available", "reference_data_unavailable", "no_usable_reference", "external_use_not_authorized", "comparison_failed"]);
+  return {
+    status: value.status,
+    attempted: value.attempted,
+    referenceCount: value.referenceCount,
+    candidateChanged: value.candidateChanged,
+    identificationStatusBefore: value.identificationStatusBefore,
+    identificationStatusAfter: value.identificationStatusAfter,
+    visualEvidence: value.visualEvidence,
+    ...(reasonCodes.has(value.reasonCode) ? { reasonCode: value.reasonCode } : {}),
+  };
+}
+
 function validate(body) {
   const { spotId, lang, vision } = body;
   if (![
@@ -39,13 +61,14 @@ function validate(body) {
   ].includes(spotId) || !["ko", "en"].includes(lang) || !vision || typeof vision !== "object" ||
       typeof vision.candidateName !== "string" || vision.candidateName.length > 160 ||
       typeof vision.objectType !== "string" || vision.objectType.length > 100 ||
+      (vision.subjectLevel !== undefined && !["place", "facility", "feature", "general", "unknown"].includes(vision.subjectLevel)) ||
       typeof vision.reason !== "string" || vision.reason.length > 500 ||
       !Array.isArray(vision.visualFeatures) || vision.visualFeatures.length > 8 ||
       !vision.visualFeatures.every((item) => typeof item === "string" && item.length <= 180) ||
       !["identified", "uncertain", "unknown"].includes(vision.identificationStatus)) {
     throw fail(400, "invalid_request", "A valid place, language, and saved image analysis are required.");
   }
-  return { spotId, lang, vision };
+  return { spotId, lang, vision, referenceComparison: safeReferenceComparison(body.referenceComparison) };
 }
 
 async function localizeVision(vision, lang) {
@@ -55,6 +78,7 @@ async function localizeVision(vision, lang) {
     user: JSON.stringify({ targetLanguage: language, establishedNameGlossary: NAME_GUIDE, savedVisionFields: {
       candidateName: vision.candidateName,
       objectType: vision.objectType,
+      ...(vision.subjectLevel ? { subjectLevel: vision.subjectLevel } : {}),
       visualFeatures: vision.visualFeatures,
       reason: vision.reason,
       identificationStatus: vision.identificationStatus,
@@ -70,6 +94,7 @@ async function localizeVision(vision, lang) {
   return {
     candidateName: response.candidateName.slice(0, 160),
     objectType: response.objectType.slice(0, 100),
+    ...(vision.subjectLevel ? { subjectLevel: vision.subjectLevel } : {}),
     visualFeatures: response.visualFeatures.slice(0, 8).map((item) => item.slice(0, 180)),
     reason: response.reason.slice(0, 500),
     identificationStatus: vision.identificationStatus,
@@ -80,7 +105,7 @@ export default async function localizeImageAnalysis(req, res) {
   if (req.method !== "POST") return res.status(405).json({ code: "method_not_allowed", error: "POST only" });
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
-    const { spotId, lang, vision } = validate(body);
+    const { spotId, lang, vision, referenceComparison } = validate(body);
     const mock = body.testData === true && process.env.GEMINI_IMAGE_MOCK === "1";
     if (!mock && !hasKey()) throw fail(503, "gemini_not_configured", "Language update is unavailable until the server API key is configured.");
 
@@ -88,13 +113,22 @@ export default async function localizeImageAnalysis(req, res) {
       ? { candidateName: lang === "ko" ? "테스트용 시각 대상" : "Test visual object", objectType: lang === "ko" ? "테스트 데이터" : "Test data", visualFeatures: [lang === "ko" ? "테스트 데이터: 실제 사진 분석 결과가 아닙니다." : "Test data: this is not a real photo analysis."], reason: lang === "ko" ? "개발 화면 확인용 테스트 데이터입니다." : "Development-only test data for checking the UI.", identificationStatus: "uncertain" }
       : await localizeVision(vision, lang);
     const evidence = await verifyImageEvidence({ spotId, ...localizedVision, lang });
-    if (mock) return res.status(200).json({ ...localizedVision, evidence, explanation: buildMockExplanation({ lang, visualFeatures: localizedVision.visualFeatures }), explanationError: null, source: "mock", testData: true });
+    if (mock) {
+      const explanation = buildMockExplanation({ lang, visualFeatures: localizedVision.visualFeatures });
+      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation,
+        historyVerification: buildHistoryVerification({ evidence, identificationStatus: localizedVision.identificationStatus, explanation, referenceComparison }),
+        explanationError: null, source: "mock", testData: true });
+    }
 
     try {
       const explanation = await generateHistoryExplanation({ ...localizedVision, evidence, lang });
-      return res.status(200).json({ ...localizedVision, evidence, explanation, explanationError: null, source: "gemini", testData: false });
+      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation,
+        historyVerification: buildHistoryVerification({ evidence, identificationStatus: localizedVision.identificationStatus, explanation, referenceComparison }),
+        explanationError: null, source: "gemini", testData: false });
     } catch (error) {
-      return res.status(200).json({ ...localizedVision, evidence, explanation: null, explanationError: explanationErrorResponse(error, lang), source: "gemini", testData: false });
+      return res.status(200).json({ ...localizedVision, ...(referenceComparison ? { referenceComparison } : {}), evidence, explanation: buildFallbackExplanation({ evidence, visualFeatures: localizedVision.visualFeatures, identificationStatus: localizedVision.identificationStatus, lang }),
+        historyVerification: buildHistoryVerification({ evidence, identificationStatus: localizedVision.identificationStatus, referenceComparison }),
+        explanationError: explanationErrorResponse(error, lang), source: "gemini", testData: false });
     }
   } catch (error) {
     const status = error.status || (error.name === "AbortError" ? 504 : error.geminiStatus === 429 ? 429 : 502);

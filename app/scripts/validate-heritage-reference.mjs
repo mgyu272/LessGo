@@ -40,6 +40,12 @@ try {
     if (photo.viewAngle !== null && typeof photo.viewAngle !== "string") errors.push(`${prefix}: viewAngle must be a string or null`);
     if (typeof photo.source !== "string" || !photo.source.trim()) errors.push(`${prefix}: source must be a non-empty string`);
     if (photo.verificationStatus !== "unverified_filename_only") errors.push(`${prefix}: filename-derived entries must remain unverified`);
+    if (photo.identityReview?.status !== "unverified_filename_only" || photo.identityReview?.reviewer !== null || photo.identityReview?.reviewedAt !== null || photo.identityReview?.basis !== null) {
+      errors.push(`${prefix}: identity review must remain unresolved until a human review is recorded`);
+    }
+    if (photo.externalUseReview?.status !== "not_confirmed" || photo.externalUseReview?.externalGeminiUseAllowed !== false || photo.externalUseReview?.reviewer !== null || photo.externalUseReview?.reviewedAt !== null || photo.externalUseReview?.basis !== null) {
+      errors.push(`${prefix}: external Gemini use must remain blocked until rights are documented`);
+    }
     if (typeof photo.relativePath !== "string" || path.isAbsolute(photo.relativePath) || photo.relativePath.split(/[\\/]/).includes("..")) {
       errors.push(`${prefix}: unsafe relativePath '${photo.relativePath}'`);
       continue;
@@ -75,7 +81,7 @@ try {
       errors.push(`${prefix}: missing or unreadable file '${photo.relativePath}'`);
     }
   }
-  if (manifest.sourceArchive?.attributionStatus !== "unknown" || manifest.sourceArchive?.publicationAllowed !== false) {
+  if (manifest.sourceArchive?.attributionStatus !== "unknown" || manifest.sourceArchive?.publicationAllowed !== false || manifest.sourceArchive?.externalGeminiUseAllowed !== false) {
     errors.push("Source attribution/publication status must remain unresolved and not allowed.");
   }
   if (errors.length) {

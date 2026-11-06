@@ -4,14 +4,58 @@ import { readData } from "./gemini.js";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
+// Static module-relative reference helps Vercel trace and package this server-only JSON.
+// process.cwd() may differ between local dev and deployed serverless functions.
+const OFFICIAL_EVIDENCE_URL = new URL("../../server-data/heritage_evidence_4d.json", import.meta.url);
 let officialEvidencePromise;
 async function readOfficialEvidence() {
   if (!officialEvidencePromise) {
-    officialEvidencePromise = readFile(path.join(process.cwd(), "server-data", "heritage_evidence_4d.json"), "utf8")
-      .then(JSON.parse)
-      .catch(() => ({ objects: [] }));
+    officialEvidencePromise = (async () => {
+      let lastError;
+      for (const location of [OFFICIAL_EVIDENCE_URL, path.join(process.cwd(), "server-data", "heritage_evidence_4d.json")]) {
+        try {
+          const data = JSON.parse(await readFile(location, "utf8"));
+          if (!Array.isArray(data?.objects) || !data.objects.length) throw new Error("Invalid official heritage evidence format");
+          return data;
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      // Do not silently turn missing server assets into "no official facts".
+      console.error("[history-evidence] official heritage data unavailable; verify function file tracing", lastError?.code || "invalid_data");
+      return { objects: [], unavailable: true };
+    })();
   }
   return officialEvidencePromise;
+}
+
+// Return a small, place-scoped vocabulary for visual recognition. These labels
+// are suggestions only; they are never used as evidence that a photo depicts an object.
+const CANDIDATE_URLS = {simujang: new URL("../../server-data/heritage_candidates_simujang.json", import.meta.url), jeongneung: new URL("../../server-data/heritage_candidates_jeongneung.json", import.meta.url), uiryeong: new URL("../../server-data/heritage_candidates_uiryeong.json", import.meta.url)};
+export async function getPlaceVisualCandidates(spotId) {
+  const file = CANDIDATE_URLS[spotId];
+  if (!file) return [];
+  try {
+    const data = JSON.parse(await readFile(file, "utf8"));
+    return Array.isArray(data.objects) ? data.objects.map(({id,name,aliases,visualKeywords}) => ({id,name,aliases,visualKeywords})) : [];
+  } catch (error) {
+    console.warn("[history-evidence] visual candidates unavailable", spotId, error?.code || "invalid_data");
+    return [];
+  }
+}
+
+export async function getOfficialVisualCandidates(spotId, limit = 12) {
+  if (typeof spotId !== "string" || !spotId || !Number.isInteger(limit) || limit < 1) return [];
+  const officialData = await readOfficialEvidence();
+  return (officialData.objects || [])
+    .filter((entry) => entry.spotId === spotId && entry.verificationStatus === "official_verified")
+    .slice(0, Math.min(limit, 12))
+    .map((entry) => ({
+      name: entry.objectName,
+      aliases: Array.isArray(entry.aliases) ? entry.aliases.slice(0, 8) : [],
+      types: Array.isArray(entry.objectType) ? entry.objectType.slice(0, 4) : [],
+    }))
+    .filter((entry) => typeof entry.name === "string" && entry.name.trim());
 }
 
 const PLACE_ENTITIES = {
@@ -106,6 +150,41 @@ const UNSOURCED_OBJECT_ALIASES = [
   { canonical: "능침", aliases: ["능침", "Neungchim", "tomb sanctuary"] },
   { canonical: "봉분", aliases: ["봉분", "bongbun", "burial mound"] },
 ];
+
+
+const CURATED_EVIDENCE_URLS = {
+  simujang: new URL("../../server-data/heritage_simujang.json", import.meta.url),
+  jeongneung: new URL("../../server-data/heritage_jeongneung.json", import.meta.url),
+  uiryeong: new URL("../../server-data/heritage_uiryeong.json", import.meta.url),
+};
+async function getCuratedEvidence(spotId, candidateName, lang) {
+  const file = CURATED_EVIDENCE_URLS[spotId];
+  if (!file) return null;
+  try {
+    const data = JSON.parse(await readFile(file, "utf8"));
+    const object = (data.objects || []).find(item =>
+      exactAlias(candidateName, [item.name, ...(item.aliases || [])]));
+    if (!object) return null;
+    const bySource = new Map((data.sources || []).map(source => [source.id, source]));
+    const factSources = (data.facts || []).filter(fact =>
+      fact.objectId === object.id && (object.factIds || []).includes(fact.id))
+      .map(fact => ({
+        factId: fact.id, fact: fact[lang] || fact.ko,
+        verificationStatus: "source_linked",
+        sources: (fact.sourceIds || []).map(id => bySource.get(id))
+          .filter(source => source?.url?.startsWith("https://"))
+          .map(source => ({ sourceId: source.id, title: source.title, agency: source.agency,
+            url: source.url, sourceLevel: "official", supports: "자료에 연결된 출처" })),
+      })).filter(entry => entry.fact && entry.sources.length);
+    if (!factSources.length) return null;
+    const sources = [...new Map(factSources.flatMap(entry => entry.sources)
+      .map(source => [source.url, source])).values()];
+    return { object, factSources, sources };
+  } catch (error) {
+    console.warn("[history-evidence] curated evidence unavailable", spotId, error?.message);
+    return null;
+  }
+}
 
 const BASIC_LIMITATIONS = {
   ko: ["역사 자료에서 명칭이나 사실을 확인해도 사진 속 대상의 정체가 증명되는 것은 아닙니다.", "시각 특징은 대상 명칭이나 역사적 사실의 근거로 사용하지 않았습니다."],
@@ -275,7 +354,20 @@ export async function verifyImageEvidence({ spotId, candidateName, objectType, v
   // Official facts are searched first and are scoped to this exact spotId. The
   // presence of a facility in a record is not treated as proof that it appears
   // in the submitted photograph.
+  const curated = await getCuratedEvidence(spotId, candidateName, lang);
+  if (curated && identificationStatus !== "unknown") {
+    const notes = [phrase(lang,
+      "연결된 역사 자료의 출처를 표시합니다. 사진 속 대상의 식별은 AI 추정이며, 출처의 원문과 개별 사실을 추가 대조한 결과는 아닙니다.",
+      "Linked historical sources are shown. The photo identity is an AI estimate; each claim has not been independently checked against the source text.")];
+    return result("supported", curated.object.name, curated.factSources.map(entry => entry.fact),
+      curated.sources, notes, "official", curated.factSources, lang);
+  }
   const officialData = await readOfficialEvidence();
+  if (officialData.unavailable) {
+    return result("insufficient", null, [], [], [phrase(lang,
+      "서버에서 공식 역사 자료를 불러오지 못해 역사 사실을 검증할 수 없습니다.",
+      "The server could not load the official heritage records; historical claims cannot currently be verified.")], "none", [], lang);
+  }
   const officialObject = (officialData.objects || []).find((entry) =>
     entry.spotId === spotId && exactAlias(candidateName, entry.aliases || [])
   );
@@ -298,9 +390,15 @@ export async function verifyImageEvidence({ spotId, candidateName, objectType, v
       sourceLevel: "official",
     })]));
     const factSources = officialObject.facts.map((fact) => ({
+      factId: fact.factId,
       fact: fact[lang] || fact.ko || fact.en,
-      sources: (fact.sourceIds || []).map((sourceId) => sourceById.get(sourceId)).filter((source) => source?.url),
-    })).filter((entry) => entry.fact && entry.sources.length);
+      verificationStatus: "verified",
+      sources: (fact.sourceIds || []).map((sourceId) => sourceById.get(sourceId))
+        .filter((source) => source?.sourceLevel === "official" && source.url?.startsWith("https://") && source.supports?.trim()),
+    })).filter((entry) => entry.fact && entry.factId && entry.sources.length);
+    if (!factSources.length) {
+      return result("insufficient", localizedObjectName(officialObject.objectName, lang), [], [], [phrase(lang, "공식 자료와 개별 사실의 출처 연결을 확인하지 못했습니다.", "The links between the official records and the individual facts could not be confirmed.")], "none", [], lang);
+    }
     const officialFacts = factSources.map((entry) => entry.fact);
     const sources = [...new Map(factSources.flatMap((entry) => entry.sources).map((source) => [`${source.title}|${source.url}`, source])).values()];
     const limitations = [
@@ -346,3 +444,34 @@ export async function verifyImageEvidence({ spotId, candidateName, objectType, v
 }
 
 export const evidenceVocabulary = UNSOURCED_OBJECT_ALIASES;
+
+// This summary keeps photo identity, reference-image comparison, and historical
+// claim support independent. Only curated facts linked to a supporting official
+// source are marked verified; internal story text and Gemini context remain unverified.
+export function buildHistoryVerification({ evidence, identificationStatus, explanation, referenceComparison } = {}) {
+  const verifiedClaims = (evidence?.factSources || [])
+    .filter((entry) => entry.verificationStatus === "verified" && typeof entry.fact === "string" && Array.isArray(entry.sources) &&
+      entry.sources.some((source) => source?.sourceLevel === "official" && source.url?.startsWith("https://") && typeof source.supports === "string" && source.supports.trim()))
+    .map((entry) => ({
+      factId: entry.factId,
+      claim: entry.fact,
+      verificationStatus: "verified",
+      sourceIds: entry.sources.filter((source) => source?.sourceLevel === "official" && source.url?.startsWith("https://") && source.supports?.trim()).map((source) => source.sourceId).filter(Boolean),
+    }));
+  const internalClaims = evidence?.sourceLevel === "internal"
+    ? (evidence.supportedFacts || []).map((claim) => ({ claim, verificationStatus: "unverified", sourceLevel: "internal", sourceIds: [] }))
+    : [];
+  const aiClaims = (explanation?.aiContext || []).filter((claim) => typeof claim === "string" && claim.trim())
+    .map((claim) => ({ claim, verificationStatus: "unverified", sourceLevel: "ai_generated", sourceIds: [] }));
+  // This corpus does not yet contain a claim-by-claim contradiction registry.
+  // Therefore candidate mismatches are kept on candidateEvidenceStatus and are
+  // never mislabeled as contradictions between historical claims.
+  return {
+    status: verifiedClaims.length ? "verified" : "insufficient_evidence",
+    sourceLevel: verifiedClaims.length ? "official" : evidence?.sourceLevel === "internal" ? "internal" : "none",
+    photoIdentityStatus: ["identified", "uncertain", "unknown"].includes(identificationStatus) ? identificationStatus : "unknown",
+    candidateEvidenceStatus: ["supported", "insufficient", "conflicting"].includes(evidence?.evidenceStatus) ? evidence.evidenceStatus : "insufficient",
+    referenceComparisonStatus: ["matched", "mismatched", "inconclusive", "not_compared"].includes(referenceComparison?.status) ? referenceComparison.status : "not_compared",
+    claims: [...verifiedClaims, ...internalClaims, ...aiClaims],
+  };
+}
