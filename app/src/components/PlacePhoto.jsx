@@ -44,7 +44,7 @@ async function findPhoto(spot) {
   return null;
 }
 
-export default function PlacePhoto({ spot }) {
+export default function PlacePhoto({ spot, fallback }) {
   const key = spot.id;
   const [photo, setPhoto] = useState(() => spot.photo || cache.get(key) || null);
   const [state, setState] = useState(photo ? "ok" : "loading");
@@ -66,5 +66,5 @@ export default function PlacePhoto({ spot }) {
       </figure>
     );
   }
-  return <div className={`pd-photo pd-photo-empty ${state}`} aria-hidden={state === "loading"}>{state === "loading" ? "" : loc({ ko: "대표 사진 준비 중", en: "Photo coming soon" })}</div>;
+  return fallback ?? <div className={`pd-photo pd-photo-empty ${state}`} aria-hidden={state === "loading"}>{state === "loading" ? "" : loc({ ko: "대표 사진 준비 중", en: "Photo coming soon" })}</div>;
 }

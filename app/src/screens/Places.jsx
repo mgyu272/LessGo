@@ -11,7 +11,7 @@ import { distance } from "../lib/geo.js";
 import { GROUPS, groupOf, PLACE_TOPICS, kindLabel, exploreMeta, fromCourseEnd, byNearest, destName, round10 } from "../lib/places.js";
 import { MapView, FitBounds, SpotMarker, ExploreLayer } from "../components/MapView.jsx";
 import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
-import { Badge } from "../components/ui.jsx";
+import PlacePhoto from "../components/PlacePhoto.jsx";
 
 const chipIcons = {
   all: "M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z",
@@ -20,6 +20,10 @@ const chipIcons = {
   religion: "M5 16h14l-2-3V9a5 5 0 00-10 0v4z M10 19a2 2 0 004 0",
   park: "M12 2l6 8h-3l5 7H4l5-7H6z M12 17v5",
 };
+
+function PhotoIcon() {
+  return <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>;
+}
 
 function ExploreCard({ place, data, onOpen }) {
   const name = loc(place.name);
@@ -32,7 +36,7 @@ function ExploreCard({ place, data, onOpen }) {
       aria-label={from && distanceText ? `${name}, ${from} ${distanceText}` : name}>
       <span className="explore-photo">
         {place.photo_url ? <img src={place.photo_url} alt="" loading="lazy" /> :
-          <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>}
+          <PhotoIcon />}
         <span className="explore-badge">{badge}</span>
       </span>
       <span className="explore-caption">
@@ -118,24 +122,30 @@ export default function Places() {
           </div>
         )}
 
-        <p className="pl-count">{list.length ? t("dest_places_n", { n: list.length }) : t("dest_places_none")}</p>
-
-        {list.map((s) => (
-          <article key={s.id} className="card pl-card">
-            <div className="pl-card-top">
-              <span className="pl-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
-              <div className="pl-text">
-                <div className="pl-name"><h2>{loc(s.name)}</h2><Badge>{t("courses_n", { n: courseCount(s.id) })}</Badge></div>
-                <small>{[...(PLACE_TOPICS[s.id] || []).map((k) => t("topic_" + k)), here ? t("from_me", { km: (distance(here, s) / 1000).toFixed(1) }) : null].filter(Boolean).join(" · ")}</small>
-                <p>{loc(s.cards[0]?.body)}</p>
-              </div>
-            </div>
-            <div className="pl-actions">
-              <button className="btn btn-soft" onClick={() => openPlace(s)}>{t("story_visit")}</button>
-              <button className="btn btn-cta" onClick={() => runHere(s)}>{t("run_here")} →</button>
-            </div>
-          </article>
-        ))}
+        {list.length ? <section className="pl-destinations" data-places-theme={topic}>
+          <h2>{t("dest_title")} <span>{list.length}</span></h2>
+          <p>{t("dest_description")}</p>
+          <div className="explore-rail" role="list" aria-label={t("dest_title")} key={topic}>
+            {list.map((s) => (
+              <article key={s.id} className="pl-card" role="listitem">
+                <div className="pl-card-photo">
+                  <PlacePhoto spot={s} fallback={<PhotoIcon />} />
+                  <span className="pl-course-count">{t("courses_n", { n: courseCount(s.id) })}</span>
+                  <span className="pl-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
+                </div>
+                <div className="pl-text" data-places-theme={groupOf(s)}>
+                  <h3>{loc(s.name)}</h3>
+                  <small>{[...(PLACE_TOPICS[s.id] || []).map((k) => t("topic_" + k)), here ? t("from_me", { km: (distance(here, s) / 1000).toFixed(1) }) : null].filter(Boolean).join(" · ")}</small>
+                  <p>{loc(s.summary)}</p>
+                </div>
+                <div className="pl-actions">
+                  <button type="button" aria-label={t("dest_visit_label", { name: loc(s.name) })} onClick={() => openPlace(s)}>{t("story_visit")}</button>
+                  <button type="button" aria-label={t("dest_run_label", { name: loc(s.name) })} onClick={() => runHere(s)}>{t("run_here")} →</button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section> : <p className="pl-count">{t("dest_places_none")}</p>}
 
           <section className="pl-explore" data-places-theme={topic} ref={exploreRef} aria-label={t("explore_n", { n: explore.length })}>
             <h2>{t("explore_n", { n: "" }).trim()} <span>{explore.length}</span></h2>
