@@ -30,13 +30,17 @@ export default function RunDone() {
   const openPlace = (spot) => { app.setSpot(spot); app.setPlaceFrom("places"); app.go("place"); };
   // 걷기로 끝낸 코스는 "의릉 걷기 완주"
   const title = f.course ? t(f.move === "walk" ? "done_course_walk" : "done_course", { name: loc(f.course.properties.title || f.course.properties.name) }) : t("done_free");
+  // 완주 아이콘: 코스 목적지 장소 아이콘 (자유 달리기는 로고)
+  const destSpot = f.course && app.data.spotById?.[f.course.properties.dest];
 
   return (
     <section className="screen done-screen">
       <div className="hanji-layer" aria-hidden="true" />
       <div className="done-scroll">
         <div className="done-head">
-          <span className="done-stamp" role="img" aria-label="LessGo"><LogoBird variant="icon" size={60} /></span>
+          {destSpot
+            ? <span className="done-stamp done-place" role="img" aria-label={loc(destSpot.name)} dangerouslySetInnerHTML={{ __html: spotIconSvg(destSpot) }} />
+            : <span className="done-stamp" role="img" aria-label="LessGo"><LogoBird variant="icon" size={60} /></span>}
           <div><span className="kicker2">{t("todays_run")}</span><h1>{title}</h1></div>
         </div>
 

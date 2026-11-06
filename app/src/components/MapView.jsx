@@ -238,9 +238,10 @@ export function SpotMarker({ spot, label = false, onClick }) {
 }
 
 // 코스·달린 길 선. path는 [{lat,lng}] 또는 [[lat,lng]] 둘 다 돼요. dashed면 짧은 점선
-export function Route({ path, color = "#1F4D3F", weight = 6, opacity = 0.9, dashed = false }) {
+export function Route({ path, color = "#1F4D3F", weight = 6, opacity = 0.9, dashed = false, zIndex = 0 }) {
   const line = useMemo(() => path.map(toLatLng), [path]);
-  return <Polyline path={line} strokeColor={color} strokeWeight={weight} strokeOpacity={opacity} strokeStyle={dashed ? "shortdash" : "solid"} />;
+  // zIndex: 겹치는 구간에서 어떤 선이 위에 보일지 (큰 값이 위)
+  return <Polyline path={line} strokeColor={color} strokeWeight={weight} strokeOpacity={opacity} strokeStyle={dashed ? "shortdash" : "solid"} zIndex={zIndex} />;
 }
 
 export function Dot({ at, color = "#1C2B26", radius = 7 }) {
