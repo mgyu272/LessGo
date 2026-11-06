@@ -1,12 +1,15 @@
-// 장소와 이야기 화면에서 쓰는 장소 주제(태그). spots.json에는 아직 주제가 없어서 여기 한곳에 둬요.
-// 장소를 추가하면 여기에 id와 주제를 넣어 주세요. (i18n.js의 topic_* 문구와 짝)
-// 둘러볼 곳(explore.json)은 장소마다 topics가 있고, park는 chip이 park인 곳이에요 (exploreTopics).
+// 장소 종류 칩(GROUPS · groupOf)과 코스 목적지 주제 태그(PLACE_TOPICS), 둘러볼 곳 계산을 한곳에 둬요.
+// 칩은 홈 지도와 장소와 이야기가 같은 기준을 써요 (i18n.js의 grp_* 문구와 짝).
 
 import { t, loc, getLang } from "./i18n.js";
 import { distance } from "./geo.js";
+import { DESTINATIONS } from "./routes.js";
 
-export const TOPICS = ["all", "tomb", "indep", "hanok", "wall", "temple", "museum", "park"];
+// 장소 종류 칩: 전체 · 전시 · 역사·한옥 · 사찰·성당 · 공원·전망
+export const GROUPS = ["all", "exhibit", "heritage", "religion", "park"];
 
+// 코스 목적지 상세(PlaceDetail)·카드에 붙는 주제 태그 (i18n.js의 topic_* 문구와 짝).
+// 목적지를 추가하면 여기에 id와 주제를 넣어 주세요.
 export const PLACE_TOPICS = {
   simujang: ["indep", "hanok"],
   jeongneung: ["tomb"],
@@ -24,7 +27,27 @@ export const kakaoDirections = (name, lat, lng) => `https://map.kakao.com/link/t
 // 지도 점 색: 역사문화 · 공원 · 하천
 export const EXPLORE_COLORS = { history: "#2F6512", park: "#2E8A6B", stream: "#3B82C4" };
 export const exploreColor = (p) => EXPLORE_COLORS[p.chip] || EXPLORE_COLORS.history;
-export const exploreTopics = (p) => (p.chip === "park" ? [...p.topics, "park"] : p.topics);
+// 지도 아이콘 종류: explore.json의 kind·name·chip으로 정해요 (위에서부터 먼저 맞는 것)
+export function iconTypeOf(p) {
+  const kind = p.kind || "", name = p.name?.ko || "";
+  const has = (...words) => words.some((w) => kind.includes(w));
+  if (has("성곽", "한양도성") || ["숙정문", "혜화문"].includes(name)) return "wall";
+  if (p.chip === "park") return "park";
+  if (has("사찰")) return "temple";
+  if (has("종교") || name.includes("성당")) return "church";
+  if (has("문학")) return "literature";
+  if (has("박물관") || name.includes("박물관")) return "museum";
+  if (has("미술관", "전시", "조각", "예술", "건축")) return "art";
+  if (has("정보")) return "info";
+  return "hanok";
+}
+// 칩 묶음: 코스 목적지(심우장·정릉·의릉)는 역사·한옥, 공원(chip park)은 아이콘보다 먼저 봐요. 나머지는 지도 아이콘 종류로
+const GROUP_OF_ICON = { museum: "exhibit", art: "exhibit", literature: "exhibit", hanok: "heritage", wall: "heritage", info: "heritage", temple: "religion", church: "religion" };
+export function groupOf(p) {
+  if (DESTINATIONS.includes(p.id)) return "heritage";
+  if (p.chip === "park") return "park";
+  return GROUP_OF_ICON[iconTypeOf(p)] || "heritage";
+}
 
 // explore.json 방문 정보를 팀이 마지막으로 확인한 날
 export const CHECKED_DATE = "2026.10.30";

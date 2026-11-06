@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
-import { TOPICS, PLACE_TOPICS, exploreTopics, exploreColor, exploreMeta, fromCourseEnd, byNearest, destName } from "../lib/places.js";
+import { GROUPS, groupOf, PLACE_TOPICS, exploreColor, exploreMeta, fromCourseEnd, byNearest, destName } from "../lib/places.js";
 import { MapView, FitBounds, SpotMarker, ExploreLayer } from "../components/MapView.jsx";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { Badge } from "../components/ui.jsx";
@@ -23,7 +23,7 @@ export default function Places() {
 
   const list = useMemo(() => {
     const qq = q.trim().toLowerCase();
-    return data.spots.filter((s) => (topic === "all" || (PLACE_TOPICS[s.id] || []).includes(topic)))
+    return data.spots.filter((s) => topic === "all" || groupOf(s) === topic)
       .filter((s) => !qq || [s.name.ko, s.name.en, ...s.cards.flatMap((c) => [c.title?.ko, c.title?.en, c.body?.ko, c.body?.en])]
         .some((x) => (x || "").toLowerCase().includes(qq)));
   }, [data.spots, topic, q]);
@@ -32,7 +32,7 @@ export default function Places() {
   const explore = useMemo(() => {
     const qq = q.trim().toLowerCase();
     return data.explore.filter((p) => !near || p.nearest_course?.dest === near)
-      .filter((p) => topic === "all" || exploreTopics(p).includes(topic))
+      .filter((p) => topic === "all" || groupOf(p) === topic)
       .filter((p) => !qq || [p.name.ko, p.name.en, p.kind, p.curation, p.area_ko].some((x) => (x || "").toLowerCase().includes(qq)))
       .sort(byNearest);
   }, [data.explore, topic, q, near]);
@@ -68,8 +68,8 @@ export default function Places() {
         </label>
 
         <div className="pl-topics scroll" role="radiogroup" aria-label={t("topic")}>
-          {TOPICS.map((k) => (
-            <button key={k} role="radio" aria-checked={topic === k} className={`pl-topic ${topic === k ? "on" : "soft"}`} onClick={() => setTopic(k)}>{t("topic_" + k)}</button>
+          {GROUPS.map((k) => (
+            <button key={k} role="radio" aria-checked={topic === k} className={`pl-topic ${topic === k ? "on" : "soft"}`} onClick={() => setTopic(k)}>{t("grp_" + k)}</button>
           ))}
         </div>
 

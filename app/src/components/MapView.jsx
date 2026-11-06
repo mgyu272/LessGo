@@ -7,7 +7,7 @@ import { Map, CustomOverlayMap, Polygon, Polyline, Circle, MarkerClusterer, useM
 import { spotIconSvg, LABEL_OFFSETS } from "./SpotIcons.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { CENTER } from "../state/AppContext.jsx";
-import { exploreColor, areaLabel } from "../lib/places.js";
+import { exploreColor, areaLabel, iconTypeOf } from "../lib/places.js";
 
 const KAKAO_MAP_KEY = import.meta.env.NEXT_PUBLIC_KAKAO_MAP_KEY;
 
@@ -287,22 +287,30 @@ export function MapWatch({ onChange }) {
   return null;
 }
 
-// 확대 단계는 그대로 두고 그곳으로 옮겨요 (to는 누를 때마다 새 배열)
-export function PanTo({ to }) {
-  const map = useMap();
-  useEffect(() => { if (to) map.panTo(new window.kakao.maps.LatLng(to[0], to[1])); }, [map, to]);
-  return null;
-}
-
-// ---------- 둘러볼 곳 점 ----------
-// 작은 점(14px, 흰 테두리, 분류 색). 고르면 22px로 커지고 위에 이름 알약이 떠요. named면 늘 이름을 보여줘요
-export function ExploreDot({ place, selected = false, named = false, onClick }) {
+// ---------- 둘러볼 곳 아이콘 ----------
+// 종류별 선 아이콘 (viewBox 0 0 24 24, places.js의 iconTypeOf와 짝)
+const EXPLORE_ICONS = {
+  hanok: "M2 11c3 .5 5-1 6.5-3.5h7C17 10 19 11.5 22 11M5 11v8h14v-8M10 19v-5h4v5",
+  temple: "M12 2v3M8 5h8M8 5L5.5 9h13L16 5M7 9v4h10V9M5 13h14M8 13v7h8v-7M10.5 20v-3h3v3",
+  church: "M12 2v6M9.5 4.5h5M7 21V12l5-4 5 4v9M4 21h16M10 21v-4h4v4",
+  literature: "M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19a2 2 0 0 1 2-2h13",
+  museum: "M3 9l9-5 9 5M5 9v9M9.5 9v9M14.5 9v9M19 9v9M3 20h18",
+  art: "M4 5h16v14H4zM7 16l4-5 3 3 2-2 2 4M15 8.5h.01",
+  wall: "M3 20V9h3v3h3V9h6v3h3V9h3v11M10 20v-4a2 2 0 0 1 4 0v4",
+  park: "M12 3L6 11h4l-4 6h12l-4-6h4zM12 17v4",
+  info: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01",
+};
+// 흰 원 + 1.5px 분류 색 테두리 + 가운데 선 아이콘. size: "sm"(22px, 단계 6 이상) · "lg"(28px, 5 이하).
+// 고르면 36px로 커지고 원이 분류 색으로 채워지고(아이콘은 흰색) 아래에 이름 알약이 떠요. 누르는 칸은 최소 30px
+export function ExploreDot({ place, selected = false, size = "sm", onClick }) {
   const name = loc(place.name);
   return (
-    <CustomOverlayMap position={{ lat: place.lat, lng: place.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 6 : 2} clickable>
-      <div className={`ex-pin ${selected ? "on" : ""}`} style={{ "--c": exploreColor(place) }}>
-        {(selected || named) && <span className="ex-name" onClick={onClick} aria-hidden="true">{name}</span>}
-        <button type="button" className="ex-dot" aria-label={name} aria-pressed={selected} onClick={onClick} />
+    <CustomOverlayMap position={{ lat: place.lat, lng: place.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 2 : 1} clickable>
+      <div className={`ex-pin ${size} ${selected ? "on" : ""}`} style={{ "--c": exploreColor(place) }}>
+        <button type="button" className="ex-dot" aria-label={name} aria-pressed={selected} onClick={onClick}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d={EXPLORE_ICONS[iconTypeOf(place)]} /></svg>
+        </button>
+        {selected && <span className="ex-name" onClick={onClick} aria-hidden="true">{name}</span>}
       </div>
     </CustomOverlayMap>
   );
@@ -313,16 +321,14 @@ const esc = (x) => String(x).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 // 묶음 글자는 아래 relabel에서 직접 넣어요. 카카오 기본 모양(파란 원)은 지워요
 const CLUSTER_STYLE = { width: "auto", height: "auto", background: "none", border: "0", lineHeight: "normal", textAlign: "left", color: "inherit" };
 
-// 둘러볼 곳 점 여러 개. cluster면 카카오 MarkerClusterer로 묶어요 (확대 단계 5 이상 = 멀리 볼 때만).
+// 둘러볼 곳 아이콘 여러 개. 서울 동북부 전체처럼 아주 멀리 볼 때(확대 단계 9 이상)만 카카오 MarkerClusterer로 묶고,
+// 성북구 전체(휴대폰 홈 첫 화면 단계 8)나 그보다 가까우면 장소마다 하나씩 보여요.
 // 묶음은 "성북동 18"처럼 가장 많은 동네 이름 + 개수(섞여 있으면 숫자만), 누르면 그 범위로 확대해요.
-//   pad(): 확대할 때 비워 둘 지도 가장자리 px [위, 오른쪽, 아래, 왼쪽] (홈은 위 검색·칩, 아래 카드 줄 + 내려간 시트)
-//   그 여백으로 setBounds 해서 묶음의 점이 모두 빈 칸 안에 들어와요. 맞춘 단계와 묶음의 장소 id는
-//   onZoom(단계, ids)으로 알려주고, 부르는 쪽이 그 id를 loose로 넘기면 그 점들은 묶지 않고 따로 그려요
-//   (그 단계에서 다시 묶이지 않게. 다른 곳의 촘촘한 묶음은 그대로예요).
-// 고른 점은 묶음에 들어가지 않게 밖에 따로 그려요.
-export const CLUSTER_MIN_LEVEL = 5;
-const ZOOM_IN_MAX = 3; // 가까운 점 2개짜리 묶음도 너무 깊이 들어가지 않게
-export function ExploreLayer({ places, selectedId, cluster = true, named = false, onSelect, pad, onZoom, loose = [] }) {
+//   pad(): 확대할 때 비워 둘 지도 가장자리 px [위, 오른쪽, 아래, 왼쪽] (홈은 위 검색·칩, 아래 시트)
+// level: 지금 확대 단계 (아이콘 크기를 정해요). 고른 아이콘은 묶음에 들어가지 않게 밖에 따로 그려요.
+export const CLUSTER_MIN_LEVEL = 9;
+const ZOOM_IN_MAX = 3; // 가까운 장소 2개짜리 묶음도 너무 깊이 들어가지 않게
+export function ExploreLayer({ places, selectedId, cluster = true, level = 6, onSelect, pad }) {
   const byPos = useMemo(() => {
     const m = {};
     places.forEach((p) => { m[posKey(p.lat, p.lng)] = p; });
@@ -331,7 +337,7 @@ export function ExploreLayer({ places, selectedId, cluster = true, named = false
   const relabel = useCallback((_, clusters) => {
     clusters.forEach((c) => {
       const marker = c.getClusterMarker?.();
-      marker?.setZIndex?.(2); // 코스 목적지 핀(3)보다 아래
+      marker?.setZIndex?.(1); // 코스 목적지 핀(3)보다 아래
       const el = marker?.getContent?.();
       if (!el || typeof el === "string") return;
       const count = {};
@@ -358,26 +364,25 @@ export function ExploreLayer({ places, selectedId, cluster = true, named = false
   useEffect(() => () => { clusterer.current?.clear(); clusterer.current = null; }, []);
   const zoomIn = useCallback((clusterer, c) => {
     const map = clusterer.getMap();
-    // 확대하면 묶음이 다시 계산돼 비니까, 장소 id와 범위를 먼저 꺼내 둬요
-    const ids = c.getMarkers().map((m) => byPos[posKey(m.getPosition().getLat(), m.getPosition().getLng())]?.id).filter(Boolean);
+    // 확대하면 묶음이 다시 계산돼 비니까, 범위를 먼저 꺼내 둬요
     const bounds = c.getBounds(), center = c.getCenter();
     const [top, right, bottom, left] = pad?.() || [40, 40, 40, 40];
     map.setBounds(bounds, top, right, bottom, left);
+    // 그래도 묶이는 단계면 묶음이 풀리는 단계까지 들어가요
+    if (map.getLevel() >= CLUSTER_MIN_LEVEL) map.setLevel(CLUSTER_MIN_LEVEL - 1, { anchor: center });
     if (map.getLevel() < ZOOM_IN_MAX) map.setLevel(ZOOM_IN_MAX, { anchor: center });
-    onZoom?.(map.getLevel(), ids);
-  }, [pad, onZoom, byPos]);
+  }, [pad]);
 
   const sel = places.find((p) => p.id === selectedId);
-  const dot = (p) => <ExploreDot key={p.id} place={p} named={named} onClick={() => onSelect?.(p)} />;
-  const rest = places.filter((p) => p.id !== selectedId);
-  const dots = (cluster ? rest.filter((p) => !loose.includes(p.id)) : rest).map(dot);
+  const size = level >= 6 ? "sm" : "lg";
+  const dots = places.filter((p) => p.id !== selectedId)
+    .map((p) => <ExploreDot key={p.id} place={p} size={size} onClick={() => onSelect?.(p)} />);
   return (
     <>
-      {cluster && rest.filter((p) => loose.includes(p.id)).map(dot)}
       {cluster
         ? <MarkerClusterer averageCenter minLevel={CLUSTER_MIN_LEVEL} gridSize={64} styles={[CLUSTER_STYLE]} disableClickZoom onClusterclick={zoomIn} onClustered={relabel} onCreate={(c) => { clusterer.current = c; }}>{dots}</MarkerClusterer>
         : dots}
-      {sel && <ExploreDot place={sel} selected onClick={() => onSelect?.(sel)} />}
+      {sel && <ExploreDot place={sel} selected size={size} onClick={() => onSelect?.(sel)} />}
     </>
   );
 }

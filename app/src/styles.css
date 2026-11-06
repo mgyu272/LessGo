@@ -374,6 +374,8 @@ div:has(> .spot-pin) { pointer-events: none; }
 .home-chips .chip { height: 38px; padding: 0 15px; display: inline-flex; align-items: center; border: 0; color: var(--text); font-size: 14px; flex: none; }
 .home-chips .chip.on { background: var(--strong); color: #fff; box-shadow: var(--glass-shadow); }
 .home-chips .chip:last-child { margin-right: 36px; }
+.home-chips .grp-ic { width: 16px; height: 16px; margin-right: 6px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.home-chips .chip-n { margin-left: 5px; font-size: 12px; font-weight: 700; opacity: .75; }
 /* 장소 데이터를 못 불러왔을 때 지도 위 작은 안내 (검색·칩 바로 아래) */
 .map-notice { position: absolute; left: 50%; top: calc(124px + var(--safe-top)); transform: translateX(-50%); z-index: 6; margin: 0; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; }
 .locate-btn { position: absolute; right: 14px; z-index: 6; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; color: var(--link); transition: bottom .3s var(--ease-out); }
@@ -393,35 +395,12 @@ div:has(> .spot-pin) { pointer-events: none; }
 .home-sheet-v2 .sheet-body { padding-top: 0; }
 .home-sheet-v2 h2 { margin: 4px 0 14px; font-size: 25px; font-weight: 800; line-height: 1.3; letter-spacing: -.02em; }
 .chev { width: 16px; height: 16px; flex: none; fill: none; stroke: #7FA66B; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.today-card { margin-top: 12px; border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 0 rgba(120, 190, 60, .12), 0 14px 28px -20px rgba(63, 127, 28, .6); }
-.tc-head { display: flex; align-items: center; gap: 12px; }
-.tc-ic { width: 52px; height: 52px; flex: none; border-radius: 16px; background: #F2F9E6; box-shadow: inset 0 0 0 1px var(--border); display: grid; place-items: center; }
-.tc-ic svg { width: 34px; height: 34px; }
-.tc-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; align-items: flex-start; }
-.tc-text b { font-size: 17px; font-weight: 800; }
-.tc-badges { display: flex; gap: 4px; flex-wrap: wrap; }
-.tc-text small { font-size: 13px; font-weight: 500; color: var(--muted); }
-.today-card .elev { height: 28px; margin: 0; }
-.tc-actions { display: grid; grid-template-columns: 1fr 1.3fr; gap: 8px; }
-.tc-actions .btn { margin: 0; min-height: 50px; padding: 0 10px; border-radius: 16px; font-size: 15px; }
-.tc-actions .btn-soft { color: var(--strong); }
-.tc-actions .btn-cta { font-weight: 800; }
-.tc-actions .play { width: 14px; height: 14px; fill: currentColor; }
-.today-none { margin-top: 12px; }
+/* 코스 고르기 버튼 (오늘의 추천 카드 자리) */
+.home-pick { margin-top: 12px; min-height: 56px; border-radius: 18px; font-weight: 800; }
 .home-sheet-v2 .free-card { min-height: 56px; border-radius: 16px; padding: 0 14px; }
 .home-sheet-v2 .free-ic { width: 34px; height: 34px; }
 .home-sheet-v2 .free-ic svg { width: 18px; height: 18px; }
 .home-sheet-v2 .free-text b { font-size: 14px; font-weight: 700; }
-.map-spots { margin-top: 22px; }
-.map-spots h3 { margin: 0 0 6px; font-size: 15px; font-weight: 700; }
-.map-spots ul { margin: 0; padding: 0; list-style: none; }
-.map-spots li + li button, .map-spots li:first-child button { border-top: 1px solid rgba(31, 77, 63, .1); }
-.map-spots button { width: 100%; min-height: 56px; display: flex; align-items: center; gap: 12px; padding: 10px 0; text-align: left; color: var(--text); }
-.ms-ic { width: 36px; height: 36px; flex: none; border-radius: 18px; background: rgba(255, 255, 255, .7); display: grid; place-items: center; }
-.ms-ic svg { width: 26px; height: 26px; }
-.ms-text { flex: 1; display: flex; flex-direction: column; }
-.ms-text b { font-size: 15px; font-weight: 700; }
-.ms-text small { font-size: 12px; color: var(--muted); }
 
 /* ---------- 하단 내비 (흰 반투명 유리 · 디자인 원본 Places/Events/Stats 화면 기준) ---------- */
 /* 비선택은 #4F6B3B 보통 굵기, 선택은 진초록 #2F6512 굵게. 알약 배경 없이 글자색으로만 구분해요 */
@@ -1142,13 +1121,16 @@ div:has(> .spot-pin) { pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .here-dot::after { animation: none; } }
 
 /* ---------- 둘러볼 곳 (explore.json) ---------- */
-/* 지도 점: 14px · 흰 테두리 2.5px · 분류 색(--c). 고르면 22px + 위에 이름 알약 */
-.ex-pin { position: relative; width: 0; height: 0; --c: #2F6512; }
-.ex-dot { position: absolute; left: 0; top: 0; width: 14px; height: 14px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--c); border: 2.5px solid #FFFFFF; box-shadow: 0 1px 4px rgba(28, 43, 38, .35); padding: 0; cursor: pointer; transition: width .15s, height .15s; }
-.ex-dot::before { content: ""; position: absolute; inset: -12px; } /* 누르기 쉬운 칸 */
-.ex-pin.on .ex-dot { width: 22px; height: 22px; box-shadow: 0 0 0 3px rgba(255, 255, 255, .5), 0 4px 10px rgba(28, 43, 38, .35); }
-.ex-name { position: absolute; left: 0; bottom: 12px; transform: translateX(-50%); padding: 3px 10px; border-radius: 999px; background: #FFFFFF; color: var(--text); font-size: 12px; font-weight: 700; white-space: nowrap; box-shadow: 0 4px 12px -4px rgba(31, 61, 20, .4); cursor: pointer; }
-.ex-pin.on .ex-name { bottom: 17px; font-size: 13px; background: var(--c); color: #FFFFFF; }
+/* 지도 아이콘: 흰 원 + 1.5px 분류 색(--c) 테두리 + 선 아이콘. sm 22px(아이콘 12) · lg 28px(아이콘 15).
+   고르면 36px, 원이 분류 색으로 채워지고 아이콘은 흰색, 아래에 이름 알약. 누르는 칸은 최소 30px */
+.ex-pin { position: relative; width: 0; height: 0; --c: #2F6512; --s: 22px; --i: 12px; }
+.ex-pin.lg { --s: 28px; --i: 15px; }
+.ex-pin.on { --s: 36px; --i: 19px; }
+.ex-dot { position: absolute; left: 0; top: 0; width: var(--s); height: var(--s); transform: translate(-50%, -50%); box-sizing: border-box; border-radius: 50%; background: #FFFFFF; border: 1.5px solid var(--c); color: var(--c); box-shadow: 0 1px 4px rgba(28, 43, 38, .3); padding: 0; display: grid; place-items: center; cursor: pointer; transition: width .15s, height .15s; }
+.ex-dot::before { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 30px); height: max(100%, 30px); transform: translate(-50%, -50%); }
+.ex-dot svg { width: var(--i); height: var(--i); fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ex-pin.on .ex-dot { background: var(--c); color: #FFFFFF; box-shadow: 0 0 0 3px rgba(255, 255, 255, .6), 0 4px 10px rgba(28, 43, 38, .35); }
+.ex-name { position: absolute; left: 0; top: calc(var(--s) / 2 + 6px); transform: translateX(-50%); padding: 3px 10px; border-radius: 999px; background: var(--c); color: #FFFFFF; font-size: 13px; font-weight: 700; white-space: nowrap; box-shadow: 0 4px 12px -4px rgba(31, 61, 20, .4); cursor: pointer; }
 /* 묶음: 흰 알약 · 진초록 테두리 2px · 숫자는 진초록 원 안 흰 글자 */
 .ex-cluster { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 4px 0 11px; border-radius: 15px; background: #FFFFFF; border: 2px solid #1F3D14; color: #1F3D14; font: 700 12px var(--sans); white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(31, 61, 20, .5); cursor: pointer; }
 .ex-cluster:not(:has(span)) { padding-left: 4px; }
