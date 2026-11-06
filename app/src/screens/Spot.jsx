@@ -202,7 +202,7 @@ export function Spot() {
           <button className="btn btn-teal" onClick={() => { stopAudio(); app.run.resume(); }}>{t("keep_running")}</button>
           <button className="btn btn-outline" onClick={() => { stopAudio(); app.go("shops"); }}>{t("nearby_shops")}</button>
         </div>
-        <p className="foot">{t("partner_note")}</p>
+
       </BottomSheet>
     </section>
   );
