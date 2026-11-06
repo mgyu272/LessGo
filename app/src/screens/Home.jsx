@@ -41,7 +41,6 @@ export default function Home() {
   const [saved] = useState(() => app.homeMap.current);
   const [filter, setFilter] = useState(saved?.filter ?? "all");
   const [query, setQuery] = useState("");
-  const [sheetOpen, setSheetOpen] = useState(false);
   const [flyTo, setFlyTo] = useState(null); // { at: [lat, lng], level }
   const [focusTo, setFocusTo] = useState(null); // 고른 아이콘으로: { at, level }
   const [refit, setRefit] = useState(0);
@@ -173,27 +172,7 @@ export default function Home() {
         </div>
       </div>
 
-      {!showCards && <div className={`home-course-sheet ${sheetOpen ? "expanded" : ""}`}>
-        <button className="home-sheet-handle" type="button" aria-label={sheetOpen ? "코스 목록 접기" : "코스 목록 펼치기"} onClick={() => setSheetOpen(!sheetOpen)}><span /></button>
-        <div className="home-distance-tabs">
-          {[3,5,10].map(k => <button key={k} type="button" className={app.pick.km === k ? "on" : ""} onClick={() => { app.setPick({ ...app.pick, km:k }); app.setSettings({ ...settings, km:k }); }}>
-            <b>{k}<small>km</small></b><small>{k===3?"가볍게":k===5?"보통":"길게"}</small>
-          </button>)}
-        </div>
-        <button type="button" className="home-free-entry" onClick={() => app.run.start(null, { demo:app.demo, speedup:10, move:"run" })}>
-          <span className="home-free-icon">⌁</span><b>코스 없이 자유 달리기</b><span className="home-free-arrow">›</span>
-        </button>
-        <h3>장소별 코스</h3>
-        <div className="home-course-list">
-          {(data.spots || []).filter(s => getCourse(data,s.id,app.pick.km,"low") || getCourse(data,s.id,app.pick.km,"high")).map(s =>
-            <button type="button" key={s.id} onClick={() => { app.setPick({ ...app.pick, dest:s.id }); app.go("courses"); }}>
-              <span className="home-course-icon" aria-hidden="true">◉</span><b>{loc(s.name)}</b><span>›</span>
-            </button>
-          )}
-        </div>
-      </div>}
-      {!showCards && (
-        <button className={`locate-btn glass ${locating ? "busy" : ""}`} style={{ bottom: aboveTabbar(14) }} onClick={locate} aria-label={t("my_location")}>
+      {!showCards && <div className={`home-course-shecate-btn glass ${locating ? "busy" : ""}`} style={{ bottom: aboveTabbar(14) }} onClick={locate} aria-label={t("my_location")}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="6.5" /><circle cx="12" cy="12" r="2" fill="currentColor" /><path d="M12 2v3 M12 19v3 M2 12h3 M19 12h3" />
           </svg>
