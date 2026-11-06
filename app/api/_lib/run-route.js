@@ -161,13 +161,11 @@ async function fillElevation(samples) {
   return samples.every((s) => s.ele != null);
 }
 
-async function overpass(q, ms = 20000) {
-  for (const url of OVERPASS) {
-    try {
-      return await fetchJSON(url, { method: "POST", body: "data=" + encodeURIComponent(q), headers: { "Content-Type": "application/x-www-form-urlencoded" } }, ms);
-    } catch { /* 다음 서버 */ }
-  }
-  return null;
+// 여러 서버에 동시에 물어보고 먼저 온 답을 써요 (하나가 막혀도 괜찮게)
+async function overpass(q, ms = 14000) {
+  try {
+    return await Promise.any(OVERPASS.map((url) => fetchJSON(url, { method: "POST", body: "data=" + encodeURIComponent(q), headers: { "Content-Type": "application/x-www-form-urlencoded" } }, ms)));
+  } catch { return null; }
 }
 
 // OSM: 하천 · 러닝 친화 보행로 · 공원 · 횡단보도(신호 포함)
@@ -351,6 +349,29 @@ function candidateVias(from, to, osm, ctx) {
   return sets.slice(0, 11);
 }
 
+// 지도 데이터(OSM) 없이도 서로 다른 길을 만들 수 있게, 좌표만으로 경유점을 만들어요 (길찾기가 가까운 길에 붙여요)
+function geometricVias(from, to, ctx) {
+  const kx = 111320 * Math.cos(rad((from.lat + to.lat) / 2)), ky = 110540;
+  const ax = (to.lng - from.lng) * kx, ay = (to.lat - from.lat) * ky;
+  const L = Math.hypot(ax, ay) || 1;
+  const ux = ax / L, uy = ay / L, nx = -uy, ny = ux;          // 진행 방향, 옆 방향
+  const at = (t, side) => ({ lng: from.lng + (ux * t + nx * side) / kx, lat: from.lat + (uy * t + ny * side) / ky });
+  const sets = [];
+  if (ctx.target && ctx.target > ctx.directLen * 1.15) {
+    // 목표 거리를 채우는 타원 위의 점: 거리 합이 S가 되는 옆 거리 h (가운데 지점 기준)
+    const S = ctx.target / ROAD_FACTOR;
+    const h = Math.sqrt(Math.max(0, (S / 2) ** 2 - (L / 2) ** 2));
+    for (const side of [1, -1]) {
+      sets.push({ kind: "loop", vias: [at(L / 2, side * h)] });
+      sets.push({ kind: "loop", vias: [at(L * 0.25, side * h * 0.9), at(L * 0.75, side * h * 0.9)] });
+    }
+  } else {
+    // 최단 길 양옆으로 조금씩 비켜 가는 길
+    for (const side of [1, -1]) for (const f of [0.22, 0.4]) sets.push({ kind: "side", vias: [at(L / 2, side * L * f)] });
+  }
+  return sets;
+}
+
 // ---------- 메인: 출발 → 도착 ----------
 // targetKm가 있으면 그 거리(±300m)에 맞춘 코스, 없으면 조금 돌아가더라도 달리기 좋은 길
 export async function findRunRoute({ from, to, targetKm = null, orsKey = null, osm: givenOsm = null }) {
@@ -363,7 +384,8 @@ export async function findRunRoute({ from, to, targetKm = null, orsKey = null, o
     const reach = ctx.target ? Math.max(ctx.target / ROAD_FACTOR / 2, directLen / 2) : directLen / 2;
     osm = await fetchOsm(bboxAround([from, to], Math.max(500, reach * 0.75)));
   }
-  const sets = osm ? candidateVias(from, to, osm, ctx) : [];
+  // OSM 후보(하천·공원·보행로) + 좌표 후보(양옆으로 비켜 가는 길). OSM을 못 받아도 좌표 후보로 다른 길을 만들어요
+  const sets = [...(osm ? candidateVias(from, to, osm, ctx) : []), ...geometricVias(from, to, ctx)].slice(0, 14);
   const routed = [];
   // 공용 길찾기 서버에 무리가 가지 않게 2개씩
   for (let i = 0; i < sets.length; i += 2) {
