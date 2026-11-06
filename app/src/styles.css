@@ -1497,3 +1497,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .cx-item .elev { margin: 6px 0 0; }
 .cx-go { margin-top: 8px; height: 36px; font-size: 14px; border-radius: 9px; }
 .cx-demo { margin: 10px 16px 0; }
+
+/* 로그인: 아이디·비밀번호 줄 높이 똑같이 (눈 버튼이 줄을 늘리지 않게) */
+.cred-row { height: 62px; }
+.cred-row .eye-btn { height: 40px; margin: 0 -8px 0 0; }

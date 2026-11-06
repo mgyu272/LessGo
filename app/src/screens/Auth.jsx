@@ -126,12 +126,15 @@ export function Login() {
                   <Icon name={showPw ? "eyeOff" : "eye"} />
                 </button>
               </div>
-            <small className={`login-password-hint ${pw.length > 0 && pw.length < 8 ? "visible" : ""}`} aria-live="polite">
-              {pw.length > 0 && pw.length < 8 ? t("err_pw_short_login") : " "}
-            </small>
             </>
           )}
         </div>
+        {/* 비밀번호 안내는 칸 밖(아래)에: 아이디 줄과 비밀번호 줄 높이를 똑같이 */}
+        {!local && (
+          <small className={`login-password-hint ${pw.length > 0 && pw.length < 8 ? "visible" : ""}`} aria-live="polite">
+            {pw.length > 0 && pw.length < 8 ? t("err_pw_short_login") : " "}
+          </small>
+        )}
         <div className="login-opts">
           <label className="keep">
             <input type="checkbox" checked={keep} onChange={(e) => setKeep(e.target.checked)} />
