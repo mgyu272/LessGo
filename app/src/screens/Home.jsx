@@ -1,6 +1,6 @@
 // ① 홈: 지도 (디자인 원본 docs/design/Main.dc.html). 아래 바텀시트는 없앴어요
 // 코스 목적지 핀을 누르면 장소 상세(이야기 탭)로 가요.
-// 둘러볼 곳(explore.json): 장소마다 종류 아이콘. 서울 전체처럼 아주 멀리 볼 때만 "성북동 18"처럼 묶어요.
+// 둘러볼 곳(explore.json): 장소마다 종류 아이콘. 멀리 볼 때도 묶지 않고 작은 아이콘 그대로 보여요.
 //   아이콘을 누르면 그곳을 가운데에 두고 한 단계 확대하고, 하단 탭 바로 위 카드 줄에 그곳부터 가까운 순 8곳이 떠요.
 //   왼쪽 위 "← 성북구 전체 · {장소} 주변"을 누르면 고르기 전 확대 단계로 돌아가요.
 //   칩(전체 · 전시 · 역사 · 종교 · 공원, places.js의 groupOf)은 둘러볼 곳 아이콘만 걸러요.
@@ -126,7 +126,7 @@ export default function Home() {
     <section className="screen home-screen">
       <MapView className="home-map" center={saved?.view ? [saved.view.center.lat, saved.view.center.lng] : HOME_CENTER} level={saved?.view?.level ?? HOME_LEVEL}>
         {/* 둘러볼 곳 아이콘은 코스 목적지 핀 아래에. 칩을 바꾸면 묶음을 새로 만들어요 */}
-        <ExploreLayer key={filter}
+        <ExploreLayer key={filter} cluster={false}
           // 장소 하나를 열면 그 장소(와 코스)만 보이게 다른 아이콘은 숨겨요
           places={popupSpot ? exShown.filter((p) => popupSpot.preparing && p.id === popupSpot.id) : exShown}
           selectedId={popupSpot?.preparing ? popupSpot.id : null} level={view?.level ?? HOME_LEVEL} onSelect={openPreparing} pad={clusterPad} />
