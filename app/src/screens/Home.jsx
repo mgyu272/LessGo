@@ -10,7 +10,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp, HOME_CENTER, HOME_LEVEL } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
-import { MapView, FitSpots, FlyTo, FocusOn, SpotMarker, Me, ExploreLayer, MapWatch, Route } from "../components/MapView.jsx";
+import { MapView, FlyTo, FocusOn, SpotMarker, Me, ExploreLayer, MapWatch, Route } from "../components/MapView.jsx";
+import SeongbukBoundary from "../components/SeongbukBoundary.jsx";
 import { LangPill, ElevationChart } from "../components/Bits.jsx";
 import { useBottomSheet, BottomSheet, Segment, Badge } from "../components/ui.jsx";
 import { DISTANCES, DESTINATIONS } from "../lib/routes.js";
@@ -146,7 +147,9 @@ export default function Home() {
         <Me at={me} />
         {/* 위쪽 검색·칩과 아래 시트에 배지·이름표가 가리지 않게 맞춰요 */}
         {/* 남겨 둔 확대 범위로 돌아왔으면 처음 맞춤은 건너뛰고, 전체 지도·내 위치 실패 때만 다시 맞춰요 */}
-        {(!saved?.view || refit > 0) && <FitSpots spots={data.spots} safe={homeSafeArea} refitKey={refit} />}
+        {/* 성북구 경계·바깥 막과 지도 범위. 성북구 밖의 내 위치와 고른 장소로 간 지도는 되돌리지 않아요 */}
+        <SeongbukBoundary spots={data.spots} safe={homeSafeArea} refitKey={refit} keepView={!!saved?.view && refit === 0}
+          extra={() => [me, sel && [sel.lat, sel.lng]].filter(Boolean)} />
         <FlyTo to={flyTo?.at} level={flyTo?.level} />
         <FocusOn to={focusTo?.at} level={focusTo?.level} pad={focusPad} />
         <MapWatch onChange={setView} />

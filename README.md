@@ -216,6 +216,10 @@ python main.py --recommend --destination-id uiryeong --target-distance-km 3 --sl
 
 장소 사진: 한국관광공사 TourAPI (공공누리 제1유형·제3유형)
 
+## 행정구역 경계 출처
+
+행정구역 경계: 통계청(southkorea/seoul-maps)
+
 ## 현재 한계 및 주의사항
 
 - 최신 앱 번들은 18개 슬롯과 Low/High geometry가 다른 9개 페어를 제공합니다. 앱은 저장된 번들을 불러오며, 경로는 앱에서 새로 계산하지 않습니다.
