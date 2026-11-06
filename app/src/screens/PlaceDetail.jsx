@@ -4,7 +4,7 @@
 // 관람 시간·휴관일·관람료·주소는 explore.json의 같은 장소(spot_id)에서 가져오고, 없으면 "정보 준비 중"이에요 (가짜 값을 넣지 않아요).
 // 방문 정보 탭 아래에 "근처 둘러볼 곳": 이 목적지가 가장 가까운 둘러볼 곳 4곳 + 모두 보기(장소와 이야기).
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc, getLang } from "../lib/i18n.js";
 import { fmtTime } from "../lib/geo.js";
@@ -23,10 +23,16 @@ export default function PlaceDetail() {
   const [tab, setTab] = useState("story");
   const [playing, setPlaying] = useState(false);
   const [report, setReport] = useState(false);
+  // 홈 팝업: 처음엔 화면 절반, 위로 끌면 전체, 아래로 끌면 다시 절반 → 한 번 더 내리면 닫기
+  const [full, setFull] = useState(false);
+  const [dragY, setDragY] = useState(0);
+  const drag = useRef(null);
   useEffect(() => () => voice.stop(), []);
   if (!spot) return null;
 
   const name = loc(spot.name);
+  // 새로 추가된 장소: 탭 형식·기능은 같고 내용은 비워 둔 "준비 중" (발표 때 채울 예정)
+  const prep = spot.preparing === true;
   const text = loc(spot.narration);
   const listen = () => {
     if (playing) { voice.stop(); setPlaying(false); return; }
@@ -48,14 +54,37 @@ export default function PlaceDetail() {
   const back = () => { voice.stop(); app.go(app.placeFrom || "places"); };
   // 홈 지도 핀으로 열면 팝업: 위 왼쪽 버튼이 X(닫기), 바깥 덮개를 눌러도 닫혀요
   const popup = app.placeFrom === "home";
+  // 끌기: 누른 뒤에는 창 전체에서 움직임을 받아요 (손가락이 시트 밖으로 나가도 이어지게)
+  const onDown = (e) => {
+    if (!popup || e.target.closest("button")) return;
+    e.preventDefault(); // 글자 선택·끌어 놓기가 시작되지 않게
+    const y0 = e.clientY;
+    let dy = 0;
+    const move = (ev) => { dy = ev.clientY - y0; setDragY(dy || 0.01); };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+      setDragY(0);
+      if (dy < -40) setFull(true);
+      else if (dy > 60) { if (drag.current?.full) setFull(false); else back(); }
+    };
+    drag.current = { full };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+  };
+  const dragHandlers = popup ? { onPointerDown: onDown } : {};
 
   return (
     <>
     {popup && <div className="ui-scrim pd-scrim" onClick={back} aria-hidden="true" />}
-    <section className={`screen pd-screen ${popup ? "pd-popup rise" : ""}`} {...(popup ? { role: "dialog", "aria-modal": true, "aria-label": name } : {})}>
+    <section className={`screen pd-screen ${popup ? `pd-popup rise ${full ? "pd-full" : ""} ${dragY ? "pd-dragging" : ""}` : ""}`}
+      style={popup && dragY ? { top: `calc(${full ? "44px + var(--safe-top)" : "50%"} + ${full ? Math.max(0, dragY) : dragY}px)` } : undefined}
+      {...(popup ? { role: "dialog", "aria-modal": true, "aria-label": name } : {})}>
       <div className="hanji-layer" aria-hidden="true" />
       <div className="pd-scroll">
-        <div className="pd-hero">
+        <div className="pd-hero" {...dragHandlers}>
           {popup && <span className="grip" aria-hidden="true" />}
           <div className="pd-bar">
             {popup
@@ -66,7 +95,7 @@ export default function PlaceDetail() {
           <div className="pd-id">
             <span className="pd-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(spot) }} />
             <div>
-              <small>{(PLACE_TOPICS[spot.id] || []).map((k) => t("topic_" + k)).join(" · ") || t("filter_" + spot.category)}</small>
+              <small>{spot.kindLabel || (PLACE_TOPICS[spot.id] || []).map((k) => t("topic_" + k)).join(" · ") || t("filter_" + spot.category)}</small>
               <h1>{name}</h1>
             </div>
           </div>
@@ -77,7 +106,16 @@ export default function PlaceDetail() {
         </div>
 
         <div className="pd-body">
-          {tab === "story" && (
+          {prep && (
+            <div className="rise pd-col">
+              <article className="card pd-story pd-prep">
+                <span>{loc({ ko: "준비 중", en: "Coming soon" })}</span>
+                <h3>{loc({ ko: "곧 이야기가 채워져요", en: "Stories are on the way" })}</h3>
+                <p>{loc({ ko: "이 장소의 해설·방문 정보·러닝 코스를 준비하고 있어요.", en: "We're preparing the story, visit info and running course for this place." })}</p>
+              </article>
+            </div>
+          )}
+          {!prep && tab === "story" && (
             <div className="rise pd-col">
               <button className="btn btn-cta pd-listen" onClick={listen} aria-pressed={playing}>
                 <span>{t(playing ? "listen_stop" : "listen_about", { t: fmtTime(voice.estimateSeconds(text, app.lang)) })}</span>
@@ -98,7 +136,7 @@ export default function PlaceDetail() {
             </div>
           )}
 
-          {tab === "visit" && (
+          {!prep && tab === "visit" && (
             <div className="rise pd-col">
               <div className="card pd-rows">
                 {Object.keys(visit).map((k) => (
@@ -140,13 +178,15 @@ export default function PlaceDetail() {
             </div>
           )}
 
-          {tab === "events" && <div className="rise pd-col"><PlaceEvents spotId={spot.id} /></div>}
-          {tab === "history_lens" && <HistoryLens spotId={spot.id} spotName={name} />}
+          {!prep && tab === "events" && <div className="rise pd-col"><PlaceEvents spotId={spot.id} /></div>}
+          {!prep && tab === "history_lens" && <HistoryLens spotId={spot.id} spotName={name} />}
         </div>
       </div>
 
       <div className="pd-cta">
-        <button className="btn btn-cta" onClick={runHere}>{t("run_to", { name: name.replace(/\s*\(.*\)/, "") })} →</button>
+        {prep
+          ? <button className="btn btn-cta" disabled>{loc({ ko: "코스 준비 중", en: "Course coming soon" })}</button>
+          : <button className="btn btn-cta" onClick={runHere}>{t("run_to", { name: name.replace(/\s*\(.*\)/, "") })} →</button>}
       </div>
 
       {report && <ReportSheet spot={spot} onClose={() => setReport(false)} />}
