@@ -22,7 +22,7 @@ const gpsError = (e) => e?.code === 1 ? "위치 권한이 거부됐어요. 휴�
 
 // 성공하면 { low, high, here } (완만한 길 · 언덕 허용 두 코스), 실패하면 { error }
 // bases: { low, high } 같은 목적지의 저장 코스 (이름·배지 등 속성을 물려받아요)
-export async function buildCoursesFromHere(bases, dest, demo) {
+export async function buildCoursesFromHere(bases, dest, demo, km = null) {
   const base = bases.low || bases.high;
   let here = null;
   try {
@@ -35,7 +35,7 @@ export async function buildCoursesFromHere(bases, dest, demo) {
   try {
     const res = await fetch("/api/route-from-here", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ from: { lat: here.lat, lng: here.lng }, to: { lat: dest.lat, lng: dest.lng } }),
+      body: JSON.stringify({ from: { lat: here.lat, lng: here.lng }, to: { lat: dest.lat, lng: dest.lng }, km }),
     });
     const json = await res.json();
     if (!res.ok || !json.best) throw new Error(json.error || "route");

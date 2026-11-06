@@ -7,7 +7,7 @@
 // - 아래 고정: 저장(하트) + "A 완만한 길 · 출발지로 이동" → 출발지로 이동 화면(ToCourseStart). 고른 move는 pick.move로 넘어가요
 // 데이터: public/data/lessgo 번들 (lib/routes.js). 예상 시간은 달리기 1km 6분 30초, 걷기 1km 15분 기준.
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { aiRecommend } from "../lib/ai.js";
@@ -37,7 +37,8 @@ export default function CoursePicker() {
   const app = useApp();
   const { data, pick, setPick } = app;
   const km = nearestKm(pick.km);
-  const dest = DESTINATIONS.includes(pick.dest) ? pick.dest : DESTINATIONS[0];
+  const dests = data.destinations || DESTINATIONS;
+  const dest = dests.includes(pick.dest) ? pick.dest : dests[0];
   const savedPair = MODES.map((m) => getCourse(data, dest, km, m)).filter(Boolean);
   const place = (id) => loc(data.spotById[id]?.name).replace(/\s*\(.*\)/, "");
   // 이동 방법 (카카오맵 길찾기의 자동차·버스·도보처럼 맨 위): 달리기 / 걷기
@@ -45,9 +46,11 @@ export default function CoursePicker() {
   const setMove = (v) => setPick({ ...pick, move: v });
   // 출발: 코스 출발지(저장 코스) / 현위치(내 위치 → 목적지 두 길을 새로 찾아요)
   const [source, setSource] = useState("course");
-  const [hereSet, setHereSet] = useState(null); // { dest, low, high, here }
+  const [hereSets, setHereSets] = useState({}); // "dest-km" → { low, high, here } (현위치에서도 3·5·10km)
   const [finding, setFinding] = useState(false);
-  const herePair = hereSet && hereSet.dest === dest ? [hereSet.low, hereSet.high].filter(Boolean) : [];
+  const hereKey = `${dest}-${km}`;
+  const hereSet = hereSets[hereKey];
+  const herePair = hereSet ? [hereSet.low, hereSet.high].filter(Boolean) : [];
   const pair = source === "here" ? herePair : savedPair;
   const [sel, setSel] = useState(pick.hill === "flat" ? "low" : "high");
   const course = pair.find((c) => c.properties.mode === sel) || pair[0];
@@ -66,20 +69,34 @@ export default function CoursePicker() {
 
   // 현위치를 고르면(또는 목적지를 바꾸면) 내 위치에서 완만한 길·언덕 허용 두 길을 찾아요
   useEffect(() => {
-    if (source !== "here" || (hereSet && hereSet.dest === dest)) return;
+    if (source !== "here" || hereSet) return;
     const bases = { low: getCourse(data, dest, km, "low") || savedPair[0], high: getCourse(data, dest, km, "high") || savedPair[0] };
     if (!bases.low) return;
     let alive = true;
     setFinding(true);
-    buildCoursesFromHere(bases, data.spotById[dest], app.demo).then((r) => {
+    buildCoursesFromHere(bases, data.spotById[dest], app.demo, km).then((r) => {
       if (!alive) return;
       setFinding(false);
       if (r.error) { app.toast(r.error); setSource("course"); return; }
-      setHereSet({ dest, ...r });
+      setHereSets((m) => ({ ...m, [hereKey]: r }));
     });
     return () => { alive = false; setFinding(false); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [source, dest]);
+  }, [source, dest, km]);
+
+  // 아래 목록 칸 높이: 손잡이를 위아래로 끌어요 (지도를 크게 보고 싶으면 내리기)
+  const [panelH, setPanelH] = useState(null); // null = 기본 높이 (CSS)
+  const panelRef = useRef(null);
+  const onGrip = (e) => {
+    e.preventDefault();
+    const el = panelRef.current, screen = el?.parentElement;
+    if (!el || !screen) return;
+    const startY = e.clientY, startH = el.offsetHeight;
+    const min = 86, max = Math.round(screen.offsetHeight * 0.72);
+    const move = (ev) => setPanelH(clamp(startH - (ev.clientY - startY), min, max));
+    const up = () => { window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", up); window.removeEventListener("pointercancel", up); };
+    window.addEventListener("pointermove", move); window.addEventListener("pointerup", up); window.addEventListener("pointercancel", up);
+  };
 
   const saved = course && favs.has(course.id);
   const toggleSave = () => { if (!course) return; const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
@@ -149,16 +166,15 @@ export default function CoursePicker() {
       </div>
 
       {/* ③ 길 목록 (카카오맵 길찾기 결과처럼) */}
-      <div className="cx-panel">
-        {source === "course" ? (
-          <div className="cx-tabs" role="tablist" aria-label={t("distance")}>
-            {DISTANCES.map((k) => (
-              <button key={k} role="tab" aria-selected={km === k} className="cx-tab" onClick={() => setPick({ ...pick, km: k })}>{k}km</button>
-            ))}
-          </div>
-        ) : (
-          <p className="cx-note">{loc({ ko: "내 위치에서 출발해 경사·보행로·하천을 따져 찾은 길이에요", en: "Routes from where you are, chosen by slope, paths and streams" })}</p>
-        )}
+      <div className="cx-panel" ref={panelRef} style={panelH ? { flex: `0 0 ${panelH}px` } : undefined}>
+        <div className="cx-grip" onPointerDown={onGrip} aria-hidden="true"><span /></div>
+        {/* 거리 탭: 코스 출발지·현위치 둘 다 3·5·10km */}
+        <div className="cx-tabs" role="tablist" aria-label={t("distance")}>
+          {DISTANCES.map((k) => (
+            <button key={k} role="tab" aria-selected={km === k} className="cx-tab" onClick={() => setPick({ ...pick, km: k })}>{k}km</button>
+          ))}
+        </div>
+        {source === "here" && <p className="cx-note">{loc({ ko: "현위치에서 출발해 경사·횡단보도·하천을 따져 찾은 길이에요", en: "From where you are, chosen by slope, crossings and streams" })}</p>}
 
         {finding && <p className="cx-empty">{loc({ ko: "현위치에서 길을 찾고 있어요…", en: "Finding routes from here…" })}</p>}
         {!finding && pair.length === 0 && <p className="cx-empty">{t("no_route_data")}</p>}
@@ -174,7 +190,7 @@ export default function CoursePicker() {
               </div>
               <div className="cx-time">{durText(minutesFor(p.distance_km, move))}</div>
               <div className="cx-sub">{p.distance_km}km · {p.ascent_m == null ? t("unknown") : `${loc({ ko: "오르막", en: "Climb" })} +${p.ascent_m}m`}</div>
-              <ElevationChart values={p.elevation} height={26} color={color} fill={color + "22"} />
+              <ElevationChart values={p.elevation} height={18} color={color} fill={color + "22"} />
               <button type="button" className="cx-go" onClick={(e) => { e.stopPropagation(); setSel(p.mode); startRoute(o); }}>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z" /></svg>
                 {loc({ ko: "안내시작", en: "Start" })}
@@ -227,9 +243,10 @@ const fmtM = (m) => (m < 1000 ? `${Math.round(m)}m` : `${(m / 1000).toFixed(1)}k
 
 // 목적지 고르기 시트 ("어디든" 같은 데이터 없는 옵션은 넣지 않아요)
 function DestSheet({ open, dest, place, onClose, onPick }) {
+  const { data } = useApp();
   return (
     <OptionSheet open={open} title={t("choose_dest")} cols={2} value={dest} onClose={onClose}
-      options={DESTINATIONS.map((d) => ({ value: d, label: place(d), sub: t("dest_sub_" + d) }))} onPick={onPick} />
+      options={(data.destinations || DESTINATIONS).map((d) => ({ value: d, label: place(d), sub: DESTINATIONS.includes(d) ? t("dest_sub_" + d) : data.spotById[d]?.kindLabel || "" }))} onPick={onPick} />
   );
 }
 
@@ -343,5 +360,6 @@ const RunIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true" className="mv-
 const WalkIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true" className="mv-ic"><circle cx="12.5" cy="4.5" r="2" /><path d="M9.5 21l2-6.5 2.5 2.5V21M8.5 12l1.5-4 3.5 1 1.5 4M11.5 14.5l-1.5-6" /></svg>;
 const CheckIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>;
 
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 function readFavs() { try { return new Set(JSON.parse(localStorage.getItem("runtrip.favs") || "[]")); } catch { return new Set(); } }
 function writeFavs(f) { try { localStorage.setItem("runtrip.favs", JSON.stringify([...f])); } catch {} }

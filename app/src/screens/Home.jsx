@@ -101,10 +101,10 @@ export default function Home() {
   const startFree = () => app.run.start(null, { demo: app.demo, speedup: speedParam() });
   // 장소 팝업(홈 위 절반 시트)이 열려 있으면: 코스가 있는 곳은 코스를, 준비 중인 곳은 그 자리를 지도 위쪽 절반에 보여줘요
   const popupSpot = app.screen === "place" && app.placeFrom === "home" ? app.spot : null;
-  const popupCourse = popupSpot && !popupSpot.preparing ? courseFor(data, popupSpot.id, settings.km) : null;
+  const popupCourse = popupSpot ? courseFor(data, popupSpot.id, settings.km) : null;
   const halfPad = () => (document.querySelector(".home-map")?.offsetHeight || 700) * 0.5 + 24;
   // 새로 추가된 장소(둘러볼 곳): 코스 목적지와 같은 팝업 형식으로, 내용은 "준비 중"
-  const openPreparing = (p) => { app.setSpot(preparingSpot(p)); app.setPlaceFrom("home"); app.go("place"); };
+  const openPreparing = (p) => { app.setSpot(data.spotById[p.id] || preparingSpot(p)); app.setPlaceFrom("home"); app.go("place"); };
 
   // 코스 고르기로 (지금 고른 거리로)
   const openCourses = () => { app.setPick({ ...app.pick, km: settings.km }); app.go("courses"); };
@@ -137,14 +137,15 @@ export default function Home() {
         <ExploreLayer key={filter}
           // 장소 하나를 열면 그 장소(와 코스)만 보이게 다른 아이콘은 숨겨요
           places={popupSpot ? exShown.filter((p) => popupSpot.preparing && p.id === popupSpot.id) : exShown}
-          spots={popupSpot ? shown.filter((s) => !popupSpot.preparing && s.id === popupSpot.id) : shown}
-          onSpot={openSpot} selectedId={popupSpot?.id ?? null} level={view?.level ?? HOME_LEVEL} onSelect={openPreparing} pad={clusterPad} />
+          selectedId={popupSpot?.preparing ? popupSpot.id : null} level={view?.level ?? HOME_LEVEL} onSelect={openPreparing} pad={clusterPad} />
+        {/* 코스 목적지(심우장·정릉·의릉)는 예전처럼 큰 그림 핀 + 이름표 */}
+        {(popupSpot ? shown.filter((s) => s.id === popupSpot.id) : shown).map((s) => <SpotMarker key={s.id} spot={s} label onClick={() => openSpot(s)} />)}
         {popupCourse && [
           <Route key="pc-case" path={popupCourse.path} color="#FFFFFF" weight={11} opacity={1} zIndex={5} />,
           <Route key="pc" path={popupCourse.path} color={MODE_COLOR[popupCourse.properties.mode]} weight={6} opacity={1} zIndex={6} />,
           <FitBounds key="pc-fit" points={popupCourse.path.map((q) => [q.lat, q.lng])} padTL={[30, 70]} padBR={[30, halfPad()]} fitKey={popupCourse.id} />,
         ]}
-        {popupSpot?.preparing && <FitBounds points={[[popupSpot.lat + 0.0025, popupSpot.lng], [popupSpot.lat - 0.0025, popupSpot.lng]]} padTL={[30, 70]} padBR={[30, halfPad()]} fitKey={popupSpot.id} />}
+        {popupSpot?.preparing && !popupCourse && <FitBounds points={[[popupSpot.lat + 0.0025, popupSpot.lng], [popupSpot.lat - 0.0025, popupSpot.lng]]} padTL={[30, 70]} padBR={[30, halfPad()]} fitKey={popupSpot.id} />}
         <Me at={me} />
         {/* 위쪽 검색·칩과 아래 시트에 배지·이름표가 가리지 않게 맞춰요 */}
         {/* 남겨 둔 확대 범위로 돌아왔으면 처음 맞춤은 건너뛰고, 전체 지도·내 위치 실패 때만 다시 맞춰요 */}
@@ -205,16 +206,16 @@ export default function Home() {
 
           {/* 장소별 코스: 코스가 있는 곳은 고도 그래프까지, 나머지는 "코스 준비 중" (스크롤해서 봐요) */}
           <h3 className="home-list-h">{loc({ ko: "장소별 코스", en: "Courses by place" })}</h3>
-          {DESTINATIONS.map((dest) => {
+          {(data.destinations || DESTINATIONS).map((dest) => {
             const c = courseFor(data, dest, settings.km);
             const spot = data.spotById[dest];
             return c && spot && <PlaceCourseCard key={dest} course={c} spot={spot} onSpot={() => openSpot(spot)}
               onCourses={() => { app.setPick({ ...app.pick, km: settings.km, dest }); app.go("courses"); }} />;
           })}
-          {data.spots.filter((s) => !DESTINATIONS.includes(s.id)).map((s) => (
+          {data.spots.filter((s) => !(data.destinations || DESTINATIONS).includes(s.id)).map((s) => (
             <PrepCard key={s.id} name={loc(s.name)} sub={loc({ ko: "역사·문화", en: "History" })} icon={<span dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />} onOpen={() => openSpot(s)} />
           ))}
-          {data.explore.filter((p) => !data.spotById[p.spot_id]).map((p) => (
+          {data.explore.filter((p) => !data.spotById[p.spot_id] && !(data.destinations || []).includes(p.id)).map((p) => (
             <PrepCard key={p.id} name={loc(p.name)} sub={[p.kind, p.area_ko].filter(Boolean).join(" · ")} icon={<GroupIcon group={groupOf(p)} size={30} />} onOpen={() => openPreparing(p)} />
           ))}
         </div>

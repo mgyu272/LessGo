@@ -54,6 +54,42 @@ export function buildCourses(index, collection, spotById) {
 
 export const keyOf = (dest, km, mode) => `${dest}-${km}km-${normMode(mode)}`;
 
+// 새 알고리즘으로 만든 코스 (public/data/lessgo/generated_routes.json, api/plan-course.js로 생성)
+//   places[장소 id].routes["3"|"5"|"10"].low|high = { start: {name}, path: 폴리라인 문자열 또는 [[lng,lat,ele]], metrics }
+//   overrides["simujang-5km-low"] = 같은 모양 → 기존 번들 코스를 바꿔요 (이상하게 돌아가던 코스 고친 것)
+// spotOf(id): 그 장소의 스팟 모양 (이름·좌표). 결과는 byKey에 더해요.
+export function buildGenerated(gen, spotOf, byKey) {
+  const add = (dest, km, mode, r) => {
+    if (!r?.path) return;
+    const coords = typeof r.path === "string" ? decodePath(r.path) : r.path;
+    const m = r.metrics || {};
+    const route = {
+      summary: { distance_km: m.distance_m != null ? Math.round(m.distance_m / 100) / 10 : null, ascent_m: m.ascent_m ?? null },
+      status: "generated", formal_recommendation: false, elevation: { confidence: "medium" },
+      start: { name: r.start?.name || null }, metrics: m,
+    };
+    byKey[keyOf(dest, km, mode)] = makeCourse({ dest, km, mode, route, coords, spot: spotOf(dest) });
+  };
+  Object.entries(gen?.places || {}).forEach(([id, pl]) => {
+    Object.entries(pl.routes || {}).forEach(([km, rr]) => { add(id, Number(km), "low", rr.low); add(id, Number(km), "high", rr.high); });
+  });
+  Object.entries(gen?.overrides || {}).forEach(([key, r]) => {
+    const m = key.match(/^(.+)-(\d+)km-(low|high)$/);
+    if (m) add(m[1], Number(m[2]), m[3], r);
+  });
+}
+
+// 구글 폴리라인(정밀도 1e5) + 고도(정수 m, 쉼표 목록) → [[lng, lat, ele]]
+export function decodePath(str) {
+  const [poly, eles = ""] = str.split("|");
+  const out = []; let i = 0, lat = 0, lng = 0;
+  const next = () => { let r = 0, s = 0, b; do { b = poly.charCodeAt(i++) - 63; r |= (b & 31) << s; s += 5; } while (b >= 32); return r & 1 ? ~(r >> 1) : r >> 1; };
+  while (i < poly.length) { lat += next(); lng += next(); out.push([lng / 1e5, lat / 1e5, null]); }
+  const e = eles ? eles.split(",").map((x) => (x === "" ? null : Number(x))) : [];
+  out.forEach((p, k) => { p[2] = e[k] ?? null; });
+  return out;
+}
+
 function makeCourse({ dest, km, mode, route, coords, spot }) {
   const path = coords.map(([lng, lat]) => ({ lat, lng }));
   let len = 0;

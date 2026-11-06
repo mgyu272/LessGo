@@ -1462,3 +1462,21 @@ div:has(> .spot-pin) { pointer-events: none; }
 .cx-rail .cx-item { flex: 0 0 82%; scroll-snap-align: center; border: 1.5px solid #E6E6E6; border-bottom: 1.5px solid #E6E6E6; border-radius: 16px; padding: 14px 16px 16px; background: #FFFFFF; }
 .cx-rail .cx-item.on { border-color: var(--c); box-shadow: 0 6px 16px -10px var(--c); background: #FFFFFF; }
 .cx-rail .cx-time { font-size: 26px; }
+
+/* 코스 화면: 아래 목록 칸 끌기 + 카드 작게 */
+.cx-map { flex: 1 1 auto; min-height: 120px; }
+.cx-panel { flex: 0 0 300px; position: relative; display: flex; flex-direction: column; overflow-y: auto; box-shadow: 0 -6px 16px -10px rgba(0,0,0,.25); border-radius: 16px 16px 0 0; margin-top: -12px; background: #FFFFFF; z-index: 6; }
+.cx-grip { flex: none; height: 18px; display: grid; place-items: center; cursor: ns-resize; touch-action: none; }
+.cx-grip span { width: 40px; height: 4px; border-radius: 2px; background: #D0D0D0; }
+.cx-tabs { position: static; flex: none; }
+.cx-tab { height: 38px; font-size: 14px; }
+.cx-note { flex: none; padding: 8px 20px; font-size: 12px; }
+.cx-rail { flex: none; padding: 10px 16px 4px; }
+.cx-rail .cx-item { flex-basis: 74%; padding: 10px 12px 12px; border-radius: 14px; }
+.cx-item-top small { font-size: 11px; }
+.cx-tag { font-size: 11.5px; padding: 2px 7px; }
+.cx-rail .cx-time { margin-top: 4px; font-size: 21px; }
+.cx-sub { font-size: 12.5px; }
+.cx-item .elev { margin: 6px 0 0; }
+.cx-go { margin-top: 8px; height: 36px; font-size: 14px; border-radius: 9px; }
+.cx-demo { margin: 10px 16px 0; }

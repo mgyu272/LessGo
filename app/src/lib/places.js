@@ -46,6 +46,7 @@ const GROUP_OF_ICON = { museum: "exhibit", art: "exhibit", literature: "exhibit"
 // 테마를 따로 정한 스팟 (spots.json에는 kind가 없어서요)
 const SPOT_GROUP = { gilsangsa: "religion" };
 export function groupOf(p) {
+  if (p.group) return p.group; // 이미 정해 둔 테마 (새로 만든 코스 장소)
   if (SPOT_GROUP[p.id] || SPOT_GROUP[p.spot_id]) return SPOT_GROUP[p.id] || SPOT_GROUP[p.spot_id];
   if (DESTINATIONS.includes(p.id)) return "heritage";
   if (p.chip === "park") return "park";

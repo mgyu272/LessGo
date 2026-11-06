@@ -185,7 +185,7 @@ export default function PlaceDetail() {
       </div>
 
       <div className="pd-cta">
-        {prep
+        {prep && !(app.data.destinations || []).includes(spot.id)
           ? <button className="btn btn-cta" disabled>{loc({ ko: "코스 준비 중", en: "Course coming soon" })}</button>
           : <button className="btn btn-cta" onClick={runHere}>{t("run_to", { name: name.replace(/\s*\(.*\)/, "") })} →</button>}
       </div>

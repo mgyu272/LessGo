@@ -3,11 +3,11 @@
 // 지도를 쓰는 화면(홈·코스 상세·달리기·내 기록)은 모두 이 파일의 부품만 써요.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Map, CustomOverlayMap, Polygon, Polyline, Circle, useMap } from "react-kakao-maps-sdk";
-import { spotIconSvg, groupIconSvg, LABEL_OFFSETS } from "./SpotIcons.jsx";
+import { Map, CustomOverlayMap, Polygon, Polyline, Circle, MarkerClusterer, useMap } from "react-kakao-maps-sdk";
+import { spotIconSvg, LABEL_OFFSETS } from "./SpotIcons.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { CENTER } from "../state/AppContext.jsx";
-import { groupOf } from "../lib/places.js";
+import { exploreColor, areaLabel, iconTypeOf } from "../lib/places.js";
 
 const KAKAO_MAP_KEY = import.meta.env.NEXT_PUBLIC_KAKAO_MAP_KEY;
 
@@ -312,127 +312,102 @@ export function MapWatch({ onChange }) {
   return null;
 }
 
-// ---------- 장소 아이콘 (테마별: 역사·전시·종교·공원) ----------
-// 코스 목적지(spots)와 둘러볼 곳(places)을 똑같이 테마 아이콘으로 보여줘요.
-// - 축소해서 겹치면 같은 테마끼리 "아이콘 + 역사 5" 알약으로 묶어요. 묶음을 누르면 확대해요.
-// - 확대(단계 LABEL_LEVEL 이하)하면 장소마다 실제 위치 점 + 점선 + 아이콘 + 아래 이름표 (예전 심우장 핀과 같은 모양)
-// - 서로 다른 테마끼리 겹치면 아이콘을 살짝 밀어서 안 겹치게 둬요 (점선이 실제 위치를 가리켜요)
-//   pad(): 확대할 때 비워 둘 지도 가장자리 px [위, 오른쪽, 아래, 왼쪽]
-const MERGE_PX = 50;      // 같은 테마가 이보다 가까우면 묶어요
-const LABEL_LEVEL = 6;    // 이 단계 이하(성북구 전체 정도부터 확대)일 때 이름표·점선 핀을 기본으로
-const LIFT_PX = 44;       // 이름표 핀: 아이콘을 실제 위치보다 이만큼 위에
-const LABEL_MERGE_PX = 80; // 확대해도 이만큼 붙어 있는 같은 테마는 이름표 대신 묶음으로 (더 확대하면 풀려요)
-export function ExploreLayer({ places = [], spots = [], selectedId, onSelect, onSpot, pad }) {
-  const map = useMap();
-  const [items, setItems] = useState([]);
-  const [labeled, setLabeled] = useState(false);
-  const latest = useRef(null);
-  // 같은 장소가 둘러볼 곳에도 있으면(spot_id) 코스 목적지 쪽만 남겨요
-  const spotIds = new Set(spots.map((s) => s.id));
-  latest.current = [
-    ...spots.map((p) => ({ p, spot: true })),
-    ...places.filter((p) => !spotIds.has(p.spot_id)).map((p) => ({ p, spot: false })),
-  ];
+// ---------- 둘러볼 곳 아이콘 ----------
+// 종류별 선 아이콘 (viewBox 0 0 24 24, places.js의 iconTypeOf와 짝)
+const EXPLORE_ICONS = {
+  hanok: "M2 11c3 .5 5-1 6.5-3.5h7C17 10 19 11.5 22 11M5 11v8h14v-8M10 19v-5h4v5",
+  temple: "M12 2v3M8 5h8M8 5L5.5 9h13L16 5M7 9v4h10V9M5 13h14M8 13v7h8v-7M10.5 20v-3h3v3",
+  church: "M12 2v6M9.5 4.5h5M7 21V12l5-4 5 4v9M4 21h16M10 21v-4h4v4",
+  literature: "M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19a2 2 0 0 1 2-2h13",
+  museum: "M3 9l9-5 9 5M5 9v9M9.5 9v9M14.5 9v9M19 9v9M3 20h18",
+  art: "M4 5h16v14H4zM7 16l4-5 3 3 2-2 2 4M15 8.5h.01",
+  wall: "M3 20V9h3v3h3V9h6v3h3V9h3v11M10 20v-4a2 2 0 0 1 4 0v4",
+  park: "M12 3L6 11h4l-4 6h12l-4-6h4zM12 17v4",
+  info: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01",
+};
+// 흰 원 + 1.5px 분류 색 테두리 + 가운데 선 아이콘. size: "sm"(22px, 단계 6 이상) · "lg"(28px, 5 이하).
+// 고르면 36px로 커지고 원이 분류 색으로 채워지고(아이콘은 흰색) 아래에 이름 알약이 떠요. 누르는 칸은 최소 30px
+export function ExploreDot({ place, selected = false, size = "sm", onClick }) {
+  const name = loc(place.name);
+  return (
+    <CustomOverlayMap position={{ lat: place.lat, lng: place.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 2 : 1} clickable>
+      <div className={`ex-pin ${size} ${selected ? "on" : ""}`} style={{ "--c": exploreColor(place) }}>
+        <button type="button" className="ex-dot" aria-label={name} aria-pressed={selected} onClick={onClick}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d={EXPLORE_ICONS[iconTypeOf(place)]} /></svg>
+        </button>
+        {selected && <span className="ex-name" onClick={onClick} aria-hidden="true">{name}</span>}
+      </div>
+    </CustomOverlayMap>
+  );
+}
 
-  const compute = useCallback(() => {
-    const { kakao } = window;
-    const proj = map.getProjection?.();
-    if (!kakao || !proj) return;
-    const label = map.getLevel() <= LABEL_LEVEL;
-    const pts = latest.current.map(({ p, spot }) => {
-      const pt = proj.containerPointFromCoords(new kakao.maps.LatLng(p.lat, p.lng));
-      return { p, spot, x: pt.x, y: pt.y, g: groupOf(p) };
-    }).sort((a, b) => a.y - b.y || a.x - b.x);
-    // 1) 같은 테마끼리 가까우면 묶기 (이름표를 보여줄 만큼 확대했으면 묶지 않아요)
-    const used = new Set(), out = [];
-    pts.forEach((a, i) => {
-      if (used.has(i)) return;
-      const members = [];
-      pts.forEach((b, j) => {
-        if (used.has(j) || b.g !== a.g || Math.hypot(a.x - b.x, a.y - b.y) > (label ? LABEL_MERGE_PX : MERGE_PX)) return;
-        used.add(j); members.push(b);
+const posKey = (lat, lng) => `${lat.toFixed(6)},${lng.toFixed(6)}`;
+const esc = (x) => String(x).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+// 묶음 글자는 아래 relabel에서 직접 넣어요. 카카오 기본 모양(파란 원)은 지워요
+const CLUSTER_STYLE = { width: "auto", height: "auto", background: "none", border: "0", lineHeight: "normal", textAlign: "left", color: "inherit" };
+
+// 둘러볼 곳 아이콘 여러 개. 서울 동북부 전체처럼 아주 멀리 볼 때(확대 단계 9 이상)만 카카오 MarkerClusterer로 묶고,
+// 성북구 전체(휴대폰 홈 첫 화면 단계 8)나 그보다 가까우면 장소마다 하나씩 보여요.
+// 묶음은 "성북동 18"처럼 가장 많은 동네 이름 + 개수(섞여 있으면 숫자만), 누르면 그 범위로 확대해요.
+//   pad(): 확대할 때 비워 둘 지도 가장자리 px [위, 오른쪽, 아래, 왼쪽] (홈은 위 검색·칩, 아래 시트)
+// level: 지금 확대 단계 (아이콘 크기를 정해요). 고른 아이콘은 묶음에 들어가지 않게 밖에 따로 그려요.
+export const CLUSTER_MIN_LEVEL = 9;
+const ZOOM_IN_MAX = 3; // 가까운 장소 2개짜리 묶음도 너무 깊이 들어가지 않게
+export function ExploreLayer({ places, selectedId, cluster = true, level = 6, onSelect, pad }) {
+  const byPos = useMemo(() => {
+    const m = {};
+    places.forEach((p) => { m[posKey(p.lat, p.lng)] = p; });
+    return m;
+  }, [places]);
+  const relabel = useCallback((_, clusters) => {
+    clusters.forEach((c) => {
+      const marker = c.getClusterMarker?.();
+      marker?.setZIndex?.(1); // 코스 목적지 핀(3)보다 아래
+      const el = marker?.getContent?.();
+      if (!el || typeof el === "string") return;
+      const count = {};
+      c.getMarkers().forEach((m) => {
+        const pos = m.getPosition();
+        const p = byPos[posKey(pos.getLat(), pos.getLng())];
+        if (p) count[p.area] = (count[p.area] || 0) + 1;
       });
-      const x = members.reduce((n, m) => n + m.x, 0) / members.length;
-      const y = members.reduce((n, m) => n + m.y, 0) / members.length;
-      // 아이콘 자리(bx, by): 이름표 핀이면 실제 위치보다 위에
-      out.push({ g: a.g, members, x, y, bx: x, by: label && members.length === 1 ? y - LIFT_PX : y });
+      // 한 동네가 절반을 넘을 때만 동네 이름을 붙여요 (여러 동네가 섞인 큰 묶음은 숫자만)
+      const n = c.getSize();
+      const [area, top = 0] = Object.entries(count).sort((a, b) => b[1] - a[1])[0] || [];
+      const label = area && top * 2 > n ? areaLabel({ area }) : "";
+      el.innerHTML = `<span class="ex-cluster">${label ? `<span>${esc(label)}</span>` : ""}<b>${n}</b></span>`;
+      // 카카오는 기본 묶음 크기로 위치를 잡아서, 알약 가운데가 실제 위치에 오게 다시 맞춰요
+      el.style.transform = "translate(-50%, -50%)";
+      requestAnimationFrame(() => { if (el.parentElement) el.parentElement.style.margin = "0"; });
+      el.setAttribute("role", "button");
+      el.setAttribute("aria-label", t(label ? "cluster_label" : "cluster_label_n", { area: label, n }));
     });
-    // 2) 겹치면 아이콘(+이름표) 상자끼리 밀어내기. 이름표 핀은 상자가 넓어요
-    // 이름표 핀 상자 폭은 이름 길이에 맞춰요 (글자당 약 12px)
-    const box = (it) => (it.members.length > 1 ? { w: 100, h: 46 }
-      : label ? { w: Math.max(60, loc(it.members[0].p.name).length * 12 + 24), h: 80 } : { w: 46, h: 46 });
-    for (let k = 0; k < 80; k++) {
-      let moved = false;
-      for (let i = 0; i < out.length; i++) for (let j = i + 1; j < out.length; j++) {
-        const a = out[i], b = out[j], A = box(a), B = box(b);
-        const dx = b.bx - a.bx, dy = b.by - a.by;
-        const ox = (A.w + B.w) / 2 - Math.abs(dx), oy = (A.h + B.h) / 2 - Math.abs(dy);
-        if (ox <= 0 || oy <= 0) continue;
-        if (ox < oy) { const s2 = (dx >= 0 ? 1 : -1) * ox / 2; a.bx -= s2; b.bx += s2; }
-        else { const s2 = (dy >= 0 ? 1 : -1) * oy / 2; a.by -= s2; b.by += s2; }
-        moved = true;
-      }
-      if (!moved) break;
-    }
-    setLabeled(label);
-    setItems(out.map((it) => {
-      // 이름표 핀은 실제 위치에 두고 아이콘을 (dx, dy)만큼 옮겨 그려요. 아니면 아이콘 자리를 좌표로 바꿔요
-      const ll = proj.coordsFromContainerPoint(new kakao.maps.Point(it.bx, it.by));
-      return { ...it, lat: ll.getLat(), lng: ll.getLng(), dx: it.bx - it.x, dy: it.by - it.y, key: it.members.map((m) => m.p.id).join("|") };
-    }));
-  }, [map]);
+  }, [byPos]);
 
-  useEffect(() => {
-    const { kakao } = window;
-    compute();
-    kakao.maps.event.addListener(map, "idle", compute);
-    return () => kakao.maps.event.removeListener(map, "idle", compute);
-  }, [map, compute, places, spots]);
-
-  const zoomTo = (members) => {
-    const { kakao } = window;
-    const bounds = new kakao.maps.LatLngBounds();
-    members.forEach((m) => bounds.extend(new kakao.maps.LatLng(m.p.lat, m.p.lng)));
-    const [top, right, bottom, left] = pad?.() || [60, 40, 60, 40];
-    const before = map.getLevel();
+  // 칩을 바꿔 이 층이 사라질 때 묶음 표시가 지도에 남지 않게 지워요
+  const clusterer = useRef(null);
+  useEffect(() => () => { clusterer.current?.clear(); clusterer.current = null; }, []);
+  const zoomIn = useCallback((clusterer, c) => {
+    const map = clusterer.getMap();
+    // 확대하면 묶음이 다시 계산돼 비니까, 범위를 먼저 꺼내 둬요
+    const bounds = c.getBounds(), center = c.getCenter();
+    const [top, right, bottom, left] = pad?.() || [40, 40, 40, 40];
     map.setBounds(bounds, top, right, bottom, left);
-    if (map.getLevel() >= before && before > 1) map.setLevel(before - 1);
-  };
-  const open = (m) => (m.spot ? onSpot?.(m.p) : onSelect?.(m.p));
+    // 그래도 묶이는 단계면 묶음이 풀리는 단계까지 들어가요
+    if (map.getLevel() >= CLUSTER_MIN_LEVEL) map.setLevel(CLUSTER_MIN_LEVEL - 1, { anchor: center });
+    if (map.getLevel() < ZOOM_IN_MAX) map.setLevel(ZOOM_IN_MAX, { anchor: center });
+  }, [pad]);
 
-  return items.map((it) => {
-    const m = it.members[0];
-    const name = loc(m.p.name);
-    const svg = { __html: groupIconSvg(it.g) };
-    if (it.members.length > 1) {
-      return (
-        <CustomOverlayMap key={it.key} position={{ lat: it.lat, lng: it.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={1} clickable>
-          <button type="button" className="th-cluster" aria-label={`${t("grp_" + it.g)} ${it.members.length}`} onClick={() => zoomTo(it.members)}>
-            <span className="th-cluster-ic" aria-hidden="true" dangerouslySetInnerHTML={svg} />
-            <span>{t("grp_" + it.g)}</span><b>{it.members.length}</b>
-          </button>
-        </CustomOverlayMap>
-      );
-    }
-    const selected = m.p.id === selectedId;
-    if (!labeled) {
-      return (
-        <CustomOverlayMap key={it.key} position={{ lat: it.lat, lng: it.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 3 : m.spot ? 2 : 1} clickable>
-          <button type="button" className={`th-pin ${selected ? "on" : ""}`} aria-label={name} aria-pressed={selected} onClick={() => open(m)} dangerouslySetInnerHTML={svg} />
-        </CustomOverlayMap>
-      );
-    }
-    // 확대: 실제 위치 점 + 점선 + 아이콘 + 아래 이름표
-    const c = PIN_BOX / 2, bx = c + it.dx, by = c + it.dy;
-    return (
-      <CustomOverlayMap key={it.key} position={{ lat: m.p.lat, lng: m.p.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 3 : m.spot ? 2 : 1} clickable>
-        <div className="spot-pin" style={{ width: PIN_BOX, height: PIN_BOX }}>
-          <svg className="pin-lead" width={PIN_BOX} height={PIN_BOX} aria-hidden="true"><line x1={c} y1={c} x2={bx} y2={by} /></svg>
-          <span className="pin-dot" style={{ left: c, top: c }} />
-          <button type="button" className={`pin-badge th-badge ${selected ? "on" : ""}`} style={{ left: bx, top: by }} aria-label={name} onClick={() => open(m)} dangerouslySetInnerHTML={svg} />
-          <span className="pin-label below" style={{ left: bx, top: by }} onClick={() => open(m)}>{name}</span>
-        </div>
-      </CustomOverlayMap>
-    );
-  });
+  const sel = places.find((p) => p.id === selectedId);
+  const size = level >= 6 ? "sm" : "lg";
+  const dots = places.filter((p) => p.id !== selectedId)
+    .map((p) => <ExploreDot key={p.id} place={p} size={size} onClick={() => onSelect?.(p)} />);
+  return (
+    <>
+      {cluster
+        ? <MarkerClusterer averageCenter minLevel={CLUSTER_MIN_LEVEL} gridSize={64} styles={[CLUSTER_STYLE]} disableClickZoom onClusterclick={zoomIn} onClustered={relabel} onCreate={(c) => { clusterer.current = c; }}>{dots}</MarkerClusterer>
+        : dots}
+      {sel && <ExploreDot place={sel} selected size={size} onClick={() => onSelect?.(sel)} />}
+    </>
+  );
 }

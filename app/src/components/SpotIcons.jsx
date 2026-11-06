@@ -39,7 +39,9 @@ export function GroupIcon({ group, size = 18, className = "grp-icon" }) {
 }
 
 // 모든 장소(코스 목적지 포함)는 테마 아이콘으로 통일 (심우장·정릉·의릉 = 역사, 길상사 = 종교)
+// 코스 목적지(심우장·정릉·의릉·길상사)는 원래 장소 그림, 나머지 장소는 테마 아이콘
 export function spotIconSvg(spot) {
+  if (SPOT_SVG[spot.id]) return `<svg viewBox="0 0 32 32" aria-hidden="true">${SPOT_SVG[spot.id]}</svg>`;
   return groupIconSvg(spot.group || groupOf(spot));
 }
 // 예전 장소별 그림 (지금은 안 써요. 다시 쓰고 싶으면 위 함수에서 SPOT_SVG[spot.id]를 먼저 보면 돼요)
