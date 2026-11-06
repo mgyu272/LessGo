@@ -12,12 +12,16 @@ export default function LoginScene() {
   for (let x = -10; x <= 400; x += 10) top.push(`${x},${wallY(x).toFixed(1)}`);
   for (let x = 0; x <= 390; x += 14) merlons.push(<rect key={x} x={x} y={wallY(x + 4) - 7} width="8" height="8" rx="1.5" />);
   return (
-    <svg className="login-scene" viewBox="0 0 390 250" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <svg className="login-scene" viewBox="0 0 390 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <circle className="ls-sun" cx="318" cy="56" r="26" fill="#FFF3C9" />
       <circle cx="318" cy="56" r="40" fill="#FFF3C9" opacity=".35" />
       <g className="ls-clouds" fill="#FFFFFF">
         <g className="ls-cloud a"><ellipse cx="70" cy="52" rx="34" ry="11" /><ellipse cx="88" cy="44" rx="18" ry="11" /></g>
         <g className="ls-cloud b"><ellipse cx="230" cy="34" rx="28" ry="9" /><ellipse cx="244" cy="28" rx="14" ry="9" /></g>
+      </g>
+      <g className="ls-birds" fill="none" stroke="#5E8F45" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M151 78l7 5 8-7" />
+        <path d="M270 66l6 4 7-6" />
       </g>
       <path d="M0 150 C 60 112, 120 118, 180 132 S 300 104, 390 126 V250 H0 Z" fill="#CDEBA6" />
       <path d="M0 172 C 70 146, 150 150, 220 160 S 330 140, 390 152 V250 H0 Z" fill="#B4DE84" />
@@ -30,12 +34,30 @@ export default function LoginScene() {
         ))}
       </g>
       <path d={ROUTE} fill="none" stroke="#FFFFFF" strokeWidth="4" strokeDasharray="1 9" strokeLinecap="round" />
+      <g className="ls-stamps">
+        <g transform="translate(93 198)">
+          <rect x="-29" y="-34" width="58" height="19" rx="9.5" fill="#FFFFFF" />
+          <text x="0" y="-21" textAnchor="middle">성곽길</text>
+          <circle r="9" fill="#2E7A1F" stroke="#FFFFFF" strokeWidth="3" />
+          <path d="M-3 0l2 2 4-5" fill="none" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+        <g transform="translate(216 178)">
+          <rect x="-28" y="-34" width="56" height="19" rx="9.5" fill="#FFFFFF" />
+          <text x="0" y="-21" textAnchor="middle">길상사</text>
+          <circle r="9" fill="#2E7A1F" stroke="#FFFFFF" strokeWidth="3" />
+          <path d="M-3 0l2 2 4-5" fill="none" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+      </g>
       <g className="ls-pin" transform="translate(360 132)">
         <circle className="ls-pulse" r="9" fill="none" stroke="#2F6512" strokeWidth="2" />
         <g className="ls-bounce">
           <path d="M0 0 C -9 -10, -9 -22, 0 -24 C 9 -22, 9 -10, 0 0 Z" fill="#2F6512" />
           <circle cy="-16" r="3.6" fill="#FFFFFF" />
         </g>
+      </g>
+      <g className="ls-destination-label" transform="translate(319 104)">
+        <rect x="-25" y="-10" width="50" height="20" rx="10" fill="#1F5A14" />
+        <text y="4" textAnchor="middle">정릉</text>
       </g>
       <circle r="6" cx={reduced ? 360 : 0} cy={reduced ? 132 : 0} fill="#FFFFFF" stroke="#2F6512" strokeWidth="2.5">
         {!reduced && <animateMotion dur="5s" repeatCount="indefinite" path={ROUTE} keyPoints="0;1;1" keyTimes="0;.8;1" calcMode="linear" />}
