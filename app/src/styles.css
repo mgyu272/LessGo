@@ -1530,3 +1530,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .reward-camera>span{position:absolute;color:#fff;font-size:13px}
 .reward-error{font-size:12px;color:#7b5424;line-height:1.5}
 .reward-content>.btn{width:100%;margin-top:12px}
+
+/* Keep the free-run completion actions close to the summary cards. */
+.done-screen .done-cta{padding-top:10px;padding-bottom:calc(12px + var(--safe-bottom));background:linear-gradient(180deg,rgba(233,246,214,0),var(--bg-soft) 18%)}
+.done-screen .done-scroll{padding-bottom:calc(138px + var(--safe-bottom))}
