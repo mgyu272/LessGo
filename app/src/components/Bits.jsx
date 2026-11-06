@@ -73,11 +73,13 @@ export function Toast() {
   return <div className={`toast ${toastMsg ? "show" : ""}`}>{toastMsg}</div>;
 }
 
-export function LangPill({ soft = false, glass = false }) {
+export function LangPill({ soft = false, glass = false, expanded = false }) {
   const { lang, changeLang } = useApp();
   return (
-    <button className={`lang-pill ${soft ? "soft" : ""} ${glass ? "glass" : ""}`} onClick={() => changeLang(lang === "en" ? "ko" : "en")}
-      aria-label={lang === "en" ? "Switch language to Korean" : "언어를 영어로 바꾸기"}>{lang.toUpperCase()}</button>
+    <button className={`lang-pill ${soft ? "soft" : ""} ${glass ? "glass" : ""} ${expanded ? "expanded" : ""}`} onClick={() => changeLang(lang === "en" ? "ko" : "en")}
+      aria-label={lang === "en" ? "Switch language to Korean" : "언어를 영어로 바꾸기"}>
+      {expanded ? <><svg className="lang-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18" /></svg><span>{lang === "ko" ? t("language_korean") : t("language_english")}</span></> : lang.toUpperCase()}
+    </button>
   );
 }
 

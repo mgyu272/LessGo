@@ -76,11 +76,11 @@ export function LogoBird({ size = 40, variant = "mark", flap = false, fill, stro
 }
 
 // 로고 + 이름 (로그인 화면 왼쪽 위 등)
-export function Brand({ size = 34 }) {
+export function Brand({ size = 34, subtitle = true, name = "LessGo", className = "" }) {
   return (
-    <span className="brand">
+    <span className={`brand ${className}`}>
       <LogoBird variant="icon" size={size} />
-      <span className="brand-name"><b>LessGo</b><small>RUN · SEONGBUK</small></span>
+      <span className="brand-name"><b>{name}</b>{subtitle && <small>RUN · SEONGBUK</small>}</span>
     </span>
   );
 }
