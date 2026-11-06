@@ -175,33 +175,6 @@ export default function Home() {
         </div>
       </div>
 
-      {!showCards && !popupSpot && (
-        <div className="home-course-panel">
-          <div className="home-course-grip" aria-hidden="true"><span /></div>
-          <div className="home-km-options" role="group" aria-label="달리기 거리">
-            {[3, 5, 10].map((km) => (
-              <button key={km} type="button" className={app.pick.km === km ? "selected" : ""} aria-pressed={app.pick.km === km}
-                onClick={() => { app.setPick({ ...app.pick, km }); app.setSettings({ ...settings, km }); }}>
-                <strong>{km}<small>km</small></strong>
-                <span>{km === 3 ? "가볍게" : km === 5 ? "보통" : "길게"}</span>
-              </button>
-            ))}
-          </div>
-          <button className="home-free-run" type="button" onClick={() => app.run.start(null, { demo: app.demo, speedup: 10, move: "run" })}>
-            <span className="home-run-symbol" aria-hidden="true">⌁</span>
-            <strong>{t("free_title")}</strong><span aria-hidden="true">›</span>
-          </button>
-          <h2 className="home-course-heading">장소별 코스</h2>
-          <div className="home-destination-list">
-            {data.spots.filter((spot) => getCourse(data, spot.id, app.pick.km, "low") || getCourse(data, spot.id, app.pick.km, "high")).map((spot) => (
-              <button key={spot.id} type="button" onClick={() => { app.setPick({ ...app.pick, dest: spot.id }); app.go("courses"); }}>
-                <span className="home-destination-symbol" aria-hidden="true">◎</span>
-                <strong>{loc(spot.name)}</strong><span aria-hidden="true">›</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
       {!showCards && (
         <button className={`locate-btn glass ${locating ? "busy" : ""}`} style={{ bottom: aboveTabbar(14) }} onClick={locate} aria-label={t("my_location")}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
