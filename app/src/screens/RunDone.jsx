@@ -10,6 +10,7 @@ import { MapView, FitBounds, Route } from "../components/MapView.jsx";
 import { LogoBird } from "../components/LogoBird.jsx";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 
+// Preview redeploy: star rewards are runner-temperature only.
 const NEAR_TRAIL_M = 500; // 지나간 길에서 이 거리 안의 장소를 "근처 이야기"로 보여줘요
 
 export default function RunDone() {
