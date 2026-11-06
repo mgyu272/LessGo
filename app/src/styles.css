@@ -1290,6 +1290,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .places-screen .pl-topic svg, .pl-explore h2 span { color: var(--places-theme); }
 .places-screen .pl-topic.on { background: var(--places-theme); color: white; }
 .places-screen .pl-topic.on svg { color: inherit; }
+.market-screen .pl-topic.on { background: var(--strong); color: #FFFFFF; }
 .explore-rail { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: -18px; padding: 5px 18px 12px; scroll-padding-inline: 18px; }
 .explore-rail::-webkit-scrollbar { display: none; }
 .explore-tile { flex: 0 0 220px; min-width: 0; scroll-snap-align: start; overflow: hidden; border-radius: 20px; background: white; border: 1px solid #E2ECD9; box-shadow: 0 3px 8px rgba(30,60,20,.08); padding: 0; text-align: left; }
