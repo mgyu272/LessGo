@@ -427,7 +427,7 @@
    "address": "서울 성북구 대사관로 121",
    "open_days": "일요일, 월요일, 공휴일 휴관",
    "hours": "10:00~17:00, 사전예약제",
-   "fee": null,
+   "fee": "20,000원",
    "audio": "no",
    "curation": "nan",
    "spot_id": null,
@@ -437,7 +437,8 @@
    ],
    "show_on_map": true,
    "source": [
-    "2026-10-30 성북구 장소 정리"
+    "2026-10-30 성북구 장소 정리",
+    "2026-11-06 한국관광공사 TourAPI (contentid: 2554064)"
    ],
    "nearest_course": {
     "dest": "simujang",
