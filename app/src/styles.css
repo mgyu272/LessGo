@@ -1515,7 +1515,9 @@ div:has(> .spot-pin) { pointer-events: none; }
   font-weight: 700;
   letter-spacing: 0;
   /* 도면체라 Bold도 획이 가늘어서, 같은 색 테두리로 더 두껍게 */
-  -webkit-text-stroke: 1.1px currentColor;
+  -webkit-text-stroke: .7px currentColor;
   paint-order: stroke fill;
 }
-.login-brand .brand-name b { -webkit-text-stroke-width: 2px; }
+.login-brand .brand-name b { -webkit-text-stroke-width: 1.5px; }
+/* 장소 카드 이름(심우장·정릉·의릉)은 테두리 없이 원래 두께 */
+.pl-name h2 { -webkit-text-stroke-width: 0; }
