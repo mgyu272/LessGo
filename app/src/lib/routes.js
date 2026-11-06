@@ -6,11 +6,23 @@
 // 화면(api/recommend.js 포함)은 예전 courses.geojson 때와 같은 { id, properties, path, len, cues } 모양으로 써요.
 
 import { distance } from "./geo.js";
+import { t } from "./i18n.js";
 
 export const DESTINATIONS = ["simujang", "jeongneung", "uiryeong"];
 export const DISTANCES = [3, 5, 10];
 export const MODES = ["low", "high"]; // low = 완만한 길, high = 언덕 허용
 export const MIN_PER_KM = 6.5;        // 예상 시간: 1km 6분 30초 (ORS duration은 걷기 시간이라 안 써요)
+export const WALK_MIN_PER_KM = 15;    // 걷기 모드 예상 시간: 1km 15분
+
+// 이동 방식(run | walk)에 맞춘 예상 시간(분)
+export const minutesFor = (km, move) => Math.round(km * (move === "walk" ? WALK_MIN_PER_KM : MIN_PER_KM));
+// 분 → "34분" / 60분이 넘으면 "1시간 14분"
+export function durText(min) {
+  const n = Math.max(0, Math.round(min));
+  if (n <= 60) return t("min_n", { n });
+  const h = Math.floor(n / 60), m = n % 60;
+  return m ? t("h_min", { h, m }) : t("h_only", { h });
+}
 
 const MODE_NAME = { low: { ko: "완만한 길", en: "Gentle route" }, high: { ko: "언덕 허용", en: "Hills OK" } };
 

@@ -2,6 +2,8 @@
 // 위: 카카오 지도 — 지나온 길(진한 초록), 남은 코스(흰 선 + 점선), 1km 지점, 목적지, 현재 위치
 // 아래: 거리(큰 숫자), "다음 1km까지" 진행 바, 페이스·시간·오르막, 별·쿠폰까지 카드, 음성·일시정지·종료
 // 코스 위 500m마다 별이 있어요(주우면 연한 금색). 자유 달리기일 때는 남은 코스·1km 지점·목적지·별 마커를 숨겨요.
+// 걷기 모드(v.move === "walk"): 제목 "걸은 거리" + "걷기 모드 · 페이스 없음" 알약, 지표는 시간 · 남은 거리 · 도착 예상(1km 15분).
+//   별·쿠폰·음성·일시정지는 달리기와 같아요.
 // 실제 계산은 state/useRun.js 에 있어요.
 
 import { useMemo, useState } from "react";
@@ -11,6 +13,7 @@ import { t, loc } from "../lib/i18n.js";
 import { fmtTime, fmtPace, distance } from "../lib/geo.js";
 import { MapView, SpotMarker, Route, Me, Follow, FlyTo, KmMark, StarMark } from "../components/MapView.jsx";
 import { ConfirmDialog } from "../components/ui.jsx";
+import { minutesFor, durText } from "../lib/routes.js";
 
 export default function Run() {
   const app = useApp();
@@ -28,7 +31,10 @@ export default function Run() {
   const dest = c && data.spotById[c.properties.dest];
   const leftKm = c ? Math.max(0, (c.len - v.meters) / 1000) : 0;
   const place = dest ? loc(dest.name).replace(/\s*\(.*\)/, "") : "";
-  const status = v.paused ? t("run_paused") : c ? t("run_status_course", { name: place, time: fmtTime(v.seconds) }) : t("run_status_free", { time: fmtTime(v.seconds) });
+  const walk = v.move === "walk";
+  const status = v.paused ? t("run_paused")
+    : c ? t(walk ? "walk_status" : "run_status_course", { name: place, time: fmtTime(v.seconds) })
+    : t("run_status_free", { time: fmtTime(v.seconds) });
   const per = STAR_RULES.perCoupon;
   const hold = v.starBalance % per;      // 쿠폰까지 모은 별 (10개가 되면 바로 쿠폰으로 바뀌어요)
   const finish = () => { setConfirm(false); app.run.finish(); };
@@ -64,17 +70,26 @@ export default function Run() {
       {v.cue && <div className="cue">{v.cue}</div>}
 
       <div className="run-panel2 hanji-sheet">
-        <span className="rp-label">{t("distance")}</span>
+        <span className="rp-label">{t(walk ? "walked_dist" : "distance")}{walk && <em className="rp-walk">{t("walk_pill")}</em>}</span>
         <div className="rp-big">{km.toFixed(km < 10 ? 2 : 1)}<em>km</em></div>
         <div className="rp-next">
           <span className="rp-bar"><i style={{ width: `${(1 - toNext) * 100}%` }} /></span>
           <small>{t("to_next_km", { km: toNext.toFixed(2) })}</small>
         </div>
-        <div className="rp-stats">
-          <div><b>{fmtPace(v.seconds, v.meters)}</b><small>{t("pace")}</small></div>
-          <div><b>{fmtTime(v.seconds)}</b><small>{t("time")}</small></div>
-          <div><b>+{v.ascent}m</b><small>{t("ascent")}</small></div>
-        </div>
+        {walk ? (
+          // 걷기: 페이스 대신 남은 거리와 도착 예상 시간
+          <div className="rp-stats">
+            <div><b>{fmtTime(v.seconds)}</b><small>{t("time")}</small></div>
+            <div><b>{c ? `${leftKm.toFixed(1)}km` : "—"}</b><small>{t("dist_left")}</small></div>
+            <div><b>{c ? durText(minutesFor(leftKm, "walk")) : "—"}</b><small>{t("eta")}</small></div>
+          </div>
+        ) : (
+          <div className="rp-stats">
+            <div><b>{fmtPace(v.seconds, v.meters)}</b><small>{t("pace")}</small></div>
+            <div><b>{fmtTime(v.seconds)}</b><small>{t("time")}</small></div>
+            <div><b>+{v.ascent}m</b><small>{t("ascent")}</small></div>
+          </div>
+        )}
         <div className="rp-cards">
           <div className="soft rp-card" aria-live="polite">
             {c ? (
@@ -108,7 +123,7 @@ export default function Run() {
         </div>
       </div>
 
-      <ConfirmDialog open={confirm} title={t("stop_title")} cancelLabel={t("stop_cancel")} confirmLabel={t("stop_save")}
+      <ConfirmDialog open={confirm} title={t(walk ? "walk_stop_title" : "stop_title")} cancelLabel={t(walk ? "walk_stop_cancel" : "stop_cancel")} confirmLabel={t("stop_save")}
         body={t("stop_body_stars", { km: km.toFixed(2), time: fmtTime(v.seconds), n: v.starsGot })}
         onCancel={() => setConfirm(false)} onConfirm={finish} />
     </section>

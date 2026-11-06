@@ -1,14 +1,15 @@
 // ⑧ 장소 상세 (디자인 원본 docs/design/PlaceDetail.dc.html)
 // 탭: 이야기(해설 듣기 + spots.json cards + 출처) / 방문 정보 / 문화 활동
 // "정보가 달라요" → 신고 시트 → Firestore reports 컬렉션에 저장
-// 관람 시간·관람료·주소·가는 길은 아직 데이터가 없어서 "정보 준비 중"으로 보여줘요 (가짜 값을 넣지 않아요).
+// 관람 시간·휴관일·관람료·주소는 explore.json의 같은 장소(spot_id)에서 가져오고, 없으면 "정보 준비 중"이에요 (가짜 값을 넣지 않아요).
+// 방문 정보 탭 아래에 "근처 둘러볼 곳": 이 목적지가 가장 가까운 둘러볼 곳 4곳 + 모두 보기(장소와 이야기).
 
 import { useEffect, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc, getLang } from "../lib/i18n.js";
 import { fmtTime } from "../lib/geo.js";
 import * as voice from "../lib/voice.js";
-import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections } from "../lib/places.js";
+import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections, exploreColor, byNearest, round10, CHECKED_DATE } from "../lib/places.js";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { PlaceEvents } from "./Events.jsx";
 import HistoryLens from "./HistoryLens.jsx";
@@ -38,16 +39,28 @@ export default function PlaceDetail() {
       else { await navigator.clipboard.writeText(name); app.toast(t("shared")); }
     } catch {}
   };
+  // 방문 정보: explore.json의 같은 장소 (값이 없으면 null → "정보 준비 중")
+  const info = app.data.exploreBySpot[spot.id] || {};
+  const visit = { hours: info.hours, closed: info.open_days, fee: info.fee, address: info.address, access: null };
+  const nearby = app.data.explore.filter((p) => p.nearest_course?.dest === spot.id).sort(byNearest);
+  const openExplore = (p) => { voice.stop(); app.setExplore({ place: p, from: "place" }); app.go("explore"); };
   const runHere = () => { voice.stop(); app.setPick({ ...app.pick, dest: spot.id }); app.go("courses"); };
-  const back = () => { voice.stop(); app.go("places"); };
+  const back = () => { voice.stop(); app.go(app.placeFrom || "places"); };
+  // 홈 지도 핀으로 열면 팝업: 위 왼쪽 버튼이 X(닫기), 바깥 덮개를 눌러도 닫혀요
+  const popup = app.placeFrom === "home";
 
   return (
-    <section className="screen pd-screen">
+    <>
+    {popup && <div className="ui-scrim pd-scrim" onClick={back} aria-hidden="true" />}
+    <section className={`screen pd-screen ${popup ? "pd-popup rise" : ""}`} {...(popup ? { role: "dialog", "aria-modal": true, "aria-label": name } : {})}>
       <div className="hanji-layer" aria-hidden="true" />
       <div className="pd-scroll">
         <div className="pd-hero">
+          {popup && <span className="grip" aria-hidden="true" />}
           <div className="pd-bar">
-            <button className="round-btn glass" onClick={back} aria-label={t("back")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
+            {popup
+              ? <button className="round-btn glass" onClick={back} aria-label={t("close")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+              : <button className="round-btn glass" onClick={back} aria-label={t("back")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>}
             <button className="round-btn glass" onClick={share} aria-label={t("share")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg></button>
           </div>
           <div className="pd-id">
@@ -88,10 +101,10 @@ export default function PlaceDetail() {
           {tab === "visit" && (
             <div className="rise pd-col">
               <div className="card pd-rows">
-                {["hours", "fee", "address", "access"].map((k) => (
+                {Object.keys(visit).map((k) => (
                   <div className="pd-row" key={k}>
                     <span className="pd-row-ic" aria-hidden="true" />
-                    <span><small>{t("visit_" + k)}</small><b>{t("info_pending")}</b>{k === "address" && <small>{t("visit_check_site")}</small>}{k === "access" && <small>{t("visit_quiet")}</small>}</span>
+                    <span><small>{t("visit_" + k)}</small><b className={visit[k] ? "" : "pd-pending"}>{visit[k] || t("info_pending")}</b>{k === "address" && <small>{t("visit_check_site")}</small>}{k === "access" && <small>{t("visit_quiet")}</small>}</span>
                   </div>
                 ))}
               </div>
@@ -101,8 +114,27 @@ export default function PlaceDetail() {
               </div>
               {/* 주변 가게: 거르기 칩 + 4곳, 더 있으면 모두 보기 (제휴 아님) */}
               <NearbyShops spot={spot} variant="detail" />
+              {nearby.length > 0 && (
+                <section className="pd-explore" aria-label={t("explore_near_title")}>
+                  <h3>{t("explore_near_title")}</h3>
+                  <ul className="card">
+                    {nearby.slice(0, 4).map((p) => (
+                      <li key={p.id}>
+                        <button type="button" onClick={() => openExplore(p)}>
+                          <i style={{ background: exploreColor(p) }} aria-hidden="true" />
+                          <b>{loc(p.name)}</b>
+                          <small>{t("about_m", { m: round10(p.nearest_course.straight_m) })}</small>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <button type="button" className="btn btn-soft pd-explore-all" onClick={() => { voice.stop(); app.setPlacesNear(spot.id); app.go("places"); }}>
+                    {t("explore_near_all", { name: name.replace(/\s*\(.*\)/, ""), n: nearby.length })}
+                  </button>
+                </section>
+              )}
               <div className="pd-check">
-                <small>{t("last_checked", { date: t("info_pending") })}</small>
+                <small>{t("last_checked", { date: app.data.exploreBySpot[spot.id] ? CHECKED_DATE : t("info_pending") })}</small>
                 <button onClick={() => setReport(true)}>{t("info_wrong")}</button>
               </div>
             </div>
@@ -119,11 +151,12 @@ export default function PlaceDetail() {
 
       {report && <ReportSheet spot={spot} onClose={() => setReport(false)} />}
     </section>
+    </>
   );
 }
 
 // 정보가 달라요: 이유 고르기 + 자세히(선택) → Firestore reports
-function ReportSheet({ spot, onClose }) {
+export function ReportSheet({ spot, onClose }) {
   const { user } = useApp();
   const [reason, setReason] = useState("hours");
   const [note, setNote] = useState("");

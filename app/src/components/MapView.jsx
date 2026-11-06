@@ -2,11 +2,12 @@
 // 앱 키는 .env.local 의 NEXT_PUBLIC_KAKAO_MAP_KEY 에서 읽어요. 코드에 키를 쓰지 마세요.
 // 지도를 쓰는 화면(홈·코스 상세·달리기·내 기록)은 모두 이 파일의 부품만 써요.
 
-import { useEffect, useMemo, useState } from "react";
-import { Map, CustomOverlayMap, Polygon, Polyline, useMap } from "react-kakao-maps-sdk";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Map, CustomOverlayMap, Polygon, Polyline, Circle, MarkerClusterer, useMap } from "react-kakao-maps-sdk";
 import { spotIconSvg, LABEL_OFFSETS } from "./SpotIcons.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { CENTER } from "../state/AppContext.jsx";
+import { exploreColor, areaLabel, iconTypeOf } from "../lib/places.js";
 
 const KAKAO_MAP_KEY = import.meta.env.NEXT_PUBLIC_KAKAO_MAP_KEY;
 
@@ -19,7 +20,7 @@ function loadKakaoMaps() {
     const ready = () => window.kakao.maps.load(resolve);
     if (window.kakao?.maps) return ready();
     const script = document.createElement("script");
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${encodeURIComponent(KAKAO_MAP_KEY)}&autoload=false`;
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${encodeURIComponent(KAKAO_MAP_KEY)}&autoload=false&libraries=clusterer`;
     script.async = true;
     script.onload = ready;
     script.onerror = () => { sdkPromise = null; script.remove(); reject(new Error("load-failed")); };
@@ -167,6 +168,30 @@ export function FlyTo({ to, level = 2 }) {
   return null;
 }
 
+// 그곳을 가린 곳 없는 칸의 가운데에 두고 확대 (to는 누를 때마다 새 배열)
+// pad(): 비워 둘 지도 가장자리 px [위, 오른쪽, 아래, 왼쪽]. 그 여백을 뺀 영역의 가운데에 to가 오게 지도 중심을 옮겨요
+export function FocusOn({ to, level, pad }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!to) return;
+    const { kakao } = window;
+    const [top, right, bottom, left] = pad?.() || [0, 0, 0, 0];
+    const el = map.getNode();
+    const W = el.offsetWidth, H = el.offsetHeight;
+    // to가 빈 칸 가운데(cx, cy)에 오려면, 지도 중심은 to에서 (화면 가운데 - 빈 칸 가운데)만큼 떨어져야 해요.
+    // 단계를 바꾼 직후에는 좌표 계산이 바로 갱신되지 않아서, 지금 단계에서 미리 계산해요 (한 단계 = 거리 절반)
+    const k = level ? 2 ** (level - map.getLevel()) : 1;
+    const proj = map.getProjection();
+    const pt = proj.containerPointFromCoords(new kakao.maps.LatLng(to[0], to[1]));
+    const cx = (left + W - right) / 2, cy = (top + H - bottom) / 2;
+    const center = proj.coordsFromContainerPoint(new kakao.maps.Point(pt.x + (W / 2 - cx) * k, pt.y + (H / 2 - cy) * k));
+    if (level) map.setLevel(level);
+    map.setCenter(center);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, to]);
+  return null;
+}
+
 // 달리기 별: 흰 원(r12) + 금색 테두리 + 금색 별. 주운 별은 연한 금색 바탕
 export function StarMark({ at, got = false }) {
   return (
@@ -236,10 +261,153 @@ export function KmMark({ at, label }) {
   );
 }
 
+// 출발지로 이동: 파란 내 위치 점(퍼지는 원)
+export function HereDot({ at }) {
+  return at ? (
+    <CustomOverlayMap position={toLatLng(at)} xAnchor={0.5} yAnchor={0.5} zIndex={5}>
+      <div className="here-dot" aria-hidden="true"><i /></div>
+    </CustomOverlayMap>
+  ) : null;
+}
+
+// 출발지 깃발 + 이름표 ("출발지 · 150m 안에서 시작"). 깃대 아래 끝이 실제 위치예요
+export function StartFlag({ at, label }) {
+  return (
+    <CustomOverlayMap position={toLatLng(at)} xAnchor={0.5} yAnchor={1} zIndex={4}>
+      <div className="start-flag">
+        <span className="sf-label">{label}</span>
+        <svg viewBox="0 0 24 32" width="24" height="32" aria-hidden="true"><path d="M5 31V3" stroke="#1F3D14" strokeWidth="2.4" strokeLinecap="round" /><path d="M6 4h13l-3.5 5L19 14H6z" fill="#E38B2C" stroke="#1F3D14" strokeWidth="1.6" strokeLinejoin="round" /></svg>
+      </div>
+    </CustomOverlayMap>
+  );
+}
+
+// 반지름 radius(m) 원 (출발지 둘레 150m)
+export function RangeCircle({ at, radius }) {
+  return <Circle center={toLatLng(at)} radius={radius} strokeWeight={2} strokeColor="#2F6512" strokeOpacity={0.7} strokeStyle="shortdash" fillColor="#9FD25E" fillOpacity={0.16} />;
+}
+
 export function Me({ at }) {
   return at ? (
     <CustomOverlayMap position={toLatLng(at)} xAnchor={0.5} yAnchor={0.5} zIndex={5}>
       <div className="me-dot" />
     </CustomOverlayMap>
   ) : null;
+}
+
+// 지도가 멈출 때마다(이동·확대 끝) 확대 단계와 보이는 영역을 알려줘요 { level, center: {lat,lng}, bounds: {s,w,n,e} }
+export function MapWatch({ onChange }) {
+  const map = useMap();
+  const cb = useRef(onChange); cb.current = onChange;
+  useEffect(() => {
+    const { kakao } = window;
+    const fire = () => {
+      const b = map.getBounds(), sw = b.getSouthWest(), ne = b.getNorthEast(), c = map.getCenter();
+      cb.current({ level: map.getLevel(), center: { lat: c.getLat(), lng: c.getLng() }, bounds: { s: sw.getLat(), w: sw.getLng(), n: ne.getLat(), e: ne.getLng() } });
+    };
+    kakao.maps.event.addListener(map, "idle", fire);
+    fire();
+    return () => kakao.maps.event.removeListener(map, "idle", fire);
+  }, [map]);
+  return null;
+}
+
+// ---------- 둘러볼 곳 아이콘 ----------
+// 종류별 선 아이콘 (viewBox 0 0 24 24, places.js의 iconTypeOf와 짝)
+const EXPLORE_ICONS = {
+  hanok: "M2 11c3 .5 5-1 6.5-3.5h7C17 10 19 11.5 22 11M5 11v8h14v-8M10 19v-5h4v5",
+  temple: "M12 2v3M8 5h8M8 5L5.5 9h13L16 5M7 9v4h10V9M5 13h14M8 13v7h8v-7M10.5 20v-3h3v3",
+  church: "M12 2v6M9.5 4.5h5M7 21V12l5-4 5 4v9M4 21h16M10 21v-4h4v4",
+  literature: "M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19a2 2 0 0 1 2-2h13",
+  museum: "M3 9l9-5 9 5M5 9v9M9.5 9v9M14.5 9v9M19 9v9M3 20h18",
+  art: "M4 5h16v14H4zM7 16l4-5 3 3 2-2 2 4M15 8.5h.01",
+  wall: "M3 20V9h3v3h3V9h6v3h3V9h3v11M10 20v-4a2 2 0 0 1 4 0v4",
+  park: "M12 3L6 11h4l-4 6h12l-4-6h4zM12 17v4",
+  info: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01",
+};
+// 흰 원 + 1.5px 분류 색 테두리 + 가운데 선 아이콘. size: "sm"(22px, 단계 6 이상) · "lg"(28px, 5 이하).
+// 고르면 36px로 커지고 원이 분류 색으로 채워지고(아이콘은 흰색) 아래에 이름 알약이 떠요. 누르는 칸은 최소 30px
+export function ExploreDot({ place, selected = false, size = "sm", onClick }) {
+  const name = loc(place.name);
+  return (
+    <CustomOverlayMap position={{ lat: place.lat, lng: place.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 2 : 1} clickable>
+      <div className={`ex-pin ${size} ${selected ? "on" : ""}`} style={{ "--c": exploreColor(place) }}>
+        <button type="button" className="ex-dot" aria-label={name} aria-pressed={selected} onClick={onClick}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d={EXPLORE_ICONS[iconTypeOf(place)]} /></svg>
+        </button>
+        {selected && <span className="ex-name" onClick={onClick} aria-hidden="true">{name}</span>}
+      </div>
+    </CustomOverlayMap>
+  );
+}
+
+const posKey = (lat, lng) => `${lat.toFixed(6)},${lng.toFixed(6)}`;
+const esc = (x) => String(x).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+// 묶음 글자는 아래 relabel에서 직접 넣어요. 카카오 기본 모양(파란 원)은 지워요
+const CLUSTER_STYLE = { width: "auto", height: "auto", background: "none", border: "0", lineHeight: "normal", textAlign: "left", color: "inherit" };
+
+// 둘러볼 곳 아이콘 여러 개. 서울 동북부 전체처럼 아주 멀리 볼 때(확대 단계 9 이상)만 카카오 MarkerClusterer로 묶고,
+// 성북구 전체(휴대폰 홈 첫 화면 단계 8)나 그보다 가까우면 장소마다 하나씩 보여요.
+// 묶음은 "성북동 18"처럼 가장 많은 동네 이름 + 개수(섞여 있으면 숫자만), 누르면 그 범위로 확대해요.
+//   pad(): 확대할 때 비워 둘 지도 가장자리 px [위, 오른쪽, 아래, 왼쪽] (홈은 위 검색·칩, 아래 시트)
+// level: 지금 확대 단계 (아이콘 크기를 정해요). 고른 아이콘은 묶음에 들어가지 않게 밖에 따로 그려요.
+export const CLUSTER_MIN_LEVEL = 9;
+const ZOOM_IN_MAX = 3; // 가까운 장소 2개짜리 묶음도 너무 깊이 들어가지 않게
+export function ExploreLayer({ places, selectedId, cluster = true, level = 6, onSelect, pad }) {
+  const byPos = useMemo(() => {
+    const m = {};
+    places.forEach((p) => { m[posKey(p.lat, p.lng)] = p; });
+    return m;
+  }, [places]);
+  const relabel = useCallback((_, clusters) => {
+    clusters.forEach((c) => {
+      const marker = c.getClusterMarker?.();
+      marker?.setZIndex?.(1); // 코스 목적지 핀(3)보다 아래
+      const el = marker?.getContent?.();
+      if (!el || typeof el === "string") return;
+      const count = {};
+      c.getMarkers().forEach((m) => {
+        const pos = m.getPosition();
+        const p = byPos[posKey(pos.getLat(), pos.getLng())];
+        if (p) count[p.area] = (count[p.area] || 0) + 1;
+      });
+      // 한 동네가 절반을 넘을 때만 동네 이름을 붙여요 (여러 동네가 섞인 큰 묶음은 숫자만)
+      const n = c.getSize();
+      const [area, top = 0] = Object.entries(count).sort((a, b) => b[1] - a[1])[0] || [];
+      const label = area && top * 2 > n ? areaLabel({ area }) : "";
+      el.innerHTML = `<span class="ex-cluster">${label ? `<span>${esc(label)}</span>` : ""}<b>${n}</b></span>`;
+      // 카카오는 기본 묶음 크기로 위치를 잡아서, 알약 가운데가 실제 위치에 오게 다시 맞춰요
+      el.style.transform = "translate(-50%, -50%)";
+      requestAnimationFrame(() => { if (el.parentElement) el.parentElement.style.margin = "0"; });
+      el.setAttribute("role", "button");
+      el.setAttribute("aria-label", t(label ? "cluster_label" : "cluster_label_n", { area: label, n }));
+    });
+  }, [byPos]);
+
+  // 칩을 바꿔 이 층이 사라질 때 묶음 표시가 지도에 남지 않게 지워요
+  const clusterer = useRef(null);
+  useEffect(() => () => { clusterer.current?.clear(); clusterer.current = null; }, []);
+  const zoomIn = useCallback((clusterer, c) => {
+    const map = clusterer.getMap();
+    // 확대하면 묶음이 다시 계산돼 비니까, 범위를 먼저 꺼내 둬요
+    const bounds = c.getBounds(), center = c.getCenter();
+    const [top, right, bottom, left] = pad?.() || [40, 40, 40, 40];
+    map.setBounds(bounds, top, right, bottom, left);
+    // 그래도 묶이는 단계면 묶음이 풀리는 단계까지 들어가요
+    if (map.getLevel() >= CLUSTER_MIN_LEVEL) map.setLevel(CLUSTER_MIN_LEVEL - 1, { anchor: center });
+    if (map.getLevel() < ZOOM_IN_MAX) map.setLevel(ZOOM_IN_MAX, { anchor: center });
+  }, [pad]);
+
+  const sel = places.find((p) => p.id === selectedId);
+  const size = level >= 6 ? "sm" : "lg";
+  const dots = places.filter((p) => p.id !== selectedId)
+    .map((p) => <ExploreDot key={p.id} place={p} size={size} onClick={() => onSelect?.(p)} />);
+  return (
+    <>
+      {cluster
+        ? <MarkerClusterer averageCenter minLevel={CLUSTER_MIN_LEVEL} gridSize={64} styles={[CLUSTER_STYLE]} disableClickZoom onClusterclick={zoomIn} onClustered={relabel} onCreate={(c) => { clusterer.current = c; }}>{dots}</MarkerClusterer>
+        : dots}
+      {sel && <ExploreDot place={sel} selected size={size} onClick={() => onSelect?.(sel)} />}
+    </>
+  );
 }

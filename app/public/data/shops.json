@@ -127,7 +127,14 @@
    "address": "서울 성북구 성북로 138",
    "kakao_url": "http://place.map.kakao.com/8238823",
    "near": "simujang",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "near_places": [
+    "sb-art-museum",
+    "suyeonsanbang",
+    "seonjam-museum",
+    "simujang",
+    "bukjeong-village"
+   ]
   },
   {
    "id": "kakao-23300753",
@@ -145,7 +152,10 @@
    "address": "서울 성북구 성북로23길 4",
    "kakao_url": "http://place.map.kakao.com/23300753",
    "near": "simujang",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "near_places": [
+    "kansong"
+   ]
   },
   {
    "id": "kakao-7940056",
@@ -163,7 +173,11 @@
    "address": "서울 성북구 성북로26길 8",
    "kakao_url": "http://place.map.kakao.com/7940056",
    "near": "simujang",
-   "source": "2026-11-02 상권 2차 자료조사"
+   "source": "2026-11-02 상권 2차 자료조사",
+   "near_places": [
+    "suyeonsanbang",
+    "seonjam-museum"
+   ]
   },
   {
    "id": "kakao-13324245",
@@ -362,6 +376,176 @@
    "kakao_url": "http://place.map.kakao.com/1129136524",
    "near": "uiryeong",
    "source": "2026-11-02 상권 2차 자료조사"
+  },
+  {
+   "id": "kakao-2072595213",
+   "name": {
+    "ko": "해로커피",
+    "en": "해로커피"
+   },
+   "lat": 37.58959868410067,
+   "lng": 127.00423801360527,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 카페 > 커피전문점",
+   "address": "서울 성북구 성북로 19-3",
+   "kakao_url": "http://place.map.kakao.com/2072595213",
+   "near": null,
+   "near_places": [
+    "choisunu-house",
+    "naksan-wall"
+   ],
+   "source": "2026-10-18 1차 자료조사(주변 상권)"
+  },
+  {
+   "id": "kakao-22752158",
+   "name": {
+    "ko": "이강희곰탕",
+    "en": "이강희곰탕"
+   },
+   "lat": 37.5888409413808,
+   "lng": 127.004456492771,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 한식 > 곰탕",
+   "address": "서울 성북구 성북로5길 9-4",
+   "kakao_url": "http://place.map.kakao.com/22752158",
+   "near": null,
+   "near_places": [
+    "choisunu-house"
+   ],
+   "source": "2026-10-18 1차 자료조사(주변 상권)"
+  },
+  {
+   "id": "kakao-1132361647",
+   "name": {
+    "ko": "구포국수 3호점",
+    "en": "구포국수 3호점"
+   },
+   "lat": 37.5926828266892,
+   "lng": 127.002649575494,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 한식 > 국수",
+   "address": "서울 성북구 성북로12길 2",
+   "kakao_url": "http://place.map.kakao.com/1132361647",
+   "near": null,
+   "near_places": [
+    "choisunu-house"
+   ],
+   "source": "2026-10-18 1차 자료조사(주변 상권)"
+  },
+  {
+   "id": "kakao-369820538",
+   "name": {
+    "ko": "돌담",
+    "en": "돌담"
+   },
+   "lat": 37.5936000107164,
+   "lng": 126.996382265984,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 한식",
+   "address": "서울 성북구 성북로 118",
+   "kakao_url": "http://place.map.kakao.com/369820538",
+   "near": null,
+   "near_places": [
+    "kansong"
+   ],
+   "source": "2026-10-18 1차 자료조사(주변 상권)"
+  },
+  {
+   "id": "kakao-767790604",
+   "name": {
+    "ko": "쌍다리돼지불백 본점 주차장",
+    "en": "쌍다리돼지불백 본점 주차장"
+   },
+   "lat": 37.5934621279447,
+   "lng": 126.995482086983,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "교통,수송 > 교통시설 > 주차장",
+   "address": "서울 성북구 성북동 110-1",
+   "kakao_url": "http://place.map.kakao.com/767790604",
+   "near": null,
+   "near_places": [
+    "sb-art-museum"
+   ],
+   "source": "2026-10-18 1차 자료조사(주변 상권)"
+  },
+  {
+   "id": "kakao-8447191",
+   "name": {
+    "ko": "스페이스수퍼노말",
+    "en": "스페이스수퍼노말"
+   },
+   "lat": 37.59831297331423,
+   "lng": 126.99349785949566,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "문화,예술 > 미술,공예 > 화랑",
+   "address": "서울 성북구 선잠로5길 69",
+   "kakao_url": "http://place.map.kakao.com/8447191",
+   "near": "gilsangsa",
+   "near_places": [
+    "gilsangsa"
+   ],
+   "source": "2026-10-18 1차 자료조사(주변 상권)"
+  },
+  {
+   "id": "kakao-871464618",
+   "name": {
+    "ko": "정릉아리랑시장 상인회",
+    "en": "정릉아리랑시장 상인회"
+   },
+   "lat": 37.60269600250755,
+   "lng": 127.01053177537045,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "사회,공공기관 > 단체,협회",
+   "address": "서울 성북구 아리랑로19길 46-6",
+   "kakao_url": "http://place.map.kakao.com/871464618",
+   "near": "jeongneung",
+   "near_places": [
+    "jeongneung",
+    "heungcheonsa"
+   ],
+   "source": "2026-10-18 1차 자료조사(주변 상권)"
+  },
+  {
+   "id": "kakao-13092182",
+   "name": {
+    "ko": "임금님수타자장면",
+    "en": "임금님수타자장면"
+   },
+   "lat": 37.612479166684864,
+   "lng": 127.00770505942322,
+   "partner": false,
+   "visit_coupon": false,
+   "buy_stars": 0,
+   "coupon": null,
+   "category": "음식점 > 중식 > 중국요리",
+   "address": "서울 성북구 보국문로 91",
+   "kakao_url": "http://place.map.kakao.com/13092182",
+   "near": null,
+   "near_places": [
+    "gyeongguksa"
+   ],
+   "source": "2026-10-18 1차 자료조사(주변 상권)"
   }
  ]
 }

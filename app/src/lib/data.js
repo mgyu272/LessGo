@@ -2,7 +2,7 @@
 // 데이터 담당은 public/data 안의 파일만 고치면 돼요. 빌드 없이 바로 반영돼요.
 // 코스는 팀원 번들 public/data/lessgo/ (routes.json + routes.geojson) → lib/routes.js 에서 앱 모양으로 바꿔요.
 
-import { buildCourses, keyOf, nearestKm } from "./routes.js";
+import { buildCourses, keyOf, nearestKm, DESTINATIONS } from "./routes.js";
 
 // 지금은 화면(홈 지도 핀·스팟 목록·카테고리)에서 숨기는 장소. spots.json 데이터는 그대로 두고,
 // 코스가 생기면 여기서 id를 빼면 다시 보여요.
@@ -12,20 +12,26 @@ const getJSON = (url) => fetch(url).then((r) => { if (!r.ok) throw new Error(`${
 
 // 파일 하나를 못 받아도 앱은 뜨게 빈 값으로 채우고, 어떤 파일이 실패했는지 failed에 남겨요 (홈 지도에 안내)
 export async function loadData() {
-  const names = ["spots", "routes", "routeLines", "shops"];
+  const names = ["spots", "routes", "routeLines", "shops", "explore"];
   const res = await Promise.allSettled([
     getJSON("/data/spots.json"),
     getJSON("/data/lessgo/routes.json"),
     getJSON("/data/lessgo/routes.geojson"),
     getJSON("/data/shops.json"),
+    getJSON("/data/explore.json"),
   ]);
   const failed = names.filter((n, i) => res[i].status === "rejected");
   res.forEach((r, i) => { if (r.status === "rejected") console.error(`[data] ${names[i]}`, r.reason); });
-  const [spots, routes, routeLines, shops] = res.map((r, i) => (r.status === "fulfilled" ? r.value : [{ spots: [] }, {}, { features: [] }, { shops: [] }][i]));
+  const [spots, routes, routeLines, shops, explore] = res.map((r, i) => (r.status === "fulfilled" ? r.value : [{ spots: [] }, {}, { features: [] }, { shops: [] }, { places: [] }][i]));
   const spotById = {};
   const visible = spots.spots.filter((s) => !HIDDEN_SPOTS.has(s.id));
   spots.spots.forEach((s) => { spotById[s.id] = s; });
   const { byKey, list } = buildCourses(routes, routeLines, spotById);
+  // 둘러볼 곳 (explore.json): 화면에는 show_on_map인 곳만, 코스 목적지(심우장·정릉·의릉)는 빼요.
+  // 코스 목적지와 같은 장소(spot_id)는 장소 상세의 방문 정보로 써요.
+  const places = (Array.isArray(explore?.places) ? explore.places : []).map(cleanPlace);
+  const exploreBySpot = {};
+  places.forEach((p) => { if (p.spot_id) exploreBySpot[p.spot_id] = p; });
   return {
     spots: visible,           // 화면에 보이는 장소만
     allSpots: spots.spots,    // 숨긴 장소까지 전부
@@ -33,8 +39,19 @@ export async function loadData() {
     courses: list,            // 목적지 3 × 거리 3 × low/high = 18개
     courseByKey: byKey,
     spotById,
+    explore: places.filter((p) => p.show_on_map && p.lat != null && !DESTINATIONS.includes(p.spot_id)),
+    exploreBySpot,
     failed,
   };
+}
+
+// 엑셀에서 온 빈 칸("nan", "")은 null로, en 이름이 없으면 한국어 이름을 써요
+const blank = (v) => (v == null || v === "nan" || (typeof v === "string" && !v.trim()) ? null : v);
+function cleanPlace(p) {
+  const name = { ko: p.name?.ko || p.id, en: blank(p.name?.en) || p.name?.ko || p.id };
+  const out = { ...p, name, topics: p.topics || [], survey_shops: p.survey_shops || [] };
+  ["address", "open_days", "hours", "fee", "curation", "kind"].forEach((k) => { out[k] = blank(p[k]); });
+  return out;
 }
 
 // 목적지·거리·모드로 코스 하나 (거리는 가장 가까운 3/5/10km, 'any'는 'high')

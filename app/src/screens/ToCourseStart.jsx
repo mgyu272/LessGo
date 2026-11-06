@@ -1,14 +1,20 @@
 // Guide a runner to the START of an existing saved course.
 // Kakao Maps provides walking directions; Less GO only begins tracking after live GPS validation.
-import { useEffect, useMemo, useState } from "react";
+// 화면(디자인): 위 = 뒤로 + "출발지로 이동 중" + 모드 알약(달리기/걷기)
+//   지도 = 내 위치(파란 점) → 출발지(깃발) 파란 점선, 출발지 둘레 150m 원
+//   시트 = "{출발지}까지" 남은 m · 걸어서 약 N분(80m/분) · 진행 바 · GPS 알약 · 코스 요약 · 카카오맵 길안내 · 시작 버튼
+// GPS 판단(150m · 정확도 60m)과 시작(startSavedCourse)은 그대로예요. move는 코스 고르기의 pick.move를 써요.
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
-import { MapView, Route, Dot, Me, FitBounds } from "../components/MapView.jsx";
+import { MapView, Route, FitBounds, HereDot, StartFlag, RangeCircle } from "../components/MapView.jsx";
 import { distance } from "../lib/geo.js";
 import { loc, t } from "../lib/i18n.js";
 import { startSavedCourse } from "../lib/startSavedCourse.js";
+import { minutesFor, durText } from "../lib/routes.js";
 
 const START_RADIUS_M = 150;
 const MAX_ACCURACY_M = 60;
+const WALK_M_PER_MIN = 80; // 출발지까지 "걸어서 약 N분"
 
 function useStartLocation(enabled) {
   const [position, setPosition] = useState(null);
@@ -72,6 +78,12 @@ export default function ToCourseStart() {
     await startSavedCourse(app, course);
   };
 
+  const move = app.pick?.move === "walk" ? "walk" : "run";
+  // 진행 바: 처음 잰(가장 먼) 거리를 기준으로 얼마나 가까워졌는지
+  const farthest = useRef(0);
+  if (meters != null && meters > farthest.current) farthest.current = meters;
+  const progress = meters == null || !farthest.current ? 0 : ready ? 1 : Math.max(0, Math.min(1, 1 - meters / farthest.current));
+
   if (!course || !start) return (
     <section className="screen to-start-screen">
       <div className="to-start-panel">
@@ -81,54 +93,52 @@ export default function ToCourseStart() {
     </section>
   );
 
+  const p = course.properties;
+  const left = meters == null ? null : Math.max(0, Math.round(meters));
+  const gpsTone = !position ? "wait" : accurate ? "good" : "low";
+  const gpsText = !position ? t("gps_checking") : t(accurate ? "gps_good" : "gps_low", { m: Math.round(position.accuracy) });
+  const summary = `${loc(p.title || p.name)} · ${loc(p.modeName)} · ${t("about_dur", { d: durText(minutesFor(p.distance_km, move)) })}`;
+
   return (
     <section className="screen to-start-screen">
       <MapView className="to-start-map" center={[start.lat, start.lng]} zoom={15}>
-        <Route path={course.path} color="#2F6512" weight={5} opacity={0.7} />
-        <Dot at={[start.lat, start.lng]} color="#E38B2C" radius={10} />
-        {position && <Me at={[position.lat, position.lng]} />}
+        <Route path={course.path} color="#2F6512" weight={5} opacity={0.45} />
+        <RangeCircle at={[start.lat, start.lng]} radius={START_RADIUS_M} />
+        {position && !near && <Route path={[position, start]} color="#3B82C4" weight={4} opacity={0.95} dashed />}
+        <StartFlag at={[start.lat, start.lng]} label={t("start_flag")} />
+        {position && <HereDot at={[position.lat, position.lng]} />}
         <FitBounds
           points={position ? [[position.lat, position.lng], [start.lat, start.lng]] : [[start.lat, start.lng]]}
           fitKey={position ? `${Math.round(position.lat*1000)}-${Math.round(position.lng*1000)}` : "start"}
-          padTL={[22, 90]} padBR={[22, 270]}
+          padTL={[40, 90]} padBR={[40, 130]}
         />
       </MapView>
       <div className="to-start-top">
-        <button type="button" className="round-btn glass" onClick={() => app.go("courses")} aria-label="코스 화면으로">←</button>
-        <strong className="glass">출발지까지 길찾기</strong>
+        <button type="button" className="round-btn glass" onClick={() => app.go("courses")} aria-label={t("back_courses")}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+        </button>
+        <strong className="glass ts-title">{t("to_start_title")}</strong>
+        <span className={`ts-mode ${move}`}>{t(move === "walk" ? "move_walk" : "move_run")}</span>
       </div>
       <div className="to-start-panel hanji-sheet">
-        <h2>먼저 출발지로 이동해요</h2>
-        <p className="to-start-course">{loc(course.properties.name)}</p>
-        <div className="to-start-destination">
-          <span>출발 위치</span>
-          <strong>{startName}</strong>
-          <small>저장된 코스의 첫 좌표를 기준으로 안내해요.</small>
+        <div className="ts-head" role="status">
+          <small>{ready ? t("to_start_arrived") : t("to_start_until", { name: startName })}</small>
+          <div className="ts-big">{left == null ? "—" : left >= 1000 ? (left / 1000).toFixed(2) : left}<em>{left != null && left >= 1000 ? "km" : "m"}</em></div>
+          <span className="ts-walk">{left == null ? t("gps_checking") : t("walk_about", { n: Math.max(1, Math.ceil(left / WALK_M_PER_MIN)) })}</span>
+          <span className="ts-bar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)} aria-label={t("to_start_title")}><i style={{ width: `${progress * 100}%` }} /></span>
         </div>
-        <div className="to-start-metrics">
-          <div>
-            <small>출발지까지 직선거리</small>
-            <strong>{meters == null ? "측정 중" : meters >= 1000 ? `${(meters/1000).toFixed(2)} km` : `${Math.round(meters)} m`}</strong>
-          </div>
-          <div>
-            <small>GPS 예상 오차</small>
-            <strong>{position ? `±${Math.round(position.accuracy)} m` : "측정 중"}</strong>
-          </div>
+        <div className="ts-pills">
+          <span className={`ts-gps ${gpsTone}`}><i aria-hidden="true" />{gpsText}</span>
+          <span className="ts-course">{summary}</span>
         </div>
-        <p className="to-start-status" role="status">
-          {ready ? "출발지 근처에 도착했어요. GPS 러닝을 시작할 수 있어요."
-            : !position ? "GPS 위치를 확인하고 있어요."
-            : !accurate ? "GPS 신호가 부정확해요. 실외에서 위치를 다시 확인해 주세요."
-            : `출발지에서 ${Math.round(meters)}m 떨어져 있어요. 카카오맵 도보 길찾기를 이용해 주세요.`}
-        </p>
         {error && <p className="to-start-error" role="alert">{error}</p>}
-        <div className="to-start-actions">
-          <button type="button" className="btn btn-soft" onClick={openDirections} disabled={!directionUrl}>카카오맵 도보 길찾기</button>
-          <button type="button" className="btn btn-cta" onClick={run} disabled={!ready}>런닝 시작</button>
-        </div>
-        <button type="button" className="to-start-refresh" onClick={retry}>GPS 다시 확인</button>
-        {opening && <p className="to-start-hint">길찾기 후 Less GO로 돌아오세요. 현재 위치를 확인해 러닝 시작 버튼이 활성화됩니다.</p>}
-        <small className="to-start-hint">150m 이내 · GPS 오차 60m 이내일 때 시작할 수 있어요. 실제 출입구와 보행 가능 여부는 현장에서 확인하세요.</small>
+        <button type="button" className="btn soft ts-kakao" onClick={openDirections} disabled={!directionUrl}>{t("open_kakao_nav")}</button>
+        <p className="ts-note">{t("to_start_note")}</p>
+        {opening && <p className="to-start-hint">{t("kakao_return_hint")}</p>}
+        <button type="button" className="to-start-refresh" onClick={retry}>{t("gps_recheck")}</button>
+        <button type="button" className="btn btn-cta ts-start" onClick={run} disabled={!ready}>
+          {ready ? t(move === "walk" ? "start_walk" : "start_run") : t("start_locked")}
+        </button>
       </div>
     </section>
   );

@@ -1,22 +1,23 @@
 // ③ 코스 고르기 (디자인 원본 docs/design/Courses.dc.html)
 // 한 화면에서 조건을 고르고 두 길을 비교해요. (예전 코스 조건 시트 · 코스 3개 · 코스 상세를 합쳤어요)
-// - 지도 위: 뒤로 + 목적지 버튼(누르면 목적지 고르기 시트). 거리는 시트 안 탭, 경사는 완만한 길/언덕 허용 카드로 골라요
+// - 지도 위: 뒤로 + 출발 → 도착 카드. 출발은 고른 코스의 출발지(바꾸기 없음, 위치를 알면 "내 위치에서 N m"),
+//   도착 줄을 누르면 목적지 고르기 시트. 시트 안에서 달리기/걷기 → 거리 탭, 경사는 완만한 길/언덕 허용 카드로 골라요
 // - 바텀시트: 가로로 넘기는 경로 카드(완만한 길 low / 언덕 허용 high). 고른 카드의 경로가 지도에서 굵게
 // - 시트를 끌어올리면 비교표(거리 · 예상 시간 · 오르막 · 급경사)와 지나가는 곳
-// - 아래 고정: 저장(하트) + "…로 시작"
-// 데이터: public/data/lessgo 번들 (lib/routes.js). 예상 시간은 1km 6분 30초 기준.
+// - 아래 고정: 저장(하트) + "A 완만한 길 · 출발지로 이동" → 출발지로 이동 화면(ToCourseStart). 고른 move는 pick.move로 넘어가요
+// 데이터: public/data/lessgo 번들 (lib/routes.js). 예상 시간은 달리기 1km 6분 30초, 걷기 1km 15분 기준.
 
 import { useEffect, useMemo, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { aiRecommend } from "../lib/ai.js";
 import { distance } from "../lib/geo.js";
-import { DESTINATIONS, DISTANCES, MODES, nearestKm } from "../lib/routes.js";
+import { DESTINATIONS, DISTANCES, MODES, nearestKm, minutesFor, durText } from "../lib/routes.js";
 import { getCourse } from "../lib/data.js";
 import { MapView, FitBounds, SpotMarker, Route, Dot, Me } from "../components/MapView.jsx";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { ElevationChart } from "../components/Bits.jsx";
-import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet, Toggle, Segment } from "../components/ui.jsx";
+import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet, Segment } from "../components/ui.jsx";
 import { speedParam } from "./Home.jsx";
 import { buildCourseFromHere } from "../lib/fromHere.js";
 
@@ -47,6 +48,17 @@ export default function CoursePicker() {
   const sheet = useBottomSheet({ snaps: snapsFor, initial: 0 });
   const course = pair.find((c) => c.properties.mode === sel) || pair[0];
   const place = (id) => loc(data.spotById[id]?.name).replace(/\s*\(.*\)/, "");
+  const move = pick.move === "walk" ? "walk" : "run";
+
+  // 내 위치 (출발지까지 거리 알약용). 권한이 없으면 알약만 안 보여요
+  const [here, setHere] = useState(null);
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    let alive = true;
+    navigator.geolocation.getCurrentPosition((pos) => alive && setHere({ lat: pos.coords.latitude, lng: pos.coords.longitude }), () => {},
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+    return () => { alive = false; };
+  }, []);
 
   // 언덕 조건을 바꾸면 그에 맞는 카드를 다시 골라요
   useEffect(() => { setSel(pick.hill === "flat" ? "low" : "high"); }, [pick.hill]);
@@ -64,7 +76,7 @@ export default function CoursePicker() {
   if (!course) {
     return (
       <section className="screen picker-screen">
-        <PickerTop onBack={() => app.go("home")} name={place(dest)} onDest={() => setChip("dest")} />
+        <PickerTop onBack={() => app.go("home")} fromName={t("start_point")} name={place(dest)} onDest={() => setChip("dest")} />
         <p className="note cream picker-empty">{t("no_route_data")}</p>
         <DestSheet open={chip === "dest"} dest={dest} place={place} onClose={() => setChip("")} onPick={(v) => setPick({ ...pick, dest: v })} />
       </section>
@@ -74,11 +86,16 @@ export default function CoursePicker() {
   const p = course.properties;
   const saved = favs.has(course.id);
   const toggleSave = () => { const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
+  const start = () => { app.setCourse(course); app.go("toStart"); };
+  const startSimulation = () => app.run.start(course, { demo: true, speedup: speedParam(), move });
+  const reason = reasons[course.id] || factualReason(course, pair, move);
+  const fromName = startNameOf(course);
+  const fromM = here ? distance(here, course.path[0]) : null;
   // 코스 달리기: 저장된 코스 그대로. 시연 모드면 출발점부터 자동으로,
   // 아니면 출발지 화면(카카오맵 길찾기로 이동 → 돌아와서 출발지 150m 안이면 런닝 시작)
   const runCourse = () => {
     app.setCourse(course);
-    if (app.demo) return app.run.start(course, { demo: true, speedup: speedParam() });
+    if (app.demo) return app.run.start(course, { demo: true, speedup: speedParam(), move });
     app.go("toStart");
   };
   // 현위치에서 달리기: 내 위치 → 이 코스의 목적지까지 러닝 최적 코스를 찾아 지도에 먼저 보여주고, 확정하면 시작
@@ -93,9 +110,8 @@ export default function CoursePicker() {
   };
   const confirmHere = () => {
     app.setCourse(preview);
-    app.run.start(preview, { demo: app.demo, speedup: speedParam() });
+    app.run.start(preview, { demo: app.demo, speedup: speedParam(), move });
   };
-  const reason = reasons[course.id] || factualReason(course, pair);
   const themeText = pick.themes.length ? (pick.themes.length > 1 ? t("theme_more", { first: t("th2_" + pick.themes[0]), n: pick.themes.length - 1 }) : t("th2_" + pick.themes[0])) : t("theme");
 
   return (
@@ -122,7 +138,7 @@ export default function CoursePicker() {
         {data.spotById[dest] && <SpotMarker spot={data.spotById[dest]} />}
       </MapView>
 
-      <PickerTop onBack={() => app.go("home")} name={place(dest)} onDest={() => setChip("dest")}>
+      <PickerTop onBack={() => app.go("home")} fromName={fromName} fromM={fromM} name={place(dest)} onDest={() => setChip("dest")}>
         {/* 예전 조건 칩 줄. 거리·경사는 시트 안에서 고르고, 테마는 실제로 거르는 기능이 없어서 숨겨 뒀어요 */}
         {SHOW_CONDITION_CHIPS && (
           <div className="picker-chips scroll" role="toolbar" aria-label={t("course_conditions")}>
@@ -146,12 +162,16 @@ export default function CoursePicker() {
             <h2>{t("course_to", { name: place(dest), km })}</h2>
             <button className="picker-more" onClick={sheet.toggle}>{t(sheet.expanded ? "fold" : "details")}</button>
           </div>
+          {/* 달리기 / 걷기 (거리 탭과 같은 모양) */}
+          <Segment className="picker-move" label={t("move_label")} value={move} onChange={(v) => setPick({ ...pick, move: v })}
+            options={[{ value: "run", label: <><RunIcon />{t("move_run")}</> }, { value: "walk", label: <><WalkIcon />{t("move_walk")}</> }]} />
           {/* 거리 탭: 3km · 가볍게 / 5km · 보통 / 10km · 길게 */}
           <Segment className="picker-km" label={t("distance")} value={km} onChange={(v) => setPick({ ...pick, km: v })}
             options={DISTANCES.map((k) => ({ value: k, label: <>{k}<small>km</small></>, sub: t("km_" + k) }))} />
+          {move === "walk" && <p className="soft picker-walk"><InfoIcon /><span>{t("walk_note")}</span></p>}
 
           <div className="rail scroll" role="radiogroup" aria-label={t("route_type")}>
-            {pair.map((o) => <RouteCard key={o.id} c={o} on={o.id === course.id} onPick={() => setSel(o.properties.mode)} />)}
+            {pair.map((o) => <RouteCard key={o.id} c={o} move={move} on={o.id === course.id} onPick={() => setSel(o.properties.mode)} />)}
             <button className="rc rc-other" onClick={() => setChip("dest")}>
               <span className="rc-icons" aria-hidden="true">
                 {DESTINATIONS.filter((d) => d !== dest && data.spotById[d]).map((d) => <span key={d} dangerouslySetInnerHTML={{ __html: spotIconSvg(data.spotById[d]) }} />)}
@@ -163,9 +183,15 @@ export default function CoursePicker() {
           </div>
 
           <p className="soft picker-reason"><InfoIcon /><span>{reason}</span></p>
+          {p.status === "review_required" && <p className="picker-warn"><WarnIcon /><span>{t("warn_review")}</span></p>}
+          {p.elevationLow && <p className="picker-warn"><WarnIcon /><span>{t("warn_elev")}</span></p>}
+
+          <CompareTable pair={pair} sel={course.id} move={move} />
           <Timeline course={course} />
-          {/* 디자인에는 없지만 PC에서 확인할 수 있게 시연 모드 스위치를 맨 아래에 둬요 */}
-          <Toggle className="demo-row" checked={app.demo} onChange={app.setDemo} title={t("demo_mode")} sub={t("demo_sub")} />
+          {/* 디자인에는 없지만 PC·실내에서 확인할 수 있게 시뮬레이션(GPS 없이 코스를 따라 움직임)을 맨 아래에 둬요 */}
+          <button className="soft picker-sim" onClick={startSimulation}>
+            <span><b>{t("simulate")}</b><small>{t("demo_sub")}</small></span><PlayIcon />
+          </button>
           <span className="picker-spacer" aria-hidden="true" />
         </div>
       </BottomSheet>}
@@ -178,8 +204,10 @@ export default function CoursePicker() {
           <button className="btn btn-soft" onClick={() => setPreview(null)}>취소</button>
           <button className="btn btn-cta" onClick={confirmHere} style={{ whiteSpace: "nowrap" }}>이 코스로 달리기</button>
         </> : <>
-        <button className="btn btn-soft" onClick={runCourse} style={{ whiteSpace: "nowrap" }}>코스 달리기</button>
-        <button className="btn btn-cta" onClick={runFromHere} disabled={finding} style={{ whiteSpace: "nowrap" }}>{finding ? "코스 찾는 중…" : "현위치에서 달리기"}</button>
+        {move === "walk" ? <button className="btn btn-cta" onClick={start}>{t("start_to_origin", { route: t("route_letter_" + p.mode) })}</button> : <>
+          <button className="btn btn-soft" onClick={runCourse} style={{ whiteSpace: "nowrap" }}>코스 달리기</button>
+          <button className="btn btn-cta" onClick={runFromHere} disabled={finding} style={{ whiteSpace: "nowrap" }}>{finding ? "코스 찾는 중…" : "현위치에서 달리기"}</button>
+        </>}
         </>}
       </div>
 
@@ -198,24 +226,41 @@ export default function CoursePicker() {
   );
 }
 
-// 위쪽: 뒤로 버튼 + 목적지 버튼 (버튼 전체를 누르면 목적지 고르기 시트)
-function PickerTop({ onBack, name, onDest, children }) {
+// 위쪽: 뒤로 버튼 + 출발 → 도착 카드
+// 출발 줄: 고른 코스의 출발지(바꾸기 없음) + 위치를 알면 "내 위치에서 N m" 알약 / 도착 줄: 누르면 목적지 고르기 시트
+function PickerTop({ onBack, fromName, fromM, name, onDest, children }) {
   return (
     <div className="picker-top">
       <div className="picker-title">
         <button className="round-btn glass picker-back" onClick={onBack} aria-label={t("back_home")}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
         </button>
-        <button className="dest-btn" onClick={onDest} aria-haspopup="dialog" aria-label={t("dest_btn_label", { name })}>
-          <span className="dest-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg></span>
-          <span className="dest-text"><small>{t("where_to")}</small><b>{name}</b></span>
-          <span className="dest-change" aria-hidden="true">{t("change")} ▾</span>
-        </button>
+        <div className="trip-card">
+          <div className="trip-row">
+            <i className="trip-from" aria-hidden="true" />
+            <small>{t("from_label")}</small><b>{fromName}</b>
+            {fromM != null && <span className="trip-near">{t("from_here_d", { d: fmtM(fromM) })}</span>}
+          </div>
+          <button className="trip-row" onClick={onDest} aria-haspopup="dialog" aria-label={t("dest_btn_label", { name })}>
+            <svg className="trip-pin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+            <small>{t("to_label")}</small><b>{name}</b>
+            <span className="trip-change" aria-hidden="true">{t("change")} ▾</span>
+          </button>
+        </div>
       </div>
       {children}
     </div>
   );
 }
+
+// 코스 출발지 이름 (번들 route.start.name). "OSM …" 같은 자동 이름은 ToCourseStart처럼 기본 문구로
+function startNameOf(course) {
+  const n = course?.properties?.route?.start?.name;
+  return n && !n.startsWith("OSM ") ? n : t("start_point");
+}
+
+// 거리 표시: 1km 미만은 m, 그 이상은 km 한 자리
+const fmtM = (m) => (m < 1000 ? `${Math.round(m)}m` : `${(m / 1000).toFixed(1)}km`);
 
 // 목적지 고르기 시트 ("어디든" 같은 데이터 없는 옵션은 넣지 않아요)
 function DestSheet({ open, dest, place, onClose, onPick }) {
@@ -226,7 +271,7 @@ function DestSheet({ open, dest, place, onClose, onPick }) {
 }
 
 // 경로 카드: 색 점 + 이름 + 배지, 한 줄 설명, 거리·예상 시간·오르막, 고도 그래프
-function RouteCard({ c, on, onPick }) {
+function RouteCard({ c, move, on, onPick }) {
   const p = c.properties;
   const color = MODE_COLOR[p.mode];
   return (
@@ -243,7 +288,7 @@ function RouteCard({ c, on, onPick }) {
       <small className="rc-sub">{t("mode_sub_" + p.mode)}</small>
       <span className="rc-stats">
         <span><b>{p.distance_km}km</b><small>{t("distance")}</small></span>
-        <span><b>{t("min_n", { n: p.minutes })}</b><small>{t("est_time")}</small></span>
+        <span><b>{durText(minutesFor(p.distance_km, move))}</b><small>{t("est_time")}</small></span>
         <span><b>{p.ascent_m == null ? t("unknown") : `+${p.ascent_m}m`}</b><small>{t("uphill_short")}</small></span>
       </span>
       <ElevationChart values={p.elevation} height={30} color={color} fill={p.mode === "low" ? "rgba(47,101,18,.14)" : "rgba(227,139,44,.14)"} />
@@ -252,10 +297,10 @@ function RouteCard({ c, on, onPick }) {
 }
 
 // 두 길 비교표: 거리 · 예상 시간 · 오르막 · 급경사(8% 이상) 구간
-function CompareTable({ pair, sel }) {
+function CompareTable({ pair, sel, move }) {
   const rows = [
     ["distance", (p) => `${p.distance_km}km`],
-    ["est_time", (p) => t("about_min", { n: p.minutes })],
+    ["est_time", (p) => t("about_dur", { d: durText(minutesFor(p.distance_km, move)) })],
     ["uphill_short", (p) => (p.ascent_m == null ? t("unknown") : `+${p.ascent_m}m`)],
     ["steep_parts", (p) => steepText(p.route)],
   ];
@@ -316,7 +361,7 @@ function shopsAlong(course, shops) {
 }
 
 // 데이터로 만든 안내 문장 (AI 이유가 없을 때)
-function factualReason(course, pair) {
+function factualReason(course, pair, move) {
   const p = course.properties;
   const other = pair.find((o) => o.id !== course.id)?.properties;
   if (other && p.ascent_m != null && other.ascent_m != null) {
@@ -324,13 +369,15 @@ function factualReason(course, pair) {
     if (diff > 0) return t("reason_less_climb", { n: diff });
     if (diff < 0) return t("reason_more_climb", { n: -diff });
   }
-  return t("reason_basic", { km: p.distance_km, n: p.minutes });
+  return t("reason_basic", { km: p.distance_km, n: minutesFor(p.distance_km, move) });
 }
 
 const InfoIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" /></svg>;
 const WarnIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9.5 17h-19z" /><path d="M12 10v4M12 17h.01" /></svg>;
 const PlayIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor" stroke="none" /></svg>;
 const BagIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16l-1.5 10a2 2 0 0 1-2 1.7h-9a2 2 0 0 1-2-1.7z" /><path d="M8 9V7a4 4 0 0 1 8 0v2" /></svg>;
+const RunIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true" className="mv-ic"><circle cx="14.5" cy="4.5" r="2" /><path d="M8 21l3.5-6 3 2.5V22M6 12.5l3-3.5 4 1 2.5 3.5 3 .5M11.5 15l-1-5" /></svg>;
+const WalkIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true" className="mv-ic"><circle cx="12.5" cy="4.5" r="2" /><path d="M9.5 21l2-6.5 2.5 2.5V21M8.5 12l1.5-4 3.5 1 1.5 4M11.5 14.5l-1.5-6" /></svg>;
 const CheckIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>;
 
 function readFavs() { try { return new Set(JSON.parse(localStorage.getItem("runtrip.favs") || "[]")); } catch { return new Set(); } }

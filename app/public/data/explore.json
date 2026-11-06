@@ -1,0 +1,1502 @@
+{
+ "_설명": "둘러볼 곳(코스 목적지가 아닌 장소 포함) 데이터. 2026-10-30 성북구 장소 정리(엑셀)와 10/18 1차 자료조사(주변 상권)를 합쳤어요. spot_id가 있으면 코스 목적지(spots.json)와 같은 장소예요. show_on_map이 false면 좌표 문제로 지도에 안 보여요. issues는 조사팀 확인이 필요한 점이에요. nearest_course.straight_m은 가장 가까운 코스 목적지까지 직선거리(m)예요. en 이름은 아직 없어요.",
+ "updated": "2026-11-06",
+ "places": [
+  {
+   "id": "choisunu-house",
+   "name": {
+    "ko": "최순우 옛집",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "전통가옥·문화유산",
+   "chip": "history",
+   "topics": [
+    "hanok"
+   ],
+   "lat": 37.5929066,
+   "lng": 127.0003577,
+   "address": "서울 성북구 성북로15길 9",
+   "open_days": "4~11월 화~토 개방 (일·월요일, 12~3월, 설·추석 당일 휴관)",
+   "hours": "10:00~17:00 (16:30 입장마감)",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "근대 한옥, 최순우 선생 이야기",
+   "spot_id": null,
+   "survey_shops": [
+    "해로커피",
+    "이강희곰탕",
+    "구포국수"
+   ],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 770
+   }
+  },
+  {
+   "id": "kansong",
+   "name": {
+    "ko": "간송미술관",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "미술관·전통미술",
+   "chip": "history",
+   "topics": [
+    "museum"
+   ],
+   "lat": 37.5945132,
+   "lng": 126.9966038,
+   "address": "서울 성북구 성북로 102-11",
+   "open_days": "월요일 휴관, 전시 기간에만 개관",
+   "hours": "전시 기간 10:00~18:00",
+   "fee": "전시마다 상이(무료·사전예약 / 현재 전시 성인 5,000원)",
+   "audio": "yes",
+   "curation": "보화각(등록문화재), 간송 전형필 스토리",
+   "spot_id": null,
+   "survey_shops": [
+    "쌍다리돼지불백",
+    "성북동 돼지갈비"
+   ],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 450
+   }
+  },
+  {
+   "id": "sb-art-museum",
+   "name": {
+    "ko": "성북구립미술관",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "미술관·전시",
+   "chip": "history",
+   "topics": [
+    "museum"
+   ],
+   "lat": 37.5948062,
+   "lng": 126.9948842,
+   "address": "서울 성북구 성북로 134",
+   "open_days": "월요일(공휴일이면 다음 날), 1/1, 설 연휴, 추석 당일 휴관",
+   "hours": "10:00~18:00",
+   "fee": "무료",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [
+    "금왕돈까스",
+    "쌍다리돼지불백"
+   ],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 310
+   }
+  },
+  {
+   "id": "suyeonsanbang",
+   "name": {
+    "ko": "수연산방(이태준 가옥)",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "문학·근대가옥",
+   "chip": "history",
+   "topics": [
+    "hanok"
+   ],
+   "lat": 37.5950435,
+   "lng": 126.9947454,
+   "address": "서울 성북구 성북로26길 8",
+   "open_days": "월·화요일 휴무",
+   "hours": "수~금 11:30~17:50 / 토 11:30~21:50 / 일 11:30~19:40",
+   "fee": "전통 찻집으로 운영",
+   "audio": "yes",
+   "curation": "근대 가옥, 이태준 문학",
+   "spot_id": null,
+   "survey_shops": [
+    "수연산방",
+    "금왕돈까스"
+   ],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 310
+   }
+  },
+  {
+   "id": "seonjam-museum",
+   "name": {
+    "ko": "성북선잠박물관",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "박물관·전통문화",
+   "chip": "history",
+   "topics": [
+    "museum"
+   ],
+   "lat": 37.5931802,
+   "lng": 126.9980918,
+   "address": "서울 성북구 성북로 96",
+   "open_days": "화~일 (월요일 휴관, 공휴일이면 개관하고 다음 날 휴관)",
+   "hours": "10:00~18:00 (종료 30분 전까지 입장)",
+   "fee": "성인 1,000원",
+   "audio": "yes",
+   "curation": "선잠제·왕실 양잠 역사 전시",
+   "spot_id": null,
+   "survey_shops": [
+    "금왕돈까스",
+    "수연산방"
+   ],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 570
+   }
+  },
+  {
+   "id": "simujang",
+   "name": {
+    "ko": "심우장",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "역사인물·문화유산",
+   "chip": "history",
+   "topics": [
+    "indep",
+    "hanok"
+   ],
+   "lat": 37.5936207,
+   "lng": 126.9916993,
+   "address": "서울 성북구 성북로29길 24",
+   "open_days": "연중무휴",
+   "hours": "09:00~18:00",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "만해 한용운 유택",
+   "spot_id": "simujang",
+   "survey_shops": [
+    "성북동 함박스테이크"
+   ],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 0
+   }
+  },
+  {
+   "id": "bukjeong-village",
+   "name": {
+    "ko": "북정마을",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "마을·골목 산책",
+   "chip": "history",
+   "topics": [
+    "hanok",
+    "wall"
+   ],
+   "lat": 37.5926369,
+   "lng": 126.99246,
+   "address": "서울 성북구 성북로23길 87",
+   "open_days": "연중무휴",
+   "hours": "09:00~18:00 (주민 배려 정숙)",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "성곽마을, 골목 이야기",
+   "spot_id": null,
+   "survey_shops": [
+    "북정카페",
+    "성북동 함박스테이크"
+   ],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 130
+   }
+  },
+  {
+   "id": "naksan-wall",
+   "name": {
+    "ko": "낙산공원 성곽길",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "역사·성곽 산책",
+   "chip": "history",
+   "topics": [
+    "wall"
+   ],
+   "lat": 37.5875412,
+   "lng": 127.0043498,
+   "address": "서울 성북구 삼선동1가 1 ~ 삼선동1가 305-54 (입출구 범위)",
+   "open_days": "연중무휴 (24시간 개방)",
+   "hours": "24시간 개방 (낙산공원전시관은 화~일 09:00~17:00, 월요일 휴무)",
+   "fee": "무료 (낙산공원전시관도 무료)",
+   "audio": "yes",
+   "curation": "한양도성 낙산구간: 혜화문~장수마을~낙산 정상 이야기",
+   "spot_id": null,
+   "survey_shops": [
+    "북정카페",
+    "해로커피"
+   ],
+   "issues": [
+    "시작점·끝점 두 줄을 하나로 합쳤어요. 낙산공원은 대부분 종로구라 성북구 구간만 쓸지 정해야 해요.",
+    "1차 조사의 \"한양도성 성곽길\"(성북동권, 주변 북정카페·해로커피)과 같은 구간인지 확인이 필요해요."
+   ],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "end": {
+    "lat": 37.5806314,
+    "lng": 127.0090206
+   },
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 1310
+   }
+  },
+  {
+   "id": "gilsangsa",
+   "name": {
+    "ko": "길상사",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "사찰·문화유산",
+   "chip": "history",
+   "topics": [
+    "temple"
+   ],
+   "lat": 37.5987021,
+   "lng": 126.99345,
+   "address": "서울 성북구 선잠로5길 68",
+   "open_days": "연중무휴",
+   "hours": "09:00~18:00",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "요정 대원각이 사찰이 된 사연",
+   "spot_id": "gilsangsa",
+   "survey_shops": [
+    "스페이스 수퍼노말"
+   ],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 590
+   }
+  },
+  {
+   "id": "leejongseok-villa",
+   "name": {
+    "ko": "성북동 이종석 별장",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "전통건축·역사문화",
+   "chip": "history",
+   "topics": [
+    "hanok"
+   ],
+   "lat": 37.5942469,
+   "lng": 126.9946426,
+   "address": "서울 성북구 성북로 131",
+   "open_days": "월요일, 공휴일 휴관",
+   "hours": "10:00~17:00",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "근대 별장 건축",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 270
+   }
+  },
+  {
+   "id": "korean-stone-museum",
+   "name": {
+    "ko": "우리옛돌박물관",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "박물관·전통 석조문화",
+   "chip": "history",
+   "topics": [
+    "museum"
+   ],
+   "lat": 37.6008585,
+   "lng": 126.9896787,
+   "address": "서울 성북구 대사관로13길 66",
+   "open_days": "월요일 휴관(공휴일이면 다음 날), 1/1 (10/15~11/16 휴관)",
+   "hours": "3~11월 평일 10:00~17:00·주말 10:00~18:00 / 12~2월 10:00~17:00 (입장마감 종료 1시간 전)",
+   "fee": "성인 7,000원·청소년 5,000원·어린이 3,000원 (성북구 주민, 단체, 65세 이상 등 할인 적용대상)",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 820
+   }
+  },
+  {
+   "id": "furniture-museum",
+   "name": {
+    "ko": "한국가구박물관",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "박물관·전통생활문화",
+   "chip": "history",
+   "topics": [
+    "museum"
+   ],
+   "lat": 37.6000442,
+   "lng": 126.9930488,
+   "address": "서울 성북구 대사관로 121",
+   "open_days": "일요일, 월요일, 공휴일 휴관",
+   "hours": "10:00~17:00, 사전예약제",
+   "fee": null,
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [
+    "입장료 \"도슨트 투어 3,5000원\"은 오타로 보여요. 금액 확인이 필요해요."
+   ],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 720
+   }
+  },
+  {
+   "id": "samcheonggak",
+   "name": {
+    "ko": "삼청각",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "전통문화·문화공간",
+   "chip": "history",
+   "topics": [],
+   "lat": 37.5971439,
+   "lng": 126.9843219,
+   "address": "서울 성북구 대사관로 3",
+   "open_days": null,
+   "hours": "11:00~21:30(내부 카페 '다원' 기준)",
+   "fee": null,
+   "audio": "yes",
+   "curation": "1970년대 요정 → 문화공간 변천사",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 760
+   }
+  },
+  {
+   "id": "martyrs-monastery",
+   "name": {
+    "ko": "한국순교복자성직수도회 구 본원",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "종교·역사문화",
+   "chip": "history",
+   "topics": [],
+   "lat": 37.5947592,
+   "lng": 126.995418,
+   "address": "서울 성북구 성북로24길 3",
+   "open_days": null,
+   "hours": "상시개방",
+   "fee": null,
+   "audio": "yes",
+   "curation": "등록문화재(2015), 근대 종교건축",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 350
+   }
+  },
+  {
+   "id": "myeongwol-museum",
+   "name": {
+    "ko": "명월박물관",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "전통가옥·역사문화",
+   "chip": "history",
+   "topics": [
+    "hanok",
+    "museum"
+   ],
+   "lat": 37.6110981,
+   "lng": 127.0002006,
+   "address": "서울 성북구 정릉로9길 68 (국민대 교내)",
+   "open_days": "토요일, 일요일, 공휴일, 개교기념일(10/18) 휴관",
+   "hours": "학기 중 10:00~17:00, 방학 중 10:00~16:00",
+   "fee": "무료(한규설 가옥은 예약제로 수요일만 개방)",
+   "audio": "yes",
+   "curation": "서울시 민속문화유산, 종로 장교동에서 이전한 사연",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 1280
+   }
+  },
+  {
+   "id": "kwonjingyu-atelier",
+   "name": {
+    "ko": "서울 동선동 권진규 아틀리에",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "예술·역사문화",
+   "chip": "history",
+   "topics": [],
+   "lat": 37.5938434,
+   "lng": 127.0214362,
+   "address": "서울 성북구 동소문로26마길 2-15",
+   "open_days": "매월 정기개방 일자 확인 필요",
+   "hours": "월별 정기개방 시간 상이. 확인필요",
+   "fee": "6,000원 / 무료",
+   "audio": "yes",
+   "curation": "조각가 권진규의 작업실",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [
+    "개방일이 매월 달라요. 앱에는 \"개방일 확인 필요\"로 보여줘요."
+   ],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 1470
+   }
+  },
+  {
+   "id": "sukjeongmun",
+   "name": {
+    "ko": "숙정문",
+    "en": null
+   },
+   "area": "bukak-wall",
+   "area_ko": "북악·한양도성",
+   "kind": "한양도성 역사유적",
+   "chip": "history",
+   "topics": [
+    "wall"
+   ],
+   "lat": 37.5889656,
+   "lng": 126.9805566,
+   "address": "서울 종로구 삼청로11길 40 (성북구청 홈페이지 등재)",
+   "open_days": "연중무휴",
+   "hours": "nan",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "한양도성 4소문 중 북문",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [
+    "주소가 종로구예요(성북구청 홈페이지 등재). 앱에 그대로 넣어도 되는지 확인해 주세요."
+   ],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 1110
+   }
+  },
+  {
+   "id": "hyehwamun",
+   "name": {
+    "ko": "혜화문",
+    "en": null
+   },
+   "area": "bukak-wall",
+   "area_ko": "북악·한양도성",
+   "kind": "한양도성 역사유적",
+   "chip": "history",
+   "topics": [
+    "wall"
+   ],
+   "lat": 37.5879249,
+   "lng": 127.0034874,
+   "address": "서울 종로구 창경궁로 307 (성북구청 홈페이지 등재)",
+   "open_days": "연중무휴",
+   "hours": "nan",
+   "fee": null,
+   "audio": "yes",
+   "curation": "한양도성 4소문 중 동소문",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [
+    "주소가 종로구예요(성북구청 홈페이지 등재). 앱에 그대로 넣어도 되는지 확인해 주세요."
+   ],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 1220
+   }
+  },
+  {
+   "id": "sb-literature",
+   "name": {
+    "ko": "성북근현대문학관",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "문학·지역문화",
+   "chip": "history",
+   "topics": [],
+   "lat": 37.5924566,
+   "lng": 126.9970351,
+   "address": "서울 성북구 성북로21길 24",
+   "open_days": "화~일 (월요일(공휴일이면 다음 날), 1/1, 설·추석 연휴 휴관)",
+   "hours": "10:00~18:00 (입장마감 17:30)",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "성북동 문인들 이야기",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 490
+   }
+  },
+  {
+   "id": "choemanrin-museum",
+   "name": {
+    "ko": "성북구립 최만린미술관",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "조각·미술 전시",
+   "chip": "history",
+   "topics": [
+    "museum"
+   ],
+   "lat": 37.6106735,
+   "lng": 127.0043219,
+   "address": "서울 성북구 솔샘로7길 23",
+   "open_days": "일요일, 월요일 휴관 (전시 없는 기간은 미개방)",
+   "hours": "10:00~18:00",
+   "fee": "무료",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 1090
+   }
+  },
+  {
+   "id": "sb-art-factory",
+   "name": {
+    "ko": "성북예술창작터",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "예술·전시·창작",
+   "chip": "history",
+   "topics": [],
+   "lat": 37.5900502,
+   "lng": 127.0041198,
+   "address": "서울 성북구 성북로 23",
+   "open_days": "일요일, 월요일, 공휴일 휴관 (토요일 공휴일인 경우 휴관)",
+   "hours": "화~토 10:00~18:00 (전시 기간 내)",
+   "fee": "무료(전시설명 상시 운영)",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 1170
+   }
+  },
+  {
+   "id": "jeongbeopsa",
+   "name": {
+    "ko": "정법사",
+    "en": null
+   },
+   "area": "seongbuk-dong",
+   "area_ko": "성북동",
+   "kind": "사찰·역사문화",
+   "chip": "history",
+   "topics": [
+    "temple"
+   ],
+   "lat": 37.6016698,
+   "lng": 126.9908856,
+   "address": "서울 성북구 대사관로13길 44",
+   "open_days": "연중무휴(카페 '수미산')",
+   "hours": "09:00~18:00",
+   "fee": "무료",
+   "audio": "maybe",
+   "curation": "성북동에서 가장 오래된 절",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 900
+   }
+  },
+  {
+   "id": "jeongneung",
+   "name": {
+    "ko": "정릉",
+    "en": null
+   },
+   "area": "jeongneung",
+   "area_ko": "정릉",
+   "kind": "왕릉·역사유적",
+   "chip": "history",
+   "topics": [
+    "tomb"
+   ],
+   "lat": 37.6012152,
+   "lng": 127.006821,
+   "address": "서울 성북구 아리랑로19길 116",
+   "open_days": "매주 월요일 휴관 (월요일이 공휴일이면 개방, 다음 첫 평일 휴관)",
+   "hours": "2~5월·9~10월 06:00~18:00 (마감 17:00) / 6~8월 06:00~18:30 (마감 17:30) / 11~1월 06:30~17:30 (마감 16:30). 해설 10:00·14:00",
+   "fee": "개인 1,000원, 단체 800원. 만 24세 이하·65세 이상 등 무료, 지역주민 50% 할인",
+   "audio": "yes",
+   "curation": "신덕왕후릉, 조선 왕실 이야기",
+   "spot_id": "jeongneung",
+   "survey_shops": [
+    "정릉시장",
+    "카페 그리다"
+   ],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 70
+   }
+  },
+  {
+   "id": "jeongneungcheon",
+   "name": {
+    "ko": "정릉천",
+    "en": null
+   },
+   "area": "jeongneung",
+   "area_ko": "정릉",
+   "kind": "하천 산책·도심 자연",
+   "chip": "stream",
+   "topics": [],
+   "lat": null,
+   "lng": null,
+   "address": "주소 없음 (성북구 정릉동~월곡 일대 하천)",
+   "open_days": "nan",
+   "hours": "nan",
+   "fee": "nan",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [
+    "킨폭스 커피"
+   ],
+   "issues": [
+    "하천이라 점 좌표가 없어요. 지도에 선으로 그리려면 하천 경로 데이터가 필요해요."
+   ],
+   "show_on_map": false,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": null
+  },
+  {
+   "id": "gyeongguksa",
+   "name": {
+    "ko": "경국사",
+    "en": null
+   },
+   "area": "jeongneung",
+   "area_ko": "정릉",
+   "kind": "사찰·역사문화",
+   "chip": "history",
+   "topics": [
+    "temple"
+   ],
+   "lat": 37.6146726,
+   "lng": 127.0049176,
+   "address": "서울 성북구 보국문로 113-10",
+   "open_days": "연중무휴",
+   "hours": "09:00~18:00",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "정릉 일대 옛 절",
+   "spot_id": null,
+   "survey_shops": [
+    "임금님짜장면"
+   ],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 1520
+   }
+  },
+  {
+   "id": "bukhansan-jeongneung-trail",
+   "name": {
+    "ko": "북한산 정릉탐방로",
+    "en": null
+   },
+   "area": "jeongneung",
+   "area_ko": "정릉",
+   "kind": "자연 탐방·등산",
+   "chip": "park",
+   "topics": [],
+   "lat": 37.618041,
+   "lng": 126.997675,
+   "address": "서울 성북구 보국문로 262 (소스마다 달라 보국문로 215 표기도 있음)",
+   "open_days": "기상에 따라 통제",
+   "hours": "3~11월 04:00~17:00 12~2월 04:00~16:00",
+   "fee": "무료",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [
+    "주소가 자료마다 달라요(보국문로 262 / 215)."
+   ],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 2070
+   }
+  },
+  {
+   "id": "heungcheonsa",
+   "name": {
+    "ko": "흥천사",
+    "en": null
+   },
+   "area": "jeongneung",
+   "area_ko": "정릉",
+   "kind": "사찰·역사문화",
+   "chip": "history",
+   "topics": [
+    "temple"
+   ],
+   "lat": 37.59823,
+   "lng": 127.0091567,
+   "address": "서울 성북구 흥천사길 29",
+   "open_days": "연중무휴",
+   "hours": "07:30~18:00",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "신덕왕후 정릉의 원찰",
+   "spot_id": null,
+   "survey_shops": [
+    "아리랑시장"
+   ],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 360
+   }
+  },
+  {
+   "id": "bongguksa",
+   "name": {
+    "ko": "봉국사",
+    "en": null
+   },
+   "area": "jeongneung",
+   "area_ko": "정릉",
+   "kind": "사찰·역사문화",
+   "chip": "history",
+   "topics": [
+    "temple"
+   ],
+   "lat": 37.6052462,
+   "lng": 127.0059838,
+   "address": "서울 성북구 정릉로 202",
+   "open_days": "연중무휴",
+   "hours": "09:00~18:00",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "정릉 일대 옛 절",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 470
+   }
+  },
+  {
+   "id": "bomunsa",
+   "name": {
+    "ko": "보문사",
+    "en": null
+   },
+   "area": "bomun-dong",
+   "area_ko": "보문동",
+   "kind": "사찰·문화유산",
+   "chip": "history",
+   "topics": [
+    "temple"
+   ],
+   "lat": 37.584671,
+   "lng": 127.016097,
+   "address": "서울 성북구 보문사길 20",
+   "open_days": "연중무휴",
+   "hours": "6:00~18:00(11:30~12:30 휴게시간)",
+   "fee": "무료",
+   "audio": "maybe",
+   "curation": "사찰·문화재(신중도 포함)",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 1980
+   }
+  },
+  {
+   "id": "gaeunsan",
+   "name": {
+    "ko": "개운산",
+    "en": null
+   },
+   "area": "jeongneung",
+   "area_ko": "정릉",
+   "kind": "산책·자연 탐방",
+   "chip": "park",
+   "topics": [],
+   "lat": null,
+   "lng": null,
+   "address": "확인 필요 (하늘전망대는 성북구 종암동 77-252 일대)",
+   "open_days": "연중무휴",
+   "hours": null,
+   "fee": "nan",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [
+    "좌표와 주소가 없어요.",
+    "운영시간이 보문사와 똑같이 적혀 있어요. 복사 실수인지 확인이 필요해요."
+   ],
+   "show_on_map": false,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": null
+  },
+  {
+   "id": "uiryeong",
+   "name": {
+    "ko": "의릉",
+    "en": null
+   },
+   "area": "seokgwan-uiryeong",
+   "area_ko": "석관동·의릉",
+   "kind": "왕릉·역사유적",
+   "chip": "history",
+   "topics": [
+    "tomb"
+   ],
+   "lat": 37.6037986,
+   "lng": 127.0558626,
+   "address": "서울 성북구 화랑로32길 146-20",
+   "open_days": "매주 월요일 휴관 (월요일이 공휴일이면 개방, 다음 첫 비공휴일 휴관)",
+   "hours": "2~5월·9~10월 09:00~18:00 (마감 17:00) / 6~8월 09:00~18:30 (마감 17:30) / 11~1월 09:00~17:30 (마감 16:30)",
+   "fee": "개인 1,000원, 단체(10인) 800원. 성북·동대문구 주민 50% 할인, 문화가 있는 날(매월 마지막 수요일) / 어린이·청소년·65세 이상 등 증빙 시 무료",
+   "audio": "yes",
+   "curation": "경종릉, 조선 왕실 이야기",
+   "spot_id": "uiryeong",
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "uiryeong",
+    "straight_m": 260
+   }
+  },
+  {
+   "id": "samgunbu-chongmudang",
+   "name": {
+    "ko": "삼군부 총무당",
+    "en": null
+   },
+   "area": "seokgwan-uiryeong",
+   "area_ko": "석관동·의릉",
+   "kind": "군사·역사문화",
+   "chip": "history",
+   "topics": [],
+   "lat": 37.5832165,
+   "lng": 127.0082565,
+   "address": "서울 성북구 삼선교로4나길 19",
+   "open_days": "개방(공원 내 위치)",
+   "hours": "nan",
+   "fee": "nan",
+   "audio": "yes",
+   "curation": "서울시 유형문화재, 조선 군사기구 건물",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [
+    "권역이 석관동·의릉으로 되어 있지만 주소와 좌표는 삼선동이에요. 권역 확인이 필요해요."
+   ],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 1860
+   }
+  },
+  {
+   "id": "knua",
+   "name": {
+    "ko": "한국예술종합학교",
+    "en": null
+   },
+   "area": "seokgwan-uiryeong",
+   "area_ko": "석관동·의릉",
+   "kind": "예술·문화시설",
+   "chip": "history",
+   "topics": [],
+   "lat": 37.603799,
+   "lng": 127.055863,
+   "address": "서울 성북구 화랑로32길 146-37",
+   "open_days": "교내 공연일정 확인 필요(하단 주소에서 확인 가능) https://www.karts.ac.kr/usr/shw/exh/selectUsrShowList.do",
+   "hours": "선착순 또는 사전예매 형식",
+   "fee": "대부분 무료 관람 가능",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [
+    "좌표가 의릉과 완전히 같아요(37.603799, 127.055863). 정문 좌표로 다시 찾아야 해요."
+   ],
+   "show_on_map": false,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "uiryeong",
+    "straight_m": 260
+   }
+  },
+  {
+   "id": "seongbukcheon",
+   "name": {
+    "ko": "성북천",
+    "en": null
+   },
+   "area": "seongbukcheon-anam",
+   "area_ko": "성북천·안암",
+   "kind": "하천 산책·도심 경관",
+   "chip": "stream",
+   "topics": [],
+   "lat": null,
+   "lng": null,
+   "address": "한성대입구역 부근~청계천 합류부, 약 3.68km) 구간 전체 어디서든 출발 가능",
+   "open_days": "nan",
+   "hours": "nan",
+   "fee": "nan",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [
+    "선류도",
+    "부부셰프",
+    "나폴레옹과자점",
+    "유스리스 어덜트",
+    "공유",
+    "콜렉트마이페이보릿",
+    "마가밀"
+   ],
+   "issues": [
+    "하천이라 점 좌표가 없어요. 지도에 선으로 그리려면 하천 경로 데이터가 필요해요.",
+    "1차 조사의 \"성북천 안암 구간\" 가게도 여기에 합쳤어요."
+   ],
+   "show_on_map": false,
+   "source": [
+    "2026-10-30 성북구 장소 정리",
+    "2026-10-18 1차 자료조사(주변 상권)"
+   ],
+   "nearest_course": null
+  },
+  {
+   "id": "bukak-skyway",
+   "name": {
+    "ko": "북악스카이웨이",
+    "en": null
+   },
+   "area": "bukak-wall",
+   "area_ko": "북악·한양도성",
+   "kind": "전망·경관·산책",
+   "chip": "park",
+   "topics": [],
+   "lat": 37.6015379,
+   "lng": 126.9800522,
+   "address": "팔각정: 서울 종로구 북악산로 267 (성북구 아님) 도로는 종로구 부암동~성북구 종암동 7.1km",
+   "open_days": "팔각정·공원 연중무휴",
+   "hours": "팔각정 영업시설 11:00~23:00",
+   "fee": "무료",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [
+    "팔각정 주소는 종로구예요. 성북구 쪽 진입 지점 좌표로 바꿀지 확인해 주세요."
+   ],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 1350
+   }
+  },
+  {
+   "id": "sb-history-park",
+   "name": {
+    "ko": "성북역사문화공원",
+    "en": null
+   },
+   "area": "bukak-wall",
+   "area_ko": "북악·한양도성",
+   "kind": "역사공원·성곽 조망",
+   "chip": "park",
+   "topics": [
+    "wall"
+   ],
+   "lat": 37.5925098,
+   "lng": 126.9977832,
+   "address": "서울 성북구 성북동 118-2",
+   "open_days": "nan",
+   "hours": "nan",
+   "fee": "nan",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 550
+   }
+  },
+  {
+   "id": "samseon-park",
+   "name": {
+    "ko": "삼선공원",
+    "en": null
+   },
+   "area": "bukak-wall",
+   "area_ko": "북악·한양도성",
+   "kind": "공원 산책·휴식",
+   "chip": "park",
+   "topics": [],
+   "lat": 37.5839221,
+   "lng": 127.0088271,
+   "address": "서울 성북구 삼선동1가 일대",
+   "open_days": "nan",
+   "hours": "nan",
+   "fee": "nan",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 1860
+   }
+  },
+  {
+   "id": "sb-history-center",
+   "name": {
+    "ko": "성북역사문화센터",
+    "en": null
+   },
+   "area": "etc",
+   "area_ko": "기타 문화공간·관광시설",
+   "kind": "역사문화 정보·관광안내",
+   "chip": "history",
+   "topics": [],
+   "lat": 37.5926572,
+   "lng": 126.9970242,
+   "address": "서울 성북구 성북로21길 31",
+   "open_days": "매일 운영 (휴관: 1월은 일·월요일, 1/1, 설·추석 연휴)",
+   "hours": "09:00~18:00",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "성북 역사문화 안내 거점",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 480
+   }
+  },
+  {
+   "id": "sb-eco-center",
+   "name": {
+    "ko": "성북생태체험관",
+    "en": null
+   },
+   "area": "etc",
+   "area_ko": "기타 문화공간·관광시설",
+   "kind": "공원 산책·휴식",
+   "chip": "park",
+   "topics": [],
+   "lat": 37.6209971,
+   "lng": 127.0069382,
+   "address": "서울 성북구 솔샘로25길 121-50",
+   "open_days": "토요일, 화요일 휴관",
+   "hours": "09:00~18:00",
+   "fee": "무료",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 2200
+   }
+  },
+  {
+   "id": "yehyangjae",
+   "name": {
+    "ko": "성북 예향재",
+    "en": null
+   },
+   "area": "etc",
+   "area_ko": "기타 문화공간·관광시설",
+   "kind": "전통문화·문화공간",
+   "chip": "history",
+   "topics": [],
+   "lat": 37.593891,
+   "lng": 126.9886339,
+   "address": "서울 성북구 성북로31길 97",
+   "open_days": "화~일 (매주 월요일·공휴일 휴관)",
+   "hours": "09:00~18:00",
+   "fee": "무료",
+   "audio": "maybe",
+   "curation": "전통문화공간 (프로그램 확인 후)",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "simujang",
+    "straight_m": 270
+   }
+  },
+  {
+   "id": "kimjungup-house",
+   "name": {
+    "ko": "김중업 건축문화의 집",
+    "en": null
+   },
+   "area": "etc",
+   "area_ko": "기타 문화공간·관광시설",
+   "kind": "건축·문화공간",
+   "chip": "history",
+   "topics": [],
+   "lat": 37.6149824,
+   "lng": 127.0440877,
+   "address": "서울 성북구 장위로21나길 11",
+   "open_days": "일요일, 월요일 휴관",
+   "hours": "10:00~17:00 (12:00~13:00 입장 불가는 보도 기준)",
+   "fee": "무료",
+   "audio": "maybe",
+   "curation": "건축가 김중업 (건축 이야기)",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "uiryeong",
+    "straight_m": 1740
+   }
+  },
+  {
+   "id": "leeyuksa-space",
+   "name": {
+    "ko": "문화공간 이육사",
+    "en": null
+   },
+   "area": "etc",
+   "area_ko": "기타 문화공간·관광시설",
+   "kind": "문학·역사·전시",
+   "chip": "history",
+   "topics": [
+    "indep"
+   ],
+   "lat": 37.5981393,
+   "lng": 127.0326196,
+   "address": "서울 성북구 종암로21가길 36-1",
+   "open_days": "화~토 (일요일, 월요일, 공휴일 휴관)",
+   "hours": "10:00~17:00",
+   "fee": "무료",
+   "audio": "yes",
+   "curation": "시인·독립운동가 이육사",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 2230
+   }
+  },
+  {
+   "id": "donam-cathedral",
+   "name": {
+    "ko": "돈암동 성당",
+    "en": null
+   },
+   "area": "etc",
+   "area_ko": "기타 문화공간·관광시설",
+   "kind": "종교건축·문화유산",
+   "chip": "history",
+   "topics": [],
+   "lat": 37.5902712,
+   "lng": 127.0174916,
+   "address": "서울 성북구 고려대로7길 120",
+   "open_days": null,
+   "hours": null,
+   "fee": "nan",
+   "audio": "yes",
+   "curation": "1955년 지어진 고딕 양식 성당",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "jeongneung",
+    "straight_m": 1490
+   }
+  },
+  {
+   "id": "odong-park",
+   "name": {
+    "ko": "오동근린공원",
+    "en": null
+   },
+   "area": "etc",
+   "area_ko": "기타 문화공간·관광시설",
+   "kind": "공원·자연 산책",
+   "chip": "park",
+   "topics": [],
+   "lat": 37.6095786,
+   "lng": 127.0415016,
+   "address": "서울 성북구 화랑로13가길 100",
+   "open_days": "nan",
+   "hours": "nan",
+   "fee": "nan",
+   "audio": "no",
+   "curation": "nan",
+   "spot_id": null,
+   "survey_shops": [],
+   "issues": [],
+   "show_on_map": true,
+   "source": [
+    "2026-10-30 성북구 장소 정리"
+   ],
+   "nearest_course": {
+    "dest": "uiryeong",
+    "straight_m": 1620
+   }
+  }
+ ]
+}
