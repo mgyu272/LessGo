@@ -9,8 +9,7 @@ import * as voice from "../lib/voice.js";
 import { ShopRow, FakeQr, LangPill } from "../components/Bits.jsx";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { LogoBird } from "../components/LogoBird.jsx";
-import { useBottomSheet, BottomSheet } from "../components/ui.jsx";
-import NearbyShops from "../components/NearbyShops.jsx";
+import { useBottomSheet, BottomSheet, ConfirmDialog } from "../components/ui.jsx";
 import HistoryLens from "./HistoryLens.jsx";
 import { RewardShop } from "./RewardShop.jsx";
 import { CENTER } from "../state/AppContext.jsx";
@@ -30,6 +29,7 @@ export function Spot() {
   const [cur, setCur] = useState(0); // 지금까지 읽은 시간(초)
   const [showScript, setShowScript] = useState(false);
   const [activeTab, setActiveTab] = useState("lens");
+  const [confirmFinish, setConfirmFinish] = useState(false);
   const [q, setQ] = useState("");
   const [answer, setAnswer] = useState(null); // {loading} | {text, sources, cached} | {none}
   const timer = useRef(null);
@@ -189,21 +189,14 @@ export function Spot() {
             <p>획득한 도장: {app.run.view?.visited?.length || 0}개</p>
             <small>현재 러닝 진행 기록입니다. 최종 기록은 러닝 종료 후 저장됩니다.</small>
           </div>
-          <div hidden={activeTab !== "shops"}>
-          {/* 근처에서 쉬어 가기: 카카오맵 가게 가까운 순 4곳 (제휴 아님) */}
-          <NearbyShops spot={spot} variant="arrival" />
-
-          </div>
-          <p className="note cream">{loc(spot.notice)}</p>
+<p className="note cream">{loc(spot.notice)}</p>
 
 
         </div>
-        <div className="cta-row two">
-          <button className="btn btn-teal" onClick={() => { stopAudio(); app.run.resume(); }}>{t("keep_running")}</button>
-          <button className="btn btn-outline" onClick={() => { stopAudio(); app.go("shops"); }}>{t("nearby_shops")}</button>
+        <div className="cta-row">
+          <button className="btn btn-teal" onClick={() => { stopAudio(); setConfirmFinish(true); }}>달리기 종료</button>
         </div>
-
-      </BottomSheet>
+</BottomSheet>
     </section>
   );
 }
