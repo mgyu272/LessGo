@@ -94,12 +94,12 @@ export function Login() {
     <section className="screen login-screen">
       <div className="hanji-layer" aria-hidden="true" />
       <header className="login-top">
-        <Brand />
-        <LangPill glass />
+        <Brand subtitle={false} />
+        <LangPill glass expanded />
       </header>
       <div className="login-title">
-        <p className="kicker">RUN · SEONGBUK</p>
-        <h1>{t("login_title1")}<br /><mark>{t("login_title_mark")}</mark>{t("login_title2")}</h1>
+        <h1>{t("login_title1")}<br />{t("login_title2")}</h1>
+        <p className="login-subtitle">{t("login_subtitle")}</p>
       </div>
       <LoginScene />
       <form className="login-form" onSubmit={submit} noValidate>
@@ -127,19 +127,26 @@ export function Login() {
                   <Icon name={showPw ? "eyeOff" : "eye"} />
                 </button>
               </div>
+            <small className={`login-password-hint ${pw.length > 0 && pw.length < 8 ? "visible" : ""}`} aria-live="polite">
+              {pw.length > 0 && pw.length < 8 ? t("err_pw_short_login") : " "}
+            </small>
             </>
           )}
         </div>
         <div className="login-opts">
           <label className="keep">
             <input type="checkbox" checked={keep} onChange={(e) => setKeep(e.target.checked)} />
-            <span>{t("keep_login")}</span>
+            <span>{t("keep_login_short")}</span>
           </label>
-          {!local && <button type="button" className="link" onClick={() => app.go("find")}>{t("to_find_short")}</button>}
+          {!local && <span className="login-find-links">
+            <button type="button" className="link" onClick={() => app.go("find")}>{t("find_id_short")}</button>
+            <i aria-hidden="true" />
+            <button type="button" className="link" onClick={() => app.go("find")}>{t("find_password_short")}</button>
+          </span>}
         </div>
         {shownErr && <p className="note cream" role="alert">{shownErr}</p>}
-        <button type="submit" className="btn btn-cta" disabled={busy || !id}>
-          {busy ? t("signing_in") : t("login_btn")}<Icon name="arrow" className="arrow" />
+        <button type="submit" className="btn login-submit" disabled={busy || !id.trim() || (!local && pw.length < 8)}>
+          {busy ? t("signing_in") : t("login_btn")}
         </button>
         {local ? <p className="foot">{t("local_login_note")}</p> : (
           <>
@@ -147,8 +154,7 @@ export function Login() {
             <button type="button" className="btn-google" onClick={google} disabled={busy}>
               <GoogleG /><span>{t("google_continue")}</span>
             </button>
-            <p className="or-line"><span>{t("first_time")}</span></p>
-            <button type="button" className="btn btn-soft" onClick={() => app.go("signup")}>{t("new_account")}</button>
+            <p className="login-signup"><span>{t("signup_prompt")}</span><button type="button" className="link" onClick={() => app.go("signup")}>{t("to_signup")}</button></p>
           </>
         )}
       </form>
