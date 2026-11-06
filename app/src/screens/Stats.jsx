@@ -31,6 +31,8 @@ export default function Stats() {
       <div className="pd-scroll">
         <div className="st-top">
           <h1>{t("tab_stats")}</h1>
+          {/* 로그아웃: 첫 화면 오른쪽 위에서 바로 (공유 버튼 옆) */}
+          <button className="st-logout" onClick={async () => { await user.signOut(); app.go("onboarding"); }}>{t("logout")}</button>
           <button className="round-btn glass" onClick={share} aria-label={t("share")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg></button>
         </div>
         <div className="st-links">

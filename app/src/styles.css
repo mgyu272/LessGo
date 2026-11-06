@@ -1352,3 +1352,6 @@ div:has(> .spot-pin) { pointer-events: none; }
 .screen.pd-popup.pd-full { top: calc(44px + var(--safe-top)); }
 .screen.pd-popup.pd-dragging { transition: none; }
 .pd-popup .pd-hero { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+
+/* 내 기록 첫 화면 오른쪽 위 로그아웃 */
+.st-logout { margin-left: auto; margin-right: 8px; padding: 8px 12px; border: 0; border-radius: 999px; background: rgba(255,255,255,.7); color: var(--muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
