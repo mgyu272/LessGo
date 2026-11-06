@@ -86,7 +86,6 @@ export default function CoursePicker() {
   const p = course.properties;
   const saved = favs.has(course.id);
   const toggleSave = () => { const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
-  const start = () => { app.setCourse(course); app.go("toStart"); };
   const reason = reasons[course.id] || factualReason(course, pair, move);
   const fromName = startNameOf(course);
   const fromM = here ? distance(here, course.path[0]) : null;
@@ -196,12 +195,11 @@ export default function CoursePicker() {
         </button>
         {preview ? <>
           <button className="btn btn-soft" onClick={() => setPreview(null)}>취소</button>
-          <button className="btn btn-cta" onClick={confirmHere} style={{ whiteSpace: "nowrap" }}>이 코스로 달리기</button>
+          <button className="btn btn-cta" onClick={confirmHere} style={{ whiteSpace: "nowrap" }}>{move === "walk" ? "이 코스로 걷기" : "이 코스로 달리기"}</button>
         </> : <>
-        {move === "walk" ? <button className="btn btn-cta" onClick={start}>{t("start_to_origin", { route: t("route_letter_" + p.mode) })}</button> : <>
-          <button className="btn btn-soft" onClick={runCourse} style={{ whiteSpace: "nowrap" }}>코스 달리기</button>
-          <button className="btn btn-cta" onClick={runFromHere} disabled={finding} style={{ whiteSpace: "nowrap" }}>{finding ? "코스 찾는 중…" : "현위치에서 달리기"}</button>
-        </>}
+          {/* 걷기도 달리기와 같은 두 버튼 (기능 같음, 글자만 걷기) */}
+          <button className="btn btn-soft" onClick={runCourse} style={{ whiteSpace: "nowrap" }}>{move === "walk" ? "코스 걷기" : "코스 달리기"}</button>
+          <button className="btn btn-cta" onClick={runFromHere} disabled={finding} style={{ whiteSpace: "nowrap" }}>{finding ? "코스 찾는 중…" : move === "walk" ? "현위치에서 걷기" : "현위치에서 달리기"}</button>
         </>}
       </div>
 
