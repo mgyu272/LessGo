@@ -52,8 +52,8 @@ export function Records() {
   return (
     <section className="screen light">
       <header className="topbar">
-        <div><h3>{t("tab_records")}</h3><small>{t("hello", { name: user.profile?.nickname || "" })}</small></div>
-        <button className="link" onClick={async () => { await user.signOut(); app.go("onboarding"); }}>{t("logout")}</button>
+        <button className="round-back glass" onClick={() => app.go("stats")} aria-label={t("back_aria")}>‹</button>
+        <div><h3>{t("run_list")}</h3></div>
       </header>
       <div className="scroll-y pad has-tabbar">
         {user.runs.length === 0 && <p className="empty">{t("no_records")}</p>}

@@ -1050,7 +1050,9 @@ div:has(> .spot-pin) { pointer-events: none; }
 .stats-screen { background: var(--bg-soft); }
 .stats-screen .pd-scroll { padding-bottom: calc(110px + var(--safe-bottom)); }
 .st-top { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: calc(12px + var(--safe-top)) 18px 0; }
-.st-top h1 { flex: 1; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+.st-heading { flex: 1; min-width: 0; }
+.st-top h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+.st-heading p { margin: 2px 0 0; color: #4A5E42; font-size: 14px; }
 .st-top .round-btn svg { fill: none; }
 .st-links { display: flex; gap: 8px; padding: 8px 18px 0; }
 .st-links button { min-height: 40px; padding: 0 14px; border-radius: 20px; font-size: 13px; font-weight: 700; color: var(--strong); }
@@ -1090,6 +1092,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .st-tile.done .st-medal { background: radial-gradient(circle at 35% 30%, #E8F8D2, #9FD25E); color: var(--text); box-shadow: 0 8px 16px -10px rgba(63, 127, 28, .7); }
 .st-tile b { font-size: 13px; font-weight: 700; }
 .st-tile small { font-size: 11px; font-weight: 500; color: var(--muted); }
+.st-logout-footer { display: block; width: 100%; height: 44px; margin: 8px 0 0; padding: 0; background: transparent; border: 0; color: #5C6F54; font-size: 14px; text-align: center; text-decoration: none; }
 
 /* 문화 활동: 달력으로 보기 버튼 (Events.dc.html), 누르면 이번 주 날짜 영역으로 */
 .ev-cal { color: var(--strong); }
@@ -1342,3 +1345,36 @@ div:has(> .spot-pin) { pointer-events: none; }
 .here-preview small { font-size: 12px; color: var(--muted); font-weight: 700; }
 .here-preview strong { font-size: 20px; font-weight: 800; color: var(--strong); }
 .here-preview span { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+/* 홈: 장소별 코스 목록 (예전 오늘의 추천 카드 모양) */
+.home-list-h { margin: 18px 0 2px; font-size: 16px; font-weight: 800; color: var(--strong); }
+.today-card { margin-top: 12px; border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 0 rgba(120, 190, 60, .12), 0 14px 28px -20px rgba(63, 127, 28, .6); }
+.tc-head { display: flex; align-items: center; gap: 12px; background: none; border: 0; padding: 0; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.tc-ic { width: 52px; height: 52px; flex: none; border-radius: 16px; background: #F2F9E6; box-shadow: inset 0 0 0 1px var(--border); display: grid; place-items: center; }
+.tc-ic svg { width: 34px; height: 34px; }
+.tc-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; align-items: flex-start; }
+.tc-text b { font-size: 17px; font-weight: 800; }
+.tc-text small { font-size: 13px; font-weight: 500; color: var(--muted); }
+.today-card .elev { height: 28px; margin: 0; }
+.tc-actions { display: grid; grid-template-columns: 1fr 1.3fr; gap: 8px; }
+.tc-actions .btn { margin: 0; min-height: 50px; padding: 0 10px; border-radius: 16px; font-size: 15px; }
+.tc-actions .btn-soft { color: var(--strong); }
+.tc-actions .btn-cta { font-weight: 800; }
+.prep-card { margin-top: 10px; width: 100%; border-radius: 18px; padding: 10px 12px; display: flex; align-items: center; gap: 12px; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.prep-card .tc-ic { width: 44px; height: 44px; border-radius: 14px; }
+.prep-card .tc-ic svg { width: 28px; height: 28px; }
+.prep-card .tc-text b { font-size: 15px; }
+.prep-card .tc-text small { font-size: 12px; }
+.prep-card .ui-badge { flex: none; }
+/* 홈 지도에서 연 장소 팝업: 화면 절반 이하만 차지하고 위쪽 지도(코스)가 보이게 */
+.screen.pd-popup { top: 50%; }
+.pd-scrim { background: rgba(31, 61, 20, .06); }
+.pd-prep { opacity: .9; }
+
+/* 장소 팝업 끌기: 위로 = 전체 화면, 아래로 = 절반 / 닫기 */
+.screen.pd-popup { transition: top .28s var(--ease-out, ease); }
+.screen.pd-popup.pd-full { top: calc(44px + var(--safe-top)); }
+.screen.pd-popup.pd-dragging { transition: none; }
+.pd-popup .pd-hero { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+
+/* 내 기록 첫 화면 오른쪽 위 로그아웃 */
