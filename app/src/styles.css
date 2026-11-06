@@ -11,6 +11,14 @@
    (--ink, --vermilion, --ginkgo 같은 이름은 예전 테마에서 쓰던 이름을 그대로 두고 값만 바꿨어요)
    --safe-top / --safe-bottom : 다이내믹 아일랜드·홈 바에 가리지 않게 두는 여백
    ============================================================ */
+/* 얼리폰트 오이샐러드: 앱 정체성이 드러나는 큰 제목에만 써요 (길찾기·달리기 화면에는 안 써요) */
+@font-face {
+  font-family: "EF Cucumber";
+  src: url("/fonts/EF_cucumbersalad.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 @font-face {
   font-family: "Pretendard";
   src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
@@ -1494,3 +1502,20 @@ div:has(> .spot-pin) { pointer-events: none; }
 /* 로그인: 아이디·비밀번호 줄 높이 똑같이 (눈 버튼이 줄을 늘리지 않게) */
 .cred-row { height: 62px; }
 .cred-row .eye-btn { height: 40px; margin: 0 -8px 0 0; }
+
+/* ---------- 정체성 제목 글꼴 (오이샐러드) ----------
+   로그인 "성북런", 홈 "오늘은 얼마나 달려볼까요?", 장소와 이야기 제목·장소 이름, 장소 상세 이름, 내 기록 제목, 완주 제목 */
+.login-brand .brand-name b,
+.home-sheet-v2 h2,
+.pl-top h1, .pl-name h2, .pl-explore h2,
+.pd-id h1,
+.st-heading h1,
+.done-head h1 {
+  font-family: "EF Cucumber", "Pretendard", system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
+  /* 글꼴 자체가 가늘어서, 같은 색 테두리로 굵게 보이게 해요 */
+  -webkit-text-stroke: .9px currentColor;
+  paint-order: stroke fill;
+}
+.login-brand .brand-name b { -webkit-text-stroke-width: 1.6px; }
