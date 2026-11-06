@@ -20,8 +20,10 @@ const gpsError = (e) => e?.code === 1 ? "위치 권한이 거부됐어요. 휴�
   : e?.code === 9 ? "GPS 정확도가 낮아요. 실외에서 다시 시도해 주세요."
   : "GPS 위치를 가져오지 못했어요. 실외에서 다시 시도해 주세요.";
 
-// 성공하면 코스 객체, 실패하면 { error }
-export async function buildCourseFromHere(base, dest, demo) {
+// 성공하면 { low, high, here } (완만한 길 · 언덕 허용 두 코스), 실패하면 { error }
+// bases: { low, high } 같은 목적지의 저장 코스 (이름·배지 등 속성을 물려받아요)
+export async function buildCoursesFromHere(bases, dest, demo) {
+  const base = bases.low || bases.high;
   let here = null;
   try {
     here = await getPosition(demo ? 6000 : 15000);
@@ -37,14 +39,18 @@ export async function buildCourseFromHere(base, dest, demo) {
     });
     const json = await res.json();
     if (!res.ok || !json.best) throw new Error(json.error || "route");
-    return makeCourse(base, dest, json.best);
+    return {
+      here,
+      low: makeCourse(bases.low || base, dest, json.low || json.best, "low"),
+      high: makeCourse(bases.high || base, dest, json.high || json.best, "high"),
+    };
   } catch {
     return { error: "코스를 찾지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요." };
   }
 }
 
 // 서버 결과 → 앱 코스 모양 (기존 코스의 속성은 그대로 두고 길·거리만 바꿔요)
-function makeCourse(base, dest, best) {
+function makeCourse(base, dest, best, mode) {
   const path = best.path.map(([lng, lat]) => ({ lat, lng }));
   let len = 0;
   for (let i = 1; i < path.length; i++) len += distance(path[i - 1], path[i]);
@@ -55,12 +61,13 @@ function makeCourse(base, dest, best) {
   const elevation = ele.every((x) => x != null) ? sample(ele, 60) : [];
   const properties = {
     ...base.properties,
-    id: `here-${base.properties.dest}-${Date.now()}`,
+    id: `here-${base.properties.dest}-${mode}-${Date.now()}`, mode,
     name: { ko: `내 위치 → ${short.ko}`, en: `From here → ${short.en}` },
     title: { ko: `내 위치 → ${short.ko}`, en: `From here → ${short.en}` },
     distance_km, minutes: Math.round(distance_km * MIN_PER_KM),
     ascent_m: m.ascent_m ?? null, elevation, spots: [base.properties.dest],
-    fromHere: true, hereMetrics: m,
+    route: { ...(base.properties.route || {}), start: { name: "현위치" } },
+    fromHere: true, hereMetrics: m, formal: false, status: "here", elevationLow: false,
   };
   return { id: properties.id, properties, path, len, cues: [] };
 }

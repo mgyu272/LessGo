@@ -11,9 +11,12 @@ const WIKI_TITLES = {
   uiryeong: ["서울 의릉", "의릉"],
   gilsangsa: ["길상사 (서울)"],
 };
+// 위키백과 대표 이미지가 장소 사진이 아닌 곳 (길상사 문서는 법정 스님 사진)
+const NO_WIKI = new Set(["gilsangsa"]);
 const cache = new Map();
 
 async function findPhoto(spot) {
+  if (NO_WIKI.has(spot.id) || NO_WIKI.has(spot.spot_id)) return null;
   const base = (spot.name?.ko || "").replace(/\s*\(.*\)/, "").trim();
   const titles = [...(WIKI_TITLES[spot.id] || WIKI_TITLES[spot.spot_id] || []), base, `${base} (서울)`].filter(Boolean);
   const url = "https://ko.wikipedia.org/w/api.php?action=query&format=json&origin=*&redirects=1"
@@ -31,6 +34,7 @@ async function findPhoto(spot) {
   for (const t of titles) {
     const page = pages.find((p) => p.title === resolve(t));
     if (!page || page.missing !== undefined || page.pageprops?.disambiguation !== undefined || !page.thumbnail) continue;
+    if (/Replace_this_image|\.svg$/i.test(page.pageimage || "")) continue; // "사진 넣어 주세요" 자리표시 그림은 건너뛰어요
     return {
       url: page.thumbnail.source,
       credit: loc({ ko: "사진: 위키미디어 공용", en: "Photo: Wikimedia Commons" }),

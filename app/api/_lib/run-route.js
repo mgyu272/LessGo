@@ -18,9 +18,16 @@ const OVERPASS = ["https://overpass-api.de/api/interpreter", "https://overpass.p
 const ELEVATION = "https://api.open-meteo.com/v1/elevation";
 
 // 기존 알고리즘 data/route_defaults.json · ROUTING_ALGORITHM.md 의 Low 경사 페널티
-const SLOPE_PENALTY = { share8: 35, share10: 25, sustained: 20, longClimb: 10, ascent: 10 };
-// 최종 점수 가중치 (기존 Low 가중치 비율 + 하천 보너스)
-const WEIGHTS = { slope: 30, running: 26, river: 18, directness: 16, natural: 10 };
+// 기존 알고리즘 data/route_defaults.json · ROUTING_ALGORITHM.md 의 경사 페널티 (low = 완만한 길, high = 언덕 허용(any))
+const SLOPE_PENALTY = {
+  low: { share8: 35, share10: 25, sustained: 20, longClimb: 10, ascent: 10 },
+  high: { share8: 12, share10: 8, sustained: 8, longClimb: 4, ascent: 8 },
+};
+// 최종 점수 가중치 (기존 Low/Any 가중치 비율 + 하천 보너스). 언덕 허용은 경사 비중이 아주 작고 길·직진성 비중이 커요
+const WEIGHTS = {
+  low: { slope: 30, running: 26, river: 18, directness: 16, natural: 10 },
+  high: { slope: 3, running: 40, river: 18, directness: 29, natural: 10 },
+};
 const FRIENDLY = /^(footway|path|cycleway|pedestrian|track|living_street)$/;
 const MAX_DETOUR = 1.6;      // 최단 경로 대비 최대 1.6배까지만 돌아가요
 const MAX_EXTRA_M = 2500;    // 그리고 최대 2.5km 추가까지
@@ -171,7 +178,7 @@ function classifyOsm(elements) {
 // ---------- 점수 (기존 Python 공식) ----------
 function median(xs) { const s = [...xs].sort((a, b) => a - b); return s[Math.floor(s.length / 2)]; }
 
-export function gradeMetrics(samples) {
+export function gradeMetrics(samples, mode = "low") {
   // 20m 간격 + 60m 중앙값 평활화 (ROUTING_ALGORITHM.md)
   if (samples.length < 3 || samples.some((s) => s.ele == null)) return null;
   const ele = samples.map((_, i) => median(samples.slice(Math.max(0, i - 1), i + 2).map((s) => s.ele)));
@@ -193,7 +200,7 @@ export function gradeMetrics(samples) {
   }
   const km = Math.max(total / 1000, 0.1);
   const share8 = len8 / total, share10 = len10 / total, perKm = ascent / km;
-  const P = SLOPE_PENALTY;
+  const P = SLOPE_PENALTY[mode];
   const score = clamp(
     100 - share8 * P.share8 - share10 * P.share10
       - Math.min(1, sustained / 12) * P.sustained
@@ -223,21 +230,30 @@ function evaluate(path, ctx, osm) {
   const share = (idx, m) => (idx ? samples.filter((s) => idx.near(s, m)).length / samples.length : 0);
   const friendlyShare = osm ? share(osm.idx.friendly, 12) : 0;
   const riverShare = osm ? share(osm.idx.river, 15) : 0;
-  const grade = gradeMetrics(samples);
+  const grade = gradeMetrics(samples, "low");
+  const gradeHigh = gradeMetrics(samples, "high");
   const overlap = overlapShare(samples);
   const detour = len / ctx.directLen;
   const directness = clamp(100 * (1 - (detour - 1) / (MAX_DETOUR - 1)), 0, 100);
   const parts = {
     slope: grade ? grade.slope_score : null,
+    slope_high: gradeHigh ? gradeHigh.slope_score : null,
     running: osm ? friendlyShare * 100 : null,
     river: osm ? Math.min(100, riverShare * 250) : null, // 하천변 40% 이상이면 만점
     directness,
     natural: clamp(100 - overlap * 300, 0, 100),
   };
-  let sum = 0, w = 0;
-  for (const [k, v] of Object.entries(parts)) if (v != null) { sum += v * WEIGHTS[k]; w += WEIGHTS[k]; }
+  const scoreFor = (mode) => {
+    let sum = 0, w = 0;
+    for (const [k, wt] of Object.entries(WEIGHTS[mode])) {
+      const v = k === "slope" && mode === "high" ? parts.slope_high : parts[k];
+      if (v != null) { sum += v * wt; w += wt; }
+    }
+    return Math.round((sum / w) * 10) / 10;
+  };
   return {
-    score: Math.round((sum / w) * 10) / 10,
+    score: scoreFor("low"),
+    score_high: scoreFor("high"),
     distance_m: Math.round(len),
     detour: Math.round(detour * 100) / 100,
     friendly_share: Math.round(friendlyShare * 100),
@@ -313,8 +329,8 @@ export async function findRunRoute({ from, to, orsKey }) {
     }
     return { ...c, ev };
   }));
-  evaluated.sort((a, b) => b.ev.score - a.ev.score);
-  const best = evaluated[0];
+  const best = [...evaluated].sort((a, b) => b.ev.score - a.ev.score)[0];
+  const bestHigh = [...evaluated].sort((a, b) => b.ev.score_high - a.ev.score_high)[0];
   const directEv = evaluated.find((c) => c.kind === "direct");
 
   const pack = (c) => ({
@@ -323,7 +339,9 @@ export async function findRunRoute({ from, to, orsKey }) {
     metrics: { ...c.ev, samples: undefined },
   });
   return {
-    best: pack(best),
+    best: pack(best),        // 완만한 길 (예전 이름 그대로)
+    low: pack(best),
+    high: pack(bestHigh),    // 언덕 허용
     direct: pack(directEv),
     tried: evaluated.length,
     osm: osm ? { rivers: osm.water.length, riverside_paths: osm.river.length, friendly_paths: osm.friendly.length } : null,

@@ -134,7 +134,11 @@ export default function Home() {
     <section className="screen home-screen">
       <MapView className="home-map" center={saved?.view ? [saved.view.center.lat, saved.view.center.lng] : HOME_CENTER} level={saved?.view?.level ?? HOME_LEVEL}>
         {/* 둘러볼 곳 아이콘은 코스 목적지 핀 아래에. 칩을 바꾸면 묶음을 새로 만들어요 */}
-        <ExploreLayer key={filter} places={exShown} spots={shown} onSpot={openSpot} selectedId={popupSpot?.id ?? null} level={view?.level ?? HOME_LEVEL} onSelect={openPreparing} pad={clusterPad} />
+        <ExploreLayer key={filter}
+          // 장소 하나를 열면 그 장소(와 코스)만 보이게 다른 아이콘은 숨겨요
+          places={popupSpot ? exShown.filter((p) => popupSpot.preparing && p.id === popupSpot.id) : exShown}
+          spots={popupSpot ? shown.filter((s) => !popupSpot.preparing && s.id === popupSpot.id) : shown}
+          onSpot={openSpot} selectedId={popupSpot?.id ?? null} level={view?.level ?? HOME_LEVEL} onSelect={openPreparing} pad={clusterPad} />
         {popupCourse && [
           <Route key="pc-case" path={popupCourse.path} color="#FFFFFF" weight={11} opacity={1} zIndex={5} />,
           <Route key="pc" path={popupCourse.path} color={MODE_COLOR[popupCourse.properties.mode]} weight={6} opacity={1} zIndex={6} />,
