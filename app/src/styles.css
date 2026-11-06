@@ -1274,6 +1274,29 @@ div:has(> .spot-pin) { pointer-events: none; }
 /* 장소와 이야기: 둘러볼 곳 목록 */
 .pl-explore { display: flex; flex-direction: column; gap: 8px; flex: none; margin-top: 6px; }
 .pl-explore h2 { margin: 0; font-size: 18px; font-weight: 800; }
+.places-screen [data-places-theme="all"] { --places-theme: #2E6B1C; }
+.places-screen [data-places-theme="exhibit"] { --places-theme: #2F6DB5; }
+.places-screen [data-places-theme="heritage"] { --places-theme: #B4532A; }
+.places-screen [data-places-theme="religion"] { --places-theme: #7B4FA6; }
+.places-screen [data-places-theme="park"] { --places-theme: #2E7A1F; }
+.places-screen .pl-topics { display: flex; flex-wrap: nowrap; overflow-x: auto; }
+.places-screen .pl-topic { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; background: white; }
+.places-screen .pl-topic svg, .pl-explore h2 span { color: var(--places-theme); }
+.places-screen .pl-topic.on { background: var(--places-theme); color: white; }
+.places-screen .pl-topic.on svg { color: inherit; }
+.explore-rail { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: -18px; padding: 5px 18px 12px; scroll-padding-inline: 18px; }
+.explore-rail::-webkit-scrollbar { display: none; }
+.explore-tile { flex: 0 0 220px; min-width: 0; scroll-snap-align: start; overflow: hidden; border-radius: 20px; background: white; border: 1px solid #E2ECD9; box-shadow: 0 3px 8px rgba(30,60,20,.08); padding: 0; text-align: left; }
+.explore-tile:focus-visible { outline: 3px solid var(--places-theme); outline-offset: 2px; }
+.explore-photo { position: relative; height: 140px; display: grid; place-items: center; background: #E6EDDF; color: #798174; }
+.explore-photo img { width: 100%; height: 140px; object-fit: cover; }
+.explore-badge { position: absolute; top: 10px; left: 10px; background: white; padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; color: var(--places-theme); }
+.explore-caption { display: grid; gap: 4px; padding: 12px 14px 14px; }
+.explore-caption > b, .explore-caption > small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.explore-caption > b { font-size: 16px; font-weight: 700; }
+.explore-caption > small { min-height: 18px; font-size: 12.5px; color: #5C6F54; }
+.explore-distance { display: flex; align-items: center; gap: 4px; font-size: 13px; }
+.explore-distance svg { color: #2E7A1F; }
 .pl-explore > p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
 .pl-explore ul, .pd-explore ul { list-style: none; margin: 0; padding: 2px 12px; border-radius: 20px; }
 .pl-explore li + li, .pd-explore li + li { border-top: 1px solid #EAF3DD; }
