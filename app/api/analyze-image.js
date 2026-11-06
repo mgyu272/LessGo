@@ -1,0 +1,260 @@
+// POST /api/analyze-image — visual identification plus a separate sourced/estimated explanation.
+import { askGeminiJSON, hasKey, IMAGE_MODEL, supportsImageInput, VISION_RETRY_POLICY } from "./_lib/gemini.js";
+import { applyReferenceComparison, buildReferenceAssistedRequest, canSendReferencesToGemini, selectLocalReferenceImages } from "./_lib/heritage-reference.js";
+import { buildHistoryVerification, getOfficialVisualCandidates, getPlaceVisualCandidates, verifyImageEvidence } from "./_lib/history-evidence.js";
+import { buildFallbackExplanation, buildMockExplanation, explanationErrorResponse, generateHistoryExplanation, getDestinationStoryEvidence, enrichStoryEvidence, classifyExplanationType } from "./_lib/history-explanation.js";
+import { performance } from "node:perf_hooks";
+
+const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
+const MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const RESULT_SCHEMA = {
+  type: "OBJECT",
+  properties: {
+    candidateName: { type: "STRING" },
+    objectType: { type: "STRING" },
+    subjectLevel: { type: "STRING", enum: ["place", "facility", "feature", "general", "unknown"] },
+    visualFeatures: { type: "ARRAY", items: { type: "STRING" } },
+    identificationStatus: { type: "STRING", enum: ["identified", "uncertain", "unknown"] },
+    reason: { type: "STRING" },
+    heritageRelevance: { type: "STRING", enum: ["relevant", "irrelevant", "uncertain"] },
+  },
+  required: ["candidateName", "objectType", "visualFeatures", "identificationStatus", "reason"],
+};
+const REFERENCE_RESULT_SCHEMA = {
+  ...RESULT_SCHEMA,
+  properties: {
+    ...RESULT_SCHEMA.properties,
+    comparison: {
+      type: "OBJECT",
+      properties: {
+        status: { type: "STRING", enum: ["matched", "mismatched", "inconclusive"] },
+        visualEvidence: { type: "ARRAY", items: { type: "STRING" } },
+      },
+      required: ["status", "visualEvidence"],
+    },
+  },
+  required: [...RESULT_SCHEMA.required, "comparison"],
+};
+
+function fail(status, code, error) { return Object.assign(new Error(error), { status, code }); }
+
+function validateImage(mimeType, encoded) {
+  if (!MIME_TYPES.has(mimeType)) throw fail(415, "unsupported_image_type", "Only JPEG, PNG, and WEBP images are supported.");
+  if (typeof encoded !== "string" || !encoded || encoded.length > Math.ceil(MAX_IMAGE_BYTES * 4 / 3) + 8 || !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(encoded)) {
+    throw fail(400, "invalid_image_data", "A valid base64 image is required.");
+  }
+  const bytes = Buffer.from(encoded, "base64");
+  if (!bytes.length) throw fail(400, "invalid_image_data", "A valid base64 image is required.");
+  if (bytes.length > MAX_IMAGE_BYTES) throw fail(413, "image_too_large", "The processed image must be 3 MB or smaller.");
+  const isJpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  const isPng = bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+  const isWebp = bytes.toString("ascii", 0, 4) === "RIFF" && bytes.toString("ascii", 8, 12) === "WEBP";
+  if (!(mimeType === "image/jpeg" && isJpeg) && !(mimeType === "image/png" && isPng) && !(mimeType === "image/webp" && isWebp)) {
+    throw fail(415, "image_signature_mismatch", "The image content does not match its declared format.");
+  }
+  return bytes;
+}
+
+function normalizeResult(value) {
+  const statuses = new Set(["identified", "uncertain", "unknown"]);
+  if (!value || typeof value !== "object" || !statuses.has(value.identificationStatus) ||
+      typeof value.candidateName !== "string" || typeof value.objectType !== "string" ||
+      !Array.isArray(value.visualFeatures) || typeof value.reason !== "string") {
+    throw fail(502, "invalid_model_response", "The image analysis response was not in the expected format.");
+  }
+  return {
+    candidateName: value.candidateName.slice(0, 160),
+    objectType: value.objectType.slice(0, 100),
+    ...(["place", "facility", "feature", "general", "unknown"].includes(value.subjectLevel) ? { subjectLevel: value.subjectLevel } : {}),
+    visualFeatures: value.visualFeatures.filter((item) => typeof item === "string").slice(0, 8).map((item) => item.slice(0, 180)),
+    identificationStatus: value.identificationStatus,
+    reason: value.reason.slice(0, 500),
+    heritageRelevance: ["relevant", "irrelevant", "uncertain"].includes(value.heritageRelevance) ? value.heritageRelevance : "uncertain",
+  };
+}
+
+async function withExplanation(vision, evidence, lang, { testData = false, spotId } = {}) {
+  if (vision.heritageRelevance === "irrelevant") return { explanation: null, explanationError: null };
+  if (testData) return { explanation: buildMockExplanation({ lang, visualFeatures: vision.visualFeatures }), explanationError: null };
+  const startedAt = performance.now();
+  let storyVision = vision;
+  let storyEvidence = evidence;
+  if (vision.heritageRelevance !== "irrelevant" && evidence?.evidenceStatus !== "conflicting" && ["place", "general", "unknown"].includes(vision.subjectLevel || "unknown") && classifyExplanationType({ evidence, identificationStatus: vision.identificationStatus }) !== "grounded") {
+    const destination = await getDestinationStoryEvidence(spotId, lang);
+    if (destination) {
+      storyEvidence = destination.evidence;
+      storyVision = { ...vision, candidateName: destination.destinationName, objectType: "heritage destination", identificationStatus: "uncertain", visualFeatures: [] };
+    }
+  }
+  storyEvidence = await enrichStoryEvidence({ spotId, candidateName: storyVision.candidateName, evidence: storyEvidence, lang, siteOnly: storyVision.objectType === "heritage destination" });
+  try {
+    const explanation = await generateHistoryExplanation({ ...storyVision, evidence: storyEvidence, lang });
+    console.info(`[api/analyze-image] phase=history_explanation outcome=success elapsed_ms=${Math.round(performance.now() - startedAt)}`);
+    return { explanation, explanationError: null };
+  } catch (error) {
+    const explanationError = explanationErrorResponse(error, lang);
+    console.warn(`[api/analyze-image] phase=history_explanation outcome=failed code=${explanationError.code} elapsed_ms=${Math.round(performance.now() - startedAt)}`);
+    // Preserve a useful, source-grounded answer when optional text generation fails.
+    return { explanation: buildFallbackExplanation({ evidence: storyEvidence, visualFeatures: storyVision.visualFeatures, identificationStatus: storyVision.identificationStatus, lang }), explanationError };
+  }
+}
+
+export default async function analyzeImage(req, res) {
+  if (req.method !== "POST") return res.status(405).json({ code: "method_not_allowed", error: "POST only" });
+  let body;
+  try {
+    body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
+  } catch {
+    return res.status(400).json({ code: "invalid_json", error: "Request body must be valid JSON." });
+  }
+
+  try {
+    const { spotId, spotName, lang = "ko", mimeType, imageBase64 } = body;
+    const deferExplanation = body.explanationMode === "deferred";
+    if (typeof spotId !== "string" || spotId.length > 100 || typeof spotName !== "string" || !spotName.trim() || spotName.length > 160 || !["ko", "en"].includes(lang)) {
+      throw fail(400, "invalid_request", "Place ID, place name, and supported language are required.");
+    }
+    const imageBytes = validateImage(mimeType, imageBase64);
+
+    // The image mock is independent from GEMINI_MOCK used by existing text features.
+    if (process.env.GEMINI_IMAGE_MOCK === "1") {
+      const mockResult = {
+        candidateName: lang === "ko" ? "테스트용 시각 대상" : "Test visual object",
+        objectType: lang === "ko" ? "테스트 데이터" : "Test data",
+        visualFeatures: [lang === "ko" ? "테스트 데이터: 실제 사진 분석 결과가 아닙니다." : "Test data: this is not a real photo analysis."],
+        identificationStatus: "uncertain",
+        reason: lang === "ko" ? "개발 화면 확인용 테스트 데이터입니다." : "Development-only test data for checking the UI.",
+      };
+      const evidence = await verifyImageEvidence({ spotId, ...mockResult, lang });
+      const { explanation, explanationError } = await withExplanation(mockResult, evidence, lang, { testData: true });
+      const referenceComparison = { status: "not_compared", attempted: false, referenceCount: 0, candidateChanged: false, identificationStatusBefore: "uncertain", identificationStatusAfter: "uncertain", visualEvidence: [], reasonCode: "mock_mode" };
+      return res.status(200).json({
+        ...mockResult, evidence, explanation, explanationError,
+        referenceComparison,
+        historyVerification: buildHistoryVerification({ evidence, identificationStatus: mockResult.identificationStatus, explanation, referenceComparison }),
+        source: "mock", testData: true, model: "mock",
+      });
+    }
+    if (!hasKey()) throw fail(503, "gemini_not_configured", "AI image analysis is being prepared. Please configure GEMINI_API_KEY on the server.");
+
+    const model = IMAGE_MODEL();
+    if (!supportsImageInput(model)) throw fail(503, "unsupported_image_model", `Configured image model '${model}' is not verified as supporting image input. Set GEMINI_IMAGE_MODEL to a supported model.`);
+    const visualCandidates = await getPlaceVisualCandidates(spotId);
+    const officialCandidates = await getOfficialVisualCandidates(spotId);
+    const system = `First decide if the photograph prominently shows cultural heritage, historical architecture, royal tomb structures, historical monuments or recognizable parts of those subjects. If it instead prominently shows a selfie/person, food, vehicle, electronics, pets, or unrelated everyday objects, set heritageRelevance to "irrelevant" regardless of location context. If it may show heritage but is too unclear to judge, set heritageRelevance to "uncertain". Otherwise set heritageRelevance to "relevant". Never assume heritage relevance from the selected site or candidate list. Identify the main subject visibly centered or most prominent in the supplied image. Compare its visible features to the provided place-scoped candidate names and visual keywords; prefer a specific matching candidate label when the visible evidence is adequate. If only a generic category is defensible, use the generic category and mark uncertain. Never identify a specific site solely from its location hint. Distinguish a whole heritage place from an individual facility (such as a hall or gate) and from a smaller architectural feature. Use a specific facility name only when the image itself provides enough visible evidence; otherwise use a broad object category or the place level. The place context and the supplied candidate vocabulary are weak hints, never proof; candidates may be absent from the photo. Do not force a match. Do not infer or invent construction dates, people, historical events, or other historical facts. If uncertain, use identificationStatus "uncertain"; if no defensible candidate can be named, use "unknown". Set subjectLevel to place, facility, feature, general, or unknown according to the specificity of the visual candidate. Return ${lang === "ko" ? "Korean" : "English"}. In English, use these consistent names when relevant: Simujang, Jeongneung Royal Tomb, Uireung Royal Tomb, Jeongjagak, Hongsalmun, and Queen Sindeok.`;
+    const user = `Possible location context (weak hint only): ${spotName} (place ID: ${spotId}). Place-scoped candidate names, aliases and distinguishing visual keywords (hints, not proof): ${JSON.stringify(visualCandidates)}. Officially sourced object names: ${JSON.stringify(officialCandidates)}. Identify the most prominent visible subject and list concrete visual clues supporting the candidate. Do not claim historical facts that cannot be seen in the photo.`;
+    const visionStartedAt = performance.now();
+    let baselineRaw;
+    try {
+      baselineRaw = await askGeminiJSON({
+        system, user, schema: RESULT_SCHEMA,
+        // Only a 503 gets one retry; each 21s attempt plus 1.5s backoff fits the 45s budget.
+        // The legacy combined response keeps its existing 12s per-attempt limit.
+        model,
+        timeoutMs: deferExplanation ? VISION_RETRY_POLICY.attemptTimeoutMs : 12000,
+        maxAttempts: deferExplanation ? VISION_RETRY_POLICY.maxAttempts : 2,
+        retryStatuses: [503],
+        retryDelayMs: deferExplanation ? VISION_RETRY_POLICY.retryDelayMs : 1200,
+        phase: "vision",
+        image: { mimeType, data: imageBytes.toString("base64") },
+      });
+      console.info(`[api/analyze-image] phase=vision outcome=success elapsed_ms=${Math.round(performance.now() - visionStartedAt)}`);
+    } catch (error) {
+      console.warn(`[api/analyze-image] phase=vision outcome=failed code=${error.code || "unknown"} upstream_status=${error.geminiStatus || "none"} elapsed_ms=${Math.round(performance.now() - visionStartedAt)}`);
+      throw error;
+    }
+    const baseline = normalizeResult(baselineRaw);
+    let finalVision = baseline;
+    let referenceComparison = {
+      status: "not_compared", attempted: false, referenceCount: 0, candidateChanged: false,
+      identificationStatusBefore: baseline.identificationStatus, identificationStatusAfter: baseline.identificationStatus,
+      visualEvidence: [], reasonCode: process.env.GEMINI_IMAGE_REFERENCE_MODE === "1" ? "not_available" : "disabled",
+    };
+
+    // References are an opt-in secondary pass. Local selection is safe, but external
+    // transmission requires explicit env consent AND confirmed rights in the manifest.
+    if (process.env.GEMINI_IMAGE_REFERENCE_MODE === "1") {
+      let references = [];
+      try {
+        references = await selectLocalReferenceImages({
+          spotId, spotName, candidateName: baseline.candidateName, objectType: baseline.objectType,
+          subjectLevel: baseline.subjectLevel,
+        });
+      } catch {
+        referenceComparison.reasonCode = "reference_data_unavailable";
+      }
+      if (!references.length && referenceComparison.reasonCode !== "reference_data_unavailable") {
+        referenceComparison.reasonCode = "no_usable_reference";
+      } else if (references.length && !(await canSendReferencesToGemini(references))) {
+        referenceComparison.reasonCode = "external_use_not_authorized";
+      } else if (references.length) {
+        referenceComparison.reasonCode = "comparison_failed";
+        referenceComparison.referenceCount = references.length;
+        try {
+          const officialCandidates = await getOfficialVisualCandidates(spotId);
+          const assisted = buildReferenceAssistedRequest({
+            spotId, spotName, lang, baseline,
+            userImage: { mimeType, data: imageBytes.toString("base64") },
+            references, officialCandidates,
+          });
+          // Reserve time for this optional pass after the up-to-45s Vision budget.
+          // It is a single attempt; transient reference errors fall back to baseline.
+          const comparisonRaw = await askGeminiJSON({
+            system: assisted.system, user: assisted.user, schema: REFERENCE_RESULT_SCHEMA, model, timeoutMs: 12000,
+            maxAttempts: 1, retryStatuses: [],
+            phase: "vision_reference",
+            images: assisted.images,
+          });
+          const assistedResult = normalizeResult(comparisonRaw);
+          const applied = applyReferenceComparison({
+            baseline, assisted: assistedResult, status: comparisonRaw.comparison?.status,
+            visualEvidence: comparisonRaw.comparison?.visualEvidence || [], officialCandidates,
+          });
+          finalVision = applied.result;
+          referenceComparison = { ...applied.comparison, attempted: true, referenceCount: references.length, reasonCode: null };
+        } catch (referenceError) {
+          // A failed optional pass never replaces the original Vision analysis.
+          referenceComparison.attempted = true;
+          console.warn(`[api/analyze-image] phase=vision_reference outcome=failed code=${referenceError.code || "reference_compare_failed"} upstream_status=${referenceError.geminiStatus || "none"}`);
+        }
+      }
+    }
+    const scopedCandidates = await getPlaceVisualCandidates(spotId);
+    const normalizedCandidate = String(finalVision.candidateName || "").normalize("NFKC").toLowerCase().replace(/[\\s\\p{P}\\p{S}]+/gu, "");
+    const candidateInSite = scopedCandidates.some(item => [item.name, ...(item.aliases || [])].some(name => String(name || "").normalize("NFKC").toLowerCase().replace(/[\\s\\p{P}\\p{S}]+/gu, "") === normalizedCandidate));
+    if (finalVision.heritageRelevance !== "irrelevant" && finalVision.subjectLevel === "facility" && !candidateInSite) {
+      finalVision = { ...finalVision, identificationStatus: "uncertain", heritageRelevance: "uncertain", candidateName: "", reason: "Facility label is not in the selected heritage site's candidate list." };
+    }
+    const evidence = finalVision.heritageRelevance === "irrelevant" ? { evidenceStatus: "insufficient", sourceLevel: "none", factSources: [], supportedFacts: [], sources: [], limitations: [] } : await verifyImageEvidence({ spotId, ...finalVision, lang });
+    if (deferExplanation) {
+      return res.status(200).json({
+        ...finalVision, evidence, referenceComparison, explanation: null, explanationError: null,
+        historyVerification: buildHistoryVerification({ evidence, identificationStatus: finalVision.identificationStatus, referenceComparison }),
+        explanationPending: finalVision.heritageRelevance !== "irrelevant", source: "gemini", testData: false, model,
+      });
+    }
+    const explanationResult = await withExplanation(finalVision, evidence, lang, { spotId });
+    return res.status(200).json({ ...finalVision, evidence, referenceComparison, ...explanationResult,
+      historyVerification: buildHistoryVerification({ evidence, identificationStatus: finalVision.identificationStatus, explanation: explanationResult.explanation, referenceComparison }),
+      source: "gemini", testData: false, model });
+  } catch (error) {
+    if (error.code === "gemini_timeout" || error.name === "AbortError") {
+      const limitSeconds = error.phase === "vision" && body?.explanationMode === "deferred" ? 45 : 12;
+      return res.status(504).json({ code: "gemini_timeout", error: `Gemini did not respond within the configured ${limitSeconds}-second request limit.` });
+    }
+    if (error.code === "gemini_dns_error" || error.code === "gemini_network_error") {
+      return res.status(502).json({ code: error.code, error: "The Gemini API could not be reached from the server. Check DNS and outbound network access." });
+    }
+    const upstreamStatus = error.geminiStatus;
+    if (upstreamStatus === 503) return res.status(503).json({ code: "gemini_service_unavailable", error: "Gemini is temporarily unavailable (HTTP 503). Try again later." });
+    if (upstreamStatus === 429) return res.status(429).json({ code: "gemini_rate_limited", error: "Gemini is temporarily rate limited. Please try again shortly." });
+    if (upstreamStatus === 401 || upstreamStatus === 403) return res.status(502).json({ code: "gemini_auth_error", error: "Gemini rejected the server credentials or API permissions." });
+    const status = error.status || 502;
+    const code = error.code || (status === 502 ? "gemini_error" : "request_failed");
+    const message = status === 502 ? "Image analysis failed. Please try again." : error.message;
+    if (status >= 500) console.error(`[api/analyze-image] outcome=failed code=${code} upstream_status=${upstreamStatus || "none"}`);
+    return res.status(status).json({ code, error: message });
+  }
+}
+
+export const config = { maxDuration: 60 };

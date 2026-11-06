@@ -1,0 +1,507 @@
+{
+  "version": "4d-1",
+  "description": "Place-scoped heritage facts transcribed from directly inspected official heritage records, municipal archives, and a National Research Institute of Cultural Heritage journal article. These facts describe records about the place or facility and do not identify what appears in a user photo.",
+  "objects": [
+    {
+      "spotId": "simujang",
+      "objectId": "simujang-house",
+      "objectName": "심우장",
+      "aliases": [
+        "심우장",
+        "만해 한용운 심우장",
+        "Simujang",
+        "Simujang House",
+        "Han Yong-un’s Simujang House"
+      ],
+      "objectType": [
+        "house",
+        "hanok",
+        "building",
+        "structure",
+        "architecture",
+        "residence",
+        "집",
+        "한옥",
+        "건물",
+        "건축물",
+        "문화유산",
+        "heritage site"
+      ],
+      "facts": [
+        {
+          "ko": "국가유산포털은 만해 한용운 심우장을 1933년의 유적건조물·생활유적으로 등재하고, 수량·면적을 1동, 88.6㎡로 기록한다.",
+          "en": "The Korea Heritage Portal lists Han Yong-un’s Simujang as a 1933 living heritage site and records one building with an area of 88.6 m².",
+          "factId": "simujang-official-register",
+          "sourceIds": [
+            "heritage-simujang-record"
+          ]
+        },
+        {
+          "ko": "독립기념관 한국독립운동정보시스템의 한용운 생애 자료는 심우장의 방향을 동북향으로 서술하며, 집을 지을 때 총독부 청사를 마주하지 않으려 했다는 일화를 함께 전한다.",
+          "en": "The Independence Hall of Korea’s biography of Han Yong-un describes Simujang as facing northeast and recounts the story that he turned the house away from the Government-General building.",
+          "factId": "simujang-orientation",
+          "sourceIds": [
+            "i815-hanyongun-biography"
+          ]
+        },
+        {
+          "ko": "독립기념관의 한용운 생애 자료는 그가 심우장에서 생애를 마칠 때까지 살았다고 기록한다.",
+          "en": "The Independence Hall of Korea’s biography records that Han Yong-un lived at Simujang until the end of his life.",
+          "factId": "simujang-residence-until-death",
+          "sourceIds": [
+            "i815-hanyongun-biography"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "agency": "국가유산청 국가유산포털",
+          "sourceId": "heritage-simujang-record",
+          "title": "사적 만해 한용운 심우장",
+          "url": "https://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1331105500000&pageNo=1_1_1_1",
+          "supports": "기본 정보에 시대 1933년, 분류 생활유적, 수량/면적 1동·88.6㎡로 표시됨.",
+          "titleEn": "Manhae Han Yong-un’s Simujang"
+        },
+        {
+          "agency": "독립기념관 한국독립운동정보시스템",
+          "sourceId": "i815-hanyongun-biography",
+          "title": "한용운의 생애와 독립투쟁",
+          "url": "https://search.i815.or.kr/publication/yeoljeon/detail.do?id=9-HW0001-000",
+          "supports": "본문에서 심우장이 동북향으로 지어졌다는 일화 및 방향 선택의 배경을 서술함.",
+          "titleEn": "The Life and Independence Struggle of Han Yong-un"
+        }
+      ],
+      "verificationStatus": "official_verified",
+      "notes": [
+        "기존 Less GO 내부 이야기 카드의 ‘북쪽’ 표현과 독립기념관 자료의 ‘동북향’ 표현에 방향 정밀도 차이가 있어, 카드 문구는 별도 편집 검토가 필요함."
+      ],
+      "notesEn": [
+        "The Less GO story card says “north,” while the Independence Hall source specifies “northeast.” The card wording should be reviewed separately because the directional precision differs."
+      ]
+    },
+    {
+      "spotId": "jeongneung",
+      "objectId": "jeongneung-hongsalmun",
+      "objectName": "홍살문",
+      "aliases": [
+        "홍살문",
+        "홍전문",
+        "홍살문(서울 정릉)",
+        "Hongsalmun",
+        "red spiked gate",
+        "red arrow gate"
+      ],
+      "objectType": [
+        "gate",
+        "entrance gate",
+        "홍살문",
+        "문",
+        "문루"
+      ],
+      "facts": [
+        {
+          "ko": "성북마을아카이브의 정릉 기록은 홍살문을 정릉의 시설로 수록한다. 국가유산포털에도 ‘서울 정릉_홍살문’ 이미지 항목이 있다.",
+          "en": "The Seongbuk Village Archive lists a Hongsalmun among Jeongneung’s facilities; the Korea Heritage Portal also has an image item titled ‘Seoul Jeongneung—Hongsalmun.’",
+          "factId": "jeongneung-hongsalmun-presence",
+          "sourceIds": [
+            "seongbuk-jeongneung-archive",
+            "heritage-jeongneung-record"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "agency": "성북구 성북마을아카이브",
+          "sourceId": "seongbuk-jeongneung-archive",
+          "title": "정릉",
+          "url": "https://archive.sb.go.kr/story/871",
+          "supports": "정릉 시설 설명 및 ‘서울 정릉(사적 제208호) 홍살문’ 기록물 항목.",
+          "titleEn": "Jeongneung · Seongbuk Village Archive"
+        },
+        {
+          "agency": "국가유산청 국가유산포털",
+          "sourceId": "heritage-jeongneung-record",
+          "title": "사적 서울 정릉 (서울 貞陵)",
+          "url": "https://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1331102080000&pageNo=1_1_1_1",
+          "supports": "이미지 목록에 ‘서울 정릉_홍살문’ 항목이 표시됨.",
+          "titleEn": "Jeongneung Royal Tomb · Korea Heritage Portal"
+        }
+      ],
+      "verificationStatus": "official_verified"
+    },
+    {
+      "spotId": "jeongneung",
+      "objectId": "jeongneung-jeongjagak",
+      "objectName": "정자각",
+      "aliases": [
+        "정자각",
+        "서울 정릉 정자각",
+        "Jeongjagak",
+        "royal ritual hall",
+        "T-shaped shrine hall"
+      ],
+      "objectType": [
+        "building",
+        "structure",
+        "architecture",
+        "hall",
+        "ritual hall",
+        "건물",
+        "건축물",
+        "전각",
+        "정자각"
+      ],
+      "facts": [
+        {
+          "ko": "성북마을아카이브의 정릉 기록은 능강 아래의 정자각을 정릉 시설로 수록한다.",
+          "en": "The Seongbuk Village Archive’s Jeongneung record lists the Jeongjagak below the tomb slope as a facility at Jeongneung.",
+          "factId": "jeongneung-jeongjagak-presence",
+          "sourceIds": [
+            "seongbuk-jeongneung-archive"
+          ]
+        },
+        {
+          "ko": "궁능유적본부는 정자각을 왕릉 제향을 위한 건물로 설명하며, 정전과 배위청이 결합한 丁자형 평면이 이름의 유래라고 안내한다.",
+          "en": "The Royal Heritage Headquarters describes the Jeongjagak as a building for royal tomb rites; its name refers to the 丁-shaped plan formed by the main hall and the worship area.",
+          "factId": "royal-tomb-jeongjagak-function-and-plan",
+          "sourceIds": [
+            "royal-khs-tomb-architecture"
+          ]
+        },
+        {
+          "ko": "성북마을아카이브는 1669년 신덕왕후를 종묘에 배향한 뒤 정릉의 복구와 왕릉 시설 정비가 이루어졌다고 기록한다.",
+          "en": "The Seongbuk Village Archive records that Jeongneung was restored and its royal tomb facilities were re-established after Queen Sindeok was enshrined in Jongmyo in 1669.",
+          "factId": "jeongneung-restoration-1669",
+          "sourceIds": [
+            "seongbuk-jeongneung-archive"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "agency": "성북구 성북마을아카이브",
+          "sourceId": "seongbuk-jeongneung-archive",
+          "title": "정릉",
+          "url": "https://archive.sb.go.kr/story/871",
+          "supports": "정릉의 시설 설명에서 능강 아래 정자각을 명시함.",
+          "titleEn": "Jeongneung · Seongbuk Village Archive"
+        },
+        {
+          "agency": "국가유산청 궁능유적본부",
+          "sourceId": "royal-khs-tomb-architecture",
+          "title": "조선왕릉 건축물 — 정자각",
+          "url": "https://royal.khs.go.kr/ROYAL/contents/R308050000.do?grpCode=acm&pageType=academic_info5",
+          "supports": "정자각을 왕릉 제향 건물로 설명하고 정전·배위청이 이루는 丁자형 평면 및 명칭을 설명함.",
+          "titleEn": "Joseon Royal Tomb Architecture — Jeongjagak"
+        }
+      ],
+      "verificationStatus": "official_verified"
+    },
+    {
+      "spotId": "jeongneung",
+      "objectId": "jeongneung-bigak",
+      "objectName": "비각",
+      "aliases": [
+        "비각",
+        "정릉 비각",
+        "Bigak",
+        "stele pavilion",
+        "memorial stele pavilion"
+      ],
+      "objectType": [
+        "building",
+        "structure",
+        "architecture",
+        "pavilion",
+        "건물",
+        "건축물",
+        "비각",
+        "전각"
+      ],
+      "facts": [
+        {
+          "ko": "성북마을아카이브의 정릉 기록은 비각을 정릉의 시설로 수록하고, 비각 안 표석의 건립 및 후대 각자 내용을 설명한다.",
+          "en": "The Seongbuk Village Archive lists a stele pavilion at Jeongneung and describes the stele housed inside, including its construction and later inscription changes.",
+          "factId": "jeongneung-bigak-presence",
+          "sourceIds": [
+            "seongbuk-jeongneung-archive"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "agency": "성북구 성북마을아카이브",
+          "sourceId": "seongbuk-jeongneung-archive",
+          "title": "정릉",
+          "url": "https://archive.sb.go.kr/story/871",
+          "supports": "정릉 시설 설명에 비각 및 비각 안 표석에 대한 내용이 포함됨.",
+          "titleEn": "Jeongneung · Seongbuk Village Archive"
+        }
+      ],
+      "verificationStatus": "official_verified"
+    },
+    {
+      "spotId": "jeongneung",
+      "objectId": "jeongneung-stone-figures",
+      "objectName": "정릉 석물",
+      "aliases": [
+        "정릉 석물",
+        "정릉 능침 석물",
+        "혼유석",
+        "정릉 혼유석",
+        "장명등",
+        "정릉 장명등",
+        "망주석",
+        "정릉 망주석",
+        "문석인",
+        "정릉 문석인",
+        "석마",
+        "정릉 석마",
+        "양석",
+        "정릉 양석",
+        "호석",
+        "정릉 호석",
+        "Jeongneung stone figures",
+        "Jeongneung tomb sculptures"
+      ],
+      "objectType": [
+        "stone figure",
+        "stone statue",
+        "stone sculpture",
+        "stonework",
+        "석물",
+        "석상"
+      ],
+      "facts": [
+        {
+          "ko": "성북마을아카이브의 정릉 기록은 혼유석, 장명등, 망주석, 문석인, 석마, 양석, 호석 등 능침 주변 석물을 열거한다.",
+          "en": "The Seongbuk Village Archive’s Jeongneung record lists tomb sculptures including the stone spirit seat, stone lantern, stone posts, civil officials, horses, sheep, and tigers.",
+          "factId": "jeongneung-stone-figures",
+          "sourceIds": [
+            "seongbuk-jeongneung-archive"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "agency": "성북구 성북마을아카이브",
+          "sourceId": "seongbuk-jeongneung-archive",
+          "title": "정릉",
+          "url": "https://archive.sb.go.kr/story/871",
+          "supports": "능침 주변 배치 설명에서 현재 석물의 종류를 열거함.",
+          "titleEn": "Jeongneung · Seongbuk Village Archive"
+        }
+      ],
+      "verificationStatus": "official_verified"
+    },
+    {
+      "spotId": "uiryeong",
+      "objectId": "uiryeong-hongsalmun",
+      "objectName": "홍살문",
+      "aliases": [
+        "홍살문",
+        "의릉 홍살문",
+        "Hongsalmun",
+        "red spiked gate",
+        "red arrow gate"
+      ],
+      "objectType": [
+        "gate",
+        "entrance gate",
+        "홍살문",
+        "문"
+      ],
+      "facts": [
+        {
+          "ko": "국립문화유산연구원 학술논문은 의릉의 공간축을 이루는 요소로 홍살문을 명시한다.",
+          "en": "A journal article published by the National Research Institute of Cultural Heritage identifies the Hongsalmun as an element of Uireung’s spatial axis.",
+          "factId": "uiryeong-hongsalmun",
+          "sourceIds": [
+            "nrich-uireung-study"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "agency": "국립문화유산연구원 발행 학술지 『헤리티지:역사와 과학』",
+          "sourceId": "nrich-uireung-study",
+          "title": "懿陵 一圓의 立地와 空間構成特性에 關한 硏究",
+          "url": "https://www.kci.go.kr/kciportal/landing/article.kci?arti_id=ART001435836",
+          "supports": "초록에서 의릉의 공간 위계에 따라 홍살문·정자각·명등석·혼유석·봉분이 공간 축을 형성한다고 설명함.",
+          "titleEn": "A Study on the Location and Spatial Composition of Uireung"
+        }
+      ],
+      "verificationStatus": "official_verified"
+    },
+    {
+      "spotId": "uiryeong",
+      "objectId": "uiryeong-jeongjagak",
+      "objectName": "정자각",
+      "aliases": [
+        "정자각",
+        "의릉 정자각",
+        "Jeongjagak",
+        "royal ritual hall",
+        "T-shaped shrine hall"
+      ],
+      "objectType": [
+        "building",
+        "structure",
+        "architecture",
+        "hall",
+        "ritual hall",
+        "건물",
+        "건축물",
+        "전각",
+        "정자각"
+      ],
+      "facts": [
+        {
+          "ko": "국립문화유산연구원 학술논문은 의릉의 공간축 요소로 정자각을 들고, 정자각을 이익공 겹처마 맞배지붕 건물로 기술한다.",
+          "en": "A National Research Institute of Cultural Heritage journal article includes the Jeongjagak in Uireung’s spatial axis and describes its building form as a double-eaved gabled roof with ikgong brackets.",
+          "factId": "uiryeong-jeongjagak",
+          "sourceIds": [
+            "nrich-uireung-study"
+          ]
+        },
+        {
+          "ko": "궁능유적본부는 정자각을 왕릉 제향을 위한 건물로 설명하며, 정전과 배위청이 결합한 丁자형 평면이 이름의 유래라고 안내한다.",
+          "en": "The Royal Heritage Headquarters describes the Jeongjagak as a building for royal tomb rites; its name refers to the 丁-shaped plan formed by the main hall and the worship area.",
+          "factId": "royal-tomb-jeongjagak-function-and-plan",
+          "sourceIds": [
+            "royal-khs-tomb-architecture"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "agency": "국립문화유산연구원 발행 학술지 『헤리티지:역사와 과학』",
+          "sourceId": "nrich-uireung-study",
+          "title": "懿陵 一圓의 立地와 空間構成特性에 關한 硏究",
+          "url": "https://www.kci.go.kr/kciportal/landing/article.kci?arti_id=ART001435836",
+          "supports": "초록에서 정자각을 공간축 시설로 명시하고 건축 형식을 기술함.",
+          "titleEn": "A Study on the Location and Spatial Composition of Uireung"
+        },
+        {
+          "agency": "국가유산청 궁능유적본부",
+          "sourceId": "royal-khs-tomb-architecture",
+          "title": "조선왕릉 건축물 — 정자각",
+          "url": "https://royal.khs.go.kr/ROYAL/contents/R308050000.do?grpCode=acm&pageType=academic_info5",
+          "supports": "정자각의 제향 역할과 丁자형 평면 구성을 설명함.",
+          "titleEn": "Joseon Royal Tomb Architecture — Jeongjagak"
+        }
+      ],
+      "verificationStatus": "official_verified"
+    },
+    {
+      "spotId": "uiryeong",
+      "objectId": "uiryeong-stone-figures",
+      "objectName": "의릉 석물",
+      "aliases": [
+        "의릉 석물",
+        "의릉 능침 석물",
+        "석양",
+        "의릉 석양",
+        "석호",
+        "의릉 석호",
+        "혼유석",
+        "의릉 혼유석",
+        "망주석",
+        "의릉 망주석",
+        "문석인",
+        "의릉 문석인",
+        "무석인",
+        "의릉 무석인",
+        "석마",
+        "의릉 석마",
+        "명등석",
+        "의릉 명등석",
+        "Uireung stone figures",
+        "Uireung tomb sculptures"
+      ],
+      "objectType": [
+        "stone figure",
+        "stone statue",
+        "stone sculpture",
+        "stonework",
+        "석물",
+        "석상"
+      ],
+      "facts": [
+        {
+          "ko": "국립문화유산연구원 학술논문은 의릉의 석물 배치로 상계의 석양·석호·혼유석·망주석과 중계·하계의 문석인·무석인·석마·명등석을 기록한다.",
+          "en": "A National Research Institute of Cultural Heritage journal article records Uireung’s stone figures by terrace, including sheep, tiger, spirit seat, and stone posts above, and official figures, horses, and a stone lantern on lower terraces.",
+          "factId": "uiryeong-stone-figures",
+          "sourceIds": [
+            "nrich-uireung-study"
+          ]
+        },
+        {
+          "ko": "궁능유적본부는 조선왕릉 석물이 능침 공간에 집중되며 피장자를 위해 조성되었다고 설명한다. 석호와 석양은 봉분 주변에서 능을 지키고 음양의 균형을 상징하는 석수로 해석한다.",
+          "en": "The Royal Heritage Headquarters explains that Joseon royal tomb sculptures are concentrated around the burial area and were made for the deceased; stone tigers and sheep are interpreted as guardian figures symbolizing protection and yin-yang balance.",
+          "factId": "royal-tomb-stone-figures-role",
+          "sourceIds": [
+            "royal-khs-tomb-architecture"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "agency": "국립문화유산연구원 발행 학술지 『헤리티지:역사와 과학』",
+          "sourceId": "nrich-uireung-study",
+          "title": "懿陵 一圓의 立地와 空間構成特性에 關한 硏究",
+          "url": "https://www.kci.go.kr/kciportal/landing/article.kci?arti_id=ART001435836",
+          "supports": "초록에서 능침 상계·중계·하계별 석물 구성을 열거함.",
+          "titleEn": "A Study on the Location and Spatial Composition of Uireung"
+        },
+        {
+          "agency": "국가유산청 궁능유적본부",
+          "sourceId": "royal-khs-tomb-architecture",
+          "title": "조선왕릉 건축물 및 석물의 역사와 특성",
+          "url": "https://royal.khs.go.kr/ROYAL/contents/R308050000.do?grpCode=acm&pageType=academic_info5",
+          "supports": "조선왕릉 석물의 배치, 피장자와의 관계, 석호·석양의 상징적 해석을 설명함.",
+          "titleEn": "History and Characteristics of Royal Tomb Architecture and Stone Sculptures"
+        }
+      ],
+      "verificationStatus": "official_verified"
+    },
+    {
+      "spotId": "uiryeong",
+      "objectId": "uiryeong-jaesil",
+      "objectName": "의릉 재실 터 (논문 기록상 멸실)",
+      "aliases": [
+        "의릉 재실",
+        "의릉 재실 터",
+        "Uireung Jaesil",
+        "Uireung ritual preparation building"
+      ],
+      "objectType": [
+        "building",
+        "ritual preparation building",
+        "재실",
+        "건물"
+      ],
+      "facts": [
+        {
+          "ko": "해당 학술논문은 연구 당시 의릉의 재실이 멸실된 상태였다고 기록한다. 이 문장은 현재 현존 여부를 보증하지 않는다.",
+          "en": "The article records that Uireung’s Jaesil had been lost at the time of that study; this statement does not certify its present-day condition.",
+          "factId": "uireung-jaesil-study-status",
+          "sourceIds": [
+            "nrich-uireung-study"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "agency": "국립문화유산연구원 발행 학술지 『헤리티지:역사와 과학』",
+          "sourceId": "nrich-uireung-study",
+          "title": "懿陵 一圓의 立地와 空間構成特性에 關한 硏究",
+          "url": "https://www.kci.go.kr/kciportal/landing/article.kci?arti_id=ART001435836",
+          "supports": "초록에서 연지와 재실은 멸실되었고 관련 고증 자료로 위치·규모·형태를 파악할 수 있다고 기술함.",
+          "titleEn": "A Study on the Location and Spatial Composition of Uireung"
+        }
+      ],
+      "verificationStatus": "official_verified"
+    }
+  ]
+}

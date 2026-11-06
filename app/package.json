@@ -10,7 +10,10 @@
     "preview": "vite preview --host",
     "eval:ask": "node --env-file-if-exists=.env.local scripts/eval-ask.mjs",
     "shops:add": "node --env-file-if-exists=.env.local scripts/add-shops.mjs",
-    "shops:explore": "node --env-file-if-exists=.env.local scripts/add-explore-shops.mjs"
+    "shops:explore": "node --env-file-if-exists=.env.local scripts/add-explore-shops.mjs",
+    "eval:heritage:validate": "node scripts/validate-heritage-vision-eval.mjs",
+    "eval:heritage:self-test": "node scripts/test-heritage-vision-evaluation.mjs",
+    "eval:heritage:live": "node --env-file-if-exists=.env.local scripts/run-heritage-vision-eval.mjs --live"
   },
   "dependencies": {
     "@fontsource/noto-sans-kr": "^5.3.1",

@@ -1,0 +1,347 @@
+{
+  "schemaVersion": "1.0",
+  "spotId": "simujang",
+  "spotName": "만해 한용운 심우장",
+  "compiledAt": "2026-11-05",
+  "purpose": "Photo-object-specific historical explanation with traceable sources",
+  "usageRules": [
+    "Never use a fact for a photographed object unless objectId matches; site facts may be presented only as clearly labeled background.",
+    "A source supports the historical claim, not the identity of the photographed object.",
+    "reported_tradition must be introduced as a transmitted anecdote, not proven motive.",
+    "Visual keywords are recognition hints only and never historical evidence.",
+    "If the photographed object is not among the listed objects, do not attach main-house facts to it.",
+    "A photo of a different building is not proof of Simujang even if the user selected Simujang.",
+    "Do not use images from source websites for model comparisons without rights verification."
+  ],
+  "sources": [
+    {
+      "id": "SB",
+      "agency": "성북구청",
+      "title": "만해 한용운 심우장",
+      "url": "https://seongbuk.go.kr/tour/contents.do?key=136"
+    },
+    {
+      "id": "ARCH",
+      "agency": "성북문화원 성북마을아카이브",
+      "title": "만해 한용운 심우장",
+      "url": "https://archive.sb.go.kr/story/781"
+    },
+    {
+      "id": "MUCH",
+      "agency": "대한민국역사박물관",
+      "title": "현대사 현장: 한용운 심우장",
+      "url": "https://archive.much.go.kr/data/01/folderView.do?jobdirSeq=282"
+    },
+    {
+      "id": "TOUR",
+      "agency": "성북구청",
+      "title": "성북동B 한양도성 코스",
+      "url": "https://seongbuk.go.kr/tour/contents.do?key=7101"
+    },
+    {
+      "id": "SEOUL",
+      "agency": "서울특별시",
+      "title": "3·1절에 만난 만해 한용운의 흔적 심우장",
+      "url": "https://mediahub.seoul.go.kr/archives/2007152"
+    }
+  ],
+  "objects": [
+    {
+      "id": "site",
+      "name": "심우장 전체",
+      "aliases": [
+        "심우장",
+        "Simujang",
+        "만해 한용운 심우장"
+      ],
+      "visualKeywords": [
+        "한옥",
+        "기와집",
+        "마당",
+        "건물 전체"
+      ],
+      "factIds": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S08"
+      ]
+    },
+    {
+      "id": "main_house",
+      "name": "심우장 본채",
+      "aliases": [
+        "본채",
+        "심우장 건물",
+        "한옥 본채"
+      ],
+      "visualKeywords": [
+        "기와지붕",
+        "한옥",
+        "목조 기둥",
+        "대청"
+      ],
+      "factIds": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05"
+      ]
+    },
+    {
+      "id": "signboard",
+      "name": "심우장 현판",
+      "aliases": [
+        "심우장 편액",
+        "尋牛莊 현판"
+      ],
+      "visualKeywords": [
+        "尋牛莊",
+        "현판",
+        "한자 글씨"
+      ],
+      "factIds": [
+        "P01",
+        "P02"
+      ]
+    },
+    {
+      "id": "yard",
+      "name": "심우장 마당과 나무",
+      "aliases": [
+        "심우장 마당",
+        "향나무",
+        "소나무"
+      ],
+      "visualKeywords": [
+        "마당",
+        "향나무",
+        "소나무"
+      ],
+      "factIds": [
+        "Y01",
+        "Y02"
+      ]
+    },
+    {
+      "id": "memorial_park",
+      "name": "만해산책공원",
+      "aliases": [
+        "만해 산책공원",
+        "한용운 동상",
+        "님의 침묵 시비"
+      ],
+      "visualKeywords": [
+        "동상",
+        "시비",
+        "공원"
+      ],
+      "factIds": [
+        "M01",
+        "M02",
+        "M03"
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "S01",
+      "objectId": "site",
+      "ko": "심우장은 서울특별시 성북구 성북로29길 24에 있다.",
+      "sourceIds": [
+        "SB",
+        "ARCH"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "S02",
+      "objectId": "site",
+      "ko": "만해 한용운이 1933년부터 1944년 6월 29일 입적할 때까지 심우장에서 살았다.",
+      "sourceIds": [
+        "ARCH",
+        "SB"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "S03",
+      "objectId": "site",
+      "ko": "심우장은 2019년 4월 8일 국가 사적으로 지정되었다.",
+      "sourceIds": [
+        "SB",
+        "ARCH"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "S04",
+      "objectId": "site",
+      "ko": "한용운은 3·1운동 민족대표 33인 중 한 명이며 시집 『님의 침묵』의 시인이다.",
+      "sourceIds": [
+        "SB",
+        "ARCH"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "S05",
+      "objectId": "site",
+      "ko": "한용운은 심우장에 머물며 불교 개혁운동과 독립운동을 이어갔다.",
+      "sourceIds": [
+        "ARCH"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "S06",
+      "objectId": "site",
+      "ko": "한용운은 심우장에서 소설 『흑풍』을 집필했다.",
+      "sourceIds": [
+        "ARCH"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "S07",
+      "objectId": "site",
+      "ko": "심우장의 집터는 벽산 스님이 제공했고 수학교사 최수동이 설계했으며 여러 후원자가 건립을 도왔다.",
+      "sourceIds": [
+        "ARCH"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "S08",
+      "objectId": "site",
+      "ko": "심우(尋牛)라는 이름은 소를 찾는 일에 비유한 불교의 깨달음·수행 이야기에서 유래한다.",
+      "sourceIds": [
+        "SB",
+        "ARCH"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "B01",
+      "objectId": "main_house",
+      "ko": "심우장 본채는 북쪽을 향하는 기와집이다.",
+      "sourceIds": [
+        "SB",
+        "MUCH"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "B02",
+      "objectId": "main_house",
+      "ko": "남쪽의 조선총독부를 바라보지 않기 위해 북향으로 집을 지었다는 이야기가 전한다.",
+      "sourceIds": [
+        "MUCH",
+        "ARCH"
+      ],
+      "certainty": "reported_tradition"
+    },
+    {
+      "id": "B03",
+      "objectId": "main_house",
+      "ko": "성북구청 설명에 따르면 심우장은 전체 5칸 규모의 작은 집이다.",
+      "sourceIds": [
+        "SB"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "B04",
+      "objectId": "main_house",
+      "ko": "성북구청은 가운데 대청, 왼쪽 온돌방, 오른쪽 부엌, 부엌 뒤 찬마루방으로 공간을 소개한다.",
+      "sourceIds": [
+        "SB"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "B05",
+      "objectId": "main_house",
+      "ko": "심우장은 당시 주변 주거지의 일반적인 주택과 달리 검소하고 소박한 외관을 보여준다.",
+      "sourceIds": [
+        "SB"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "P01",
+      "objectId": "signboard",
+      "ko": "심우장 현판의 글씨는 독립운동가이자 서예가인 오세창이 썼다.",
+      "sourceIds": [
+        "MUCH"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "P02",
+      "objectId": "signboard",
+      "ko": "성북구청은 한용운의 서재였던 온돌방에 심우장 현판이 걸려 있다고 소개한다.",
+      "sourceIds": [
+        "SB"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "Y01",
+      "objectId": "yard",
+      "ko": "성북구청은 심우장 마당에 한용운이 직접 심었다고 전해지는 향나무가 있다고 소개한다.",
+      "sourceIds": [
+        "SB"
+      ],
+      "certainty": "reported_tradition"
+    },
+    {
+      "id": "Y02",
+      "objectId": "yard",
+      "ko": "대한민국역사박물관 아카이브는 심우장 앞마당의 소나무와 향나무, 마당 풍경을 기록했다.",
+      "sourceIds": [
+        "MUCH"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "M01",
+      "objectId": "memorial_park",
+      "ko": "심우장 입구에는 만해산책공원이 조성되어 있다.",
+      "sourceIds": [
+        "ARCH",
+        "TOUR"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "M02",
+      "objectId": "memorial_park",
+      "ko": "만해산책공원에는 한용운 동상과 『님의 침묵』 시비가 있다.",
+      "sourceIds": [
+        "TOUR"
+      ],
+      "certainty": "documented"
+    },
+    {
+      "id": "M03",
+      "objectId": "memorial_park",
+      "ko": "매년 한용운의 기일인 6월 29일 성북문화원 주관 추모 다례가 열린다고 성북마을아카이브는 기록한다.",
+      "sourceIds": [
+        "ARCH"
+      ],
+      "certainty": "documented"
+    }
+  ],
+  "limitations": [
+    "This dataset is a curated first pass, not an exhaustive inventory of every object onsite.",
+    "Some architectural orientations are described as 북향 by official sources; avoid inferring compass direction from an arbitrary photo.",
+    "The park is near the site, not the same as the historic main house.",
+    "Source links were reviewed through public search results; individual claims should be spot-checked against source pages before production."
+  ]
+}

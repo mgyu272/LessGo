@@ -12,9 +12,10 @@ import * as voice from "../lib/voice.js";
 import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections, exploreColor, byNearest, round10, CHECKED_DATE } from "../lib/places.js";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { PlaceEvents } from "./Events.jsx";
+import HistoryLens from "./HistoryLens.jsx";
 import NearbyShops from "../components/NearbyShops.jsx";
 
-const TABS = ["story", "visit", "events"];
+const TABS = ["story", "visit", "events", "history_lens"];
 
 export default function PlaceDetail() {
   const app = useApp();
@@ -140,6 +141,7 @@ export default function PlaceDetail() {
           )}
 
           {tab === "events" && <div className="rise pd-col"><PlaceEvents spotId={spot.id} /></div>}
+          {tab === "history_lens" && <HistoryLens spotId={spot.id} spotName={name} />}
         </div>
       </div>
 

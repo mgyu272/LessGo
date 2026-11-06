@@ -46,7 +46,7 @@ npm run dev
 1. GitHub에 저장소를 만들고 이 폴더를 올리기 (`node_modules`, `.env.local`은 자동으로 빠져요)
 2. https://vercel.com 에 GitHub로 가입 (Hobby 무료)
 3. **Add New → Project** → 저장소 선택 → Framework가 **Vite**로 잡히면 그대로 **Deploy**
-4. **Settings → Environment Variables** 에 `.env.local`과 같은 값(`VITE_FIREBASE_*` 6개, 카카오·Gemini 키)을 넣고 다시 배포. Firebase **승인된 도메인**에 배포 주소도 추가 (4번)
+4. **Settings → Environment Variables** 에 `VITE_FIREBASE_*` 6개, `NEXT_PUBLIC_KAKAO_MAP_KEY`, 서버용 `GEMINI_API_KEY`를 설정하고 다시 배포. Gemini 키는 Preview/Production 중 사용할 환경에만 설정하고, Firebase **승인된 도메인**에 배포 주소도 추가 (4번)
 5. 나온 https 주소를 휴대폰으로 열기 → 위치 권한 허용
 6. 아이폰 Safari에서 **공유 → 홈 화면에 추가**를 하면 주소창 없이 앱처럼 열려요
 
@@ -146,35 +146,49 @@ $env:VITE_FIREBASE_EMULATOR="1"; $env:VITE_FIREBASE_API_KEY="demo-key"; $env:VIT
 
 ---
 
-## 5. AI 연결 (Gemini): 질문 답변 + AI 코스 추천
+## 5. AI 기능 (Gemini)
 
-AI 기능 두 가지가 들어 있어요. 둘 다 **키만 넣으면 바로** 동작하게 만들어 뒀어요.
+Gemini 호출은 `api/`의 서버 API에서 수행합니다. 브라우저 코드에 API 키를 포함하지 마세요.
 
-| 기능 | 서버 함수 | 하는 일 | 키가 없거나 실패하면 |
-|---|---|---|---|
-| 질문 답변 | `api/ask.js` | 스팟 자료(`spots.json`)만 근거로 답하고 출처 표시. 자료에 없으면 "자료에 없다"고 답함 | `faq`의 저장된 답변 |
-| AI 코스 추천 | `api/recommend.js` | 규칙 점수로 후보 6개를 거른 뒤 Gemini가 3개를 고르고 추천 이유 한 문장 작성 | 규칙 점수 결과 |
+| 기능 | API | 동작 |
+|---|---|---|
+| 자료 기반 질문 답변 | `POST /api/ask` | 장소 자료와 FAQ를 바탕으로 답하고 근거를 연결합니다. |
+| AI 코스 추천 | `POST /api/recommend` | 규칙 점수 후보에서 Gemini가 추천을 고릅니다. |
+| AI 역사 렌즈 사진 분석 | `POST /api/analyze-image` | 사진의 대상 후보와 시각 특징을 분석하고, 현재 장소 범위에서 역사 근거를 조회합니다. |
+| 역사 해설 생성 | `POST /api/generate-image-explanation` | 사진 분석 결과와 검증 근거를 사용해 자료 기반 또는 시각 중심 해설을 생성합니다. |
+| 언어 전환 | `POST /api/localize-image-analysis` | 저장된 분석·근거를 다시 사용해 언어를 바꿉니다. 사진을 다시 전송하지 않습니다. |
 
-**키 없이 미리 확인하기 (목업 모드)**: `.env.local`에 `GEMINI_MOCK=1` → `npm run dev`.
-코스 목록에 "✦ 추천 이유 (mock)", 질문 답변에 "✦ AI · mock"이 보이면 연결 흐름이 정상이에요.
+AI 역사 렌즈는 도착 화면과 장소 상세의 `AI 역사 렌즈` 탭에서 사용할 수 있습니다. 사진 속 대상 식별과 역사 자료의 뒷받침 여부는 별도로 표시하며, 근거가 부족하거나 사진 판정이 불확실하면 대상을 확정하지 않습니다. 정확도 확률이나 임의의 신뢰도 퍼센트는 표시하지 않습니다. 한국어·영어 해설을 제공하고 브라우저 Web Speech API로 음성을 재생합니다.
 
-**키가 생기면**
-1. https://aistudio.google.com → **Get API key** → 키 복사
-2. `.env.local`의 `GEMINI_API_KEY=` 뒤에 붙여넣기 → `npm run dev` 다시 실행 (목업 모드는 자동으로 꺼져요)
-3. 배포 사이트에도 쓰려면 Vercel → Settings → Environment Variables 에 `GEMINI_API_KEY`(필수), `GEMINI_MODEL`(선택) 추가 후 다시 배포
+### 로컬 및 Vercel 환경변수
 
-**정확도 채점** (기획서 성공 지표 "해설 답변 정확도")
+로컬에서는 이 폴더(`app/`)의 `.env.example`을 `.env.local`로 복사해 설정하세요.
+
+```dotenv
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-3.5-flash-lite
+# 선택 사항: Vision만 별도 모델 사용
+GEMINI_IMAGE_MODEL=
 ```
-npm run eval:ask
+
+`npm run dev`는 Vite 화면과 프로젝트의 `/api/*` 로컬 미들웨어를 함께 실행합니다. 키가 없으면 AI 역사 렌즈는 준비 중 안내를 표시합니다. Vercel에서는 `GEMINI_API_KEY`를 서버 환경변수로 등록하고, Preview와 Production에 적용할 환경을 각각 지정한 뒤 재배포하세요. `GEMINI_MODEL`은 텍스트 기본 모델, `GEMINI_IMAGE_MODEL`은 선택적 이미지 모델입니다.
+
+### 목업과 참고 사진 보호
+
+- `GEMINI_MOCK=1`은 질문 답변·코스 추천 등 기존 텍스트 기능의 개발용 목업입니다.
+- 이미지 목업은 별도 `GEMINI_IMAGE_MOCK=1`과 테스트 요청이 함께 있을 때만 동작하며, 결과에 테스트 데이터라고 표시합니다. 키가 없다고 이미지 분석 결과를 자동 생성하지 않습니다.
+- 참고 사진 기능은 `GEMINI_IMAGE_REFERENCE_MODE=1`로 선택하는 opt-in 기능입니다. 외부 Gemini 전송에는 별도 권한 설정 및 manifest 승인도 필요합니다. 출처와 권한이 확인되기 전까지 원본 사진을 Git에 추가하거나 외부 API에 보내지 마세요.
+
+### 테스트와 정확도 평가
+
+```bash
+npm run eval:heritage:validate
+npm run eval:heritage:self-test
 ```
-`eval/qa-gilsangsa.json`의 질문들을 AI에 물어보고 정답 여부와 정확도(%)를 보여줘요. 자료에 없는 질문(입장료 등)에 "모른다"고 하는지도 채점해요. 명소가 늘면 `eval/` 에 같은 모양 파일을 추가하고 `npm run eval:ask -- eval/파일이름.json`.
 
-**말로 묻기**: 스팟 화면 질문 칸 옆 🎤 버튼 (Chrome·Safari 등 음성 인식을 지원하는 브라우저에서만 보여요)
+첫 명령은 평가 데이터셋의 라벨과 파일 경로를 확인하고, 둘째 명령은 오프라인 평가 로직을 점검합니다. 실제 인식 정확도 평가는 검증된 정답 사진·라벨과 사진 사용 권한이 준비된 경우에만 실행하세요. 기존 참고 사진 manifest는 정확도 평가용 정답 데이터가 아니며, 정답이 확인되지 않은 사진으로 정확도 수치를 만들지 않습니다. 실제 Gemini 요청은 비용·할당량이 발생할 수 있습니다.
 
-**알아 둘 점**
-- 기본 모델은 `gemini-3.5-flash-lite` (무료 등급에서 쓸 수 있는 정식 Flash-Lite). 바꾸려면 `GEMINI_MODEL`.
-- 무료 등급은 하루 요청 수 한도가 있고, 대화 내용이 Google 서비스 개선에 쓰일 수 있어요. 공개된 역사 자료만 보내고 개인정보는 넣지 마세요.
-- 키는 절대 `src` 코드나 `VITE_`로 시작하는 이름에 넣지 마세요 (브라우저로 새어 나가요).
+질문 답변용 기존 평가 명령은 `npm run eval:ask`입니다. 명소 화면의 🎤 질문 버튼은 브라우저 음성 인식 지원 여부에 따라 표시됩니다.
 
 ## 6. 폴더 구조
 
@@ -193,6 +207,7 @@ run/
 │  │  ├─ Spot.jsx             도착 (레코드판 해설) · 주변 가게 · 쿠폰
 │  │  ├─ RunDone.jsx          완주 요약
 │  │  ├─ Places.jsx · PlaceDetail.jsx  장소와 이야기 · 장소 상세(신고)
+│  │  ├─ HistoryLens.jsx       사진 분석 · 근거 대조 · 해설 · 음성
 │  │  ├─ Events.jsx           문화 활동 (public/data/events.json)
 │  │  ├─ Stats.jsx            내 기록 (오늘 · 주간 · 배지, 규칙은 lib/badges.js)
 │  │  └─ Me.jsx               도장·쿠폰 · 기록 목록 (내 기록에서 열려요)
@@ -211,7 +226,7 @@ run/
 │     ├─ territory.js         육각형(H3)
 │     ├─ voice.js             음성 안내
 │     ├─ recommend.js         코스 추천 (규칙 → 나중에 AI)
-│     ├─ ask.js / ai.js       질문하기 / AI 추천 호출
+│     ├─ ask.js / ai.js       질문·추천·역사 렌즈 API 호출
 │     ├─ firebase.js          Firebase 연결 · auth.js 아이디 규칙·오류 안내
 │     ├─ data.js / geo.js     데이터 불러오기 / 거리 계산
 ├─ public/data/               ← 데이터 담당이 채우는 곳 (빌드 없이 바로 반영)
@@ -219,9 +234,12 @@ run/
 │  ├─ lessgo/routes.json · routes.geojson   코스 번들 (팀원 데이터, 목적지 3 × 3/5/10km × low/high)
 ├─ firestore.rules            Firestore 보안 규칙 (콘솔에 붙여 넣기)
 ├─ api/
-│  ├─ ask.js                  AI 질문 답변 (Vercel 서버 함수)
-│  ├─ recommend.js            AI 코스 추천
-│  └─ _lib/gemini.js          Gemini 호출 공통 (재시도·JSON 형식)
+│  ├─ ask.js · recommend.js   AI 질문 답변 · 코스 추천
+│  ├─ analyze-image.js        Gemini Vision 사진 분석 · 역사 근거 대조
+│  ├─ generate-image-explanation.js · localize-image-analysis.js
+│  │                           해설 생성 · 분석 결과 언어 전환
+│  └─ _lib/                   Gemini · 역사 근거 · 해설 · 참고 사진
+├─ server-data/               서버 측 역사 근거 및 참고 사진 manifest
 ├─ eval/qa-gilsangsa.json     AI 정확도 채점용 정답 질문
 ├─ scripts/eval-ask.mjs       채점 스크립트 (npm run eval:ask)
 └─ .env.example               Firebase·카카오·Gemini 키 넣는 법 (복사해서 .env.local)

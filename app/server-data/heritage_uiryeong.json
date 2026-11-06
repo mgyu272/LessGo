@@ -1,0 +1,525 @@
+{
+  "schemaVersion": "1.0",
+  "spotId": "uiryeong",
+  "spotName": "서울 의릉",
+  "compiledAt": "2026-11-05",
+  "sources": [
+    {
+      "id": "KHS",
+      "agency": "국가유산청",
+      "title": "국가유산 디지털 서비스 - 서울 의릉",
+      "url": "https://digital.khs.go.kr/heri/heriDetail.do?ctptUid=13898859675461300822"
+    },
+    {
+      "id": "NRICH",
+      "agency": "국립문화유산연구원",
+      "title": "국가유산 지식이음 - 의릉",
+      "url": "https://portal.nrich.go.kr/kor/royalTombView.do?menuIdx=&royal_idx=30"
+    },
+    {
+      "id": "SB",
+      "agency": "성북구청",
+      "title": "성북구 문화관광 - 의릉",
+      "url": "https://www.sb.go.kr/tour/contents.do?key=129"
+    },
+    {
+      "id": "AKS",
+      "agency": "한국학중앙연구원",
+      "title": "역주조선왕조실록 - 의릉",
+      "url": "https://waks.aks.ac.kr/rsh/dir/rview.aspx?dataID=AKS-2013-CKD-1240001_DIC%4000011918&rshID=AKS-2013-CKD-1240001"
+    },
+    {
+      "id": "NMK",
+      "agency": "국립중앙박물관",
+      "title": "선의왕후국장도감의궤",
+      "url": "https://www.museum.go.kr/uigwe/content/contentView1?id=uig_136&pageIndex=1&pageUnit=10&searchKeyword=&serviceType=b"
+    }
+  ],
+  "objects": [
+    {
+      "id": "site",
+      "name": "서울 의릉",
+      "aliases": [
+        "의릉",
+        "서울 의릉",
+        "Uireung Royal Tomb"
+      ],
+      "visualKeywords": [
+        "왕릉",
+        "능역"
+      ],
+      "factIds": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08",
+        "U09",
+        "U10",
+        "U11",
+        "U12",
+        "U13",
+        "U14",
+        "U15",
+        "U16"
+      ]
+    },
+    {
+      "id": "hongsalmun",
+      "name": "홍살문",
+      "aliases": [
+        "의릉 홍살문",
+        "홍살문",
+        "Hongsalmun"
+      ],
+      "visualKeywords": [
+        "붉은 기둥",
+        "살대",
+        "문"
+      ],
+      "factIds": [
+        "H01",
+        "H02"
+      ]
+    },
+    {
+      "id": "jeongjagak",
+      "name": "정자각",
+      "aliases": [
+        "의릉 정자각",
+        "정자각",
+        "Jeongjagak"
+      ],
+      "visualKeywords": [
+        "제례 건물",
+        "기와지붕"
+      ],
+      "factIds": [
+        "J01",
+        "J02"
+      ]
+    },
+    {
+      "id": "bigak",
+      "name": "비각",
+      "aliases": [
+        "의릉 비각",
+        "비각",
+        "Bigak"
+      ],
+      "visualKeywords": [
+        "비석",
+        "작은 기와 건물"
+      ],
+      "factIds": [
+        "B01",
+        "B02"
+      ]
+    },
+    {
+      "id": "tombs",
+      "name": "경종·선의왕후 능침",
+      "aliases": [
+        "경종 능침",
+        "선의왕후 능침",
+        "봉분",
+        "상하이봉릉",
+        "동원상하릉"
+      ],
+      "visualKeywords": [
+        "위아래 봉분",
+        "난간석"
+      ],
+      "factIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05"
+      ]
+    },
+    {
+      "id": "stone_figures",
+      "name": "능침 석물",
+      "aliases": [
+        "문석인",
+        "무석인",
+        "석호",
+        "석양",
+        "석마",
+        "석물",
+        "망주석",
+        "장명등"
+      ],
+      "visualKeywords": [
+        "돌로 만든 인물",
+        "호랑이",
+        "양",
+        "말"
+      ],
+      "factIds": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05"
+      ]
+    },
+    {
+      "id": "jaesil_site",
+      "name": "재실 관련 기록",
+      "aliases": [
+        "의릉 재실 터",
+        "재실",
+        "Jaesil"
+      ],
+      "visualKeywords": [
+        "현장 사진만으로 현재 재실 존재 여부 확인 불가"
+      ],
+      "factIds": [
+        "R01",
+        "R02"
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "U01",
+      "objectId": "site",
+      "ko": "의릉은 조선 제20대 왕 경종과 계비 선의왕후 어씨의 능이다.",
+      "sourceIds": [
+        "KHS",
+        "NRICH",
+        "SB"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U02",
+      "objectId": "site",
+      "ko": "의릉의 소재지는 서울특별시 성북구 화랑로32길 146-20이다.",
+      "sourceIds": [
+        "NRICH",
+        "SB"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U03",
+      "objectId": "site",
+      "ko": "의릉은 1970년 5월 26일 사적으로 지정되었다.",
+      "sourceIds": [
+        "KHS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U04",
+      "objectId": "site",
+      "ko": "경종은 숙종과 희빈 장씨 사이에서 태어났으며 1720년부터 1724년까지 재위했다.",
+      "sourceIds": [
+        "KHS",
+        "NRICH"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U05",
+      "objectId": "site",
+      "ko": "경종은 1724년 승하했고 그해 경종의 능이 조성되었다.",
+      "sourceIds": [
+        "NRICH",
+        "AKS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U06",
+      "objectId": "site",
+      "ko": "선의왕후는 1730년 승하했으며 같은 해 의릉 아래쪽에 능침이 조성되었다.",
+      "sourceIds": [
+        "NRICH",
+        "AKS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U07",
+      "objectId": "site",
+      "ko": "선의왕후는 1718년 세자빈이 되었고 경종이 즉위한 1720년 왕비가 되었다.",
+      "sourceIds": [
+        "NMK"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U08",
+      "objectId": "site",
+      "ko": "선의왕후의 아버지는 어유구이다.",
+      "sourceIds": [
+        "NMK",
+        "NRICH"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U09",
+      "objectId": "site",
+      "ko": "선의왕후는 경종이 승하한 뒤 왕대비가 되었다.",
+      "sourceIds": [
+        "NMK"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U10",
+      "objectId": "site",
+      "ko": "의릉은 일제강점기 이후 훼손되었고 중앙정보부가 능역을 관리하던 시기에 조경과 시설 설치로 변형되었다.",
+      "sourceIds": [
+        "NRICH",
+        "AKS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U11",
+      "objectId": "site",
+      "ko": "국가유산청은 2006년부터 의릉 능역을 단계적으로 복원했다.",
+      "sourceIds": [
+        "NRICH"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U12",
+      "objectId": "site",
+      "ko": "1962년 중앙정보부가 의릉 경내에 들어섰고 1995년 이전 후 능역 정비가 가능해졌다.",
+      "sourceIds": [
+        "AKS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U13",
+      "objectId": "site",
+      "ko": "의릉은 조선왕릉 중 왕과 왕비의 봉분을 같은 언덕 위아래에 둔 사례이다.",
+      "sourceIds": [
+        "KHS",
+        "NRICH"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U14",
+      "objectId": "site",
+      "ko": "왕릉과 왕후릉은 1724년과 1730년에 각각 조성되었다.",
+      "sourceIds": [
+        "NRICH"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U15",
+      "objectId": "site",
+      "ko": "의릉은 1970년 사적 지정 이후에도 1972년 정자각과 홍살문 사이에 인공 연못이 조성되는 등 변형을 겪었다.",
+      "sourceIds": [
+        "AKS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "U16",
+      "objectId": "site",
+      "ko": "국가유산청은 의릉의 왕릉 석물 양식이 명릉과 같이 간소한 후릉 제도를 따른다고 설명한다.",
+      "sourceIds": [
+        "KHS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "H01",
+      "objectId": "hongsalmun",
+      "ko": "의릉에는 홍살문이 있으며 국가유산청 연혁에 1984년 홍살문 교체 기록이 있다.",
+      "sourceIds": [
+        "KHS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "H02",
+      "objectId": "hongsalmun",
+      "ko": "1972년 정자각과 홍살문 사이에 인공 연못이 조성된 기록이 있다.",
+      "sourceIds": [
+        "AKS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "J01",
+      "objectId": "jeongjagak",
+      "ko": "의릉에는 제례를 위한 정자각이 있으며 국가유산청 연혁에 1962년과 1984년 보수 기록이 있다.",
+      "sourceIds": [
+        "KHS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "J02",
+      "objectId": "jeongjagak",
+      "ko": "선의왕후의 능침을 추가할 당시 정자각은 경종릉 조성 시 이미 갖추어져 별도로 새로 짓지 않았다.",
+      "sourceIds": [
+        "AKS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "B01",
+      "objectId": "bigak",
+      "ko": "의릉에는 비각이 있으며 국가유산청 연혁에 1962년과 1984년 보수 기록이 있다.",
+      "sourceIds": [
+        "KHS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "B02",
+      "objectId": "bigak",
+      "ko": "선의왕후 능침 조성 당시 비각은 이미 설치되어 별도로 신축하지 않았다.",
+      "sourceIds": [
+        "AKS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "T01",
+      "objectId": "tombs",
+      "ko": "경종의 능침이 위쪽, 선의왕후의 능침이 아래쪽에 배치되어 있다.",
+      "sourceIds": [
+        "NRICH",
+        "AKS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "T02",
+      "objectId": "tombs",
+      "ko": "의릉의 배치는 동원상하릉 또는 상하이봉릉으로 설명된다.",
+      "sourceIds": [
+        "NRICH",
+        "KHS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "T03",
+      "objectId": "tombs",
+      "ko": "두 능침 모두 봉분 주위에 병풍석 없이 12칸의 난간석을 둘렀다.",
+      "sourceIds": [
+        "NRICH",
+        "KHS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "T04",
+      "objectId": "tombs",
+      "ko": "난간석 기둥에는 십이지를 나타내는 문자가 방위에 따라 새겨져 있다.",
+      "sourceIds": [
+        "KHS",
+        "NRICH"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "T05",
+      "objectId": "tombs",
+      "ko": "왕릉 능침에는 곡장을 두었지만 선의왕후 능침에는 곡장을 두르지 않았다.",
+      "sourceIds": [
+        "NRICH",
+        "KHS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "S01",
+      "objectId": "stone_figures",
+      "ko": "의릉 능침에는 문석인·무석인·석마·석양·석호 등의 석물이 있다.",
+      "sourceIds": [
+        "NRICH",
+        "KHS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "S02",
+      "objectId": "stone_figures",
+      "ko": "의릉에는 망주석과 장명등, 혼유석이 설치되어 있다.",
+      "sourceIds": [
+        "NRICH"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "S03",
+      "objectId": "stone_figures",
+      "ko": "석양과 석호는 능침 동서에 각각 두 쌍씩 배치되었다.",
+      "sourceIds": [
+        "NRICH"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "S04",
+      "objectId": "stone_figures",
+      "ko": "의릉의 무석인은 허리 부근에 꼬리가 말린 표피를 두른 형상으로 설명된다.",
+      "sourceIds": [
+        "NRICH"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "S05",
+      "objectId": "stone_figures",
+      "ko": "왕릉과 왕후릉의 석물 배치는 유사하지만 곡장 설치에는 차이가 있다.",
+      "sourceIds": [
+        "NRICH"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "R01",
+      "objectId": "jaesil_site",
+      "ko": "의릉에는 과거 재실이 있었으며 1973년 의민황태자 묘소인 영원 조성과 관련하여 재실이 이건되었다.",
+      "sourceIds": [
+        "AKS"
+      ],
+      "verificationStatus": "source_located"
+    },
+    {
+      "id": "R02",
+      "objectId": "jaesil_site",
+      "ko": "선의왕후 능침을 조성할 당시에는 재실을 새로 짓지 않고 기존 시설을 사용했다.",
+      "sourceIds": [
+        "AKS"
+      ],
+      "verificationStatus": "source_located"
+    }
+  ],
+  "usageRules": [
+    "Match the photographed object's objectId before attaching object-specific facts.",
+    "Historical source support does not verify the identity of an object in a user photo.",
+    "Site-level facts are background only, not object-specific photo evidence.",
+    "Do not treat the former jaesil as an extant photographable building without field confirmation.",
+    "Visual keywords are only recognition hints, not proof.",
+    "Never invent source text or copy copyrighted source images."
+  ],
+  "limitations": [
+    "This is a first-pass source-linked fact collection; individual claims should be checked against original pages before production.",
+    "The object list is not a complete field inventory.",
+    "For jaesil_site, historical records describe a relocated structure; do not assume an extant building.",
+    "The official designation date is taken from the current national heritage registry."
+  ]
+}

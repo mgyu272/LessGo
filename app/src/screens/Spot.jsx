@@ -11,6 +11,7 @@ import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { LogoBird } from "../components/LogoBird.jsx";
 import { useBottomSheet, BottomSheet } from "../components/ui.jsx";
 import NearbyShops from "../components/NearbyShops.jsx";
+import HistoryLens from "./HistoryLens.jsx";
 import { CENTER } from "../state/AppContext.jsx";
 
 const CAT = { history: ["History spot", "역사문화 스팟"], stream: ["Stream spot", "하천길 스팟"], park: ["Park & view spot", "공원·전망 스팟"] };
@@ -100,6 +101,39 @@ export function Spot() {
       <div className="spot-title"><b>{loc(spot.name)}</b><small>{t("stamped")}</small></div>
       <BottomSheet sheet={sheet} className="spot-sheet2">
         <div className="scroll-y spot-body">
+          {/* 도착 직후 AI 역사 렌즈: 사진 촬영 → 공식 근거 대조 → 해설 */}
+          <HistoryLens spotId={spot.id} spotName={loc(spot.name)} />
+
+          {/* 역사 질문은 AI 렌즈 바로 아래에 배치 */}
+          <div className="ask">
+            <h4>{t("ask_title")}</h4>
+            <div className="ask-row">
+              <input className="input" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && ask()} placeholder={mic.listening ? t("listening") : t("ask_ph")} />
+              {mic.supported && (
+                <button className={`mic ${mic.listening ? "on" : ""}`} onClick={mic.toggle} aria-label={t("mic")} title={t("mic")}>
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0014 0M12 18v3" /></svg>
+                </button>
+              )}
+              <button className="btn btn-ink sm" onClick={() => ask()}>{t("ask_btn")}</button>
+            </div>
+            {answer && (
+              <div className="ask-answer" data-testid="answer">
+                {answer.loading ? t("asking") : answer.none ? t("no_answer") : (
+                  <>
+                    {answer.text}
+                    {answer.sources.length > 0 && (
+                      <span className="src">
+                        {t("sources")}: {answer.sources.map((s, i) => <a key={i} href={s.url} target="_blank" rel="noopener">{s.title}</a>)}
+                        {answer.cached && " " + t("offline_answer")}
+                      </span>
+                    )}
+                    {!answer.cached && answer.model && <span className="src">✦ AI · {answer.model}</span>}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+
           <div className="spot-cat">
             <p>{(CAT[spot.category] || CAT.history)[lang === "ko" ? 1 : 0]}</p>
             <LangPill glass />
@@ -141,34 +175,7 @@ export function Spot() {
 
           <p className="note cream">{loc(spot.notice)}</p>
 
-          <div className="ask">
-            <h4>{t("ask_title")}</h4>
-            <div className="ask-row">
-              <input className="input" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && ask()} placeholder={mic.listening ? t("listening") : t("ask_ph")} />
-              {mic.supported && (
-                <button className={`mic ${mic.listening ? "on" : ""}`} onClick={mic.toggle} aria-label={t("mic")} title={t("mic")}>
-                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0014 0M12 18v3" /></svg>
-                </button>
-              )}
-              <button className="btn btn-ink sm" onClick={() => ask()}>{t("ask_btn")}</button>
-            </div>
-            {answer && (
-              <div className="ask-answer" data-testid="answer">
-                {answer.loading ? t("asking") : answer.none ? t("no_answer") : (
-                  <>
-                    {answer.text}
-                    {answer.sources.length > 0 && (
-                      <span className="src">
-                        {t("sources")}: {answer.sources.map((s, i) => <a key={i} href={s.url} target="_blank" rel="noopener">{s.title}</a>)}
-                        {answer.cached && " " + t("offline_answer")}
-                      </span>
-                    )}
-                    {!answer.cached && answer.model && <span className="src">✦ AI · {answer.model}</span>}
-                  </>
-                )}
-              </div>
-            )}
-          </div>
+
         </div>
         <div className="cta-row two">
           <button className="btn btn-teal" onClick={() => { stopAudio(); app.run.resume(); }}>{t("keep_running")}</button>
