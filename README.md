@@ -208,6 +208,10 @@ python main.py --recommend --destination-id uiryeong --target-distance-km 3 --sl
 - Gemini API: 서버 측 질문 응답·코스 추천·AI 역사 렌즈 이미지 분석 및 해설
 - JSON / GeoJSON: 경로, 설정, 해설 데이터
 
+## 글꼴 출처
+
+이 앱에는 국립한글박물관의 한글누리체가 사용되었습니다. (공공누리 제3유형)
+
 ## 현재 한계 및 주의사항
 
 - 최신 앱 번들은 18개 슬롯과 Low/High geometry가 다른 9개 페어를 제공합니다. 앱은 저장된 번들을 불러오며, 경로는 앱에서 새로 계산하지 않습니다.
