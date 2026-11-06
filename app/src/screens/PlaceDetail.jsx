@@ -11,11 +11,10 @@ import { fmtTime } from "../lib/geo.js";
 import * as voice from "../lib/voice.js";
 import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections, exploreColor, byNearest, round10, CHECKED_DATE } from "../lib/places.js";
 import { spotIconSvg } from "../components/SpotIcons.jsx";
-import { PlaceEvents } from "./Events.jsx";
 import HistoryLens from "./HistoryLens.jsx";
 import NearbyShops from "../components/NearbyShops.jsx";
 
-const TABS = ["story", "visit", "events", "history_lens"];
+const TABS = ["story", "visit", "history_lens"]; // 문화 활동 탭은 뺐어요
 
 export default function PlaceDetail() {
   const app = useApp();
@@ -47,7 +46,7 @@ export default function PlaceDetail() {
   };
   // 방문 정보: explore.json의 같은 장소 (값이 없으면 null → "정보 준비 중")
   const info = app.data.exploreBySpot[spot.id] || {};
-  const visit = { hours: info.hours, closed: info.open_days, fee: info.fee, address: info.address, access: null };
+  const visit = { hours: info.hours, closed: info.open_days, fee: info.fee, address: info.address }; // 가는 길은 뺐어요
   const nearby = app.data.explore.filter((p) => p.nearest_course?.dest === spot.id).sort(byNearest);
   const openExplore = (p) => { voice.stop(); app.setExplore({ place: p, from: "place" }); app.go("explore"); };
   const runHere = () => { voice.stop(); app.setPick({ ...app.pick, dest: spot.id }); app.go("courses"); };
@@ -178,7 +177,6 @@ export default function PlaceDetail() {
             </div>
           )}
 
-          {!prep && tab === "events" && <div className="rise pd-col"><PlaceEvents spotId={spot.id} /></div>}
           {!prep && tab === "history_lens" && <HistoryLens spotId={spot.id} spotName={name} />}
         </div>
       </div>
