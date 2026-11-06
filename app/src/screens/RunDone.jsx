@@ -2,8 +2,7 @@
 // 자유 달리기를 마쳤거나, 코스를 목적지 전에 끝냈을 때 보여줘요.
 // 지도 카드 + 거리·시간·페이스, 모은 별·누적 별·러너 온도, 지나간 길 근처 이야기, 하단 고정 버튼
 
-import { useMemo, useState } from "react";
-import { RewardShop } from "./RewardShop.jsx";
+import { useMemo } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { fmtTime, fmtPace, distance } from "../lib/geo.js";
@@ -17,7 +16,6 @@ const NEAR_TRAIL_M = 500; // 지나간 길에서 이 거리 안의 장소를 "�
 export default function RunDone() {
   const app = useApp();
   const f = app.finish;
-  const [activeTab, setActiveTab] = useState("result");
   const r = f?.record;
   const nearby = useMemo(() => (f ? spotsNearTrail(f.trail, app.data.spots) : []), [f, app.data.spots]);
   if (!f) return null;
@@ -70,12 +68,7 @@ export default function RunDone() {
         </div>
 
 
-        <nav className="spot-tabs" role="tablist" aria-label="완주 결과 탭">
-          <button type="button" role="tab" aria-selected={activeTab === "result"} className={activeTab === "result" ? "active" : ""} onClick={() => setActiveTab("result")}>완주 결과</button>
-          <button type="button" role="tab" aria-selected={activeTab === "shops"} className={activeTab === "shops" ? "active" : ""} onClick={() => setActiveTab("shops")}>주변 제휴 가게</button>
-        </nav>
-        {activeTab === "shops" && <RewardShop spot={destSpot || nearby[0]?.s} />}
-        {activeTab === "result" && nearby.length > 0 && (
+        {nearby.length > 0 && (
           <section className="done-near" aria-label={t("near_stories")}>
             <h2>{t("near_stories")}</h2>
             {nearby.map(({ s, d }) => (
