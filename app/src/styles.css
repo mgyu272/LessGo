@@ -1521,3 +1521,15 @@ div:has(> .spot-pin) { pointer-events: none; }
 .reward-error{color:#a33636;font-size:12px}
 .spot-run-record{background:#f4f9e9;border-radius:16px;padding:18px}
 .spot-run-record p{margin:10px 0}
+
+/* Runner temperature — separate from the existing star coupon balance */
+.runner-temp{padding:18px 16px;margin:12px 0;border-radius:20px;background:#fff}
+.runner-temp-top,.runner-temp-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.runner-temp-top b{font-size:15px;color:#304820}
+.runner-temp-top small,.runner-temp-bottom span:last-child{font-size:11px;color:#7b8d69}
+.runner-temp-value{font-size:38px;line-height:1.3;font-weight:750;color:#537f32;margin:10px 0}
+.runner-temp-value small{font-size:17px;margin-left:3px}
+.runner-temp-track{height:10px;border-radius:999px;background:#e7efd9;overflow:hidden}
+.runner-temp-track i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#a9d77a,#649e3c)}
+.runner-temp-bottom{margin-top:9px;font-size:12px;font-weight:700;color:#456a30}
+.runner-temp p{font-size:11px;color:#718365;line-height:1.5;margin:12px 0 0}
