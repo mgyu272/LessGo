@@ -27,6 +27,8 @@ export default function PlaceDetail() {
   if (!spot) return null;
 
   const name = loc(spot.name);
+  // 새로 추가된 장소: 탭 형식·기능은 같고 내용은 비워 둔 "준비 중" (발표 때 채울 예정)
+  const prep = spot.preparing === true;
   const text = loc(spot.narration);
   const listen = () => {
     if (playing) { voice.stop(); setPlaying(false); return; }
@@ -66,7 +68,7 @@ export default function PlaceDetail() {
           <div className="pd-id">
             <span className="pd-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(spot) }} />
             <div>
-              <small>{(PLACE_TOPICS[spot.id] || []).map((k) => t("topic_" + k)).join(" · ") || t("filter_" + spot.category)}</small>
+              <small>{spot.kindLabel || (PLACE_TOPICS[spot.id] || []).map((k) => t("topic_" + k)).join(" · ") || t("filter_" + spot.category)}</small>
               <h1>{name}</h1>
             </div>
           </div>
@@ -77,7 +79,16 @@ export default function PlaceDetail() {
         </div>
 
         <div className="pd-body">
-          {tab === "story" && (
+          {prep && (
+            <div className="rise pd-col">
+              <article className="card pd-story pd-prep">
+                <span>{loc({ ko: "준비 중", en: "Coming soon" })}</span>
+                <h3>{loc({ ko: "곧 이야기가 채워져요", en: "Stories are on the way" })}</h3>
+                <p>{loc({ ko: "이 장소의 해설·방문 정보·러닝 코스를 준비하고 있어요.", en: "We're preparing the story, visit info and running course for this place." })}</p>
+              </article>
+            </div>
+          )}
+          {!prep && tab === "story" && (
             <div className="rise pd-col">
               <button className="btn btn-cta pd-listen" onClick={listen} aria-pressed={playing}>
                 <span>{t(playing ? "listen_stop" : "listen_about", { t: fmtTime(voice.estimateSeconds(text, app.lang)) })}</span>
@@ -98,7 +109,7 @@ export default function PlaceDetail() {
             </div>
           )}
 
-          {tab === "visit" && (
+          {!prep && tab === "visit" && (
             <div className="rise pd-col">
               <div className="card pd-rows">
                 {Object.keys(visit).map((k) => (
@@ -140,13 +151,15 @@ export default function PlaceDetail() {
             </div>
           )}
 
-          {tab === "events" && <div className="rise pd-col"><PlaceEvents spotId={spot.id} /></div>}
-          {tab === "history_lens" && <HistoryLens spotId={spot.id} spotName={name} />}
+          {!prep && tab === "events" && <div className="rise pd-col"><PlaceEvents spotId={spot.id} /></div>}
+          {!prep && tab === "history_lens" && <HistoryLens spotId={spot.id} spotName={name} />}
         </div>
       </div>
 
       <div className="pd-cta">
-        <button className="btn btn-cta" onClick={runHere}>{t("run_to", { name: name.replace(/\s*\(.*\)/, "") })} →</button>
+        {prep
+          ? <button className="btn btn-cta" disabled>{loc({ ko: "코스 준비 중", en: "Course coming soon" })}</button>
+          : <button className="btn btn-cta" onClick={runHere}>{t("run_to", { name: name.replace(/\s*\(.*\)/, "") })} →</button>}
       </div>
 
       {report && <ReportSheet spot={spot} onClose={() => setReport(false)} />}

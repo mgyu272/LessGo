@@ -10,10 +10,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp, HOME_CENTER, HOME_LEVEL } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
-import { MapView, FitSpots, FlyTo, FocusOn, SpotMarker, Me, ExploreLayer, MapWatch } from "../components/MapView.jsx";
-import { LangPill } from "../components/Bits.jsx";
-import { useBottomSheet, BottomSheet, Segment } from "../components/ui.jsx";
-import { DISTANCES } from "../lib/routes.js";
+import { MapView, FitSpots, FlyTo, FocusOn, SpotMarker, Me, ExploreLayer, MapWatch, Route, FitBounds } from "../components/MapView.jsx";
+import { LangPill, ElevationChart } from "../components/Bits.jsx";
+import { useBottomSheet, BottomSheet, Segment, Badge } from "../components/ui.jsx";
+import { DISTANCES, DESTINATIONS } from "../lib/routes.js";
+import { getCourse } from "../lib/data.js";
+import { spotIconSvg, CategoryIcon } from "../components/SpotIcons.jsx";
+import { MODE_COLOR } from "./Courses.jsx";
 import { distance } from "../lib/geo.js";
 import { exploreColor, exploreMeta, fromCourseEnd, GROUPS, groupOf } from "../lib/places.js";
 
@@ -100,6 +103,12 @@ export default function Home() {
   // 칩을 바꾸면 고른 곳과 확대 상태를 처음으로 (고르기 전 확대 단계로 돌아가요)
   const pickFilter = (k) => { if (k === filter) return; backToAll(); setFilter(k); };
   const startFree = () => app.run.start(null, { demo: app.demo, speedup: speedParam() });
+  // 장소 팝업(홈 위 절반 시트)이 열려 있으면: 코스가 있는 곳은 코스를, 준비 중인 곳은 그 자리를 지도 위쪽 절반에 보여줘요
+  const popupSpot = app.screen === "place" && app.placeFrom === "home" ? app.spot : null;
+  const popupCourse = popupSpot && !popupSpot.preparing ? courseFor(data, popupSpot.id, settings.km) : null;
+  const halfPad = () => (document.querySelector(".home-map")?.offsetHeight || 700) * 0.5 + 24;
+  // 새로 추가된 장소(둘러볼 곳): 코스 목적지와 같은 팝업 형식으로, 내용은 "준비 중"
+  const openPreparing = (p) => { app.setSpot(preparingSpot(p)); app.setPlaceFrom("home"); app.go("place"); };
 
   // 코스 고르기로 (지금 고른 거리로)
   const openCourses = () => { app.setPick({ ...app.pick, km: settings.km }); app.go("courses"); };
@@ -109,9 +118,9 @@ export default function Home() {
     const q = query.trim().toLowerCase();
     const hit = data.spots.find((s) => s.name.ko.includes(q) || s.name.en.toLowerCase().includes(q));
     if (hit) return setFlyTo({ at: [hit.lat, hit.lng], level: 2 });
-    // 코스 목적지가 아니면 둘러볼 곳에서 찾아 골라요 (칩은 전체로)
-    const ex = data.explore.find((p) => p.name.ko.includes(q) || p.name.en.toLowerCase().includes(q));
-    if (ex) { setFilter("all"); selectPlace(ex); }
+    // 코스 목적지가 아니면 둘러볼 곳에서 찾아 준비 중 팝업으로 열어요
+    const ex = data.explore.find((p) => p.name.ko.includes(q) || (p.name.en || "").toLowerCase().includes(q));
+    if (ex) openPreparing(ex);
   };
   const locate = () => {
     // 위치를 못 쓰면 성북구로 돌아와요 (핀이 모두 보이게 다시 맞춤)
@@ -129,7 +138,13 @@ export default function Home() {
     <section className="screen home-screen">
       <MapView className="home-map" center={saved?.view ? [saved.view.center.lat, saved.view.center.lng] : HOME_CENTER} level={saved?.view?.level ?? HOME_LEVEL}>
         {/* 둘러볼 곳 아이콘은 코스 목적지 핀 아래에. 칩을 바꾸면 묶음을 새로 만들어요 */}
-        <ExploreLayer key={filter} places={exShown} selectedId={selId} level={view?.level ?? HOME_LEVEL} onSelect={selectPlace} pad={clusterPad} />
+        <ExploreLayer key={filter} places={exShown} selectedId={popupSpot?.preparing ? popupSpot.id : null} level={view?.level ?? HOME_LEVEL} onSelect={openPreparing} pad={clusterPad} />
+        {popupCourse && [
+          <Route key="pc-case" path={popupCourse.path} color="#FFFFFF" weight={11} opacity={1} zIndex={5} />,
+          <Route key="pc" path={popupCourse.path} color={MODE_COLOR[popupCourse.properties.mode]} weight={6} opacity={1} zIndex={6} />,
+          <FitBounds key="pc-fit" points={popupCourse.path.map((q) => [q.lat, q.lng])} padTL={[30, 70]} padBR={[30, halfPad()]} fitKey={popupCourse.id} />,
+        ]}
+        {popupSpot?.preparing && <FitBounds points={[[popupSpot.lat + 0.0025, popupSpot.lng], [popupSpot.lat - 0.0025, popupSpot.lng]]} padTL={[30, 70]} padBR={[30, halfPad()]} fitKey={popupSpot.id} />}
         {shown.map((s) => <SpotMarker key={s.id} spot={s} label onClick={() => openSpot(s)} />)}
         <Me at={me} />
         {/* 위쪽 검색·칩과 아래 시트에 배지·이름표가 가리지 않게 맞춰요 */}
@@ -180,7 +195,6 @@ export default function Home() {
           <Segment label={t("distance")} value={settings.km} onChange={(km) => setSettings({ ...settings, km })}
             options={DISTANCES.map((km) => ({ value: km, label: <>{km}<small>km</small></>, sub: t("km_" + km) }))} />
 
-          <button className="btn btn-cta home-pick" onClick={openCourses}>{t("pick_course_km", { km: settings.km })} →</button>
 
           <button className="free-card glass" onClick={startFree}>
             <span className="free-ic" aria-hidden="true">
@@ -189,9 +203,73 @@ export default function Home() {
             <span className="free-text"><b>{t("free_title")}</b><small>{t("free_sub")}</small></span>
             <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
           </button>
+
+          {/* 장소별 코스: 코스가 있는 곳은 고도 그래프까지, 나머지는 "코스 준비 중" (스크롤해서 봐요) */}
+          <h3 className="home-list-h">{loc({ ko: "장소별 코스", en: "Courses by place" })}</h3>
+          {DESTINATIONS.map((dest) => {
+            const c = courseFor(data, dest, settings.km);
+            const spot = data.spotById[dest];
+            return c && spot && <PlaceCourseCard key={dest} course={c} spot={spot} onSpot={() => openSpot(spot)}
+              onCourses={() => { app.setPick({ ...app.pick, km: settings.km, dest }); app.go("courses"); }} />;
+          })}
+          {data.spots.filter((s) => !DESTINATIONS.includes(s.id)).map((s) => (
+            <PrepCard key={s.id} name={loc(s.name)} sub={loc({ ko: "역사·문화", en: "History" })} icon={<span dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />} onOpen={() => openSpot(s)} />
+          ))}
+          {data.explore.filter((p) => !data.spotById[p.spot_id]).map((p) => (
+            <PrepCard key={p.id} name={loc(p.name)} sub={[p.kind, p.area_ko].filter(Boolean).join(" · ")} icon={<CategoryIcon category={p.chip} size={26} />} onOpen={() => openPreparing(p)} />
+          ))}
         </div>
       </BottomSheet>
     </section>
+  );
+}
+
+// 장소의 코스: 고른 거리의 완만한 길, 없으면 언덕 허용
+function courseFor(data, dest, km) {
+  return getCourse(data, dest, km, "low") || getCourse(data, dest, km, "high") || null;
+}
+
+// 새로 추가된 장소 → 장소 팝업에 넣을 "준비 중" 장소 (해설·방문 정보·코스는 비워 둬요)
+function preparingSpot(p) {
+  return {
+    id: p.id, preparing: true, name: { ko: p.name.ko, en: p.name.en || p.name.ko },
+    lat: p.lat, lng: p.lng, category: ["history", "stream", "park"].includes(p.chip) ? p.chip : "history",
+    kindLabel: [p.kind, p.area_ko].filter(Boolean).join(" · "),
+    cards: [], narration: { ko: "", en: "" }, sources: [],
+  };
+}
+
+// 코스가 있는 장소 카드: 장소 그림 · 이름 · 거리·시간·오르막 · 고도 그래프 · 장소 보기 / 코스 보기
+function PlaceCourseCard({ course, spot, onSpot, onCourses }) {
+  const p = course.properties;
+  const place = loc(spot.name).replace(/\s*\(.*\)/, "");
+  const climb = p.climbLevel ? t("uphill", { lv: t("lv_" + p.climbLevel) }) : null;
+  return (
+    <article className="today-card card">
+      <button type="button" className="tc-head" onClick={onSpot}>
+        <span className="tc-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(spot) }} />
+        <span className="tc-text">
+          <b>{place}</b>
+          <small>{[`${p.distance_km}km`, t("about_min", { n: p.minutes }), climb].filter(Boolean).join(" · ")}</small>
+        </span>
+      </button>
+      <ElevationChart values={p.elevation} height={28} color={MODE_COLOR[p.mode]} fill="rgba(43,111,214,.12)" />
+      <div className="tc-actions">
+        <button className="btn btn-soft" onClick={onSpot}>{loc({ ko: "장소 보기", en: "About" })}</button>
+        <button className="btn btn-cta" onClick={onCourses}>{loc({ ko: "코스 보기", en: "See course" })} →</button>
+      </div>
+    </article>
+  );
+}
+
+// 코스 준비 중인 장소 카드 (누르면 장소 팝업)
+function PrepCard({ name, sub, icon, onOpen }) {
+  return (
+    <button type="button" className="prep-card card" onClick={onOpen}>
+      <span className="tc-ic" aria-hidden="true">{icon}</span>
+      <span className="tc-text"><b>{name}</b>{sub && <small>{sub}</small>}</span>
+      <Badge tone="warn">{loc({ ko: "코스 준비 중", en: "Coming soon" })}</Badge>
+    </button>
   );
 }
 
