@@ -1452,3 +1452,13 @@ div:has(> .spot-pin) { pointer-events: none; }
 .cx-go { margin-top: 12px; width: 100%; height: 46px; border: 1px solid #D6D6D6; border-radius: 10px; background: #FFFFFF; font: 700 15px var(--sans, sans-serif); color: #1F1F1F; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
 .cx-go svg { width: 16px; height: 16px; fill: #1F1F1F; }
 .cx-demo { margin: 14px 16px 0; }
+
+/* 달리기·걷기 가운데 (닫기는 오른쪽 끝에 따로) */
+.cx-modes { position: relative; justify-content: center; }
+.cx-close { position: absolute; right: -4px; top: 0; margin: 0; }
+/* 완만한 길 · 언덕 허용 카드: 옆으로 넘기기 */
+.cx-rail { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 14px 20px 6px; scrollbar-width: none; }
+.cx-rail::-webkit-scrollbar { display: none; }
+.cx-rail .cx-item { flex: 0 0 82%; scroll-snap-align: center; border: 1.5px solid #E6E6E6; border-bottom: 1.5px solid #E6E6E6; border-radius: 16px; padding: 14px 16px 16px; background: #FFFFFF; }
+.cx-rail .cx-item.on { border-color: var(--c); box-shadow: 0 6px 16px -10px var(--c); background: #FFFFFF; }
+.cx-rail .cx-time { font-size: 26px; }

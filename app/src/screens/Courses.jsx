@@ -162,10 +162,12 @@ export default function CoursePicker() {
 
         {finding && <p className="cx-empty">{loc({ ko: "현위치에서 길을 찾고 있어요…", en: "Finding routes from here…" })}</p>}
         {!finding && pair.length === 0 && <p className="cx-empty">{t("no_route_data")}</p>}
-        {!finding && pair.map((o) => {
+        {/* 완만한 길 · 언덕 허용: 옆으로 넘기는 카드 */}
+        {!finding && pair.length > 0 && <div className="cx-rail" role="radiogroup" aria-label={t("route_type")}>
+        {pair.map((o) => {
           const p = o.properties, on = o.id === course?.id, color = MODE_COLOR[p.mode];
           return (
-            <article key={o.id} className={`cx-item ${on ? "on" : ""}`} onClick={() => setSel(p.mode)}>
+            <article key={o.id} className={`cx-item ${on ? "on" : ""}`} role="radio" aria-checked={on} onClick={() => setSel(p.mode)} style={{ "--c": color }}>
               <div className="cx-item-top">
                 <span className="cx-tag" style={{ color, background: color + "1A" }}>{loc(p.modeName)}</span>
                 <small>{t("mode_sub_" + p.mode)}</small>
@@ -180,6 +182,7 @@ export default function CoursePicker() {
             </article>
           );
         })}
+        </div>}
         <Toggle className="demo-row cx-demo" checked={app.demo} onChange={app.setDemo} title={t("demo_mode")} sub={t("demo_sub")} />
       </div>
 
