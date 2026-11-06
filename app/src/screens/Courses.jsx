@@ -20,9 +20,9 @@ import { useBottomSheet, BottomSheet, Chip, Badge, OptionSheet, Toggle, Segment 
 import { speedParam } from "./Home.jsx";
 import { buildCourseFromHere } from "../lib/fromHere.js";
 
-// 지도 선 색: 완만한 길(low) = 초록, 언덕 허용(high) = 선홍 (단색)
-export const MODE_COLOR = { low: "#2F6512", high: "#E5245E" };
-const HERE_COLOR = "#1E6FD9"; // 현위치 코스 미리보기 선
+// 지도 선 색: 완만한 길(low) = 파랑, 언덕 허용(high) = 웜톤 빨강 (단색)
+export const MODE_COLOR = { low: "#2B6FD6", high: "#E04A2F" };
+const HERE_COLOR = "#2F6512"; // 현위치 코스 미리보기 선 = 달리기 화면 코스 색(초록)과 통일
 const HILLS = ["flat", "some", "hard"];           // 평지 위주 → low, 약간 언덕·도전 → high
 const THEMES = ["wall", "hanok", "tomb", "indep", "river", "park", "temple", "cafe", "market", "night"];
 const NEAR_ROUTE_M = 150;
@@ -104,17 +104,18 @@ export default function CoursePicker() {
         {/* 고르지 않은 쪽: 얇은 점선, 고른 쪽: 흰 테두리 + 굵은 선 (고른 선이 위에 오게 나중에 그려요) */}
         {preview ? [
           // 현위치 코스 미리보기: 이 선만 굵게
-          <Route key="here-case" path={preview.path} color="#FFFFFF" weight={12} opacity={1} />,
-          <Route key="here" path={preview.path} color={HERE_COLOR} weight={7} opacity={1} />,
+          <Route key="here-case" path={preview.path} color="#FFFFFF" weight={12} opacity={1} zIndex={5} />,
+          <Route key="here" path={preview.path} color={HERE_COLOR} weight={7} opacity={1} zIndex={6} />,
           <Me key="me" at={[preview.path[0].lat, preview.path[0].lng]} />,
           <FitBounds key="fit" points={preview.path.map((q) => [q.lat, q.lng])} padTL={[30, 100]} padBR={[30, 230]} fitKey={preview.id} />,
         ] : [
           ...pair.filter((o) => o.id !== course.id).flatMap((o) => [
-            <Route key={o.id + "-case"} path={o.path} color="#FFFFFF" weight={7} opacity={0.85} />,
-            <Route key={o.id} path={o.path} color={MODE_COLOR[o.properties.mode]} weight={4.5} opacity={0.95} dashed />,
+            <Route key={o.id + "-case"} path={o.path} color="#FFFFFF" weight={7} opacity={0.85} zIndex={1} />,
+            <Route key={o.id} path={o.path} color={MODE_COLOR[o.properties.mode]} weight={4.5} opacity={0.95} dashed zIndex={2} />,
           ]),
-          <Route key={course.id + "-case"} path={course.path} color="#FFFFFF" weight={12} opacity={1} />,
-          <Route key={course.id} path={course.path} color={MODE_COLOR[p.mode]} weight={7} opacity={1} />,
+          // 고른 코스는 항상 위에: 겹치는 구간은 점선 대신 고른 코스의 실선으로 보여요
+          <Route key={course.id + "-case"} path={course.path} color="#FFFFFF" weight={12} opacity={1} zIndex={5} />,
+          <Route key={course.id} path={course.path} color={MODE_COLOR[p.mode]} weight={7} opacity={1} zIndex={6} />,
           <Dot key="start" at={[course.path[0].lat, course.path[0].lng]} color={MODE_COLOR[p.mode]} />,
           <FitBounds key="fit" points={pair.flatMap((o) => o.path).map((q) => [q.lat, q.lng])} padTL={[30, 100]} padBR={[30, sheet.snaps[0] + 20]} fitKey={dest + km} />,
         ]}
