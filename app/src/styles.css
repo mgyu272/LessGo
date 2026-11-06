@@ -360,7 +360,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .login-find-links i { height: 14px; width: 1px; background: #B9C8B1; }
 .login-submit.btn { min-height: 54px; height: 54px; margin-top: 2px; padding: 0 16px; border: 1px solid #2E7A1F; border-radius: 14px; background: #2E7A1F; color: #FFFFFF; box-shadow: none; font-size: 17px; font-weight: 700; }
 .login-submit.btn:active { background: #24631A; border-color: #24631A; transform: none; }
-.login-submit.btn:disabled { background: #D3E4C8; color: #45603B; border-color: #B9D3A9; cursor: default; }
+.login-submit.btn:disabled { opacity: 1; background: #D3E4C8; color: #45603B; border-color: #B9D3A9; cursor: default; }
 .login-signup { display: flex; justify-content: center; align-items: center; gap: 5px; min-height: 44px; margin: 14px 0 0; padding-bottom: var(--safe-bottom); color: #4A5E42; font-size: 14px; }
 .login-signup .link { min-height: 44px; padding: 0 2px; color: #2E7A1F; font-size: 14px; font-weight: 700; }
 .or-line { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; color: var(--muted); font-size: 13px; }
