@@ -148,7 +148,14 @@ export default function Home() {
         <FocusOn to={focusTo?.at} level={focusTo?.level} pad={focusPad} />
         <MapWatch onChange={setView} />
       </MapView>
-      {sel && (
+      {/* 상권 탭에서 가게를 눌러 왔으면 상권 탭으로 되돌아가는 버튼 */}
+      {shop && (
+        <button type="button" className="ex-back glass" onClick={() => app.go("market")}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+          <span>{loc({ ko: "동네 상권", en: "Local shops" })}</span><small>{loc(shop.name)}</small>
+        </button>
+      )}
+      {sel && !shop && (
         <button type="button" className="ex-back glass" onClick={backToAll}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
           <span>{t("whole_district")}</span><small>{t("around_place", { name: loc(sel.name) })}</small>

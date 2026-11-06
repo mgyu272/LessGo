@@ -27,8 +27,8 @@ function kindOf(s) {
 }
 // 상권에 넣지 않는 것: 주차장, 상인회 같은 단체
 const isStore = (s) => s.id.startsWith("kakao-") && !/주차장|단체,협회/.test(s.category || "");
-// 분류의 마지막 두 칸만 보여줘요 ("한식 · 국수")
-const catLabel = (s) => (s.category || "").split(">").map((x) => x.trim()).slice(1).slice(-2).join(" · ");
+// 분류는 큰 갈래 하나만 보여줘요 ("음식점 > 한식 > 국수" → "한식")
+const catLabel = (s) => ((s.category || "").split(">")[1] || "").trim().replace(/,/g, "·");
 
 export default function Market() {
   const app = useApp();
