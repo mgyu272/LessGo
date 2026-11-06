@@ -1,3 +1,4 @@
+import { groupOf } from "../lib/places.js";
 // 스팟·카테고리 아이콘 (지도 마커와 필터 칩에서 같이 써요)
 // SVG는 문자열로 두고 지도 오버레이에 그대로 넣어요(dangerouslySetInnerHTML). 모두 고정된 그림이라 안전해요.
 
@@ -37,9 +38,13 @@ export function GroupIcon({ group, size = 18, className = "grp-icon" }) {
   );
 }
 
+// 모든 장소(코스 목적지 포함)는 테마 아이콘으로 통일 (심우장·정릉·의릉 = 역사, 길상사 = 종교)
 export function spotIconSvg(spot) {
+  return groupIconSvg(spot.group || groupOf(spot));
+}
+// 예전 장소별 그림 (지금은 안 써요. 다시 쓰고 싶으면 위 함수에서 SPOT_SVG[spot.id]를 먼저 보면 돼요)
+export function spotOwnIconSvg(spot) {
   if (SPOT_SVG[spot.id]) return `<svg viewBox="0 0 32 32" aria-hidden="true">${SPOT_SVG[spot.id]}</svg>`;
-  if (spot.group) return groupIconSvg(spot.group); // 준비 중인 새 장소: 테마 아이콘
   return `<svg viewBox="0 0 20 20" aria-hidden="true">${CATEGORY_SVG[spot.category] || CATEGORY_SVG.history}</svg>`;
 }
 

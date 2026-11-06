@@ -1382,3 +1382,4 @@ div:has(> .spot-pin) { pointer-events: none; }
 .pd-row .pd-row-v { font-size: 14px; font-weight: 400; color: var(--text); line-height: 1.45; }
 .pd-row .pd-row-v.pd-pending { color: var(--muted); }
 .pd-row .pd-row-v + small, .pd-row small { font-weight: 400; }
+.spot-pin .pin-badge.th-badge.on { box-shadow: 0 0 0 3px var(--brand, #5FA52A), 0 6px 14px rgba(28,43,38,.3); }

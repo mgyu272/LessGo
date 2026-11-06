@@ -43,7 +43,10 @@ export function iconTypeOf(p) {
 }
 // 칩 묶음: 코스 목적지(심우장·정릉·의릉)는 역사·한옥, 공원(chip park)은 아이콘보다 먼저 봐요. 나머지는 지도 아이콘 종류로
 const GROUP_OF_ICON = { museum: "exhibit", art: "exhibit", literature: "exhibit", hanok: "heritage", wall: "heritage", info: "heritage", temple: "religion", church: "religion" };
+// 테마를 따로 정한 스팟 (spots.json에는 kind가 없어서요)
+const SPOT_GROUP = { gilsangsa: "religion" };
 export function groupOf(p) {
+  if (SPOT_GROUP[p.id] || SPOT_GROUP[p.spot_id]) return SPOT_GROUP[p.id] || SPOT_GROUP[p.spot_id];
   if (DESTINATIONS.includes(p.id)) return "heritage";
   if (p.chip === "park") return "park";
   return GROUP_OF_ICON[iconTypeOf(p)] || "heritage";

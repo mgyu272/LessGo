@@ -51,7 +51,8 @@ export default function Home() {
   const [me, setMe] = useState(null);
   const [locating, setLocating] = useState(false);
   const sheet = useBottomSheet({ snaps: snapsFor, initial: saved?.sheet ?? 1 });
-  const shown = data.spots; // 코스 목적지 핀은 칩과 상관없이 늘 보여요
+  // 코스 목적지(심우장·정릉·의릉·길상사)도 다른 장소처럼 테마 칩으로 걸러요
+  const shown = useMemo(() => data.spots.filter((s) => filter === "all" || groupOf(s) === filter), [data.spots, filter]);
   // 둘러볼 곳: 칩으로 거르고, 고른 곳 · 지도 상태(확대 단계·가운데) · 고르기 전 지도(origin: 돌아갈 곳)
   const [selId, setSelId] = useState(saved?.selId ?? null);
   const [view, setView] = useState(saved?.view ?? null);
@@ -59,8 +60,10 @@ export default function Home() {
   const exShown = useMemo(() => data.explore.filter((p) => filter === "all" || groupOf(p) === filter), [data.explore, filter]);
   // 칩마다 둘러볼 곳 개수
   const groupCount = useMemo(() => {
-    const n = { all: data.explore.length };
-    data.explore.forEach((p) => { const g = groupOf(p); n[g] = (n[g] || 0) + 1; });
+    const spotIds = new Set(data.spots.map((s) => s.id));
+    const all = [...data.spots, ...data.explore.filter((p) => !spotIds.has(p.spot_id))];
+    const n = { all: all.length };
+    all.forEach((p) => { const g = groupOf(p); n[g] = (n[g] || 0) + 1; });
     return n;
   }, [data.explore]);
   // 지금 상태를 AppContext에 남겨요 (다시 들어오면 이 값으로 시작)
@@ -131,14 +134,13 @@ export default function Home() {
     <section className="screen home-screen">
       <MapView className="home-map" center={saved?.view ? [saved.view.center.lat, saved.view.center.lng] : HOME_CENTER} level={saved?.view?.level ?? HOME_LEVEL}>
         {/* 둘러볼 곳 아이콘은 코스 목적지 핀 아래에. 칩을 바꾸면 묶음을 새로 만들어요 */}
-        <ExploreLayer key={filter} places={exShown} selectedId={popupSpot?.preparing ? popupSpot.id : null} level={view?.level ?? HOME_LEVEL} onSelect={openPreparing} pad={clusterPad} />
+        <ExploreLayer key={filter} places={exShown} spots={shown} onSpot={openSpot} selectedId={popupSpot?.id ?? null} level={view?.level ?? HOME_LEVEL} onSelect={openPreparing} pad={clusterPad} />
         {popupCourse && [
           <Route key="pc-case" path={popupCourse.path} color="#FFFFFF" weight={11} opacity={1} zIndex={5} />,
           <Route key="pc" path={popupCourse.path} color={MODE_COLOR[popupCourse.properties.mode]} weight={6} opacity={1} zIndex={6} />,
           <FitBounds key="pc-fit" points={popupCourse.path.map((q) => [q.lat, q.lng])} padTL={[30, 70]} padBR={[30, halfPad()]} fitKey={popupCourse.id} />,
         ]}
         {popupSpot?.preparing && <FitBounds points={[[popupSpot.lat + 0.0025, popupSpot.lng], [popupSpot.lat - 0.0025, popupSpot.lng]]} padTL={[30, 70]} padBR={[30, halfPad()]} fitKey={popupSpot.id} />}
-        {shown.map((s) => <SpotMarker key={s.id} spot={s} label onClick={() => openSpot(s)} />)}
         <Me at={me} />
         {/* 위쪽 검색·칩과 아래 시트에 배지·이름표가 가리지 않게 맞춰요 */}
         {/* 남겨 둔 확대 범위로 돌아왔으면 처음 맞춤은 건너뛰고, 전체 지도·내 위치 실패 때만 다시 맞춰요 */}

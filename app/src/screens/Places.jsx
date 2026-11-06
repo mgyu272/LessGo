@@ -76,8 +76,7 @@ export default function Places() {
         {view === "map" && (
           <div className="card pl-map rise">
             <MapView>
-              <ExploreLayer key={topic} places={explore} onSelect={openExplore} />
-              {list.map((s) => <SpotMarker key={s.id} spot={s} label onClick={() => openPlace(s)} />)}
+              <ExploreLayer key={topic} places={explore} spots={list} onSelect={openExplore} onSpot={openPlace} />
               <FitBounds points={(list.length || explore.length ? [...list, ...explore] : data.spots).map((s) => [s.lat, s.lng])} padTL={[60, 90]} padBR={[60, 40]} fitKey={view + topic + list.length + "-" + explore.length} />
             </MapView>
           </div>

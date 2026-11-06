@@ -312,59 +312,73 @@ export function MapWatch({ onChange }) {
   return null;
 }
 
-// ---------- 둘러볼 곳 아이콘 (테마별) ----------
-// 장소마다 테마 아이콘(역사·전시·종교·공원, SpotIcons.jsx의 GROUP_SVG)을 코스 목적지처럼 크게 보여줘요.
-// 화면에서 가까워 겹치는 같은 테마 장소는 "아이콘 + 역사 5"처럼 한 알약으로 묶어요 (축소하면 묶이고, 확대하면 풀려요).
-// 다른 테마끼리 겹치면 살짝 밀어서 안 겹치게 둬요. 묶음을 누르면 그 장소들이 다 보이게 확대해요.
-//   pad(): 확대할 때 비워 둘 지도 가장자리 px [위, 오른쪽, 아래, 왼쪽] (홈은 위 검색·칩, 아래 시트)
-const MERGE_PX = 50;   // 같은 테마가 이보다 가까우면 묶어요 (아이콘 지름 + 여유)
-const APART_PX = 46;   // 서로 다른 테마 아이콘 사이 최소 간격
-export function ExploreLayer({ places, selectedId, onSelect, pad }) {
+// ---------- 장소 아이콘 (테마별: 역사·전시·종교·공원) ----------
+// 코스 목적지(spots)와 둘러볼 곳(places)을 똑같이 테마 아이콘으로 보여줘요.
+// - 축소해서 겹치면 같은 테마끼리 "아이콘 + 역사 5" 알약으로 묶어요. 묶음을 누르면 확대해요.
+// - 확대(단계 LABEL_LEVEL 이하)하면 장소마다 실제 위치 점 + 점선 + 아이콘 + 아래 이름표 (예전 심우장 핀과 같은 모양)
+// - 서로 다른 테마끼리 겹치면 아이콘을 살짝 밀어서 안 겹치게 둬요 (점선이 실제 위치를 가리켜요)
+//   pad(): 확대할 때 비워 둘 지도 가장자리 px [위, 오른쪽, 아래, 왼쪽]
+const MERGE_PX = 50;      // 같은 테마가 이보다 가까우면 묶어요
+const LABEL_LEVEL = 4;    // 이 단계 이하(확대)일 때만 이름표·점선 핀
+const LIFT_PX = 44;       // 이름표 핀: 아이콘을 실제 위치보다 이만큼 위에
+const LABEL_MERGE_PX = 80; // 확대해도 이만큼 붙어 있는 같은 테마는 이름표 대신 묶음으로 (더 확대하면 풀려요)
+export function ExploreLayer({ places = [], spots = [], selectedId, onSelect, onSpot, pad }) {
   const map = useMap();
   const [items, setItems] = useState([]);
-  const latest = useRef(places);
-  latest.current = places;
+  const [labeled, setLabeled] = useState(false);
+  const latest = useRef(null);
+  // 같은 장소가 둘러볼 곳에도 있으면(spot_id) 코스 목적지 쪽만 남겨요
+  const spotIds = new Set(spots.map((s) => s.id));
+  latest.current = [
+    ...spots.map((p) => ({ p, spot: true })),
+    ...places.filter((p) => !spotIds.has(p.spot_id)).map((p) => ({ p, spot: false })),
+  ];
 
   const compute = useCallback(() => {
     const { kakao } = window;
     const proj = map.getProjection?.();
     if (!kakao || !proj) return;
-    const pts = latest.current.map((p) => {
+    const label = map.getLevel() <= LABEL_LEVEL;
+    const pts = latest.current.map(({ p, spot }) => {
       const pt = proj.containerPointFromCoords(new kakao.maps.LatLng(p.lat, p.lng));
-      return { p, x: pt.x, y: pt.y, g: groupOf(p) };
+      return { p, spot, x: pt.x, y: pt.y, g: groupOf(p) };
     }).sort((a, b) => a.y - b.y || a.x - b.x);
-    // 1) 같은 테마끼리 가까우면 묶기
+    // 1) 같은 테마끼리 가까우면 묶기 (이름표를 보여줄 만큼 확대했으면 묶지 않아요)
     const used = new Set(), out = [];
     pts.forEach((a, i) => {
       if (used.has(i)) return;
       const members = [];
       pts.forEach((b, j) => {
-        if (used.has(j) || b.g !== a.g || Math.hypot(a.x - b.x, a.y - b.y) > MERGE_PX) return;
+        if (used.has(j) || b.g !== a.g || Math.hypot(a.x - b.x, a.y - b.y) > (label ? LABEL_MERGE_PX : MERGE_PX)) return;
         used.add(j); members.push(b);
       });
       const x = members.reduce((n, m) => n + m.x, 0) / members.length;
       const y = members.reduce((n, m) => n + m.y, 0) / members.length;
-      out.push({ g: a.g, members: members.map((m) => m.p), x, y });
+      // 아이콘 자리(bx, by): 이름표 핀이면 실제 위치보다 위에
+      out.push({ g: a.g, members, x, y, bx: x, by: label && members.length === 1 ? y - LIFT_PX : y });
     });
-    // 2) 다른 테마끼리 겹치면 조금씩 밀어내기
-    for (let k = 0; k < 10; k++) {
+    // 2) 겹치면 아이콘(+이름표) 상자끼리 밀어내기. 이름표 핀은 상자가 넓어요
+    // 이름표 핀 상자 폭은 이름 길이에 맞춰요 (글자당 약 12px)
+    const box = (it) => (it.members.length > 1 ? { w: 100, h: 46 }
+      : label ? { w: Math.max(60, loc(it.members[0].p.name).length * 12 + 24), h: 80 } : { w: 46, h: 46 });
+    for (let k = 0; k < 80; k++) {
       let moved = false;
       for (let i = 0; i < out.length; i++) for (let j = i + 1; j < out.length; j++) {
-        const a = out[i], b = out[j];
-        const need = APART_PX + (a.members.length > 1 ? 18 : 0) + (b.members.length > 1 ? 18 : 0);
-        let dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
-        if (d >= need) continue;
-        if (d < 0.01) { dx = 1; dy = 0; d = 1; }
-        const push = (need - d) / 2;
-        a.x -= (dx / d) * push; a.y -= (dy / d) * push;
-        b.x += (dx / d) * push; b.y += (dy / d) * push;
+        const a = out[i], b = out[j], A = box(a), B = box(b);
+        const dx = b.bx - a.bx, dy = b.by - a.by;
+        const ox = (A.w + B.w) / 2 - Math.abs(dx), oy = (A.h + B.h) / 2 - Math.abs(dy);
+        if (ox <= 0 || oy <= 0) continue;
+        if (ox < oy) { const s2 = (dx >= 0 ? 1 : -1) * ox / 2; a.bx -= s2; b.bx += s2; }
+        else { const s2 = (dy >= 0 ? 1 : -1) * oy / 2; a.by -= s2; b.by += s2; }
         moved = true;
       }
       if (!moved) break;
     }
+    setLabeled(label);
     setItems(out.map((it) => {
-      const ll = proj.coordsFromContainerPoint(new kakao.maps.Point(it.x, it.y));
-      return { ...it, lat: ll.getLat(), lng: ll.getLng(), key: it.members.map((m) => m.id).join("|") };
+      // 이름표 핀은 실제 위치에 두고 아이콘을 (dx, dy)만큼 옮겨 그려요. 아니면 아이콘 자리를 좌표로 바꿔요
+      const ll = proj.coordsFromContainerPoint(new kakao.maps.Point(it.bx, it.by));
+      return { ...it, lat: ll.getLat(), lng: ll.getLng(), dx: it.bx - it.x, dy: it.by - it.y, key: it.members.map((m) => m.p.id).join("|") };
     }));
   }, [map]);
 
@@ -373,34 +387,51 @@ export function ExploreLayer({ places, selectedId, onSelect, pad }) {
     compute();
     kakao.maps.event.addListener(map, "idle", compute);
     return () => kakao.maps.event.removeListener(map, "idle", compute);
-  }, [map, compute, places]);
+  }, [map, compute, places, spots]);
 
   const zoomTo = (members) => {
     const { kakao } = window;
     const bounds = new kakao.maps.LatLngBounds();
-    members.forEach((m) => bounds.extend(new kakao.maps.LatLng(m.lat, m.lng)));
+    members.forEach((m) => bounds.extend(new kakao.maps.LatLng(m.p.lat, m.p.lng)));
     const [top, right, bottom, left] = pad?.() || [60, 40, 60, 40];
     const before = map.getLevel();
     map.setBounds(bounds, top, right, bottom, left);
-    // 거의 같은 자리라 확대가 안 됐으면 한 단계 들어가요
     if (map.getLevel() >= before && before > 1) map.setLevel(before - 1);
   };
+  const open = (m) => (m.spot ? onSpot?.(m.p) : onSelect?.(m.p));
 
   return items.map((it) => {
-    const one = it.members.length === 1;
-    const p = it.members[0];
-    const selected = one && p.id === selectedId;
-    return (
-      <CustomOverlayMap key={it.key} position={{ lat: it.lat, lng: it.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 2 : 1} clickable>
-        {one ? (
-          <button type="button" className={`th-pin ${selected ? "on" : ""}`} aria-label={loc(p.name)} aria-pressed={selected}
-            onClick={() => onSelect?.(p)} dangerouslySetInnerHTML={{ __html: groupIconSvg(it.g) }} />
-        ) : (
+    const m = it.members[0];
+    const name = loc(m.p.name);
+    const svg = { __html: groupIconSvg(it.g) };
+    if (it.members.length > 1) {
+      return (
+        <CustomOverlayMap key={it.key} position={{ lat: it.lat, lng: it.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={1} clickable>
           <button type="button" className="th-cluster" aria-label={`${t("grp_" + it.g)} ${it.members.length}`} onClick={() => zoomTo(it.members)}>
-            <span className="th-cluster-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: groupIconSvg(it.g) }} />
+            <span className="th-cluster-ic" aria-hidden="true" dangerouslySetInnerHTML={svg} />
             <span>{t("grp_" + it.g)}</span><b>{it.members.length}</b>
           </button>
-        )}
+        </CustomOverlayMap>
+      );
+    }
+    const selected = m.p.id === selectedId;
+    if (!labeled) {
+      return (
+        <CustomOverlayMap key={it.key} position={{ lat: it.lat, lng: it.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 3 : m.spot ? 2 : 1} clickable>
+          <button type="button" className={`th-pin ${selected ? "on" : ""}`} aria-label={name} aria-pressed={selected} onClick={() => open(m)} dangerouslySetInnerHTML={svg} />
+        </CustomOverlayMap>
+      );
+    }
+    // 확대: 실제 위치 점 + 점선 + 아이콘 + 아래 이름표
+    const c = PIN_BOX / 2, bx = c + it.dx, by = c + it.dy;
+    return (
+      <CustomOverlayMap key={it.key} position={{ lat: m.p.lat, lng: m.p.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 3 : m.spot ? 2 : 1} clickable>
+        <div className="spot-pin" style={{ width: PIN_BOX, height: PIN_BOX }}>
+          <svg className="pin-lead" width={PIN_BOX} height={PIN_BOX} aria-hidden="true"><line x1={c} y1={c} x2={bx} y2={by} /></svg>
+          <span className="pin-dot" style={{ left: c, top: c }} />
+          <button type="button" className={`pin-badge th-badge ${selected ? "on" : ""}`} style={{ left: bx, top: by }} aria-label={name} onClick={() => open(m)} dangerouslySetInnerHTML={svg} />
+          <span className="pin-label below" style={{ left: bx, top: by }} onClick={() => open(m)}>{name}</span>
+        </div>
       </CustomOverlayMap>
     );
   });
