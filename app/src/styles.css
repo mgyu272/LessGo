@@ -1497,3 +1497,27 @@ div:has(> .spot-pin) { pointer-events: none; }
 .cx-item .elev { margin: 6px 0 0; }
 .cx-go { margin-top: 8px; height: 36px; font-size: 14px; border-radius: 9px; }
 .cx-demo { margin: 10px 16px 0; }
+
+/* Arrival tabs and QR reward demo — isolated from existing stamp and running UI */
+.spot-tabs{display:flex;gap:5px;overflow-x:auto;position:sticky;top:0;z-index:3;padding:8px 0 12px;background:#f7faee;scrollbar-width:none}
+.spot-tabs button{border:1px solid #dce8c9;background:#fff;color:#536747;border-radius:18px;padding:9px 10px;white-space:nowrap;font-size:12px;font-weight:700;flex:1}
+.spot-tabs button.active{background:#e0f2b8;color:#2d4c1f;border-color:#b8d78d}
+.spot-body [hidden]{display:none!important}
+.reward-content{padding:12px 2px 18px;color:#314523}
+.reward-content h3{font-size:19px;margin:12px 0}
+.reward-content h4{font-size:14px;margin:20px 0 8px}
+.reward-content p{line-height:1.6}
+.reward-store{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1px solid #e2ebd8;border-radius:14px;margin:9px 0;padding:14px 12px;color:#33472b;text-decoration:none;cursor:pointer}
+.reward-store span:nth-child(2){display:flex;flex-direction:column;gap:4px;flex:1}
+.reward-store small{font-size:11px;color:#7b8b70}
+.reward-store span:last-child{color:#668a48}
+.reward-card{background:linear-gradient(155deg,#f1f9e2,#fff);border:1px solid #dfebcf;border-radius:22px;padding:24px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;margin:14px 0}
+.reward-card strong{font-size:32px;color:#557c31}
+.reward-card small{font-size:11px;color:#79836f}
+.reward-icon{font-size:36px}
+.reward-camera{position:relative;min-height:230px;background:#263322;border-radius:18px;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#fff;margin:14px 0}
+.reward-camera video{width:100%;max-height:310px;object-fit:cover}
+.reward-camera span{position:absolute}
+.reward-error{color:#a33636;font-size:12px}
+.spot-run-record{background:#f4f9e9;border-radius:16px;padding:18px}
+.spot-run-record p{margin:10px 0}
