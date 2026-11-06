@@ -416,7 +416,8 @@ async function scoreAndPick(cands, ctx, osm, orsKey) {
   const top = ev.slice(0, 6);
   for (const c of top) {
     if (c.samples.every((s) => s.ele != null)) continue;
-    const coarse = resample(c.path, 50);
+    // 고도 데이터가 90m 격자라 긴 길은 90m, 짧은 길은 50m 간격으로만 물어요 (요청 절약)
+    const coarse = resample(c.path, c.samples[c.samples.length - 1].at > 6000 ? 90 : 50);
     if (await fillElevation(coarse)) {
       c.samples = resample(coarse, 20); // 50m 고도를 20m 간격으로
       c.ev = evaluate(c.samples, ctx, osm);
@@ -425,7 +426,8 @@ async function scoreAndPick(cands, ctx, osm, orsKey) {
   // 고도를 받은 길끼리 비교해요 (고도를 못 받은 길은 경사를 몰라서 완만한지 알 수 없어요)
   const known = top.filter((c) => c.ev.ascent_m != null);
   const pool = known.length >= 2 ? known : top;
-  const best = [...pool].sort((a, b) => b.ev.score - a.ev.score)[0];
+  // 완만한 길은 고도를 아는 길 중에서만 (하나라도 있으면)
+  const best = [...(known.length ? known : pool)].sort((a, b) => b.ev.score - a.ev.score)[0];
   const byHigh = [...pool].sort((a, b) => b.ev.score_high - a.ev.score_high);
   // 언덕 허용: 완만한 길과 70% 넘게 겹치지 않는 다른 길 중 언덕 허용 점수 1등 (다른 길이 하나도 없을 때만 같은 길)
   let bestHigh = byHigh[0];
