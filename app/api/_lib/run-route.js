@@ -150,13 +150,16 @@ async function fillElevation(samples) {
   const need = [...new Map(samples.filter((s) => s.ele == null && !eleCache.has(eleKey(s))).map((s) => [eleKey(s), s])).values()];
   const chunks = [];
   for (let i = 0; i < need.length; i += 100) chunks.push(need.slice(i, i + 100));
-  try {
-    for (const part of chunks) {
-      const lat = part.map((s) => s.lat.toFixed(4)).join(","), lng = part.map((s) => s.lng.toFixed(4)).join(",");
-      const j = await fetchJSON(`${ELEVATION}?latitude=${lat}&longitude=${lng}`, {}, 8000);
-      part.forEach((s, i) => { if (j.elevation?.[i] != null) eleCache.set(eleKey(s), j.elevation[i]); });
+  for (const part of chunks) {
+    const lat = part.map((s) => s.lat.toFixed(4)).join(","), lng = part.map((s) => s.lng.toFixed(4)).join(",");
+    for (let attempt = 0; attempt < 2; attempt++) { // 실패하면 한 번 더
+      try {
+        const j = await fetchJSON(`${ELEVATION}?latitude=${lat}&longitude=${lng}`, {}, 8000);
+        part.forEach((s, i) => { if (j.elevation?.[i] != null) eleCache.set(eleKey(s), j.elevation[i]); });
+        break;
+      } catch { await new Promise((r) => setTimeout(r, 400)); }
     }
-  } catch { /* 일부 못 받으면 아래에서 확인 */ }
+  }
   samples.forEach((s) => { if (s.ele == null && eleCache.has(eleKey(s))) s.ele = eleCache.get(eleKey(s)); });
   return samples.every((s) => s.ele != null);
 }
@@ -419,8 +422,11 @@ async function scoreAndPick(cands, ctx, osm, orsKey) {
       c.ev = evaluate(c.samples, ctx, osm);
     }
   }
-  const best = [...top].sort((a, b) => b.ev.score - a.ev.score)[0];
-  const byHigh = [...top].sort((a, b) => b.ev.score_high - a.ev.score_high);
+  // 고도를 받은 길끼리 비교해요 (고도를 못 받은 길은 경사를 몰라서 완만한지 알 수 없어요)
+  const known = top.filter((c) => c.ev.ascent_m != null);
+  const pool = known.length >= 2 ? known : top;
+  const best = [...pool].sort((a, b) => b.ev.score - a.ev.score)[0];
+  const byHigh = [...pool].sort((a, b) => b.ev.score_high - a.ev.score_high);
   // 언덕 허용: 완만한 길과 70% 넘게 겹치지 않는 다른 길 중 언덕 허용 점수 1등 (다른 길이 하나도 없을 때만 같은 길)
   let bestHigh = byHigh[0];
   if (bestHigh === best || sharedShare(bestHigh.samples, best.samples) > 0.7) {
@@ -429,7 +435,7 @@ async function scoreAndPick(cands, ctx, osm, orsKey) {
   }
   // 완만한 길은 언제나 오르막이 더 적은 쪽 (점수가 비슷해 반대로 뽑히면 서로 바꿔요)
   let low = best, high = bestHigh;
-  if (low !== high && (low.ev.ascent_m ?? 0) > (high.ev.ascent_m ?? 0)) [low, high] = [high, low];
+  if (low !== high && low.ev.ascent_m != null && high.ev.ascent_m != null && low.ev.ascent_m > high.ev.ascent_m) [low, high] = [high, low];
   const direct = ev.find((c) => c.kind === "direct") || null;
   const pack = (c) => c && ({
     kind: c.kind,
