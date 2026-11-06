@@ -1553,3 +1553,17 @@ div:has(> .spot-pin) { pointer-events: none; }
 .home-course-list button{display:flex;align-items:center;gap:10px;min-height:53px;border:0;border-radius:15px;padding:8px 12px;background:white;color:#2f4625;text-align:left}
 .home-course-list b{flex:1;font-size:14px}.home-course-list button>span:last-child{font-size:22px;color:#80aa5c}
 .home-course-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#f0f7e6;color:#6b9e43}
+
+/* 도착 화면 탭 (AI 렌즈 · 역사 해설 · 주변 가게 · 내 기록): 인덱스 탭처럼 구분되게 */
+.spot-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin: 4px 0 14px; padding: 0 2px; border-bottom: 2px solid #2F6512; }
+.spot-tabs button { position: relative; min-height: 42px; padding: 8px 4px; border: 1.5px solid #CFDCBF; border-bottom: none; border-radius: 12px 12px 0 0;
+  background: #EEF4E6; color: #5B6E4C; font-family: inherit; font-size: 14px; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; white-space: nowrap; cursor: pointer; transition: background .15s, color .15s; }
+.spot-tabs button:hover { background: #E3EDD6; }
+.spot-tabs button.active { background: #2F6512; border-color: #2F6512; color: #FFFFFF; font-weight: 800; }
+.spot-tabs button:focus-visible { outline: 2px solid #2F6512; outline-offset: 2px; }
+
+/* 코스 화면: 완만한 길 · 언덕 허용 카드를 넘기지 않고 한 줄에 둘 다 (글씨는 그대로, 고도 그래프만 작게) */
+.cx-rail { gap: 8px; overflow-x: visible; scroll-snap-type: none; }
+.cx-rail .cx-item { flex: 1 1 0; min-width: 0; }
+.cx-rail .cx-item-top { flex-wrap: wrap; gap: 4px 6px; }
+.cx-rail .cx-item .elev { height: 20px; margin: 6px 0 0; }
