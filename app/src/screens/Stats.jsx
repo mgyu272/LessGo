@@ -98,7 +98,7 @@ function RunnerTemperature({ stars }) {
       <div className="runner-temp-value">{temperature.toFixed(1)}<small>°C</small></div>
       <div className="runner-temp-track" role="progressbar" aria-label="러너 온도" aria-valuemin={36.5} aria-valuemax={99.9} aria-valuenow={Number(temperature.toFixed(1))}><i style={{width: percent + "%"}} /></div>
       <div className="runner-temp-bottom"><span>{rank}</span><span>누적 별 {count.toLocaleString("ko-KR")}개</span></div>
-      <p>별을 모을수록 온도가 올라가요. 할인쿠폰과는 별개로 누적됩니다.</p>
+      <p>별을 모을수록 온도가 올라가요.</p>
     </section>
   );
 }
