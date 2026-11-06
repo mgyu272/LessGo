@@ -182,7 +182,7 @@ export function Spot() {
 
           </div>
           <div hidden={activeTab !== "shops"}><RewardShop /></div>
-          <div hidden={activeTab !== "record"} className="spot-run-record">
+          <div hidden={activeTab !== "record"} className="spot-run-record card">
             <h3>나의 러닝 기록</h3>
             <p>이동 거리: {((app.run.view?.meters || 0) / 1000).toFixed(2)}km</p>
             <p>러닝 시간: {fmtTime(app.run.view?.seconds || 0)}</p>
