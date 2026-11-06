@@ -16,7 +16,6 @@
     "eval:heritage:live": "node --env-file-if-exists=.env.local scripts/run-heritage-vision-eval.mjs --live"
   },
   "dependencies": {
-    "@fontsource/noto-sans-kr": "^5.3.1",
     "@fontsource/roboto": "^5.3.0",
     "firebase": "^11.10.0",
     "h3-js": "^4.2.1",

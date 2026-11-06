@@ -210,7 +210,7 @@ python main.py --recommend --destination-id uiryeong --target-distance-km 3 --sl
 
 ## 글꼴 출처
 
-이 앱에는 국립한글박물관의 한글누리체가 사용되었습니다. (공공누리 제3유형)
+이 앱에는 Pretendard(SIL Open Font License 1.1)가 사용되었습니다.
 
 ## 현재 한계 및 주의사항
 
