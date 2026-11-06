@@ -1562,3 +1562,25 @@ div:has(> .spot-pin) { pointer-events: none; }
 .mk-kakao:active { transform: scale(.94); }
 .mk-kakao:focus-visible, .mk-main:focus-visible { outline: 2px solid #2F6512; outline-offset: 2px; }
 .plain-pin { display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,.3)); }
+
+/* 도착 화면 주변 가게: 상권 탭과 같은 카드 + QR 표시 */
+.reward-store-list { gap: 10px; }
+.rw-store { width: 100%; border: 0; text-align: left; cursor: pointer; font: inherit; color: inherit; }
+.rw-store .mk-main { pointer-events: none; }
+.rw-qr { flex: none; width: 44px; height: 44px; border-radius: 12px; background: #2F6512; color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.rw-qr svg { width: 20px; height: 20px; fill: currentColor; }
+.rw-qr small { font-size: 9px; font-weight: 800; letter-spacing: .04em; }
+/* 가게 고른 뒤: 사진 배경 머리 카드 · 노란 쿠폰권 */
+.rw-back { border: 0; background: none; padding: 4px 2px; font: inherit; font-size: 14px; font-weight: 700; color: var(--link); cursor: pointer; }
+.rw-hero { position: relative; height: 150px; margin: 8px 0 12px; border-radius: 18px; overflow: hidden; background: #2F6512 center / cover no-repeat; }
+.rw-hero-shade { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; padding: 14px 16px;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 25%, rgba(10,24,6,.82) 100%); color: #FFFFFF; }
+.rw-hero-shade h3 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -.02em; color: #FFFFFF; text-shadow: 0 1px 6px rgba(0,0,0,.4); }
+.rw-hero-shade small { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.88); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.rw-coupon { position: relative; display: flex; align-items: center; gap: 14px; margin: 0 0 12px; padding: 14px 16px; border-radius: 16px; background: #FFE89A; border: 2px dashed #C99A12; color: #4A3500; }
+.rw-coupon.done { background: #CDEFA5; border-color: #2F6512; color: #1F3D10; }
+.rw-coupon-amt { flex: none; font-size: 14px; font-weight: 800; }
+.rw-coupon-amt b { font-size: 30px; letter-spacing: -.03em; }
+.rw-coupon-text { display: flex; flex-direction: column; gap: 2px; padding-left: 14px; border-left: 2px dashed rgba(0,0,0,.18); }
+.rw-coupon-text b { font-size: 16px; font-weight: 800; }
+.rw-coupon-text small { font-size: 13px; font-weight: 600; opacity: .85; }

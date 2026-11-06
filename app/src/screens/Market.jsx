@@ -28,7 +28,7 @@ function kindOf(s) {
 // 상권에 넣지 않는 것: 주차장, 상인회 같은 단체
 const isStore = (s) => s.id.startsWith("kakao-") && !/주차장|단체,협회/.test(s.category || "");
 // 분류는 큰 갈래 하나만 보여줘요 ("음식점 > 한식 > 국수" → "한식")
-const catLabel = (s) => ((s.category || "").split(">")[1] || "").trim().replace(/,/g, "·");
+export const catLabel = (s) => ((s.category || "").split(">")[1] || "").trim().replace(/,/g, "·");
 
 export default function Market() {
   const app = useApp();
@@ -106,7 +106,7 @@ export default function Market() {
 }
 
 // 카카오맵 대표 사진. 못 불러오면 가게 종류 그림으로 바꿔요
-function ShopPhoto({ shop }) {
+export function ShopPhoto({ shop }) {
   const [broken, setBroken] = useState(false);
   if (!shop.image || broken) {
     return (
