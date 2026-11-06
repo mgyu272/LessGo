@@ -79,6 +79,7 @@ export default function ExplorePlace() {
               </div>
             ))}
           </div>
+          {place.visitor_note && <p className="pd-src">{place.visitor_note}</p>}
           <div className="ex-links">
             <a className="btn btn-soft" href={kakaoDirections(place.name.ko, place.lat, place.lng)} target="_blank" rel="noopener">{t("kakao_directions")}</a>
             <button type="button" className="btn btn-soft" onClick={() => setReport(true)}>{t("info_wrong")}</button>

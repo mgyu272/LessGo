@@ -38,7 +38,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 770
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "kansong",
@@ -75,7 +76,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 450
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "sb-art-museum",
@@ -112,7 +114,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 310
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "suyeonsanbang",
@@ -149,7 +152,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 310
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "seonjam-museum",
@@ -186,7 +190,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 570
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "simujang",
@@ -223,7 +228,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 0
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "bukjeong-village",
@@ -261,7 +267,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 130
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "naksan-wall",
@@ -305,7 +312,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 1310
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "gilsangsa",
@@ -341,7 +349,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 590
-   }
+   },
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
   },
   {
    "id": "leejongseok-villa",
@@ -374,7 +383,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 270
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "korean-stone-museum",
@@ -407,7 +417,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 820
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "furniture-museum",
@@ -443,7 +454,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 720
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "samcheonggak",
@@ -474,7 +486,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 760
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "martyrs-monastery",
@@ -505,7 +518,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 350
-   }
+   },
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
   },
   {
    "id": "myeongwol-museum",
@@ -539,7 +553,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 1280
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "kwonjingyu-atelier",
@@ -572,7 +587,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 1470
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "sukjeongmun",
@@ -607,7 +623,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 1110
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "hyehwamun",
@@ -642,7 +659,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 1220
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "sb-literature",
@@ -673,7 +691,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 490
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "choemanrin-museum",
@@ -706,7 +725,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 1090
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "sb-art-factory",
@@ -737,7 +757,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 1170
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "jeongbeopsa",
@@ -770,7 +791,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 900
-   }
+   },
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
   },
   {
    "id": "jeongneung",
@@ -807,7 +829,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 70
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "jeongneungcheon",
@@ -840,7 +863,8 @@
     "2026-10-30 성북구 장소 정리",
     "2026-10-18 1차 자료조사(주변 상권)"
    ],
-   "nearest_course": null
+   "nearest_course": null,
+   "visitor_note": null
   },
   {
    "id": "gyeongguksa",
@@ -876,7 +900,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 1520
-   }
+   },
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
   },
   {
    "id": "bukhansan-jeongneung-trail",
@@ -909,7 +934,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 2070
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "heungcheonsa",
@@ -945,7 +971,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 360
-   }
+   },
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
   },
   {
    "id": "bongguksa",
@@ -978,7 +1005,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 470
-   }
+   },
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
   },
   {
    "id": "bomunsa",
@@ -1011,7 +1039,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 1980
-   }
+   },
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
   },
   {
    "id": "gaeunsan",
@@ -1042,7 +1071,8 @@
    "source": [
     "2026-10-30 성북구 장소 정리"
    ],
-   "nearest_course": null
+   "nearest_course": null,
+   "visitor_note": null
   },
   {
    "id": "uiryeong",
@@ -1075,7 +1105,8 @@
    "nearest_course": {
     "dest": "uiryeong",
     "straight_m": 260
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "samgunbu-chongmudang",
@@ -1108,7 +1139,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 1860
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "knua",
@@ -1141,7 +1173,8 @@
    "nearest_course": {
     "dest": "uiryeong",
     "straight_m": 260
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "seongbukcheon",
@@ -1181,7 +1214,8 @@
     "2026-10-30 성북구 장소 정리",
     "2026-10-18 1차 자료조사(주변 상권)"
    ],
-   "nearest_course": null
+   "nearest_course": null,
+   "visitor_note": null
   },
   {
    "id": "bukak-skyway",
@@ -1214,7 +1248,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 1350
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "sb-history-park",
@@ -1247,7 +1282,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 550
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "samseon-park",
@@ -1278,7 +1314,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 1860
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "sb-history-center",
@@ -1309,7 +1346,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 480
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "sb-eco-center",
@@ -1340,7 +1378,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 2200
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "yehyangjae",
@@ -1371,7 +1410,8 @@
    "nearest_course": {
     "dest": "simujang",
     "straight_m": 270
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "kimjungup-house",
@@ -1402,7 +1442,8 @@
    "nearest_course": {
     "dest": "uiryeong",
     "straight_m": 1740
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "leeyuksa-space",
@@ -1435,7 +1476,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 2230
-   }
+   },
+   "visitor_note": null
   },
   {
    "id": "donam-cathedral",
@@ -1466,7 +1508,8 @@
    "nearest_course": {
     "dest": "jeongneung",
     "straight_m": 1490
-   }
+   },
+   "visitor_note": "종교 행사 중에는 조용히 관람해 주세요."
   },
   {
    "id": "odong-park",
@@ -1497,7 +1540,8 @@
    "nearest_course": {
     "dest": "uiryeong",
     "straight_m": 1620
-   }
+   },
+   "visitor_note": null
   }
  ]
 }

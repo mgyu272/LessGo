@@ -47,6 +47,7 @@ export default function PlaceDetail() {
   };
   // 방문 정보: explore.json의 같은 장소 (값이 없으면 null → "정보 준비 중")
   const info = app.data.exploreBySpot[spot.id] || {};
+  const visitorNote = info.visitor_note ?? app.data.explore.find((p) => p.id === spot.id)?.visitor_note;
   const visit = { hours: info.hours, closed: info.open_days, fee: info.fee, address: info.address }; // 가는 길은 뺐어요
   const nearby = app.data.explore.filter((p) => p.nearest_course?.dest === spot.id).sort(byNearest);
   const openExplore = (p) => { voice.stop(); app.setExplore({ place: p, from: "place" }); app.go("explore"); };
@@ -114,6 +115,7 @@ export default function PlaceDetail() {
                 <h3>{loc({ ko: "곧 이야기가 채워져요", en: "Stories are on the way" })}</h3>
                 <p>{loc({ ko: "이 장소의 해설·방문 정보·러닝 코스를 준비하고 있어요.", en: "We're preparing the story, visit info and running course for this place." })}</p>
               </article>
+              {tab === "visit" && visitorNote && <p className="pd-src">{visitorNote}</p>}
             </div>
           )}
           {!prep && tab === "story" && (
@@ -148,6 +150,7 @@ export default function PlaceDetail() {
                   </div>
                 ))}
               </div>
+              {visitorNote && <p className="pd-src">{visitorNote}</p>}
               {loc(spot.notice) && <p className="note mint">{loc(spot.notice)}</p>}
               <div className="pd-links">
                 <a className="btn btn-soft" href={kakaoDirections(name, spot.lat, spot.lng)} target="_blank" rel="noopener">{t("directions")}</a>
