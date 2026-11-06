@@ -253,7 +253,7 @@ function PlaceCourseCard({ course, spot, onSpot, onCourses }) {
           <small>{[`${p.distance_km}km`, t("about_min", { n: p.minutes }), climb].filter(Boolean).join(" · ")}</small>
         </span>
       </button>
-      <ElevationChart values={p.elevation} height={28} color={MODE_COLOR[p.mode]} fill="rgba(43,111,214,.12)" />
+      <ElevationChart values={p.elevation} height={28} color="#2F6512" fill="rgba(47,101,18,.12)" />
       <div className="tc-actions">
         <button className="btn btn-soft" onClick={onSpot}>{loc({ ko: "장소 보기", en: "About" })}</button>
         <button className="btn btn-cta" onClick={onCourses}>{loc({ ko: "코스 보기", en: "See course" })} →</button>
