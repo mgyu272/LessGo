@@ -9,7 +9,7 @@ import { t, loc, getLang } from "../lib/i18n.js";
 import { fmtTime } from "../lib/geo.js";
 import { DAILY_GOAL_KM, byDay, badgeStates, dayStart, DAY } from "../lib/badges.js";
 import { LogoBird } from "../components/LogoBird.jsx";
-import { Badge } from "../components/ui.jsx";
+import { Badge, ConfirmDialog } from "../components/ui.jsx";
 import { StarProgress, CouponItem } from "../components/StarCoupons.jsx";
 
 const TABS = ["today", "week", "badge"];
@@ -19,10 +19,15 @@ export default function Stats() {
   const app = useApp();
   const { user } = app;
   const [tab, setTab] = useState("today");
+  const [confirmLogout, setConfirmLogout] = useState(false);
   const days = useMemo(() => byDay(user.runs), [user.runs]);
   const share = async () => {
     const text = t("stats_share_stars", { km: totalKm(user.runs).toFixed(1), n: user.starsEarned });
     try { if (navigator.share) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); app.toast(t("shared")); } } catch {}
+  };
+  const logout = async () => {
+    await user.signOut();
+    app.go("onboarding");
   };
 
   return (
@@ -30,9 +35,7 @@ export default function Stats() {
       <div className="hanji-layer" aria-hidden="true" />
       <div className="pd-scroll">
         <div className="st-top">
-          <h1>{t("tab_stats")}</h1>
-          {/* 로그아웃: 첫 화면 오른쪽 위에서 바로 (공유 버튼 옆) */}
-          <button className="st-logout" onClick={async () => { await user.signOut(); app.go("onboarding"); }}>{t("logout")}</button>
+          <div className="st-heading"><h1>{t("tab_stats")}</h1><p>{t("hello", { name: user.profile?.nickname || "" })}</p></div>
           <button className="round-btn glass" onClick={share} aria-label={t("share")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg></button>
         </div>
         <div className="st-links">
@@ -47,7 +50,10 @@ export default function Stats() {
           {tab === "week" && <Week days={days} />}
           {tab === "badge" && <Badges />}
         </div>
+        <button className="st-logout-footer" onClick={() => setConfirmLogout(true)}>{t("logout")}</button>
       </div>
+      <ConfirmDialog open={confirmLogout} title={t("logout_confirm_title")} cancelLabel={t("cancel")} confirmLabel={t("logout")}
+        onCancel={() => setConfirmLogout(false)} onConfirm={logout} />
     </section>
   );
 }
