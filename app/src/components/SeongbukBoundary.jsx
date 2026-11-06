@@ -83,16 +83,16 @@ export default function SeongbukBoundary({ spots, safe, refitKey = 0, keepView =
       let top = area.top, bottom = H - area.bottom;
       if (H - top - bottom < 60) { top = Math.min(top, 24); bottom = Math.min(bottom, 24); } // 칸이 너무 좁으면 여백을 포기해요
       const { south, north, west, east } = box.current;
+      // 지도를 그대로 둘 때는 움직이지 않고 계산만 해요 (진행 중인 이동을 끊지 않게). 카카오 지도는 레벨 n에서 1px ≈ 2^(n-3)m
+      if (latest.current.keepView) {
+        const metersPerPx = Math.max((east - west) / MARGIN_LNG * 1000 / (area.right - area.left), (north - south) / MARGIN_LAT * 1000 / (H - top - bottom));
+        map.setMaxLevel(Math.min(NO_LIMIT, Math.ceil(Math.log2(metersPerPx)) + 3 + 1));
+        return;
+      }
       const bounds = new kakao.maps.LatLngBounds(new kakao.maps.LatLng(south, west), new kakao.maps.LatLng(north, east));
-      const keep = latest.current.keepView ? { center: map.getCenter(), level: map.getLevel() } : null;
       map.setMaxLevel(NO_LIMIT);
       map.setBounds(bounds, top, W - area.right, bottom, area.left);
-      const fitLevel = map.getLevel();
-      if (keep) {
-        map.setLevel(keep.level);
-        map.setCenter(keep.center);
-      }
-      map.setMaxLevel(fitLevel + 1);
+      map.setMaxLevel(map.getLevel() + 1);
     };
     fit();
     // 글꼴이 늦게 들어오면 아래 시트 높이가 바뀌어서, 다 들어온 뒤 한 번 더 맞춰요

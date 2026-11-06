@@ -1,10 +1,9 @@
-// 도장·쿠폰(내 별 + 도장 + 별 쿠폰) · 기록 목록(로그아웃)  — 새 "내 기록" 화면(Stats.jsx)에서 열려요
+// 도장·별(누적 별 + 도장) · 기록 목록(로그아웃)  — 새 "내 기록" 화면(Stats.jsx)에서 열려요
 
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { fmtTime, fmtPace } from "../lib/geo.js";
 import { STAR_RULES } from "../state/useUserData.js";
-import { StarProgress, CouponItem } from "../components/StarCoupons.jsx";
 import { Seal, sealText } from "../components/Bits.jsx";
 
 // ---------------- 완주 요약 ----------------
@@ -12,7 +11,6 @@ import { Seal, sealText } from "../components/Bits.jsx";
 export function Stars() {
   const app = useApp();
   const { user, data } = app;
-  const myCoupons = user.coupons.filter((c) => c.pending);
 
   return (
     <section className="screen stars-screen">
@@ -22,7 +20,7 @@ export function Stars() {
         <small>{t("stars_earned_total", { n: user.starsEarned })}</small>
       </div>
       <div className="scroll-y pad stars-body">
-        <div className="next-card"><StarProgress balance={user.bonus} /></div>
+        <div className="next-card">누적 별 {user.starsEarned}개 · 러너 온도에 반영됩니다.</div>
 
         <h4>{t("my_seals")} {user.stamps.size}/{data.spots.length}</h4>
         <div className="seal-grid">
@@ -35,11 +33,9 @@ export function Stars() {
         <div className="earn-grid">
           <div><b>★ 1</b>{t("e_course_star", { m: STAR_RULES.everyM })}</div>
           <div><b>★ 1</b>{t("e_free_star", { m: STAR_RULES.everyM })}</div>
-          <div><b>{t("coupon_1")}</b>{t("e_coupon", { n: STAR_RULES.perCoupon })}</div>
+
         </div>
 
-        <h4>{t("star_coupons")}</h4>
-        {myCoupons.length ? myCoupons.map((c) => <CouponItem key={c.id} coupon={c} />) : <p className="note mint">{t("no_star_coupons")}</p>}
       </div>
     </section>
   );

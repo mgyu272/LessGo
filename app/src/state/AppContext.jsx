@@ -44,6 +44,8 @@ export function AppProvider({ children }) {
   const [placesNear, setPlacesNear] = useState(null);
   // 홈 지도 상태 { filter, selId, view, focus, sheet }: 둘러볼 곳 상세에 갔다 와도 그대로예요. 앱을 새로 열 때만 처음으로
   const homeMap = useRef(null);
+  // 상권 탭에서 가게 사진·이름을 누르면 홈 지도에 그 가게를 핀 하나로 보여줘요. 지도 밖 다른 화면으로 가면 풀려요
+  const [mapShop, setMapShop] = useState(null);
   const [couponShop, setCouponShop] = useState(null);
   const [finish, setFinish] = useState(null);
   const [shuffle, setShuffle] = useState(0);
@@ -58,6 +60,7 @@ export function AppProvider({ children }) {
   const go = useCallback((s) => {
     setScreen(s);
     if (s !== "places" && s !== "explore") setPlacesNear(null);
+    if (s !== "home" && s !== "place" && s !== "explore") setMapShop(null);
   }, []);
   const toastRef = useRef(null); // 아래에서 만든 toast를 달리기 쪽(별 +1 알림)에서도 쓰게
   // 코스로 시작할 때 move를 따로 넘기지 않으면(출발지 화면의 startSavedCourse) 코스 고르기에서 고른 값을 써요
@@ -101,7 +104,7 @@ export function AppProvider({ children }) {
 
   const value = {
     lang, changeLang, screen, go, data, settings, setSettings, weather, course, setCourse, pick, setPick,
-    spot, setSpot, explore, setExplore, placeFrom, setPlaceFrom, placesNear, setPlacesNear, homeMap, couponShop, setCouponShop, finish, shuffle, setShuffle, toastMsg, toast,
+    spot, setSpot, explore, setExplore, placeFrom, setPlaceFrom, placesNear, setPlacesNear, homeMap, mapShop, setMapShop, couponShop, setCouponShop, finish, shuffle, setShuffle, toastMsg, toast,
     demo, setDemo, user, run,
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

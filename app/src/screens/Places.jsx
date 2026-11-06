@@ -126,7 +126,7 @@ export default function Places() {
         {view === "map" && (
           <div className="card pl-map rise">
             <MapView>
-              <ExploreLayer key={topic} places={explore} onSelect={openExplore} />
+              <ExploreLayer key={topic} cluster={false} places={explore} onSelect={openExplore} />
               {list.map((s) => <SpotMarker key={s.id} spot={s} label onClick={() => openPlace(s)} />)}
               <FitBounds points={(list.length || explore.length ? [...list, ...explore] : data.spots).map((s) => [s.lat, s.lng])} padTL={[60, 90]} padBR={[60, 40]} fitKey={view + topic + list.length + "-" + explore.length} />
             </MapView>
@@ -195,7 +195,7 @@ export default function Places() {
 }
 
 // 위치 권한이 이미 허용돼 있을 때만 내 위치를 써요 (이 화면에서 권한 창을 새로 띄우지 않아요). 모르면 거리 표시를 숨겨요
-function useKnownPosition() {
+export function useKnownPosition() {
   const [here, setHere] = useState(null);
   useEffect(() => {
     let alive = true;

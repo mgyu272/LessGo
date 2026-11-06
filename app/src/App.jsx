@@ -18,6 +18,7 @@ import Events from "./screens/Events.jsx";
 import Stats from "./screens/Stats.jsx";
 import ToCourseStart from "./screens/ToCourseStart.jsx";
 import ExplorePlace from "./screens/ExplorePlace.jsx";
+import Market from "./screens/Market.jsx";
 
 const SCREENS = {
   onboarding: [Login],             // 시작 화면 = 로그인
@@ -27,6 +28,7 @@ const SCREENS = {
   home: [Home],
   courses: [CoursePicker],         // 코스 고르기 (예전 조건 시트 · 코스 3개 · 코스 상세를 합침)
   places: [Places],                // 장소와 이야기
+  market: [Market],                // 동네 상권 (식당 · 카페 등)
   place: [PlaceDetail],            // 장소 상세 (app.spot)
   explore: [ExplorePlace],         // 둘러볼 곳 상세 (app.explore.place)
   events: [Events],                // 문화 활동
@@ -41,7 +43,7 @@ const SCREENS = {
   stats: [Stats],                  // 내 기록 (오늘 · 주간 · 배지)
 };
 // 하단 메뉴가 보이는 화면
-const WITH_TABS = new Set(["home", "places", "events", "stats", "stars", "records"]);
+const WITH_TABS = new Set(["home", "places", "market", "events", "stats", "stars", "records"]);
 const DARK = new Set(["stars", "coupon"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
 
 export default function App() {

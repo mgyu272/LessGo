@@ -1,63 +1,60 @@
-// ① 홈: 지도 + 끌어 올리는 바텀시트 (디자인 원본 docs/design/Main.dc.html)
-// "오늘은 얼마나 달려볼까요?" 3/5/10km → "{km}km 코스 고르기" 버튼 → 자유 달리기
+// ① 홈: 지도 (디자인 원본 docs/design/Main.dc.html). 아래 바텀시트는 없앴어요
 // 코스 목적지 핀을 누르면 장소 상세(이야기 탭)로 가요.
-// 둘러볼 곳(explore.json): 장소마다 종류 아이콘. 서울 전체처럼 아주 멀리 볼 때만 "성북동 18"처럼 묶어요.
-//   아이콘을 누르면 그곳을 가운데에 두고 한 단계 확대하고, 시트 바로 위 카드 줄에 그곳부터 가까운 순 8곳이 떠요.
+// 둘러볼 곳(explore.json): 장소마다 종류 아이콘. 멀리 볼 때도 묶지 않고 작은 아이콘 그대로 보여요.
+//   아이콘을 누르면 그곳을 가운데에 두고 한 단계 확대하고, 하단 탭 바로 위 카드 줄에 그곳부터 가까운 순 8곳이 떠요.
 //   왼쪽 위 "← 성북구 전체 · {장소} 주변"을 누르면 고르기 전 확대 단계로 돌아가요.
 //   칩(전체 · 전시 · 역사 · 종교 · 공원, places.js의 groupOf)은 둘러볼 곳 아이콘만 걸러요.
-// 칩·고른 곳·확대 범위·시트 높이는 AppContext(app.homeMap)에 남겨서, 둘러볼 곳 상세에 갔다 와도 그대로예요.
+// 칩·고른 곳·확대 범위는 AppContext(app.homeMap)에 남겨서, 둘러볼 곳 상세에 갔다 와도 그대로예요.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp, HOME_CENTER, HOME_LEVEL } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
-import { MapView, FlyTo, FocusOn, SpotMarker, Me, ExploreLayer, MapWatch, Route } from "../components/MapView.jsx";
+import { MapView, FlyTo, FocusOn, SpotMarker, Me, PlainPin, ExploreLayer, MapWatch, Route } from "../components/MapView.jsx";
 import SeongbukBoundary from "../components/SeongbukBoundary.jsx";
-import { LangPill, ElevationChart } from "../components/Bits.jsx";
-import { useBottomSheet, BottomSheet, Segment, Badge } from "../components/ui.jsx";
-import { DISTANCES, DESTINATIONS } from "../lib/routes.js";
+import { LangPill } from "../components/Bits.jsx";
 import { getCourse } from "../lib/data.js";
-import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
+import { GroupIcon } from "../components/SpotIcons.jsx";
 import { MODE_COLOR } from "./Courses.jsx";
 import { distance } from "../lib/geo.js";
 import { exploreColor, exploreMeta, fromCourseEnd, GROUPS, groupOf } from "../lib/places.js";
 
-// 바텀시트가 멈추는 높이 (px). 가운데(처음) 높이는 380(제목·거리 탭·코스 고르기·자유 달리기가 하단 탭 위에 다 보이는 높이)인데, 낮은 화면(아이폰 SE 등)에서는
-// 지도에 핀 자리가 남도록 화면 높이에 맞춰 낮춰요 (최소 300)
 // 아이콘을 누르면 아래 카드 줄에 보여줄 장소 수 (고른 곳 포함)
 const CARD_COUNT = 8;
 // 카드 줄 높이(위아래 여백 포함)와 "← 성북구 전체" 버튼 자리. 아이콘을 골라 확대할 때 이만큼 비워 둬요
 const CARD_ROW_H = 160;
 const BACK_BTN_H = 48;
-const snapsFor = (screenH) => [150, Math.max(300, Math.min(380, screenH - 330)), Math.min(640, screenH - 120)];
+// 하단 탭(.tabbar)이 차지하는 아래 높이 (px, 안전 영역 제외). 내 위치 버튼·카드 줄은 이 위에 띄워요
+const TABBAR_H = 86;
+const aboveTabbar = (gap) => `calc(${TABBAR_H + gap}px + var(--safe-bottom))`;
 
-// 스팟 배지가 보여야 하는 지도 영역: 위쪽 검색·칩 아래부터 아래 시트 위까지 (지도 안쪽 px)
-// 레이아웃 위치(offset)로 재요. 화면상 위치는 PC 아이폰 프레임 축소나 시트 애니메이션에 따라 달라져서요.
+// 스팟 배지가 보여야 하는 지도 영역: 위쪽 검색·칩 아래부터 아래 하단 탭 위까지 (지도 안쪽 px)
+// 레이아웃 위치(offset)로 재요. 화면상 위치는 PC 아이폰 프레임 축소에 따라 달라져서요.
 function homeSafeArea() {
   const map = document.querySelector(".home-map");
   const top = document.querySelector(".home-top");
-  const sheet = document.querySelector(".home-screen .bsheet");
-  return { top: top.offsetTop + top.offsetHeight + 8, bottom: sheet.offsetTop - 8, left: 8, right: map.offsetWidth - 8 };
+  return { top: top.offsetTop + top.offsetHeight + 8, bottom: map.offsetHeight - TABBAR_H - 8, left: 8, right: map.offsetWidth - 8 };
 }
 
 export default function Home() {
   const app = useApp();
-  const { data, settings, setSettings, user } = app;
+  const { data, settings } = app;
   // 떠날 때 남겨 둔 홈 지도 상태 (처음 열 때는 null)
   const [saved] = useState(() => app.homeMap.current);
   const [filter, setFilter] = useState(saved?.filter ?? "all");
   const [query, setQuery] = useState("");
-  const [flyTo, setFlyTo] = useState(null); // { at: [lat, lng], level }
+  // 상권 탭에서 고른 가게가 있으면 그곳으로 날아가 핀 하나로 보여줘요
+  const shop = app.mapShop;
+  const [flyTo, setFlyTo] = useState(() => (shop ? { at: [shop.lat, shop.lng], level: 3 } : null)); // { at: [lat, lng], level }
   const [focusTo, setFocusTo] = useState(null); // 고른 아이콘으로: { at, level }
   const [refit, setRefit] = useState(0);
   const [me, setMe] = useState(null);
   const [locating, setLocating] = useState(false);
-  const sheet = useBottomSheet({ snaps: snapsFor, initial: saved?.sheet ?? 1 });
   // 코스 목적지(심우장·정릉·의릉·길상사)도 다른 장소처럼 테마 칩으로 걸러요
   const shown = useMemo(() => data.spots.filter((s) => filter === "all" || groupOf(s) === filter), [data.spots, filter]);
   // 둘러볼 곳: 칩으로 거르고, 고른 곳 · 지도 상태(확대 단계·가운데) · 고르기 전 지도(origin: 돌아갈 곳)
   const [selId, setSelId] = useState(saved?.selId ?? null);
   const [view, setView] = useState(saved?.view ?? null);
-  const [origin, setOrigin] = useState(saved?.origin ?? null); // { level, center: [lat, lng], sheet }
+  const [origin, setOrigin] = useState(saved?.origin ?? null); // { level, center: [lat, lng] }
   const exShown = useMemo(() => data.explore.filter((p) => filter === "all" || groupOf(p) === filter), [data.explore, filter]);
   // 칩마다 둘러볼 곳 개수
   const groupCount = useMemo(() => {
@@ -68,46 +65,42 @@ export default function Home() {
     return n;
   }, [data.explore]);
   // 지금 상태를 AppContext에 남겨요 (다시 들어오면 이 값으로 시작)
-  useEffect(() => { app.homeMap.current = { filter, selId, view, origin, sheet: sheet.index }; }, [app.homeMap, filter, selId, view, origin, sheet.index]);
+  useEffect(() => { app.homeMap.current = { filter, selId, view, origin }; }, [app.homeMap, filter, selId, view, origin]);
   const sel = exShown.find((p) => p.id === selId) || null;
   // 카드 줄: 고른 곳부터 가까운 순 8곳
   const cards = sel ? [sel, ...exShown.filter((p) => p.id !== sel.id).sort((a, b) => distance(sel, a) - distance(sel, b))].slice(0, CARD_COUNT) : [];
-  const showCards = cards.length > 0 && !sheet.expanded;
+  const showCards = cards.length > 0;
   // 아이콘을 누르면 그곳을 가운데에 두고 한 단계 확대해요. 처음 고를 때만 확대하고, 그 전 지도는 origin에 남겨 둬요.
-  // 카드 줄 자리를 넓히려고 시트는 맨 아래로 내리고, 가운데는 위 검색·칩·버튼과 아래 카드 줄·시트를 뺀 칸의 가운데예요
+  // 가운데는 위 검색·칩·버튼과 아래 카드 줄·하단 탭을 뺀 칸의 가운데예요
   const selectPlace = (p) => {
     if (p.id === selId) return;
     const level = view?.level ?? HOME_LEVEL;
-    if (!sel) setOrigin({ level, center: view ? [view.center.lat, view.center.lng] : HOME_CENTER, sheet: sheet.index });
+    if (!sel) setOrigin({ level, center: view ? [view.center.lat, view.center.lng] : HOME_CENTER });
     setSelId(p.id);
     setFocusTo({ at: [p.lat, p.lng], level: sel ? level : Math.max(1, level - 1) });
-    sheet.setIndex(0);
   };
-  // 고른 곳 확대 때 비워 둘 가장자리 [위, 오른쪽, 아래, 왼쪽]: 위 = 검색·칩 + 전체 버튼, 아래 = 내려간 시트 + 카드 줄
-  const focusPad = () => [homeSafeArea().top + BACK_BTN_H, 0, sheet.snaps[0] + CARD_ROW_H, 0];
-  // 아주 멀리 볼 때의 묶음을 누르면 위 검색·칩과 아래 시트를 비우고 그 범위로 맞춰요 [위, 오른쪽, 아래, 왼쪽]
+  // 고른 곳 확대 때 비워 둘 가장자리 [위, 오른쪽, 아래, 왼쪽]: 위 = 검색·칩 + 전체 버튼, 아래 = 하단 탭 + 카드 줄
+  const focusPad = () => [homeSafeArea().top + BACK_BTN_H, 0, TABBAR_H + CARD_ROW_H, 0];
+  // 아주 멀리 볼 때의 묶음을 누르면 위 검색·칩과 아래 하단 탭을 비우고 그 범위로 맞춰요 [위, 오른쪽, 아래, 왼쪽]
   const clusterPad = () => {
     const map = document.querySelector(".home-map"), area = homeSafeArea();
     return [area.top, 24, map.offsetHeight - area.bottom, 24];
   };
-  // "← 성북구 전체": 고르기 전 확대 단계·위치·시트 높이로 돌아가요
+  // "← 성북구 전체": 고르기 전 확대 단계·위치로 돌아가요
   const backToAll = () => {
     setSelId(null);
-    if (origin) { setFlyTo({ at: origin.center, level: origin.level }); sheet.setIndex(origin.sheet ?? 1); }
+    if (origin) setFlyTo({ at: origin.center, level: origin.level });
     setOrigin(null);
   };
   const openExplore = (p) => { app.setExplore({ place: p, from: "home" }); app.go("explore"); };
   // 칩을 바꾸면 고른 곳과 확대 상태를 처음으로 (고르기 전 확대 단계로 돌아가요)
   const pickFilter = (k) => { if (k === filter) return; backToAll(); setFilter(k); };
-  const startFree = () => app.run.start(null, { demo: app.demo, speedup: speedParam() });
   // 장소 모달이 열려 있으면 코스 경로만 더 그려요. 닫았을 때 그대로이도록 지도 위치와 확대는 건드리지 않아요
   const popupSpot = app.screen === "place" && app.placeFrom === "home" ? app.spot : null;
   const popupCourse = popupSpot ? courseFor(data, popupSpot.id, settings.km) : null;
   // 새로 추가된 장소(둘러볼 곳): 코스 목적지와 같은 팝업 형식으로, 내용은 "준비 중"
   const openPreparing = (p) => { app.setSpot(data.spotById[p.id] || preparingSpot(p)); app.setPlaceFrom("home"); app.go("place"); };
 
-  // 코스 고르기로 (지금 고른 거리로)
-  const openCourses = () => { app.setPick({ ...app.pick, km: settings.km }); app.go("courses"); };
   const openSpot = (spot) => { app.setSpot(spot); app.setPlaceFrom("home"); app.go("place"); };
   const search = (e) => {
     if (e.key !== "Enter") return;
@@ -134,7 +127,7 @@ export default function Home() {
     <section className="screen home-screen" inert={popupSpot ? "" : undefined}>
       <MapView className="home-map" center={saved?.view ? [saved.view.center.lat, saved.view.center.lng] : HOME_CENTER} level={saved?.view?.level ?? HOME_LEVEL}>
         {/* 둘러볼 곳 아이콘은 코스 목적지 핀 아래에. 칩을 바꾸면 묶음을 새로 만들어요 */}
-        <ExploreLayer key={filter}
+        <ExploreLayer key={filter} cluster={false}
           // 장소 하나를 열면 그 장소(와 코스)만 보이게 다른 아이콘은 숨겨요
           places={popupSpot ? exShown.filter((p) => popupSpot.preparing && p.id === popupSpot.id) : exShown}
           selectedId={popupSpot?.preparing ? popupSpot.id : null} level={view?.level ?? HOME_LEVEL} onSelect={openPreparing} pad={clusterPad} />
@@ -145,22 +138,30 @@ export default function Home() {
           <Route key="pc" path={popupCourse.path} color={MODE_COLOR[popupCourse.properties.mode]} weight={6} opacity={1} zIndex={6} />,
         ]}
         <Me at={me} />
-        {/* 위쪽 검색·칩과 아래 시트에 배지·이름표가 가리지 않게 맞춰요 */}
-        {/* 남겨 둔 확대 범위로 돌아왔으면 처음 맞춤은 건너뛰고, 전체 지도·내 위치 실패 때만 다시 맞춰요 */}
-        {/* 성북구 경계·바깥 막과 지도 범위. 성북구 밖의 내 위치와 고른 장소로 간 지도는 되돌리지 않아요 */}
-        <SeongbukBoundary spots={data.spots} safe={homeSafeArea} refitKey={refit} keepView={!!saved?.view && refit === 0}
-          extra={() => [me, sel && [sel.lat, sel.lng]].filter(Boolean)} />
+        {shop && <PlainPin at={[shop.lat, shop.lng]} label={loc(shop.name)} />}
+        {/* 성북구 경계·바깥 막과 지도 범위. 위쪽 검색·칩과 아래 하단 탭에 가리지 않게 맞춰요 */}
+        {/* 남겨 둔 확대 범위로 돌아왔거나 가게로 날아가는 중이면 처음 맞춤은 건너뛰고, 전체 지도·내 위치 실패 때만 다시 맞춰요 */}
+        {/* 성북구 밖의 내 위치·고른 장소·가게로 간 지도는 되돌리지 않아요 */}
+        <SeongbukBoundary spots={data.spots} safe={homeSafeArea} refitKey={refit} keepView={(!!saved?.view || !!shop) && refit === 0}
+          extra={() => [me, sel && [sel.lat, sel.lng], shop && [shop.lat, shop.lng]].filter(Boolean)} />
         <FlyTo to={flyTo?.at} level={flyTo?.level} />
         <FocusOn to={focusTo?.at} level={focusTo?.level} pad={focusPad} />
         <MapWatch onChange={setView} />
       </MapView>
-      {sel && !sheet.expanded && (
+      {/* 상권 탭에서 가게를 눌러 왔으면 상권 탭으로 되돌아가는 버튼 */}
+      {shop && (
+        <button type="button" className="ex-back glass" onClick={() => app.go("market")}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+          <span>{loc({ ko: "동네 상권", en: "Local shops" })}</span><small>{loc(shop.name)}</small>
+        </button>
+      )}
+      {sel && !shop && (
         <button type="button" className="ex-back glass" onClick={backToAll}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
           <span>{t("whole_district")}</span><small>{t("around_place", { name: loc(sel.name) })}</small>
         </button>
       )}
-      {showCards && <ExploreCards cards={cards} selId={selId} bottom={sheet.height + 10} onSelect={selectPlace} onOpen={openExplore} />}
+      {showCards && <ExploreCards cards={cards} selId={selId} bottom={aboveTabbar(10)} onSelect={selectPlace} onOpen={openExplore} />}
       {data.failed?.includes("spots") && <p className="map-notice glass" role="status">{t("spots_load_error")}</p>}
 
       <div className="home-top">
@@ -181,45 +182,13 @@ export default function Home() {
         </div>
       </div>
 
-      {!sheet.expanded && !showCards && (
-        <button className={`locate-btn glass ${locating ? "busy" : ""}`} style={{ bottom: sheet.height + 14 }} onClick={locate} aria-label={t("my_location")}>
+      {!showCards && (
+        <button className={`locate-btn glass ${locating ? "busy" : ""}`} style={{ bottom: aboveTabbar(14) }} onClick={locate} aria-label={t("my_location")}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="6.5" /><circle cx="12" cy="12" r="2" fill="currentColor" /><path d="M12 2v3 M12 19v3 M2 12h3 M19 12h3" />
           </svg>
         </button>
       )}
-
-      <BottomSheet sheet={sheet} className="home-sheet-v2">
-        <div className="sheet-body">
-          <h2>{t("home_title")}</h2>
-          <Segment label={t("distance")} value={settings.km} onChange={(km) => setSettings({ ...settings, km })}
-            options={DISTANCES.map((km) => ({ value: km, label: <>{km}<small>km</small></>, sub: t("km_" + km) }))} />
-
-
-          <button className="free-card glass" onClick={startFree}>
-            <span className="free-ic" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 18c4 0 4-7 8-7s4-6 8-6" /><circle cx="20" cy="5" r="1.6" fill="currentColor" /></svg>
-            </span>
-            <span className="free-text"><b>{t("free_title")}</b><small>{t("free_sub")}</small></span>
-            <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
-          </button>
-
-          {/* 장소별 코스: 코스가 있는 곳은 고도 그래프까지, 나머지는 "코스 준비 중" (스크롤해서 봐요) */}
-          <h3 className="home-list-h">{loc({ ko: "장소별 코스", en: "Courses by place" })}</h3>
-          {(data.destinations || DESTINATIONS).map((dest) => {
-            const c = courseFor(data, dest, settings.km);
-            const spot = data.spotById[dest];
-            return c && spot && <PlaceCourseCard key={dest} course={c} spot={spot} onSpot={() => openSpot(spot)}
-              onCourses={() => { app.setPick({ ...app.pick, km: settings.km, dest }); app.go("courses"); }} />;
-          })}
-          {data.spots.filter((s) => !(data.destinations || DESTINATIONS).includes(s.id)).map((s) => (
-            <PrepCard key={s.id} name={loc(s.name)} sub={loc({ ko: "역사·문화", en: "History" })} icon={<span dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />} onOpen={() => openSpot(s)} />
-          ))}
-          {data.explore.filter((p) => !data.spotById[p.spot_id] && !(data.destinations || []).includes(p.id)).map((p) => (
-            <PrepCard key={p.id} name={loc(p.name)} sub={[p.kind, p.area_ko].filter(Boolean).join(" · ")} icon={<GroupIcon group={groupOf(p)} size={30} />} onOpen={() => openPreparing(p)} />
-          ))}
-        </div>
-      </BottomSheet>
     </section>
   );
 }
@@ -239,41 +208,7 @@ function preparingSpot(p) {
   };
 }
 
-// 코스가 있는 장소 카드: 장소 그림 · 이름 · 거리·시간·오르막 · 고도 그래프 · 장소 보기 / 코스 보기
-function PlaceCourseCard({ course, spot, onSpot, onCourses }) {
-  const p = course.properties;
-  const place = loc(spot.name).replace(/\s*\(.*\)/, "");
-  const climb = p.climbLevel ? t("uphill", { lv: t("lv_" + p.climbLevel) }) : null;
-  return (
-    <article className="today-card card">
-      <button type="button" className="tc-head" onClick={onSpot}>
-        <span className="tc-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(spot) }} />
-        <span className="tc-text">
-          <b>{place}</b>
-          <small>{[`${p.distance_km}km`, t("about_min", { n: p.minutes }), climb].filter(Boolean).join(" · ")}</small>
-        </span>
-      </button>
-      <ElevationChart values={p.elevation} height={28} color="#2F6512" fill="rgba(47,101,18,.12)" />
-      <div className="tc-actions">
-        <button className="btn btn-soft" onClick={onSpot}>{loc({ ko: "장소 보기", en: "About" })}</button>
-        <button className="btn btn-cta" onClick={onCourses}>{loc({ ko: "코스 보기", en: "See course" })} →</button>
-      </div>
-    </article>
-  );
-}
-
-// 코스 준비 중인 장소 카드 (누르면 장소 팝업)
-function PrepCard({ name, sub, icon, onOpen }) {
-  return (
-    <button type="button" className="prep-card card" onClick={onOpen}>
-      <span className="tc-ic" aria-hidden="true">{icon}</span>
-      <span className="tc-text"><b>{name}</b>{sub && <small>{sub}</small>}</span>
-      <Badge tone="warn">{loc({ ko: "코스 준비 중", en: "Coming soon" })}</Badge>
-    </button>
-  );
-}
-
-// 둘러볼 곳 카드 줄 (시트 바로 위, 가로로 넘김). 고른 곳이 맨 앞이에요
+// 둘러볼 곳 카드 줄 (하단 탭 바로 위, 가로로 넘김). 고른 곳이 맨 앞이에요
 function ExploreCards({ cards, selId, bottom, onSelect, onOpen }) {
   const { data } = useApp();
   const row = useRef(null);
