@@ -39,22 +39,34 @@ export default function CoursePicker() {
   const km = nearestKm(pick.km);
   const dest = DESTINATIONS.includes(pick.dest) ? pick.dest : DESTINATIONS[0];
   const savedPair = MODES.map((m) => getCourse(data, dest, km, m)).filter(Boolean);
-  // 위 탭: 코스 달리기(저장 코스) / 현위치에서 달리기(내 위치 → 목적지, 완만한 길·언덕 허용 두 코스를 새로 찾아요)
+  const place = (id) => loc(data.spotById[id]?.name).replace(/\s*\(.*\)/, "");
+  // 이동 방법 (카카오맵 길찾기의 자동차·버스·도보처럼 맨 위): 달리기 / 걷기
+  const move = pick.move === "walk" ? "walk" : "run";
+  const setMove = (v) => setPick({ ...pick, move: v });
+  // 출발: 코스 출발지(저장 코스) / 현위치(내 위치 → 목적지 두 길을 새로 찾아요)
   const [source, setSource] = useState("course");
-  const [hereSet, setHereSet] = useState(null);   // { dest, low, high, here }
+  const [hereSet, setHereSet] = useState(null); // { dest, low, high, here }
   const [finding, setFinding] = useState(false);
   const herePair = hereSet && hereSet.dest === dest ? [hereSet.low, hereSet.high].filter(Boolean) : [];
   const pair = source === "here" ? herePair : savedPair;
   const [sel, setSel] = useState(pick.hill === "flat" ? "low" : "high");
+  const course = pair.find((c) => c.properties.mode === sel) || pair[0];
   const [chip, setChip] = useState("");
   const [favs, setFavs] = useState(readFavs);
-  const sheet = useBottomSheet({ snaps: snapsFor, initial: 0 });
-  const course = pair.find((c) => c.properties.mode === sel) || pair[0];
-  const place = (id) => loc(data.spotById[id]?.name).replace(/\s*\(.*\)/, "");
-  const move = "run"; // 예상 시간 표시는 달리기 기준 (걷기/달리기는 아래 버튼에서 골라요)
-  // 현위치 탭을 고르면(또는 목적지를 바꾸면) 내 위치에서 두 코스를 찾아요
+
+  // 내 위치 (출발지까지 거리 표시용). 권한이 없으면 표시만 안 해요
+  const [here, setHere] = useState(null);
   useEffect(() => {
-    if (source !== "here" || (hereSet && hereSet.dest === dest) || finding) return;
+    if (!navigator.geolocation) return;
+    let alive = true;
+    navigator.geolocation.getCurrentPosition((pos) => alive && setHere({ lat: pos.coords.latitude, lng: pos.coords.longitude }), () => {},
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+    return () => { alive = false; };
+  }, []);
+
+  // 현위치를 고르면(또는 목적지를 바꾸면) 내 위치에서 완만한 길·언덕 허용 두 길을 찾아요
+  useEffect(() => {
+    if (source !== "here" || (hereSet && hereSet.dest === dest)) return;
     const bases = { low: getCourse(data, dest, km, "low") || savedPair[0], high: getCourse(data, dest, km, "high") || savedPair[0] };
     if (!bases.low) return;
     let alive = true;
@@ -69,159 +81,113 @@ export default function CoursePicker() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [source, dest]);
 
-  // 내 위치 (출발지까지 거리 알약용). 권한이 없으면 알약만 안 보여요
-  const [here, setHere] = useState(null);
-  useEffect(() => {
-    if (!navigator.geolocation) return;
-    let alive = true;
-    navigator.geolocation.getCurrentPosition((pos) => alive && setHere({ lat: pos.coords.latitude, lng: pos.coords.longitude }), () => {},
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
-    return () => { alive = false; };
-  }, []);
-
-  // 언덕 조건을 바꾸면 그에 맞는 카드를 다시 골라요
-  useEffect(() => { setSel(pick.hill === "flat" ? "low" : "high"); }, [pick.hill]);
-
-  // AI 추천 이유 (있으면 카드 아래 안내에 써요). 없으면 데이터로 만든 문장
-  const [reasons, setReasons] = useState({});
-  useEffect(() => {
-    let alive = true;
-    aiRecommend({ ...app.settings, km, hill: pick.hill === "flat" ? "flat" : "hard" }, app.weather, app.lang)
-      .then((res) => { if (alive) setReasons(Object.fromEntries((res?.picks || []).map((p) => [p.id, p.reason]))); });
-    return () => { alive = false; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [km, pick.hill, app.lang]);
-
-  if (!course && source === "here") {
-    return (
-      <section className="screen picker-screen">
-        <PickerTop onBack={() => app.go("home")} fromName={t("start_point")} name={place(dest)} onDest={() => setChip("dest")} />
-        <div className="picker-cta here-loading">
-          <button className="btn btn-soft" onClick={() => setSource("course")}>{loc({ ko: "코스 달리기로", en: "Saved courses" })}</button>
-          <button className="btn btn-cta" disabled>{loc({ ko: "현위치에서 코스 찾는 중…", en: "Finding routes from here…" })}</button>
-        </div>
-      </section>
-    );
-  }
-  if (!course) {
-    return (
-      <section className="screen picker-screen">
-        <PickerTop onBack={() => app.go("home")} fromName={t("start_point")} name={place(dest)} onDest={() => setChip("dest")} />
-        <p className="note cream picker-empty">{t("no_route_data")}</p>
-        <DestSheet open={chip === "dest"} dest={dest} place={place} onClose={() => setChip("")} onPick={(v) => setPick({ ...pick, dest: v })} />
-      </section>
-    );
-  }
-
-  const p = course.properties;
-  const saved = favs.has(course.id);
-  const toggleSave = () => { const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
-  const reason = reasons[course.id] || factualReason(course, pair, move);
-  const fromName = startNameOf(course);
-  const fromM = here ? distance(here, course.path[0]) : null;
-  // 지금 달리기 / 지금 걷기: 위 탭과 고른 길(완만한 길·언덕 허용)로 시작
-  //  - 코스 달리기: 저장 코스. 시연 모드면 출발점부터 자동, 아니면 출발지 화면(카카오맵 길찾기 → 150m 안이면 시작)
-  //  - 현위치에서 달리기: 내 위치에서 바로 시작
-  const startNow = (mv) => {
-    app.setCourse(course);
-    setPick({ ...pick, move: mv });
-    if (source === "here" || app.demo) return app.run.start(course, { demo: app.demo, speedup: speedParam(), move: mv });
+  const saved = course && favs.has(course.id);
+  const toggleSave = () => { if (!course) return; const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
+  const fromName = source === "here" ? loc({ ko: "현위치", en: "My location" }) : course ? startNameOf(course) : t("start_point");
+  const fromM = source === "course" && here && course ? distance(here, course.path[0]) : null;
+  // 안내 시작: 코스 출발지면 출발지 화면(카카오맵 길찾기 → 150m 안이면 시작, 시연 모드면 바로 자동), 현위치면 바로 시작
+  const startRoute = (c) => {
+    app.setCourse(c);
+    if (source === "here" || app.demo) return app.run.start(c, { demo: app.demo, speedup: speedParam(), move });
     app.go("toStart");
   };
-  const themeText = pick.themes.length ? (pick.themes.length > 1 ? t("theme_more", { first: t("th2_" + pick.themes[0]), n: pick.themes.length - 1 }) : t("th2_" + pick.themes[0])) : t("theme");
+  const allPaths = pair.flatMap((o) => o.path).map((q) => [q.lat, q.lng]);
 
   return (
-    <section className="screen picker-screen">
-      <MapView className="picker-map">
-        {/* 고르지 않은 쪽: 얇은 점선, 고른 쪽: 흰 테두리 + 굵은 선 (고른 선이 위에 오게 나중에 그려요) */}
-        {[
-          ...pair.filter((o) => o.id !== course.id).flatMap((o) => [
-            <Route key={o.id + "-case"} path={o.path} color="#FFFFFF" weight={7} opacity={0.85} zIndex={1} />,
-            <Route key={o.id} path={o.path} color={MODE_COLOR[o.properties.mode]} weight={4.5} opacity={0.95} dashed zIndex={2} />,
-          ]),
-          // 고른 코스는 항상 위에: 겹치는 구간은 점선 대신 고른 코스의 실선으로 보여요
-          <Route key={course.id + "-case"} path={course.path} color="#FFFFFF" weight={12} opacity={1} zIndex={5} />,
-          <Route key={course.id} path={course.path} color={MODE_COLOR[p.mode]} weight={7} opacity={1} zIndex={6} />,
-          source === "here"
-            ? <Me key="me" at={[course.path[0].lat, course.path[0].lng]} />
-            : <Dot key="start" at={[course.path[0].lat, course.path[0].lng]} color={MODE_COLOR[p.mode]} />,
-          <FitBounds key={"fit-" + source} points={pair.flatMap((o) => o.path).map((q) => [q.lat, q.lng])} padTL={[30, 100]} padBR={[30, sheet.snaps[0] + 20]} fitKey={source + dest + km + pair.length} />,
-        ]}
-        {data.spotById[dest] && <SpotMarker spot={data.spotById[dest]} />}
-      </MapView>
-
-      <PickerTop onBack={() => app.go("home")} fromName={fromName} fromM={fromM} name={place(dest)} onDest={() => setChip("dest")}>
-        {/* 예전 조건 칩 줄. 거리·경사는 시트 안에서 고르고, 테마는 실제로 거르는 기능이 없어서 숨겨 뒀어요 */}
-        {SHOW_CONDITION_CHIPS && (
-          <div className="picker-chips scroll" role="toolbar" aria-label={t("course_conditions")}>
-            <Chip caret aria-haspopup="dialog" onClick={() => setChip("km")}>{km}km</Chip>
-            <Chip caret aria-haspopup="dialog" onClick={() => setChip("hill")}>{t("hill2_" + pick.hill)}</Chip>
-            <Chip caret aria-haspopup="dialog" onClick={() => setChip("theme")}>{themeText}</Chip>
-          </div>
-        )}
-      </PickerTop>
-
-      <BottomSheet sheet={sheet} className="picker-sheet" aria-label={t("pick_course")}>
-        <div className="picker-body scroll">
-          <div className="picker-head">
-            <h2>{source === "here" ? loc({ ko: `현위치에서 ${place(dest)}까지`, en: `From here to ${place(dest)}` }) : t("course_to", { name: place(dest), km })}</h2>
-            <button className="picker-more" onClick={sheet.toggle}>{t(sheet.expanded ? "fold" : "details")}</button>
-          </div>
-          {/* 코스 달리기 / 현위치에서 달리기 (예전 달리기·걷기 자리). 어느 쪽이든 아래 카드에서 완만한 길·언덕 허용을 골라요 */}
-          <Segment className="picker-move" label={loc({ ko: "출발", en: "Start from" })} value={source} onChange={setSource}
-            options={[{ value: "course", label: loc({ ko: "코스 달리기", en: "Saved course" }) }, { value: "here", label: loc({ ko: "현위치에서 달리기", en: "From here" }) }]} />
-          {/* 거리 탭은 저장 코스에만 (현위치 코스는 내 위치~목적지 거리로 정해져요) */}
-          {source === "course"
-            ? <Segment className="picker-km" label={t("distance")} value={km} onChange={(v) => setPick({ ...pick, km: v })}
-                options={DISTANCES.map((k) => ({ value: k, label: <>{k}<small>km</small></>, sub: t("km_" + k) }))} />
-            : <p className="soft picker-walk"><InfoIcon /><span>{loc({ ko: "내 위치에서 목적지까지, 경사·보행로·하천을 따져 찾은 두 길이에요.", en: "Two routes from where you are, chosen by slope, paths and streams." })}</span></p>}
-
-          <div className="rail scroll" role="radiogroup" aria-label={t("route_type")}>
-            {pair.map((o) => <RouteCard key={o.id} c={o} move={move} on={o.id === course.id} onPick={() => setSel(o.properties.mode)} />)}
-            <button className="rc rc-other" onClick={() => setChip("dest")}>
-              <span className="rc-icons" aria-hidden="true">
-                {DESTINATIONS.filter((d) => d !== dest && data.spotById[d]).map((d) => <span key={d} dangerouslySetInnerHTML={{ __html: spotIconSvg(data.spotById[d]) }} />)}
-              </span>
-              <b>{t("run_elsewhere")}</b>
-              <small>{t("also_courses", { names: DESTINATIONS.filter((d) => d !== dest).map(place).join(" · ") })}</small>
-              <span className="rc-link">{t("change_dest")} →</span>
+    <section className="screen cx-screen">
+      {/* ① 이동 방법 + 출발·도착 (한 칸) */}
+      <header className="cx-head">
+        <div className="cx-modes" role="radiogroup" aria-label={t("move_label")}>
+          {[["run", RunIcon, t("move_run")], ["walk", WalkIcon, t("move_walk")]].map(([v, Ic, label]) => (
+            <button key={v} type="button" role="radio" aria-checked={move === v} className={`cx-mode ${move === v ? "on" : ""}`} onClick={() => setMove(v)}>
+              <Ic /><span>{label}</span>
+            </button>
+          ))}
+          <button type="button" className="cx-close" onClick={() => app.go("home")} aria-label={t("close")}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+        </div>
+        <div className="cx-box">
+          <div className="cx-row">
+            <span className="cx-k">{loc({ ko: "출발", en: "From" })}</span>
+            <b className="cx-v">{fromName}</b>
+            {fromM != null && <small className="cx-m">{loc({ ko: `내 위치에서 ${fmtM(fromM)}`, en: `${fmtM(fromM)} away` })}</small>}
+            <button type="button" className="cx-link" onClick={() => setSource(source === "here" ? "course" : "here")}>
+              {source === "here" ? loc({ ko: "코스 출발지", en: "Course start" }) : loc({ ko: "현위치로", en: "From here" })}
             </button>
           </div>
-
-          <p className="soft picker-reason"><InfoIcon /><span>{reason}</span></p>
-
-          <Timeline course={course} />
-          {/* 디자인에는 없지만 PC·실내에서 확인할 수 있게 시뮬레이션(GPS 없이 코스를 따라 움직임)을 맨 아래에 둬요 */}
-          <Toggle className="demo-row" checked={app.demo} onChange={app.setDemo} title={t("demo_mode")} sub={t("demo_sub")} />
-          <span className="picker-spacer" aria-hidden="true" />
+          <div className="cx-row">
+            <span className="cx-k">{loc({ ko: "도착", en: "To" })}</span>
+            <b className="cx-v">{place(dest)}</b>
+            <button type="button" className="cx-link" onClick={() => setChip("dest")}>{loc({ ko: "바꾸기", en: "Change" })}</button>
+          </div>
         </div>
-      </BottomSheet>
+      </header>
 
-      <div className="picker-cta">
-        <button className="soft picker-heart" aria-label={t(saved ? "unsave_course" : "save_course")} aria-pressed={saved} onClick={toggleSave}>
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill={saved ? "#9FD25E" : "none"}><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
-        </button>
-        <button className="btn btn-soft" onClick={() => startNow("walk")} style={{ whiteSpace: "nowrap" }}>{loc({ ko: "지금 걷기", en: "Walk now" })}</button>
-        <button className="btn btn-cta" onClick={() => startNow("run")} style={{ whiteSpace: "nowrap" }}>{loc({ ko: "지금 달리기", en: "Run now" })}</button>
+      {/* ② 지도 (즐겨찾기는 지도 오른쪽 아래에 작게) */}
+      <div className="cx-map">
+        <MapView className="cx-mapview">
+          {course && [
+            ...pair.filter((o) => o.id !== course.id).flatMap((o) => [
+              <Route key={o.id + "-case"} path={o.path} color="#FFFFFF" weight={7} opacity={0.85} zIndex={1} />,
+              <Route key={o.id} path={o.path} color={MODE_COLOR[o.properties.mode]} weight={4.5} opacity={0.95} dashed zIndex={2} />,
+            ]),
+            <Route key={course.id + "-case"} path={course.path} color="#FFFFFF" weight={12} opacity={1} zIndex={5} />,
+            <Route key={course.id} path={course.path} color={MODE_COLOR[course.properties.mode]} weight={7} opacity={1} zIndex={6} />,
+            source === "here"
+              ? <Me key="me" at={[course.path[0].lat, course.path[0].lng]} />
+              : <Dot key="start" at={[course.path[0].lat, course.path[0].lng]} color={MODE_COLOR[course.properties.mode]} />,
+            <FitBounds key="fit" points={allPaths} padTL={[24, 24]} padBR={[24, 24]} fitKey={source + dest + km + pair.length} />,
+          ]}
+          {data.spotById[dest] && <SpotMarker spot={data.spotById[dest]} />}
+        </MapView>
+        {course && (
+          <button type="button" className="cx-fav" aria-label={t(saved ? "unsave_course" : "save_course")} aria-pressed={saved} onClick={toggleSave}>
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill={saved ? "#E04A2F" : "none"}><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
+          </button>
+        )}
+      </div>
+
+      {/* ③ 길 목록 (카카오맵 길찾기 결과처럼) */}
+      <div className="cx-panel">
+        {source === "course" ? (
+          <div className="cx-tabs" role="tablist" aria-label={t("distance")}>
+            {DISTANCES.map((k) => (
+              <button key={k} role="tab" aria-selected={km === k} className="cx-tab" onClick={() => setPick({ ...pick, km: k })}>{k}km</button>
+            ))}
+          </div>
+        ) : (
+          <p className="cx-note">{loc({ ko: "내 위치에서 출발해 경사·보행로·하천을 따져 찾은 길이에요", en: "Routes from where you are, chosen by slope, paths and streams" })}</p>
+        )}
+
+        {finding && <p className="cx-empty">{loc({ ko: "현위치에서 길을 찾고 있어요…", en: "Finding routes from here…" })}</p>}
+        {!finding && pair.length === 0 && <p className="cx-empty">{t("no_route_data")}</p>}
+        {!finding && pair.map((o) => {
+          const p = o.properties, on = o.id === course?.id, color = MODE_COLOR[p.mode];
+          return (
+            <article key={o.id} className={`cx-item ${on ? "on" : ""}`} onClick={() => setSel(p.mode)}>
+              <div className="cx-item-top">
+                <span className="cx-tag" style={{ color, background: color + "1A" }}>{loc(p.modeName)}</span>
+                <small>{t("mode_sub_" + p.mode)}</small>
+              </div>
+              <div className="cx-time">{durText(minutesFor(p.distance_km, move))}</div>
+              <div className="cx-sub">{p.distance_km}km · {p.ascent_m == null ? t("unknown") : `${loc({ ko: "오르막", en: "Climb" })} +${p.ascent_m}m`}</div>
+              <ElevationChart values={p.elevation} height={26} color={color} fill={color + "22"} />
+              <button type="button" className="cx-go" onClick={(e) => { e.stopPropagation(); setSel(p.mode); startRoute(o); }}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z" /></svg>
+                {loc({ ko: "안내시작", en: "Start" })}
+              </button>
+            </article>
+          );
+        })}
+        <Toggle className="demo-row cx-demo" checked={app.demo} onChange={app.setDemo} title={t("demo_mode")} sub={t("demo_sub")} />
       </div>
 
       <DestSheet open={chip === "dest"} dest={dest} place={place} onClose={() => setChip("")} onPick={(v) => setPick({ ...pick, dest: v })} />
-      <OptionSheet open={chip === "km"} title={t("ask_km")} cols={3} value={km} onClose={() => setChip("")}
-        options={DISTANCES.map((k) => ({ value: k, label: `${k}km`, sub: t("km_" + k) }))}
-        onPick={(v) => setPick({ ...pick, km: v })} />
-      <OptionSheet open={chip === "hill"} title={t("ask_hill")} cols={3} value={pick.hill} onClose={() => setChip("")}
-        options={HILLS.map((h) => ({ value: h, label: t("hill2_" + h), sub: t("hill2_" + h + "_s") }))}
-        onPick={(v) => setPick({ ...pick, hill: v })} />
-      {/* TODO: 테마는 아직 코스 데이터에 없어서 고르기만 하고 코스 필터에는 쓰지 않아요 (번들에 테마가 생기면 연결) */}
-      <OptionSheet open={chip === "theme"} title={t("ask_theme")} cols={2} multi values={new Set(pick.themes)} onClose={() => setChip("")}
-        options={THEMES.map((m) => ({ value: m, label: t("th2_" + m), sub: t("th2_" + m + "_s") }))}
-        onPick={(v) => setPick({ ...pick, themes: pick.themes.includes(v) ? pick.themes.filter((x) => x !== v) : [...pick.themes, v] })} />
     </section>
   );
 }
 
-// 위쪽: 뒤로 버튼 + 출발 → 도착 카드
-// 출발 줄: 고른 코스의 출발지(바꾸기 없음) + 위치를 알면 "내 위치에서 N m" 알약 / 도착 줄: 누르면 목적지 고르기 시트
 function PickerTop({ onBack, fromName, fromM, name, onDest, children }) {
   return (
     <div className="picker-top">

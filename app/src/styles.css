@@ -1413,3 +1413,42 @@ div:has(> .spot-pin) { pointer-events: none; }
 .pd-photo-empty { display: grid; place-items: center; color: var(--muted); font-size: 13px; font-weight: 600; aspect-ratio: 16 / 7; }
 .pd-photo-empty.loading { animation: pd-photo-pulse 1.2s ease-in-out infinite; }
 @keyframes pd-photo-pulse { 50% { opacity: .55; } }
+
+/* ---------- 코스 화면 (카카오맵 길찾기 모양) ---------- */
+.cx-screen { display: flex; flex-direction: column; background: #FFFFFF; }
+.cx-head { flex: none; padding: calc(10px + var(--safe-top)) 14px 14px; background: #3E7B1F; color: #FFFFFF; }
+.cx-modes { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.cx-mode { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 16px; border: 0; border-radius: 20px; background: transparent; color: rgba(255,255,255,.85); font: 700 15px var(--sans, sans-serif); cursor: pointer; }
+.cx-mode .mv-ic { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cx-mode.on { background: #FFFFFF; color: #2F6512; }
+.cx-close { margin-left: auto; width: 40px; height: 40px; border: 0; background: none; color: #FFFFFF; cursor: pointer; }
+.cx-close svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.cx-box { border-radius: 12px; background: rgba(255,255,255,.16); overflow: hidden; }
+.cx-row { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 12px; }
+.cx-row + .cx-row { border-top: 1px solid rgba(255,255,255,.22); }
+.cx-k { flex: none; width: 30px; font-size: 12px; color: rgba(255,255,255,.75); }
+.cx-v { flex: 1; min-width: 0; font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cx-m { flex: none; font-size: 11px; color: rgba(255,255,255,.8); }
+.cx-link { flex: none; border: 0; background: none; color: #FFFFFF; font: 600 12.5px var(--sans, sans-serif); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 6px 0; }
+.cx-map { position: relative; flex: 0 0 34%; min-height: 200px; }
+.cx-mapview { position: absolute; inset: 0; }
+.cx-fav { position: absolute; right: 10px; bottom: 10px; z-index: 5; width: 36px; height: 36px; border: 0; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,.2); display: grid; place-items: center; cursor: pointer; }
+.cx-fav svg { width: 18px; height: 18px; stroke: #E04A2F; stroke-width: 2; stroke-linejoin: round; }
+.cx-panel { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: calc(16px + var(--safe-bottom)); border-top: 1px solid #ECECEC; }
+.cx-tabs { display: flex; gap: 22px; padding: 0 20px; border-bottom: 1px solid #ECECEC; position: sticky; top: 0; background: #FFFFFF; z-index: 1; }
+.cx-tab { position: relative; height: 46px; border: 0; background: none; font: 600 15px var(--sans, sans-serif); color: #777; cursor: pointer; }
+.cx-tab[aria-selected="true"] { color: #1F1F1F; font-weight: 800; }
+.cx-tab[aria-selected="true"]::after { content: ""; position: absolute; left: -4px; right: -4px; bottom: -1px; height: 2.5px; background: #1F1F1F; }
+.cx-note { margin: 0; padding: 12px 20px; font-size: 12.5px; color: #777; border-bottom: 1px solid #ECECEC; }
+.cx-empty { margin: 0; padding: 28px 20px; text-align: center; color: #888; font-size: 14px; }
+.cx-item { padding: 16px 20px 18px; border-bottom: 8px solid #F4F4F4; cursor: pointer; }
+.cx-item.on { background: #FAFDF6; }
+.cx-item-top { display: flex; align-items: center; gap: 8px; }
+.cx-tag { padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+.cx-item-top small { font-size: 12px; color: #888; }
+.cx-time { margin-top: 8px; font-size: 28px; font-weight: 800; color: #1F1F1F; letter-spacing: -.02em; }
+.cx-sub { margin-top: 2px; font-size: 14px; color: #666; }
+.cx-item .elev { margin: 10px 0 0; }
+.cx-go { margin-top: 12px; width: 100%; height: 46px; border: 1px solid #D6D6D6; border-radius: 10px; background: #FFFFFF; font: 700 15px var(--sans, sans-serif); color: #1F1F1F; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
+.cx-go svg { width: 16px; height: 16px; fill: #1F1F1F; }
+.cx-demo { margin: 14px 16px 0; }
