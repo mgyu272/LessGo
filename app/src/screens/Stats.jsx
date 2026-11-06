@@ -78,6 +78,7 @@ function Today({ days }) {
         <p>{left > 0 ? t("goal_left", { km: left.toFixed(1) }) : t("goal_done")}</p>
         <button className="btn btn-cta" onClick={() => app.go("courses")}>{t("keep_going")} →</button>
       </div>
+      <RunnerTemperature stars={app.user.starsEarned || 0} />
       <div className="st-trio">
         <div className="soft"><b>{fmtTime(today.seconds)}</b><small>{t("time")}</small></div>
         <div className="soft"><b>{t("plus_stars", { n: today.stars })}</b><small>{t("stars_collected")}</small></div>
@@ -91,6 +92,23 @@ function Today({ days }) {
         {myCoupons.length ? myCoupons.map((c) => <CouponItem key={c.id} coupon={c} />) : <p className="st-none">{t("no_star_coupons")}</p>}
       </section>
     </div>
+  );
+}
+
+function RunnerTemperature({ stars }) {
+  // Cumulative earned stars: never decreases when stars are exchanged for coupons.
+  const count = Math.max(0, Number(stars) || 0);
+  const temperature = Math.min(99.9, 36.5 + count * 0.15);
+  const percent = Math.max(0, Math.min(100, (temperature - 36.5) / (99.9 - 36.5) * 100));
+  const rank = temperature >= 60 ? "뜨거운 러너" : temperature >= 45 ? "꾸준한 러너" : "새싹 러너";
+  return (
+    <section className="card runner-temp" aria-label="러너 온도">
+      <div className="runner-temp-top"><b>🌡 나의 러너 온도</b><small>누적 활동 지수</small></div>
+      <div className="runner-temp-value">{temperature.toFixed(1)}<small>°C</small></div>
+      <div className="runner-temp-track" role="progressbar" aria-label="러너 온도" aria-valuemin={36.5} aria-valuemax={99.9} aria-valuenow={Number(temperature.toFixed(1))}><i style={{width: percent + "%"}} /></div>
+      <div className="runner-temp-bottom"><span>{rank}</span><span>누적 별 {count.toLocaleString("ko-KR")}개</span></div>
+      <p>별을 모을수록 온도가 올라가요. 쿠폰으로 사용해도 온도는 내려가지 않아요.</p>
+    </section>
   );
 }
 
