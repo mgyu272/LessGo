@@ -131,11 +131,6 @@ export default function Places() {
           </section>
         )}
 
-        <button className="soft pl-events" onClick={() => app.go("events")}>
-          <span className="pl-ev-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 5h14v15H5z M5 10h14 M9 3v4 M15 3v4" /></svg></span>
-          <span className="pl-ev-text"><b>{t("linked_events")}</b><small>{t("linked_events_sub")}</small></span>
-          <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
-        </button>
       </div>
     </section>
   );

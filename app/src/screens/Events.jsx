@@ -134,23 +134,3 @@ function whenText(e) {
   const tm = (x) => new Intl.DateTimeFormat(lang, { hour: "2-digit", minute: "2-digit" }).format(x);
   return sameDay ? `${d(e.startAt)} ${tm(e.startAt)}–${tm(e.endAt)}` : `${d(e.startAt)} – ${d(e.endAt)}`;
 }
-
-// 장소 상세의 "문화 활동" 탭: 그 장소 근처의 앞으로 열리는 활동
-export function PlaceEvents({ spotId }) {
-  const app = useApp();
-  const events = useEvents();
-  const today = startOfDay(new Date());
-  const list = (events || []).filter((e) => e.near === spotId && e.endAt >= today).sort((a, b) => a.startAt - b.startAt);
-  return (
-    <>
-      {events !== null && !list.length && <p className="note mint">{t("info_pending")}</p>}
-      {list.map((e) => (
-        <button key={e.id} className="card pd-event" onClick={() => app.go("events")}>
-          <span className="pd-date"><small>{new Intl.DateTimeFormat(getLang() === "ko" ? "ko-KR" : "en-US", { month: "short" }).format(e.startAt)}</small><b>{e.startAt.getDate()}</b></span>
-          <span className="pd-ev-text"><Badge tone="plain">{t("evcat_" + e.category)}</Badge><b>{loc(e.title)}</b><small>{whenText(e)}</small></span>
-        </button>
-      ))}
-      <button className="link pd-all-events" onClick={() => app.go("events")}>{t("all_events")} →</button>
-    </>
-  );
-}
