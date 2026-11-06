@@ -10,7 +10,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp, HOME_CENTER, HOME_LEVEL } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
-import { MapView, FitSpots, FlyTo, SpotMarker, Me, ExploreLayer, MapWatch } from "../components/MapView.jsx";
+import { MapView, FitSpots, FlyTo, FocusOn, SpotMarker, Me, ExploreLayer, MapWatch } from "../components/MapView.jsx";
 import { LangPill } from "../components/Bits.jsx";
 import { useBottomSheet, BottomSheet, Segment } from "../components/ui.jsx";
 import { DISTANCES } from "../lib/routes.js";
@@ -28,6 +28,9 @@ const GROUP_ICONS = {
 // 지도에 핀 자리가 남도록 화면 높이에 맞춰 낮춰요 (최소 300)
 // 아이콘을 누르면 아래 카드 줄에 보여줄 장소 수 (고른 곳 포함)
 const CARD_COUNT = 8;
+// 카드 줄 높이(위아래 여백 포함)와 "← 성북구 전체" 버튼 자리. 아이콘을 골라 확대할 때 이만큼 비워 둬요
+const CARD_ROW_H = 160;
+const BACK_BTN_H = 48;
 const snapsFor = (screenH) => [150, Math.max(300, Math.min(380, screenH - 330)), Math.min(640, screenH - 120)];
 
 // 스팟 배지가 보여야 하는 지도 영역: 위쪽 검색·칩 아래부터 아래 시트 위까지 (지도 안쪽 px)
@@ -47,6 +50,7 @@ export default function Home() {
   const [filter, setFilter] = useState(saved?.filter ?? "all");
   const [query, setQuery] = useState("");
   const [flyTo, setFlyTo] = useState(null); // { at: [lat, lng], level }
+  const [focusTo, setFocusTo] = useState(null); // 고른 아이콘으로: { at, level }
   const [refit, setRefit] = useState(0);
   const [me, setMe] = useState(null);
   const [locating, setLocating] = useState(false);
@@ -70,15 +74,17 @@ export default function Home() {
   const cards = sel ? [sel, ...exShown.filter((p) => p.id !== sel.id).sort((a, b) => distance(sel, a) - distance(sel, b))].slice(0, CARD_COUNT) : [];
   const showCards = cards.length > 0 && !sheet.expanded;
   // 아이콘을 누르면 그곳을 가운데에 두고 한 단계 확대해요. 처음 고를 때만 확대하고, 그 전 지도는 origin에 남겨 둬요.
-  // 카드 줄 자리를 넓히려고 시트는 맨 아래로 내려요
+  // 카드 줄 자리를 넓히려고 시트는 맨 아래로 내리고, 가운데는 위 검색·칩·버튼과 아래 카드 줄·시트를 뺀 칸의 가운데예요
   const selectPlace = (p) => {
     if (p.id === selId) return;
     const level = view?.level ?? HOME_LEVEL;
     if (!sel) setOrigin({ level, center: view ? [view.center.lat, view.center.lng] : HOME_CENTER, sheet: sheet.index });
     setSelId(p.id);
-    setFlyTo({ at: [p.lat, p.lng], level: sel ? level : Math.max(1, level - 1) });
+    setFocusTo({ at: [p.lat, p.lng], level: sel ? level : Math.max(1, level - 1) });
     sheet.setIndex(0);
   };
+  // 고른 곳 확대 때 비워 둘 가장자리 [위, 오른쪽, 아래, 왼쪽]: 위 = 검색·칩 + 전체 버튼, 아래 = 내려간 시트 + 카드 줄
+  const focusPad = () => [homeSafeArea().top + BACK_BTN_H, 0, sheet.snaps[0] + CARD_ROW_H, 0];
   // 아주 멀리 볼 때의 묶음을 누르면 위 검색·칩과 아래 시트를 비우고 그 범위로 맞춰요 [위, 오른쪽, 아래, 왼쪽]
   const clusterPad = () => {
     const map = document.querySelector(".home-map"), area = homeSafeArea();
@@ -130,6 +136,7 @@ export default function Home() {
         {/* 남겨 둔 확대 범위로 돌아왔으면 처음 맞춤은 건너뛰고, 전체 지도·내 위치 실패 때만 다시 맞춰요 */}
         {(!saved?.view || refit > 0) && <FitSpots spots={data.spots} safe={homeSafeArea} refitKey={refit} />}
         <FlyTo to={flyTo?.at} level={flyTo?.level} />
+        <FocusOn to={focusTo?.at} level={focusTo?.level} pad={focusPad} />
         <MapWatch onChange={setView} />
       </MapView>
       {sel && !sheet.expanded && (

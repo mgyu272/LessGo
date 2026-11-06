@@ -168,6 +168,30 @@ export function FlyTo({ to, level = 2 }) {
   return null;
 }
 
+// 그곳을 가린 곳 없는 칸의 가운데에 두고 확대 (to는 누를 때마다 새 배열)
+// pad(): 비워 둘 지도 가장자리 px [위, 오른쪽, 아래, 왼쪽]. 그 여백을 뺀 영역의 가운데에 to가 오게 지도 중심을 옮겨요
+export function FocusOn({ to, level, pad }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!to) return;
+    const { kakao } = window;
+    const [top, right, bottom, left] = pad?.() || [0, 0, 0, 0];
+    const el = map.getNode();
+    const W = el.offsetWidth, H = el.offsetHeight;
+    // to가 빈 칸 가운데(cx, cy)에 오려면, 지도 중심은 to에서 (화면 가운데 - 빈 칸 가운데)만큼 떨어져야 해요.
+    // 단계를 바꾼 직후에는 좌표 계산이 바로 갱신되지 않아서, 지금 단계에서 미리 계산해요 (한 단계 = 거리 절반)
+    const k = level ? 2 ** (level - map.getLevel()) : 1;
+    const proj = map.getProjection();
+    const pt = proj.containerPointFromCoords(new kakao.maps.LatLng(to[0], to[1]));
+    const cx = (left + W - right) / 2, cy = (top + H - bottom) / 2;
+    const center = proj.coordsFromContainerPoint(new kakao.maps.Point(pt.x + (W / 2 - cx) * k, pt.y + (H / 2 - cy) * k));
+    if (level) map.setLevel(level);
+    map.setCenter(center);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, to]);
+  return null;
+}
+
 // 달리기 별: 흰 원(r12) + 금색 테두리 + 금색 별. 주운 별은 연한 금색 바탕
 export function StarMark({ at, got = false }) {
   return (
