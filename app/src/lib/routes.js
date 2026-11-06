@@ -123,8 +123,9 @@ function makeCourse({ dest, km, mode, route, coords, spot }) {
     themes: [], lamps: 2, crowd: "mid", residential: false,
     tone: mode === "low" ? "easy" : "normal",
   };
-  // 음성 길안내(cues)는 이번 작업에서 연결하지 않아요 (route.directions는 영어 ORS 안내라 따로 다듬어야 해요)
-  return { id: p.id, properties: p, path, len, cues: [] };
+  // 저장된 ORS directions의 way_points를 실제 경로 좌표에 연결합니다.
+  // 추정 회전 안내는 만들지 않으며, directions가 없어도 출발 안내는 제공합니다.
+  return { id: p.id, properties: p, path, len, cues: makeCues(route.directions, path) };
 }
 
 // 고도 그래프용: 좌표의 세 번째 값(고도)을 거리 기준으로 60개 정도로 줄여요. 고도가 없으면 빈 배열
@@ -143,4 +144,35 @@ function sampleElevation(coords, path, n = 60) {
     out.push(Math.round((a + (b - a) * t) * 10) / 10);
   }
   return out;
+}
+
+
+// ORS instruction type: https://openrouteservice.org/dev/#/api-docs/v2/directions
+// 길 안내에 필요한 확실한 회전 유형만 번역합니다. 불명확한 유형은 원문만 사용합니다.
+const TURN_KO = {
+  0: "좌회전하세요.", 1: "우회전하세요.",
+  2: "급좌회전하세요.", 3: "급우회전하세요.",
+  4: "완만하게 좌회전하세요.", 5: "완만하게 우회전하세요.",
+  6: "직진하세요.", 9: "유턴하세요.",
+  12: "왼쪽 길을 유지하세요.", 13: "오른쪽 길을 유지하세요.",
+};
+function makeCues(directions, path) {
+  if (!path.length) return [];
+  const cues = [{
+    pos: path[0],
+    text: { ko: "러닝을 시작합니다. 안전에 유의하며 경로를 따라 이동하세요.", en: "Your run starts now. Follow the route and stay safe." },
+  }];
+  if (!Array.isArray(directions)) return cues;
+  for (const step of directions) {
+    const idx = Number(step?.way_points?.[0]);
+    const type = Number(step?.type);
+    if (!Number.isInteger(idx) || idx <= 0 || idx >= path.length) continue;
+    // 출발/도착 안내는 중복하지 않고, 실제 ORS가 제공한 회전만 알립니다.
+    if (type === 10 || type === 11) continue;
+    const ko = TURN_KO[type];
+    const en = typeof step.instruction === "string" ? step.instruction.trim() : "";
+    if (!ko && !en) continue;
+    cues.push({ pos: path[idx], text: { ko: ko || en, en: en || ko } });
+  }
+  return cues;
 }
