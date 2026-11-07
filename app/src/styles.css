@@ -1522,8 +1522,8 @@ div:has(> .spot-pin) { pointer-events: none; }
 .place-cover { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
 .place-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .place-cover img.contain { object-fit: contain; }
-.pd-photo figcaption { position: absolute; right: 8px; bottom: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(0, 0, 0, .45); font-size: 10.5px; }
-.pd-photo figcaption a { color: #FFFFFF; text-decoration: none; }
+.pd-photo figcaption { position: absolute; right: 8px; bottom: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(0, 0, 0, .5); font-size: 10.5px; color: #FFFFFF; }
+.pd-photo figcaption a, .pd-photo figcaption span { color: #FFFFFF; text-decoration: none; }
 .pd-photo-empty { display: grid; place-items: center; color: var(--muted); font-size: 13px; font-weight: 600; aspect-ratio: 16 / 7; }
 .pd-photo-empty.loading { animation: pd-photo-pulse 1.2s ease-in-out infinite; }
 @keyframes pd-photo-pulse { 50% { opacity: .55; } }
