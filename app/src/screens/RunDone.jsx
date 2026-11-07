@@ -64,7 +64,7 @@ export default function RunDone() {
         <div className="done-earn">
           <div className="soft"><span><StarIcon />+{f.starsGot}</span><small>{t("stars_collected")}</small></div>
           <div className="soft"><span><StarIcon />{app.user.bonus}</span><small>{t("my_stars_now")}</small></div>
-          <div className="soft"><span>🌡 {(Math.min(99.9,36.5+(app.user.starsEarned||0)*0.15)).toFixed(1)}°C</span><small>러너 온도</small></div>
+          <div className="soft"><span className="de-temp"><ThermoIcon />{(Math.min(99.9,36.5+(app.user.starsEarned||0)*0.15)).toFixed(1)}<em>°C</em></span><small>{loc({ ko: "러너 온도", en: "Runner temp" })}</small></div>
         </div>
 
 
@@ -103,3 +103,8 @@ function spotsNearTrail(trail, spots) {
 const StarIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true" className="fill"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" /></svg>;
 const BagIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16l-1.5 10a2 2 0 0 1-2 1.7h-9a2 2 0 0 1-2-1.7z" /><path d="M8 9V7a4 4 0 0 1 8 0v2" /></svg>;
 const ShareIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true" className="share"><path d="M12 15V3M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>;
+
+// 온도계 (러너 온도)
+function ThermoIcon() {
+  return <svg className="thermo" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14.5V5a2 2 0 0 1 4 0v9.5a4 4 0 1 1-4 0z" /><circle cx="12" cy="17.5" r="1.6" className="bulb" /></svg>;
+}
