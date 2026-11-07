@@ -18,7 +18,7 @@ import { minutesFor, durText } from "../lib/routes.js";
 const CUE_NEAR_M = 100;  // 이 안으로 들어오면 안내를 펼쳐요
 const HOLD_MS = 1200;    // 종료 버튼을 누르고 있어야 하는 시간
 const HOLD_HINT_MS = 1600;
-const STAR_ICONS = 10;   // 별 줄에 그리는 최대 개수 (코스 별이 더 많으면 비율로 채워요)
+const STAR_ICONS = 10;   // 코스 길이와 관계없이 진행도를 10칸에 표시해요
 
 export default function Run() {
   const app = useApp();
@@ -162,7 +162,7 @@ function CueArea({ v }) {
   );
 }
 
-function StarCard({ v }) {
+export function StarCard({ v }) {
   if (!v.course) {
     return (
       <div className="rp-card">
@@ -172,14 +172,13 @@ function StarCard({ v }) {
     );
   }
   const total = v.starsTotal;
-  const count = Math.min(total, STAR_ICONS);
-  const filled = total <= STAR_ICONS ? v.starsGot : Math.round((v.starsGot / total) * STAR_ICONS);
+  const filled = total ? Math.round((v.starsGot / total) * STAR_ICONS) : 0;
   return (
     <div className="rp-card">
       <small>{t("course_stars_label")}</small>
       <b className="rp-num">{v.starsGot}<em>/{total}</em></b>
       <span className="rp-stars" aria-hidden="true">
-        {Array.from({ length: count }, (_, i) => <StarGlyph key={i} on={i < filled} />)}
+        {Array.from({ length: STAR_ICONS }, (_, i) => <StarGlyph key={i} on={i < filled} />)}
       </span>
       <p className="rp-line">{v.nextStarM == null ? t("all_stars") : <>{t("next_star_to")} <strong>{v.nextStarM}m</strong></>}</p>
     </div>
