@@ -853,7 +853,6 @@ div:has(> .spot-pin) { pointer-events: none; }
 .pl-destinations > p { margin: 4px 0 8px; font-size: 13.5px; color: #4A5E42; }
 .pl-card { flex: 0 0 286px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; scroll-snap-align: start; overflow: hidden; border-radius: 22px; background: #FFF; border: 1px solid #E2ECD9; box-shadow: 0 3px 8px rgba(30,60,20,.08); }
 .pl-card-photo { position: relative; height: 150px; display: grid; place-items: center; background: #E6EDDF; color: #798174; }
-.pl-card-photo .pd-photo { width: 100%; height: 150px; aspect-ratio: auto; border-radius: 0; box-shadow: none; }
 .pl-course-count { position: absolute; top: 10px; right: 10px; background: white; padding: 4px 10px; border-radius: 999px; color: #2E6B1C; font-size: 12px; font-weight: 800; }
 .pl-ic { position: absolute; bottom: -28px; left: 16px; display: grid; place-items: center; box-sizing: border-box; width: 56px; height: 56px; border: 3px solid white; border-radius: 15px; background: #F2F9E6; box-shadow: 0 3px 8px rgba(30,60,20,.16); }
 .pl-ic svg { width: 42px; height: 42px; }
@@ -1307,19 +1306,15 @@ div:has(> .spot-pin) { pointer-events: none; }
 .market-screen .pl-topic.on { background: var(--strong); color: #FFFFFF; }
 .explore-rail { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: -18px; padding: 5px 18px 12px; scroll-padding-inline: 18px; }
 .explore-rail::-webkit-scrollbar { display: none; }
-.explore-tile { flex: 0 0 220px; min-width: 0; scroll-snap-align: start; overflow: hidden; border-radius: 20px; background: white; border: 1px solid #E2ECD9; box-shadow: 0 3px 8px rgba(30,60,20,.08); padding: 0; text-align: left; }
+.explore-tile { flex: 0 0 264px; min-width: 0; display: flex; align-items: center; gap: 12px; scroll-snap-align: start; overflow: hidden; border-radius: 18px; background: white; border: 1px solid #E2ECD9; box-shadow: 0 3px 8px rgba(30,60,20,.08); padding: 10px; text-align: left; }
 .explore-tile:focus-visible { outline: 3px solid var(--places-theme); outline-offset: 2px; }
-.explore-photo { position: relative; height: 140px; display: grid; place-items: center; background: #E6EDDF; color: #798174; }
-.explore-photo img { width: 100%; height: 140px; object-fit: cover; }
-.explore-photo img.contain { object-fit: contain; }
-.explore-credit { position: absolute; right: 8px; bottom: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(0, 0, 0, .55); color: #FFFFFF; font-size: 10.5px; }
-.explore-badge { position: absolute; top: 10px; left: 10px; background: white; padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; color: var(--places-theme); }
-.explore-caption { display: grid; gap: 4px; padding: 12px 14px 14px; }
-.explore-caption > b, .explore-caption > small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.explore-caption > b { font-size: 16px; font-weight: 700; }
+.explore-badge { font-weight: 700; color: var(--places-theme); }
+.explore-caption { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.explore-caption > b, .explore-caption > small { font-size: 12px; color: #5C6F54; }
+.explore-caption > b { font-size: 16px; font-weight: 800; }
 .explore-caption > small { min-height: 18px; font-size: 12.5px; color: #5C6F54; }
-.explore-distance { display: flex; align-items: center; gap: 4px; font-size: 13px; }
-.explore-distance svg { color: #2E7A1F; }
+.explore-distance { display: flex; align-items: center; gap: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; }
+.explore-distance svg { flex: none; color: #2E7A1F; }
 .pl-explore > p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
 .pl-explore ul, .pd-explore ul { list-style: none; margin: 0; padding: 2px 12px; border-radius: 20px; }
 .pl-explore li + li, .pd-explore li + li { border-top: 1px solid #EAF3DD; }
@@ -1327,7 +1322,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .ple-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .ple-text b { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ple-text small { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ple-near { flex: none; max-width: 38%; font-size: 11px; font-weight: 700; color: var(--link); text-align: right; line-height: 1.35; }
+.ple-near { font-size: 12px; font-weight: 700; color: var(--link); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pl-explore .chev, .pd-explore .chev { width: 16px; height: 16px; flex: none; fill: none; stroke: var(--muted); stroke-width: 2; }
 .ple-more, .pd-explore-all { margin: 0; min-height: 44px; border-radius: 14px; color: var(--strong); font-size: 14px; }
 
@@ -1450,6 +1445,13 @@ div:has(> .spot-pin) { pointer-events: none; }
 /* 장소 정보 탭 맨 위 대표 사진 */
 .pd-photo { margin: 0; position: relative; border-radius: 20px; overflow: hidden; background: #E6EFDA; aspect-ratio: 4 / 3; box-shadow: 0 10px 24px -16px rgba(31, 61, 20, .6); }
 .pd-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pd-photo img.contain { object-fit: contain; background: #E6EDDF; }
+.pd-lead { margin-bottom: 12px; }
+.pd-lead:empty { display: none; }
+/* 카드 위쪽 사진 칸. 공공누리 3유형은 자르지 않고 여백(칸 바탕 #E6EDDF)을 둬요 */
+.place-cover { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+.place-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.place-cover img.contain { object-fit: contain; }
 .pd-photo figcaption { position: absolute; right: 8px; bottom: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(0, 0, 0, .45); font-size: 10.5px; }
 .pd-photo figcaption a { color: #FFFFFF; text-decoration: none; }
 .pd-photo-empty { display: grid; place-items: center; color: var(--muted); font-size: 13px; font-weight: 600; aspect-ratio: 16 / 7; }
@@ -1584,6 +1586,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .mk-card { flex: none; display: flex; align-items: center; gap: 8px; padding: 10px 10px 10px 10px; border-radius: 18px; }
 .mk-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 0; border: 0; background: none; text-align: left; color: inherit; font: inherit; cursor: pointer; }
 .mk-photo { width: 64px; height: 64px; flex: none; border-radius: 14px; object-fit: cover; background: #F2F9E6; box-shadow: inset 0 0 0 1px var(--border); }
+.mk-photo.contain { object-fit: contain; background: #E6EDDF; }
 .mk-photo-empty { display: grid; place-items: center; color: var(--link); }
 .mk-photo-empty svg { width: 30px; height: 30px; }
 .mk-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
