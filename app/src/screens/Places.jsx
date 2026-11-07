@@ -11,7 +11,7 @@ import { distance } from "../lib/geo.js";
 import { GROUPS, groupOf, PLACE_TOPICS, kindLabel, exploreMeta, fromCourseEnd, byNearest, destName, round10 } from "../lib/places.js";
 import { MapView, FitBounds, SpotMarker, ExploreLayer } from "../components/MapView.jsx";
 import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
-import PlacePhoto from "../components/PlacePhoto.jsx";
+import { PlaceCover, PlaceThumb } from "../components/PlacePhoto.jsx";
 
 const chipIcons = {
   all: "M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z",
@@ -25,18 +25,6 @@ function PhotoIcon() {
   return <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>;
 }
 
-// 공공누리 3유형은 변경 금지라 자르지 않고 보여줘요. 사진을 못 불러오면 회색 아이콘으로 바뀌어요.
-function ExplorePhoto({ place }) {
-  const [failed, setFailed] = useState(false);
-  if (!place.photo_url || failed) return <PhotoIcon />;
-  return (
-    <>
-      <img className={place.photo_license === "KOGL-3" ? "contain" : undefined} src={place.photo_url} alt={t("photo_alt", { name: loc(place.name) })} loading="lazy" onError={() => setFailed(true)} />
-      <span className="explore-credit">{t("photo_credit", { credit: place.photo_credit })}</span>
-    </>
-  );
-}
-
 function ExploreCard({ place, data, onOpen }) {
   const name = loc(place.name);
   const [badge, ...tags] = kindLabel(place).split(/[·,\s]+/).filter(Boolean);
@@ -47,7 +35,7 @@ function ExploreCard({ place, data, onOpen }) {
     <button type="button" className="explore-tile" data-places-theme={groupOf(place)} onClick={() => onOpen(place)}
       aria-label={from && distanceText ? `${name}, ${from} ${distanceText}` : name}>
       <span className="explore-photo">
-        <ExplorePhoto place={place} />
+        <PlaceCover place={place} fallback={<PhotoIcon />} />
         <span className="explore-badge">{badge}</span>
       </span>
       <span className="explore-caption">
@@ -140,7 +128,7 @@ export default function Places() {
             {list.map((s) => (
               <article key={s.id} className="pl-card" role="listitem">
                 <div className="pl-card-photo">
-                  <PlacePhoto spot={s} fallback={<PhotoIcon />} />
+                  <PlaceCover place={s} fallback={<PhotoIcon />} />
                   <span className="pl-course-count">{t("courses_n", { n: courseCount(s.id) })}</span>
                   <span className="pl-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
                 </div>
@@ -174,9 +162,8 @@ export default function Places() {
               {explore.map((p) => (
                 <li key={p.id}>
                   <button type="button" onClick={() => openExplore(p)}>
-                    <GroupIcon group={groupOf(p)} size={30} className="grp-icon list" />
-                    <span className="ple-text"><b>{loc(p.name)}</b><small>{exploreMeta(p)}</small></span>
-                    <span className="ple-near">{fromCourseEnd(data, p)}</span>
+                    <PlaceThumb place={p} fallback={<GroupIcon group={groupOf(p)} size={30} />} />
+                    <span className="ple-text"><b>{loc(p.name)}</b><small>{exploreMeta(p)}</small><span className="ple-near">{fromCourseEnd(data, p)}</span></span>
                     <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
                   </button>
                 </li>

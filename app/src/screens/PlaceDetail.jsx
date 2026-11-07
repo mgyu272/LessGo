@@ -13,7 +13,7 @@ import * as voice from "../lib/voice.js";
 import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections, byNearest, round10, CHECKED_DATE, groupOf } from "../lib/places.js";
 import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
 import HistoryLens from "./HistoryLens.jsx";
-import PlacePhoto from "../components/PlacePhoto.jsx";
+import PlacePhoto, { PlaceThumb } from "../components/PlacePhoto.jsx";
 import NearbyShops from "../components/NearbyShops.jsx";
 
 const TABS = ["visit", "story", "history_lens"]; // 장소 정보 → 이야기 → AI 역사 렌즈 (문화 활동 탭은 뺐어요)
@@ -124,9 +124,10 @@ export default function PlaceDetail() {
         </div>
 
         <div className="pd-body">
+          {/* 대표 사진을 맨 위에. AI 역사 렌즈는 카메라 화면이라 빼고, 사진이 없을 때 안내는 장소 정보 탭에서만 */}
+          {tab !== "history_lens" && <div className="pd-lead"><PlacePhoto spot={spot} fallback={tab === "visit" ? undefined : null} /></div>}
           {prep && (
             <div className="rise pd-col">
-              {tab === "visit" && <PlacePhoto spot={spot} />}
               <article className="card pd-story pd-prep">
                 <span>{loc({ ko: "준비 중", en: "Coming soon" })}</span>
                 <h3>{loc({ ko: "곧 이야기가 채워져요", en: "Stories are on the way" })}</h3>
@@ -158,8 +159,6 @@ export default function PlaceDetail() {
 
           {!prep && tab === "visit" && (
             <div className="rise pd-col">
-              {/* 대표 사진을 먼저 보여주고, 아래로 내리면 관람 시간·휴관일 등 */}
-              <PlacePhoto spot={spot} />
               <div className="card pd-rows">
                 {Object.keys(visit).map((k) => (
                   <div className="pd-row" key={k}>
@@ -181,7 +180,7 @@ export default function PlaceDetail() {
                     {nearby.slice(0, 4).map((p) => (
                       <li key={p.id}>
                         <button type="button" onClick={() => openExplore(p)}>
-                          <GroupIcon group={groupOf(p)} size={28} className="grp-icon list" />
+                          <PlaceThumb place={p} fallback={<GroupIcon group={groupOf(p)} size={30} />} />
                           <b>{loc(p.name)}</b>
                           <small>{t("about_m", { m: round10(p.nearest_course.straight_m) })}</small>
                         </button>

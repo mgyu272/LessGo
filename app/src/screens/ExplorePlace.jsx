@@ -11,6 +11,7 @@ import { DISTANCES } from "../lib/routes.js";
 import { kakaoDirections, exploreColor, kindLabel, areaLabel, destName, round10, openPeriod, inPeriod, periodText, shopsNearPlace, CHECKED_DATE, groupOf } from "../lib/places.js";
 import { GroupIcon } from "../components/SpotIcons.jsx";
 import { Badge } from "../components/ui.jsx";
+import PlacePhoto from "../components/PlacePhoto.jsx";
 import NearbyShops, { shopKind } from "../components/NearbyShops.jsx";
 import { ReportSheet } from "./PlaceDetail.jsx";
 
@@ -63,6 +64,7 @@ export default function ExplorePlace() {
         </div>
 
         <div className="pd-body pd-col">
+          <PlacePhoto spot={place} fallback={null} />
           {tags.length > 0 && (
             <article className="card ex-story">
               <h3>{t("explore_story")}</h3>
