@@ -63,8 +63,8 @@ export default function SeongbukBoundary({ spots, safe, refitKey = 0, keepView =
       shapes.push(new kakao.maps.Polyline({ map, zIndex: 2, path: toPath(ring), strokeColor: "#C9DABB", strokeWeight: 1, strokeOpacity: 0.8 }));
     }));
     rings.forEach((ring) => {
-      shapes.push(new kakao.maps.Polyline({ map, zIndex: 3, path: toPath(ring), strokeColor: "#2E6B1C", strokeWeight: 9, strokeOpacity: 0.15 }));
-      shapes.push(new kakao.maps.Polyline({ map, zIndex: 4, path: toPath(ring), strokeColor: "#2E6B1C", strokeWeight: 3, strokeOpacity: 1 }));
+      shapes.push(new kakao.maps.Polyline({ map, zIndex: 3, path: toPath(ring), strokeColor: "#4E9A2E", strokeWeight: 7, strokeOpacity: 0.15 }));
+      shapes.push(new kakao.maps.Polyline({ map, zIndex: 4, path: toPath(ring), strokeColor: "#4E9A2E", strokeWeight: 2, strokeOpacity: 1 }));
     });
     return () => shapes.forEach((shape) => shape.setMap(null));
     // eslint-disable-next-line react-hooks/exhaustive-deps
