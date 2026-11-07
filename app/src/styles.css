@@ -1584,10 +1584,10 @@ div:has(> .spot-pin) { pointer-events: none; }
 .cx-grip { flex: none; height: 18px; display: grid; place-items: center; cursor: ns-resize; touch-action: none; }
 .cx-grip span { width: 40px; height: 4px; border-radius: 2px; background: #D0D0D0; }
 /* 거리 탭: 3등분 가운데 정렬, 선택 탭은 진초록 굵은 밑줄 */
-.cx-tabs { position: static; flex: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 4px 20px 0; border-bottom: 1.5px solid #DDE3D4; }
-.cx-tab { height: 52px; padding: 0; border: 0; background: none; text-align: center; font: 500 22px var(--sans, sans-serif); color: #5B6E4C; letter-spacing: -.01em; }
+.cx-tabs { position: static; flex: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 0 20px; border-bottom: 1.5px solid #DDE3D4; }
+.cx-tab { height: 35px; padding: 0; border: 0; background: none; text-align: center; font: 500 17px var(--sans, sans-serif); color: #5B6E4C; letter-spacing: -.01em; }
 .cx-tab[aria-selected="true"] { color: #1F4A12; font-weight: 800; }
-.cx-tab[aria-selected="true"]::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -1.5px; height: 5px; background: #1F4A12; }
+.cx-tab[aria-selected="true"]::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -1.5px; height: 4px; background: #1F4A12; }
 .cx-note { flex: none; padding: 8px 20px; font-size: 12px; }
 .cx-rail { flex: none; padding: 10px 16px 4px; }
 .cx-rail .cx-item { flex-basis: 74%; padding: 10px 12px 12px; border-radius: 14px; }
