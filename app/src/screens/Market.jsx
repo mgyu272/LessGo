@@ -119,7 +119,7 @@ export function ShopPhoto({ shop }) {
 }
 
 // 카카오맵으로 가는 작은 아이콘 (노란 바탕 + 지도 핀)
-function KakaoMapIcon() {
+export function KakaoMapIcon() {
   return (
     <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
       <rect width="32" height="32" rx="9" fill="#FEE500" />

@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
-import { GROUPS, groupOf, PLACE_TOPICS, kindLabel, exploreMeta, fromCourseEnd, byNearest, destName, round10 } from "../lib/places.js";
+import { GROUPS, groupOf, PLACE_TOPICS, kindLabel, byNearest, destName, round10 } from "../lib/places.js";
 import { MapView, FitBounds, SpotMarker, ExploreLayer } from "../components/MapView.jsx";
 import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
 import { PlaceCover, PlaceThumb } from "../components/PlacePhoto.jsx";
@@ -17,24 +17,84 @@ function PhotoIcon() {
   return <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>;
 }
 
-function ExploreCard({ place, data, onOpen }) {
+// 둘러볼 곳 3열 타일: 네모 사진 + 분류 배지(왼쪽 위) · 무료(오른쪽 아래), 아래에 이름과 코스 도착지에서 거리 · 도보 시간
+function ExploreTile({ place, data, onOpen }) {
   const name = loc(place.name);
-  const [badge, ...tags] = kindLabel(place).split(/[·,\s]+/).filter(Boolean);
+  const badge = kindLabel(place).split(/[·,\s]+/).filter(Boolean)[0];
+  const free = String(place.fee || "").startsWith("무료");
   const meters = place.nearest_course?.straight_m;
   const from = place.nearest_course?.dest && t("explore_distance_from", { name: destName(data, place.nearest_course.dest) });
-  const distanceText = Number.isFinite(meters) ? (meters < 1000 ? `${round10(meters)}m` : `${(meters / 1000).toFixed(1)}km`) : "";
+  const hasDist = Number.isFinite(meters);
+  const distanceText = hasDist ? (meters < 1000 ? `${round10(meters)}m` : `${(meters / 1000).toFixed(1)}km`) : "";
+  const walkMin = hasDist ? Math.max(1, Math.round(meters / 67)) : 0; // 걷는 속도 약 4km/h
   return (
-    <button type="button" className="explore-tile" data-places-theme={groupOf(place)} onClick={() => onOpen(place)}
-      aria-label={from && distanceText ? `${name}, ${from} ${distanceText}` : name}>
-      <PlaceThumb place={place} fallback={<PhotoIcon />} />
-      <span className="explore-caption">
-        <b>{name}</b><small><span className="explore-badge">{badge}</span>{tags.filter((tag) => tag !== badge).map((tag) => ` · ${tag}`).join("")}</small>
-        {from && distanceText && <span className="explore-distance">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 22s8-9 8-14a8 8 0 00-16 0c0 5 8 14 8 14z"/><circle cx="12" cy="9" r="2"/></svg>
-          {from} <strong>{distanceText}</strong>
-        </span>}
+    <button type="button" className="gx-tile" data-places-theme={groupOf(place)} onClick={() => onOpen(place)}
+      aria-label={from && hasDist ? `${name}, ${from} ${distanceText}` : name}>
+      <span className="gx-photo">
+        <PlaceThumb place={place} fallback={<GroupIcon group={groupOf(place)} size={30} />} />
+        {badge && <span className="gx-badge">{badge}</span>}
+        {free && <span className="gx-free">{t("fee_free")}</span>}
       </span>
+      <b className="gx-name">{name}</b>
+      {hasDist && <span className="gx-dist">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><path d="M12 22s8-9 8-14a8 8 0 00-16 0c0 5 8 14 8 14z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        <strong>{distanceText}</strong> · {loc({ ko: `도보 ${walkMin}분`, en: `${walkMin} min walk` })}
+      </span>}
     </button>
+  );
+}
+
+// 코스 목적지 카드: 한 장씩 넘기는 캐러셀. 옆 카드가 살짝 보이고, 끌거나 화살표·점으로 넘겨요. 끝에서 넘기면 처음으로 돌아가요
+function DestCarousel({ items, render, label }) {
+  const n = items.length;
+  const [idx, setIdx] = useState(0);
+  const [dx, setDx] = useState(0);
+  const drag = useRef(null);
+  const moved = useRef(false);
+  useEffect(() => { setIdx(0); }, [n]);
+  const go = (k) => { setDx(0); setIdx(((k % n) + n) % n); };
+  const down = (e) => { if (n < 2) return; drag.current = { x: e.clientX, y: e.clientY, id: e.pointerId, lock: null }; moved.current = false; };
+  const move = (e) => {
+    const d = drag.current; if (!d) return;
+    const mx = e.clientX - d.x, my = e.clientY - d.y;
+    if (d.lock == null && Math.hypot(mx, my) > 8) { d.lock = Math.abs(mx) > Math.abs(my) ? "x" : "y"; if (d.lock === "x") e.currentTarget.setPointerCapture?.(d.id); }
+    if (d.lock === "x") { moved.current = true; setDx(mx); }
+  };
+  const up = () => {
+    const d = drag.current; drag.current = null;
+    if (!d || d.lock !== "x") { setDx(0); return; }
+    if (dx < -50) go(idx + 1); else if (dx > 50) go(idx - 1); else setDx(0);
+  };
+  // 끌어서 넘긴 직후에는 카드 안 버튼이 눌리지 않게
+  const stopClick = (e) => { if (moved.current) { e.stopPropagation(); e.preventDefault(); moved.current = false; } };
+  const key = (e) => { if (e.key === "ArrowRight") go(idx + 1); if (e.key === "ArrowLeft") go(idx - 1); };
+
+  return (
+    <div className="dc" role="region" aria-roledescription="carousel" aria-label={label} tabIndex={0} onKeyDown={key}>
+      <div className={`dc-track ${dx !== 0 ? "dragging" : ""}`}
+        style={{ "--i": idx, "--dx": `${dx}px` }}
+        onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} onClickCapture={stopClick}>
+        {items.map((it, k) => (
+          <div key={k} className={`dc-slide ${k === idx ? "on" : ""}`} aria-hidden={k !== idx}
+            onClickCapture={k !== idx ? (e) => { e.stopPropagation(); e.preventDefault(); go(k); } : undefined}>
+            {render(it)}
+          </div>
+        ))}
+      </div>
+      {n > 1 && (
+        <div className="dc-nav">
+          <button type="button" className="dc-arrow" onClick={() => go(idx - 1)} aria-label={loc({ ko: "이전 카드", en: "Previous" })}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+          </button>
+          <div className="dc-dots">
+            {items.map((_, k) => <button key={k} type="button" className={k === idx ? "on" : ""} aria-label={`${k + 1} / ${n}`} aria-current={k === idx} onClick={() => go(k)} />)}
+          </div>
+          <button type="button" className="dc-arrow" onClick={() => go(idx + 1)} aria-label={loc({ ko: "다음 카드", en: "Next" })}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -61,8 +121,6 @@ export default function Places() {
       .filter((p) => !qq || [p.name.ko, p.name.en, p.kind, p.curation, p.area_ko].some((x) => (x || "").toLowerCase().includes(qq)))
       .sort(byNearest);
   }, [data.explore, topic, q, near]);
-  const [allExplore, setAllExplore] = useState(false);
-  useEffect(() => { setAllExplore(false); }, [topic, q, near]);
   // 근처로 걸러 왔으면 둘러볼 곳 목록으로 내려가요
   const exploreRef = useRef(null);
   useEffect(() => { if (near) exploreRef.current?.scrollIntoView({ block: "start" }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -113,9 +171,8 @@ export default function Places() {
         {list.length ? <section className="pl-destinations" data-places-theme={topic}>
           <h2>{t("dest_title")} <span>{list.length}</span></h2>
           <p>{t("dest_description")}</p>
-          <div className="explore-rail" role="list" aria-label={t("dest_title")} key={topic}>
-            {list.map((s) => (
-              <article key={s.id} className="pl-card" role="listitem">
+          <DestCarousel key={topic + q} items={list} label={t("dest_title")} render={(s) => (
+              <article className="pl-card">
                 <div className="pl-card-photo">
                   <PlaceCover place={s} fallback={<PhotoIcon />} />
                   <span className="pl-course-count">{t("courses_n", { n: courseCount(s.id) })}</span>
@@ -131,8 +188,7 @@ export default function Places() {
                   <button type="button" aria-label={t("dest_run_label", { name: loc(s.name) })} onClick={() => runHere(s)}>{t("run_here")} →</button>
                 </div>
               </article>
-            ))}
-          </div>
+            )} />
         </section> : <p className="pl-count">{t("dest_places_none")}</p>}
 
           <section className="pl-explore" data-places-theme={topic} ref={exploreRef} aria-label={t("explore_n", { n: explore.length })}>
@@ -143,25 +199,10 @@ export default function Places() {
                 {t("near_chip", { name: destName(data, near) })}<span aria-hidden="true">· {t("near_clear")}</span>
               </button>
             )}
-            {!explore.length ? <p>{t("explore_empty")}</p> : !allExplore ? (
-              <div className="explore-rail" key={topic + q}>
-                {explore.map((p) => <ExploreCard key={p.id} place={p} data={data} onOpen={openExplore} />)}
+            {!explore.length ? <p>{t("explore_empty")}</p> : (
+              <div className="gx-grid" key={topic + q}>
+                {explore.map((p) => <ExploreTile key={p.id} place={p} data={data} onOpen={openExplore} />)}
               </div>
-            ) : <ul className="card">
-              {explore.map((p) => (
-                <li key={p.id}>
-                  <button type="button" onClick={() => openExplore(p)}>
-                    <PlaceThumb place={p} fallback={<GroupIcon group={groupOf(p)} size={30} />} />
-                    <span className="ple-text"><b>{loc(p.name)}</b><small>{exploreMeta(p)}</small><span className="ple-near">{fromCourseEnd(data, p)}</span></span>
-                    <svg className="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
-                  </button>
-                </li>
-              ))}
-            </ul>}
-            {explore.length > 0 && (
-              <button type="button" className="btn btn-soft ple-more" aria-expanded={allExplore} onClick={() => setAllExplore(!allExplore)}>
-                {allExplore ? t("show_less") : t("see_all_n", { n: explore.length })}
-              </button>
             )}
           </section>
 

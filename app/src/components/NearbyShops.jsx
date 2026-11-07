@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
+import { ShopPhoto, KakaoMapIcon } from "../screens/Market.jsx";
 
 const CAFE_WORDS = ["카페", "커피", "찻집", "베이커리", "제과"];
 // 카카오 분류의 마지막 칸 → 짧은 이름
@@ -68,11 +69,11 @@ export default function NearbyShops({ spot, variant = "arrival", list: given }) 
             const name = s.name?.ko || loc(s.name); // 가게 이름은 지금 한국어만 있어서 영어 화면에서도 한국어로
             const label = shopLabel(s.category);
             return (
-              <a key={s.id} className="nb-row" href={s.kakao_url} target="_blank" rel="noopener"
+              <a key={s.id} className="nb-row" href={s.kakao_url?.replace(/^http:/, "https:")} target="_blank" rel="noopener"
                 aria-label={`${name}, ${label} · ${t("about_m", { m: d })}, ${t("open_kakao")}`}>
-                <span className={`nb-ic ${kind}`} aria-hidden="true">{kind === "cafe" ? <CupIcon /> : <MealIcon />}</span>
+                <span className="nb-photo" aria-hidden="true"><ShopPhoto shop={s} /></span>
                 <span className="nb-text"><b>{name}</b><small>{label} · {t("about_m", { m: d })}</small></span>
-                <span className="nb-kakao" aria-hidden="true">{t("kakao_map")} ↗</span>
+                <span className="nb-kakao" title={t("open_kakao")} aria-hidden="true"><KakaoMapIcon /></span>
               </a>
             );
           })}
@@ -87,12 +88,3 @@ export default function NearbyShops({ spot, variant = "arrival", list: given }) 
     </section>
   );
 }
-
-// 숟가락·포크 (식사)
-const MealIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M7 3v8a2 2 0 0 0 2 2v8" /><path d="M5 3v5a2 2 0 0 0 2 2M9 3v5a2 2 0 0 1-2 2" /><path d="M17 21V3c-2 1-3 3.5-3 6.5V13h3" /></svg>
-);
-// 컵 (카페)
-const CupIcon = () => (
-  <svg viewBox="0 0 24 24"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z" /><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16" /><path d="M8 3.5c0 1-1 1.5-1 2.5s1 1.5 1 2.5M12 3.5c0 1-1 1.5-1 2.5s1 1.5 1 2.5" /></svg>
-);

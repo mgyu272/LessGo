@@ -174,9 +174,7 @@ export default function CoursePicker() {
             <button key={k} role="tab" aria-selected={km === k} className="cx-tab" onClick={() => setPick({ ...pick, km: k })}>{k}km</button>
           ))}
         </div>
-        {source === "here" && <p className="cx-note">{loc({ ko: "현위치에서 출발해 경사·횡단보도·하천을 따져 찾은 길이에요", en: "From where you are, chosen by slope, crossings and streams" })}</p>}
-
-        {finding && <p className="cx-empty">{loc({ ko: "현위치에서 길을 찾고 있어요…", en: "Finding routes from here…" })}</p>}
+        {finding && <p className="cx-empty cx-finding">{loc({ ko: "현위치에서 러닝에 최적화된 길을 찾고 있어요...", en: "Finding the best running route from here..." })}</p>}
         {!finding && pair.length === 0 && <p className="cx-empty">{t("no_route_data")}</p>}
         {/* 완만한 길 · 언덕 허용: 옆으로 넘기는 카드 */}
         {!finding && pair.length > 0 && <div className="cx-rail" role="radiogroup" aria-label={t("route_type")}>
