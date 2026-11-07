@@ -1747,13 +1747,11 @@ div:has(> .spot-pin) { pointer-events: none; }
 .done-earn svg.thermo { width: 16px; height: 18px; flex: none; fill: none; stroke: #C8602F; stroke-width: 2; }
 .done-earn svg.thermo .bulb { fill: #C8602F; stroke: none; }
 
-/* ---------- 실제 폰 화면: 아이폰 사파리 아래 주소창에 가려지지 않게 ----------
-   사파리 주소창은 화면 위에 떠 있어서, 아래 여백(--safe-bottom)에 그만큼 더해요. 모든 화면의 아래 버튼·탭바가 같이 올라가요 */
-.ios-browser .phone.bare { --safe-bottom: calc(env(safe-area-inset-bottom, 0px) + 72px); }
-.phone.bare .run-panel2 { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding-bottom: calc(14px + var(--safe-bottom)); }
+/* ---------- 실제 폰 화면: 달리기 아래 판이 화면보다 길면 잘리지 않고 스크롤 ---------- */
+.phone.bare .run-panel2 { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 .phone.bare .run-panel2::-webkit-scrollbar { display: none; }
-.ios-browser .phone.bare .run-panel2 { top: 40%; }
 @media (max-height: 820px) {
+  .phone.bare .run-panel2 { top: 40%; }
   .phone.bare .rp-big { font-size: 48px; }
   .phone.bare .rp-stats { margin-top: 10px; }
   .phone.bare .rp-cards { margin-top: 10px; }
