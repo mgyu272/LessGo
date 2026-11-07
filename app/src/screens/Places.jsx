@@ -13,14 +13,6 @@ import { MapView, FitBounds, SpotMarker, ExploreLayer } from "../components/MapV
 import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
 import { PlaceCover, PlaceThumb } from "../components/PlacePhoto.jsx";
 
-const chipIcons = {
-  all: "M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z",
-  exhibit: "M3 4h18v14H3z M6 15l4-5 3 3 3-4 3 6 M9 21l1-3m5 3-1-3",
-  heritage: "M2 9l10-6 10 6H2z M5 10v9m5-9v9m4-9v9m5-9v9 M3 20h18",
-  religion: "M5 16h14l-2-3V9a5 5 0 00-10 0v4z M10 19a2 2 0 004 0",
-  park: "M12 2l6 8h-3l5 7H4l5-7H6z M12 17v5",
-};
-
 function PhotoIcon() {
   return <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>;
 }
@@ -103,7 +95,7 @@ export default function Places() {
         <div className="pl-topics scroll" role="radiogroup" aria-label={t("topic")}>
           {GROUPS.map((k) => (
             <button key={k} role="radio" data-places-theme={k} aria-checked={topic === k} className={`pl-topic ${topic === k ? "on" : ""}`} onClick={() => setTopic(k)}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d={chipIcons[k]} /></svg>{t("grp_" + k)}
+              <GroupIcon group={k} size={16} />{t("grp_" + k)}
             </button>
           ))}
         </div>
