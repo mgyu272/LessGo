@@ -34,12 +34,9 @@ function ExploreCard({ place, data, onOpen }) {
   return (
     <button type="button" className="explore-tile" data-places-theme={groupOf(place)} onClick={() => onOpen(place)}
       aria-label={from && distanceText ? `${name}, ${from} ${distanceText}` : name}>
-      <span className="explore-photo">
-        <PlaceCover place={place} fallback={<PhotoIcon />} />
-        <span className="explore-badge">{badge}</span>
-      </span>
+      <PlaceThumb place={place} fallback={<PhotoIcon />} />
       <span className="explore-caption">
-        <b>{name}</b><small>{tags.filter((tag) => tag !== badge).join(" · ")}</small>
+        <b>{name}</b><small><span className="explore-badge">{badge}</span>{tags.filter((tag) => tag !== badge).map((tag) => ` · ${tag}`).join("")}</small>
         {from && distanceText && <span className="explore-distance">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 22s8-9 8-14a8 8 0 00-16 0c0 5 8 14 8 14z"/><circle cx="12" cy="9" r="2"/></svg>
           {from} <strong>{distanceText}</strong>
