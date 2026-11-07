@@ -1689,27 +1689,23 @@ div:has(> .spot-pin) { pointer-events: none; }
 .rw-coupon-text b { font-size: 16px; font-weight: 800; }
 .rw-coupon-text small { font-size: 13px; font-weight: 600; opacity: .85; }
 
-/* ---------- 장소와 이야기: 코스 목적지 캐러셀 (한 장씩 넘김, 옆 카드 살짝 보임) ---------- */
-.dc { position: relative; margin-inline: -18px; overflow: hidden; outline: none; touch-action: pan-y; }
-.dc:focus-visible { box-shadow: inset 0 0 0 2px var(--places-theme, #2F6512); border-radius: 22px; }
-.dc-track { display: flex; gap: 10px; padding: 5px 0 12px; user-select: none; -webkit-user-select: none;
-  transform: translateX(calc(48px - var(--i) * (100% - 96px + 10px) + var(--dx)));
-  transition: transform .5s cubic-bezier(.22, 1, .36, 1); will-change: transform; }
-.dc-track.dragging { transition: none; cursor: grabbing; }
-.dc-slide { flex: 0 0 calc(100% - 96px); min-width: 0; display: flex; transform: scale(.93); opacity: .55; transform-origin: center;
-  transition: transform .5s cubic-bezier(.22, 1, .36, 1), opacity .5s ease; cursor: pointer; }
-.dc-slide.on { transform: scale(1); opacity: 1; cursor: grab; }
-.dc-slide img { -webkit-user-drag: none; pointer-events: none; }
+/* ---------- 장소와 이야기: 코스 목적지 캐러셀 (손으로 쓸어 한 장씩, 옆 카드 살짝 보임) ---------- */
+.dc { position: relative; margin-inline: -18px; outline: none; }
+.dc:focus-visible .dc-slide.on .pl-card { outline: 2px solid var(--places-theme, #2F6512); outline-offset: 2px; }
+.dc-track { display: flex; gap: 10px; padding: 5px 48px 12px; overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-padding-inline: 48px; scrollbar-width: none; -webkit-overflow-scrolling: touch; cursor: grab; }
+.dc-track::-webkit-scrollbar { display: none; }
+.dc-track.dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; -webkit-user-select: none; }
+.dc-slide { flex: 0 0 100%; min-width: 0; display: flex; scroll-snap-align: center; scroll-snap-stop: always;
+  transform: scale(.93); opacity: .55; transform-origin: center; transition: transform .45s cubic-bezier(.22, 1, .36, 1), opacity .45s ease; }
+.dc-slide.on { transform: scale(1); opacity: 1; }
+.dc-slide img { -webkit-user-drag: none; }
 .dc-slide .pl-card { flex: 1 1 auto; width: 100%; }
 .dc-slide.on .pl-card { box-shadow: 0 12px 26px -14px rgba(30, 60, 20, .45); }
-.dc-nav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: -2px; }
-.dc-arrow { width: 34px; height: 34px; border: 1px solid #DCEBCD; border-radius: 50%; background: #FFFFFF; display: grid; place-items: center; cursor: pointer; padding: 0; }
-.dc-arrow svg { width: 16px; height: 16px; fill: none; stroke: #2F6512; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-.dc-arrow:active { transform: scale(.92); }
-.dc-dots { display: flex; gap: 6px; }
-.dc-dots button { width: 7px; height: 7px; padding: 0; border: 0; border-radius: 4px; background: #C9DBB6; cursor: pointer; transition: width .35s cubic-bezier(.22, 1, .36, 1), background .35s; }
-.dc-dots button.on { width: 22px; background: var(--places-theme, #2F6512); }
-@media (prefers-reduced-motion: reduce) { .dc-track, .dc-slide, .dc-dots button { transition: none; } }
+.dc-dots { display: flex; justify-content: center; gap: 6px; margin-top: 2px; }
+.dc-dots span { width: 7px; height: 7px; border-radius: 4px; background: #C9DBB6; transition: width .35s cubic-bezier(.22, 1, .36, 1), background .35s; }
+.dc-dots span.on { width: 22px; background: var(--places-theme, #2F6512); }
+@media (prefers-reduced-motion: reduce) { .dc-slide, .dc-dots span { transition: none; } }
 
 /* ---------- 장소와 이야기: 둘러볼 곳 3열 타일 ---------- */
 .gx-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 10px; }
@@ -1725,3 +1721,21 @@ div:has(> .spot-pin) { pointer-events: none; }
 .gx-dist { display: flex; align-items: center; gap: 3px; padding: 0 2px; font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; }
 .gx-dist svg { flex: none; color: #2F6512; }
 .gx-dist strong { color: #2F6512; font-weight: 800; }
+
+/* ---------- 테마 칩 (컴포넌트 시트 '칩과 꼬리표'): 기본 = 호버 색, 선택 = 테마 색으로 채움 ---------- */
+[data-theme-chip="all"]      { --tc: #2E7A1F; --tc-soft: #E2EFD6; --tc-on: #2E7A1F; --tc-on-text: #FFFFFF; }
+[data-theme-chip="exhibit"]  { --tc: #3D5C7A; --tc-soft: #E1E9F1; --tc-on: #3D5C7A; --tc-on-text: #FFFFFF; }
+[data-theme-chip="heritage"] { --tc: #9A5233; --tc-soft: #F5E5DC; --tc-on: #9A5233; --tc-on-text: #FFFFFF; }
+[data-theme-chip="religion"] { --tc: #86496A; --tc-soft: #F2E2EA; --tc-on: #86496A; --tc-on-text: #FFFFFF; }
+[data-theme-chip="park"]     { --tc: #4F7330; --tc-soft: #E6EEDB; --tc-on: #9ACD6E; --tc-on-text: #1F3D14; }
+.home-chips .chip[data-theme-chip], .places-screen .pl-topic[data-theme-chip] { background: var(--tc-soft); color: var(--tc); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; transition: background .2s, color .2s; }
+.home-chips .chip[data-theme-chip] .grp-icon, .places-screen .pl-topic[data-theme-chip] .grp-icon { color: var(--tc); }
+.home-chips .chip[data-theme-chip].on, .places-screen .pl-topic[data-theme-chip].on { background: var(--tc-on); color: var(--tc-on-text); box-shadow: 0 6px 14px -8px var(--tc-on); }
+.home-chips .chip[data-theme-chip].on .grp-icon, .places-screen .pl-topic[data-theme-chip].on .grp-icon { color: var(--tc-on-text); }
+
+/* ---------- 장소 상세: 장소 이름 크게, 아래 "~까지 달리기" 버튼 진한 녹색으로 또렷하게 ---------- */
+.pd-id h1, .ex-screen .pd-id h1 { font-size: 32px; }
+.pd-popup .pd-id h1 { font-size: 28px; }
+.pd-cta .btn-cta { background: #1F5A12; color: #FFFFFF; box-shadow: 0 10px 22px -10px rgba(20, 50, 10, .7); }
+.pd-cta .btn-cta:active { background: #17450D; }
+.pd-cta .btn-cta:disabled { background: #C9D6BF; color: #5C6F54; box-shadow: none; }

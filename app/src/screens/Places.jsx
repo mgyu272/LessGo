@@ -44,35 +44,38 @@ function ExploreTile({ place, data, onOpen }) {
   );
 }
 
-// 코스 목적지 카드: 한 장씩 넘기는 캐러셀. 옆 카드가 살짝 보이고, 끌거나 화살표·점으로 넘겨요. 끝에서 넘기면 처음으로 돌아가요
+// 코스 목적지 카드: 손으로 쓸어 한 장씩 넘기는 캐러셀 (터치·트랙패드는 브라우저 스크롤, 마우스는 끌기).
+// 옆 카드가 살짝 보이고, 아래 점으로 지금 몇 번째인지 보여줘요
 function DestCarousel({ items, render, label }) {
   const n = items.length;
   const [idx, setIdx] = useState(0);
-  const [dx, setDx] = useState(0);
+  const track = useRef(null);
   const drag = useRef(null);
   const moved = useRef(false);
-  useEffect(() => { setIdx(0); }, [n]);
-  const go = (k) => { setDx(0); setIdx(((k % n) + n) % n); };
-  const down = (e) => { if (n < 2) return; drag.current = { x: e.clientX, y: e.clientY, id: e.pointerId, lock: null }; moved.current = false; };
+  const step = () => { const el = track.current; if (!el) return 1; const slide = el.querySelector(".dc-slide"); return slide ? slide.offsetWidth + 10 : el.clientWidth; };
+  const go = (k) => { const el = track.current; if (!el) return; const t = Math.max(0, Math.min(n - 1, k)); el.scrollTo({ left: t * step(), behavior: "smooth" }); setIdx(t); };
+  const onScroll = () => { const el = track.current; if (!el || drag.current) return; setIdx(Math.max(0, Math.min(n - 1, Math.round(el.scrollLeft / step())))); };
+  // 마우스로 끌기 (데스크톱 화면에서 쓸어넘기기처럼)
+  const down = (e) => { if (e.pointerType !== "mouse" || n < 2) return; drag.current = { x: e.clientX, left: track.current.scrollLeft, id: e.pointerId }; moved.current = false; };
   const move = (e) => {
     const d = drag.current; if (!d) return;
-    const mx = e.clientX - d.x, my = e.clientY - d.y;
-    if (d.lock == null && Math.hypot(mx, my) > 8) { d.lock = Math.abs(mx) > Math.abs(my) ? "x" : "y"; if (d.lock === "x") e.currentTarget.setPointerCapture?.(d.id); }
-    if (d.lock === "x") { moved.current = true; setDx(mx); }
+    const dx = e.clientX - d.x;
+    if (!moved.current && Math.abs(dx) > 6) { moved.current = true; track.current.classList.add("dragging"); track.current.setPointerCapture?.(d.id); }
+    if (moved.current) track.current.scrollLeft = d.left - dx;
   };
-  const up = () => {
-    const d = drag.current; drag.current = null;
-    if (!d || d.lock !== "x") { setDx(0); return; }
-    if (dx < -50) go(idx + 1); else if (dx > 50) go(idx - 1); else setDx(0);
+  const up = (e) => {
+    const d = drag.current; drag.current = null; if (!d) return;
+    track.current.classList.remove("dragging");
+    if (!moved.current) return;
+    const dx = e.clientX - d.x, base = Math.round(d.left / step());
+    go(dx < -40 ? base + 1 : dx > 40 ? base - 1 : base);
   };
-  // 끌어서 넘긴 직후에는 카드 안 버튼이 눌리지 않게
   const stopClick = (e) => { if (moved.current) { e.stopPropagation(); e.preventDefault(); moved.current = false; } };
   const key = (e) => { if (e.key === "ArrowRight") go(idx + 1); if (e.key === "ArrowLeft") go(idx - 1); };
 
   return (
     <div className="dc" role="region" aria-roledescription="carousel" aria-label={label} tabIndex={0} onKeyDown={key}>
-      <div className={`dc-track ${dx !== 0 ? "dragging" : ""}`}
-        style={{ "--i": idx, "--dx": `${dx}px` }}
+      <div className="dc-track" ref={track} onScroll={onScroll}
         onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} onClickCapture={stopClick}>
         {items.map((it, k) => (
           <div key={k} className={`dc-slide ${k === idx ? "on" : ""}`} aria-hidden={k !== idx}
@@ -82,16 +85,8 @@ function DestCarousel({ items, render, label }) {
         ))}
       </div>
       {n > 1 && (
-        <div className="dc-nav">
-          <button type="button" className="dc-arrow" onClick={() => go(idx - 1)} aria-label={loc({ ko: "이전 카드", en: "Previous" })}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
-          </button>
-          <div className="dc-dots">
-            {items.map((_, k) => <button key={k} type="button" className={k === idx ? "on" : ""} aria-label={`${k + 1} / ${n}`} aria-current={k === idx} onClick={() => go(k)} />)}
-          </div>
-          <button type="button" className="dc-arrow" onClick={() => go(idx + 1)} aria-label={loc({ ko: "다음 카드", en: "Next" })}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
-          </button>
+        <div className="dc-dots" aria-hidden="true">
+          {items.map((_, k) => <span key={k} className={k === idx ? "on" : ""} />)}
         </div>
       )}
     </div>
@@ -124,6 +119,9 @@ export default function Places() {
   // 근처로 걸러 왔으면 둘러볼 곳 목록으로 내려가요
   const exploreRef = useRef(null);
   useEffect(() => { if (near) exploreRef.current?.scrollIntoView({ block: "start" }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // 둘러볼 곳은 처음에 9곳(3×3)만, "더 알아보기"로 나머지
+  const [moreExplore, setMoreExplore] = useState(false);
+  useEffect(() => { setMoreExplore(false); }, [topic, q, near]);
   const openExplore = (p) => { app.setExplore({ place: p, from: "places" }); app.go("explore"); };
 
   const courseCount = (id) => data.courses.filter((c) => c.properties.dest === id).length;
@@ -152,7 +150,7 @@ export default function Places() {
 
         <div className="pl-topics scroll" role="radiogroup" aria-label={t("topic")}>
           {GROUPS.map((k) => (
-            <button key={k} role="radio" data-places-theme={k} aria-checked={topic === k} className={`pl-topic ${topic === k ? "on" : ""}`} onClick={() => setTopic(k)}>
+            <button key={k} role="radio" data-places-theme={k} data-theme-chip={k} aria-checked={topic === k} className={`pl-topic ${topic === k ? "on" : ""}`} onClick={() => setTopic(k)}>
               <GroupIcon group={k} size={16} />{t("grp_" + k)}
             </button>
           ))}
@@ -200,9 +198,16 @@ export default function Places() {
               </button>
             )}
             {!explore.length ? <p>{t("explore_empty")}</p> : (
-              <div className="gx-grid" key={topic + q}>
-                {explore.map((p) => <ExploreTile key={p.id} place={p} data={data} onOpen={openExplore} />)}
-              </div>
+              <>
+                <div className="gx-grid" key={topic + q}>
+                  {(moreExplore ? explore : explore.slice(0, 9)).map((p) => <ExploreTile key={p.id} place={p} data={data} onOpen={openExplore} />)}
+                </div>
+                {explore.length > 9 && (
+                  <button type="button" className="btn btn-soft ple-more" aria-expanded={moreExplore} onClick={() => setMoreExplore(!moreExplore)}>
+                    {moreExplore ? t("show_less") : loc({ ko: "더 알아보기", en: "See more" })}
+                  </button>
+                )}
+              </>
             )}
           </section>
 

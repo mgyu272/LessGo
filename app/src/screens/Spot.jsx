@@ -28,7 +28,7 @@ export function Spot() {
   const [playing, setPlaying] = useState(false);
   const [cur, setCur] = useState(0); // 지금까지 읽은 시간(초)
   const [showScript, setShowScript] = useState(false);
-  const [activeTab, setActiveTab] = useState("lens");
+  const [activeTab, setActiveTab] = useState("history");
   const [confirmFinish, setConfirmFinish] = useState(false);
   const [q, setQ] = useState("");
   const [answer, setAnswer] = useState(null); // {loading} | {text, sources, cached} | {none}
@@ -104,7 +104,7 @@ export function Spot() {
       <BottomSheet sheet={sheet} className="spot-sheet2">
         <div className="scroll-y spot-body">
           <nav className="spot-tabs" aria-label="도착 후 기능" role="tablist">
-            {[["lens","AI 렌즈"],["history","역사 해설"],["shops","주변 가게"],["record","내 기록"]].map(([id,label]) =>
+            {[["history","역사 해설"],["lens","AI 렌즈"],["shops","주변 가게"],["record","내 기록"]].map(([id,label]) =>
               <button key={id} type="button" role="tab" aria-selected={activeTab === id} className={activeTab === id ? "active" : ""} onClick={() => { if (id !== "history") stopAudio(); setActiveTab(id); }}>{label}</button>
             )}
           </nav>

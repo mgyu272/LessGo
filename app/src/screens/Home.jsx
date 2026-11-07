@@ -174,7 +174,7 @@ export default function Home() {
         </div>
         <div className="chips scroll home-chips">
           {GROUPS.map((k) => (
-            <button key={k} className={`chip ${filter === k ? "on" : "glass"}`} aria-pressed={filter === k} onClick={() => pickFilter(k)}>
+            <button key={k} data-theme-chip={k} className={`chip ${filter === k ? "on" : "glass"}`} aria-pressed={filter === k} onClick={() => pickFilter(k)}>
               <GroupIcon group={k} size={16} />
               {t("grp_" + k)}<span className="chip-n">{groupCount[k] || 0}</span>
             </button>
