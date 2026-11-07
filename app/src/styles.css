@@ -11,6 +11,14 @@
    (--ink, --vermilion, --ginkgo 같은 이름은 예전 테마에서 쓰던 이름을 그대로 두고 값만 바꿨어요)
    --safe-top / --safe-bottom : 다이내믹 아일랜드·홈 바에 가리지 않게 두는 여백
    ============================================================ */
+/* 얼리폰트 오이샐러드: 첫 화면 '성북런' 로고에만 써요 */
+@font-face {
+  font-family: "EF Cucumber";
+  src: url("/fonts/EF_cucumbersalad.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 @font-face {
   font-family: "Pretendard";
   src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
@@ -327,7 +335,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .login-brand { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; margin-top: 4px; color: #3E6B30; }
 .login-brand .brand { flex-direction: column; align-items: center; gap: 12px; }
 .login-brand .brand-name { align-items: center; line-height: 1; }
-.login-brand .brand-name b { color: #1F4A14; font-size: 36px; font-weight: 800; letter-spacing: -1.2px; }
+.login-brand .brand-name b { color: #1F4A14; font-size: 36px; font-family: "EF Cucumber", "Pretendard", system-ui, sans-serif; font-weight: 400; letter-spacing: 0; -webkit-text-stroke: 1.6px currentColor; paint-order: stroke fill; }
 .login-brand > span:last-child { margin-top: 6px; font-size: 12px; line-height: 1.2; font-weight: 700; letter-spacing: 3.5px; color: #3E6B30; }
 .login-title { padding: 16px 24px 0; }
 .kicker { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .18em; color: var(--link); }
