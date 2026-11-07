@@ -1583,8 +1583,13 @@ div:has(> .spot-pin) { pointer-events: none; }
 .cx-panel { flex: 0 0 300px; position: relative; display: flex; flex-direction: column; overflow-y: auto; box-shadow: 0 -6px 16px -10px rgba(0,0,0,.25); border-radius: 16px 16px 0 0; margin-top: -12px; background: #FFFFFF; z-index: 6; }
 .cx-grip { flex: none; height: 18px; display: grid; place-items: center; cursor: ns-resize; touch-action: none; }
 .cx-grip span { width: 40px; height: 4px; border-radius: 2px; background: #D0D0D0; }
-.cx-tabs { position: static; flex: none; }
-.cx-tab { height: 38px; font-size: 14px; }
+/* 거리 탭: 도착 화면과 같은 인덱스(폴더 탭) 모양, 가운데 정렬 */
+.cx-tabs { position: static; flex: none; display: flex; justify-content: center; gap: 10px; padding: 4px 20px 0; border-bottom: 2px solid #2F6512; }
+.cx-tab { height: 44px; min-width: 78px; padding: 0 18px; border: 1.5px solid #CFDCBF; border-bottom: none; border-radius: 12px 12px 0 0;
+  background: #EEF4E6; color: #5B6E4C; font: 800 18px var(--sans, sans-serif); letter-spacing: -.01em; white-space: nowrap; transition: background .15s, color .15s; }
+.cx-tab:hover { background: #E3EDD6; }
+.cx-tab[aria-selected="true"] { background: #2F6512; border-color: #2F6512; color: #FFFFFF; font-weight: 900; }
+.cx-tab[aria-selected="true"]::after { content: none; }
 .cx-note { flex: none; padding: 8px 20px; font-size: 12px; }
 .cx-rail { flex: none; padding: 10px 16px 4px; }
 .cx-rail .cx-item { flex-basis: 74%; padding: 10px 12px 12px; border-radius: 14px; }
