@@ -4,7 +4,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Map, CustomOverlayMap, Polygon, Polyline, Circle, MarkerClusterer, useMap } from "react-kakao-maps-sdk";
-import { spotIconSvg, LABEL_OFFSETS, GROUP_SVG } from "./SpotIcons.jsx";
+import { spotIconSvg, LABEL_OFFSETS, GroupIcon } from "./SpotIcons.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { CENTER } from "../state/AppContext.jsx";
 import { exploreColor, areaLabel, groupOf } from "../lib/places.js";
@@ -345,7 +345,7 @@ export function ExploreDot({ place, selected = false, size = "sm", onClick }) {
     <CustomOverlayMap position={{ lat: place.lat, lng: place.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 2 : 1} clickable>
       <div className={`ex-pin ${size} ${selected ? "on" : ""}`} style={{ "--c": exploreColor(place) }}>
         <button type="button" className="ex-dot" aria-label={name} aria-pressed={selected} onClick={onClick}>
-          <svg className="ex-art" viewBox="0 0 32 32" aria-hidden="true" dangerouslySetInnerHTML={{ __html: GROUP_SVG[groupOf(place)] || GROUP_SVG.heritage }} />
+          <GroupIcon group={groupOf(place)} className="grp-icon ex-art" />
         </button>
         {selected && <span className="ex-name" onClick={onClick} aria-hidden="true">{name}</span>}
       </div>

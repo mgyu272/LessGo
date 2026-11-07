@@ -21,20 +21,28 @@ const CATEGORY_SVG = {
   park: `<path d="M1.5 17L7.5 7L11 12.4L13.4 9.4L18.5 17Z" fill="#B9D3C6"/><path d="M6 9.4L7.5 7L9 9.4Z" fill="#FBF9F5"/><path d="M14.5 4.2C12.2 4.2 11.2 6.6 12.2 8.2C10.8 8.8 11 11.4 13 11.6H16C18 11.4 18.2 8.8 16.8 8.2C17.8 6.6 16.8 4.2 14.5 4.2Z" fill="#2F6E5E"/><path d="M14.5 11.6V17" stroke="#7A5134" stroke-width="1.5" stroke-linecap="round"/><path d="M1.5 17H18.5" stroke="#2F6E5E" stroke-width="1.5" stroke-linecap="round"/>`,
 };
 
-// 장소 테마 아이콘 (viewBox 0 0 32 32, 코스 목적지 그림과 같은 느낌)
-// 역사 = 심우장 한옥, 전시 = 이젤 위 액자, 종교 = 받침돌 위 십자가, 공원 = 둥근 나무 한 그루(지도 앱 공원 기호)
-export const GROUP_SVG = {
-  heritage: SPOT_SVG.simujang,
-  exhibit: `<path d="M10.5 23.5L8 30M21.5 23.5L24 30M16 23.5V29" stroke="#7A5134" stroke-width="1.6" stroke-linecap="round"/><rect x="3.5" y="4" width="25" height="19.5" rx="1.6" fill="#C9A24B" stroke="#9C7A2E" stroke-width=".8"/><rect x="6.2" y="6.7" width="19.6" height="14.1" fill="#FBF0DC"/><path d="M6.2 20.8L12.3 12.6L16.4 17.6L19.4 14.4L25.8 20.8Z" fill="#7FA66B"/><path d="M10.4 15.2L12.3 12.6L14.2 14.9Z" fill="#FBF9F5"/><circle cx="21.8" cy="10.4" r="2" fill="#E04A2F"/><path d="M3.5 23.5H28.5" stroke="#9C7A2E" stroke-width=".8"/>`,
-  religion: `<path d="M4 29H28" stroke="#B8AE9C" stroke-width="2" stroke-linecap="round"/><path d="M10 29V26.4C10 25.6 10.6 25 11.4 25H20.6C21.4 25 22 25.6 22 26.4V29Z" fill="#DDD6C8" stroke="#9C9384" stroke-width=".8"/><path d="M13.6 3.2H18.4V8.4H24.6V13.2H18.4V25H13.6V13.2H7.4V8.4H13.6Z" fill="#B87A3D" stroke="#8C5A2B" stroke-width="1.1" stroke-linejoin="round"/><path d="M15 5V23.4M9 10H23" stroke="#D9A066" stroke-width="1" stroke-linecap="round"/><circle cx="16" cy="10.8" r="1.5" fill="#ECB22E" stroke="#8C5A2B" stroke-width=".5"/>`,
-  park: `<path d="M3 29H29" stroke="#7FA66B" stroke-width="2" stroke-linecap="round"/><path d="M7 29C9.5 26.2 12.6 25.2 16 25.2S22.5 26.2 25 29Z" fill="#C5DCB1"/><path d="M16 27V16.5M16 21.2L12.8 18.2M16 19.4L19 16.8" stroke="#7A5134" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 2.8C11.4 2.8 8.4 6 8.6 9.6C6.2 10.6 5.6 14 7.4 16C8.6 17.4 10.4 17.8 12 17.4H20C21.6 17.8 23.4 17.4 24.6 16C26.4 14 25.8 10.6 23.4 9.6C23.6 6 20.6 2.8 16 2.8Z" fill="#4E8A3A" stroke="#3A6E2A" stroke-width=".9" stroke-linejoin="round"/><path d="M11 9.4C11.4 7 13.2 5.6 15.4 5.4" fill="none" stroke="#7FB35E" stroke-width="1.6" stroke-linecap="round"/>`,
+// 장소 테마 아이콘: 선 그림 (viewBox 0 0 24 24, 색은 currentColor). 코스 목적지 그림(SPOT_SVG)과는 따로예요
+// 전시 = 이젤, 역사 = 홍살문, 종교 = 연꽃, 공원 = 소나무, 전체 = 네모 4칸
+const GROUP_LINE = {
+  all: "M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z",
+  exhibit: "M5 4h14v10H5z M8 11l3-3 2.5 2.5L16 8.5 M8.5 14L6 21 M15.5 14L18 21",
+  heritage: "M3 6c3 .7 6 1 9 1s6-.3 9-1 M6 7v14 M18 7v14 M5 11h14 M10 11V4 M14 11V4",
+  religion: "M12 19c-2-1.8-3-4.3-3-7s1-4.6 3-6.5c2 1.9 3 3.8 3 6.5s-1 5.2-3 7z M12 19c-3.5 0-6.5-2-7.5-5.5 2.3 0 4.3.8 5.6 2.4 M12 19c3.5 0 6.5-2 7.5-5.5-2.3 0-4.3.8-5.6 2.4",
+  park: "M12 3l4.5 6H14l4 5.5H6L10 9H7.5z M12 14.5V21",
 };
-export const groupIconSvg = (group) => `<svg viewBox="0 0 32 32" aria-hidden="true">${GROUP_SVG[group] || GROUP_SVG.heritage}</svg>`;
-// 리액트 화면용 테마 아이콘 (칩·목록)
+// 테마 색은 --icon으로 넘겨요. 칩이 골라져 배경이 채워지면 styles.css에서 글자색을 따라가요
+const GROUP_COLOR = { all: "#2E6B1C", exhibit: "#3D5C7A", heritage: "#9A5233", religion: "#86496A", park: "#4F7330" };
+const lineOf = (group) => GROUP_LINE[group] || GROUP_LINE.heritage;
+const colorOf = (group) => GROUP_COLOR[group] || GROUP_COLOR.heritage;
+
+export const groupIconSvg = (group) => `<svg class="grp-icon" style="--icon:${colorOf(group)}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${lineOf(group)}"/></svg>`;
+// 리액트 화면용 테마 아이콘 (칩·목록·지도 핀)
 export function GroupIcon({ group, size = 18, className = "grp-icon" }) {
   return (
-    <svg className={className} width={size} height={size} viewBox="0 0 32 32" aria-hidden="true"
-      dangerouslySetInnerHTML={{ __html: GROUP_SVG[group] || GROUP_SVG.heritage }} />
+    <svg className={className} style={{ "--icon": colorOf(group) }} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d={lineOf(group)} />
+    </svg>
   );
 }
 
