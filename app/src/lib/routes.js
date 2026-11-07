@@ -40,7 +40,12 @@ export function buildCourses(index, collection, spotById) {
   for (const dest of DESTINATIONS) {
     const d = index?.destinations?.[dest];
     for (const km of DISTANCES) {
-      const routes = d?.distances?.[`${km}km`]?.routes || {};
+      const originalRoutes = d?.distances?.[`${km}km`]?.routes || {};
+      // 의릉 5km: 앱에서 완만한 길과 언덕 허용 코스를 서로 교체합니다.
+      // 원본 경로의 geometry, 출발지, directions, 지표를 한 묶음으로 유지합니다.
+      const routes = dest === "uiryeong" && km === 5 && originalRoutes.low && originalRoutes.high
+        ? { ...originalRoutes, low: originalRoutes.high, high: originalRoutes.low }
+        : originalRoutes;
       for (const [rawMode, route] of Object.entries(routes)) {
         const mode = normMode(rawMode);
         const f = features[route.feature_id];
