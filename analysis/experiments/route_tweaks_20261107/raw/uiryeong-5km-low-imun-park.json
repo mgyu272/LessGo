@@ -1,0 +1,1254 @@
+{
+  "route_id": "uiryeong-5km-low-imun-park",
+  "profile": "foot-walking",
+  "stops": [
+    {
+      "name": "이문수변공원 이화교 서편 접근 후보",
+      "longitude": 127.0718293,
+      "latitude": 37.6023066
+    },
+    {
+      "name": "중랑천 북쪽 수변길 후보",
+      "longitude": 127.07309,
+      "latitude": 37.615
+    },
+    {
+      "name": "의릉",
+      "longitude": 127.058716558469,
+      "latitude": 37.6044099656019
+    }
+  ],
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        127.071824,
+        37.602305,
+        20.0
+      ],
+      [
+        127.071766,
+        37.602458,
+        20.0
+      ],
+      [
+        127.071853,
+        37.602466,
+        20.0
+      ],
+      [
+        127.071793,
+        37.602887,
+        16.9
+      ],
+      [
+        127.071561,
+        37.603993,
+        19.7
+      ],
+      [
+        127.071541,
+        37.604259,
+        20.7
+      ],
+      [
+        127.071335,
+        37.605259,
+        19.9
+      ],
+      [
+        127.071255,
+        37.605828,
+        19.1
+      ],
+      [
+        127.071148,
+        37.607024,
+        18.2
+      ],
+      [
+        127.071024,
+        37.60731,
+        18.0
+      ],
+      [
+        127.070978,
+        37.607519,
+        15.0
+      ],
+      [
+        127.070956,
+        37.607913,
+        15.0
+      ],
+      [
+        127.070994,
+        37.607966,
+        15.0
+      ],
+      [
+        127.071092,
+        37.608083,
+        15.0
+      ],
+      [
+        127.071128,
+        37.60803,
+        15.0
+      ],
+      [
+        127.071204,
+        37.608023,
+        15.0
+      ],
+      [
+        127.071961,
+        37.608048,
+        15.0
+      ],
+      [
+        127.072328,
+        37.608071,
+        15.0
+      ],
+      [
+        127.072294,
+        37.608311,
+        16.6
+      ],
+      [
+        127.072197,
+        37.610187,
+        16.5
+      ],
+      [
+        127.072157,
+        37.611379,
+        20.6
+      ],
+      [
+        127.072112,
+        37.611886,
+        20.3
+      ],
+      [
+        127.072099,
+        37.612619,
+        19.1
+      ],
+      [
+        127.072059,
+        37.613049,
+        19.8
+      ],
+      [
+        127.072032,
+        37.613654,
+        20.6
+      ],
+      [
+        127.071969,
+        37.61428,
+        20.1
+      ],
+      [
+        127.071979,
+        37.614499,
+        20.2
+      ],
+      [
+        127.072047,
+        37.614895,
+        20.0
+      ],
+      [
+        127.072083,
+        37.614931,
+        20.0
+      ],
+      [
+        127.072189,
+        37.614948,
+        21.6
+      ],
+      [
+        127.072496,
+        37.615104,
+        21.6
+      ],
+      [
+        127.072704,
+        37.615279,
+        21.0
+      ],
+      [
+        127.073642,
+        37.615934,
+        17.0
+      ],
+      [
+        127.073821,
+        37.615757,
+        20.0
+      ],
+      [
+        127.073584,
+        37.615554,
+        20.0
+      ],
+      [
+        127.073475,
+        37.615424,
+        20.0
+      ],
+      [
+        127.073341,
+        37.615426,
+        20.5
+      ],
+      [
+        127.073293,
+        37.615414,
+        20.6
+      ],
+      [
+        127.073067,
+        37.615255,
+        20.7
+      ],
+      [
+        127.073055,
+        37.615223,
+        21.0
+      ],
+      [
+        127.073135,
+        37.615195,
+        21.0
+      ],
+      [
+        127.073166,
+        37.615164,
+        21.0
+      ],
+      [
+        127.073182,
+        37.615086,
+        21.0
+      ],
+      [
+        127.073166,
+        37.615049,
+        21.0
+      ],
+      [
+        127.073093,
+        37.614997,
+        21.0
+      ],
+      [
+        127.073166,
+        37.615049,
+        21.0
+      ],
+      [
+        127.073182,
+        37.615086,
+        21.0
+      ],
+      [
+        127.073166,
+        37.615164,
+        21.0
+      ],
+      [
+        127.073135,
+        37.615195,
+        21.0
+      ],
+      [
+        127.073055,
+        37.615223,
+        21.0
+      ],
+      [
+        127.073067,
+        37.615255,
+        20.7
+      ],
+      [
+        127.073293,
+        37.615414,
+        20.6
+      ],
+      [
+        127.073341,
+        37.615426,
+        20.5
+      ],
+      [
+        127.073475,
+        37.615424,
+        20.0
+      ],
+      [
+        127.073584,
+        37.615554,
+        20.0
+      ],
+      [
+        127.073821,
+        37.615757,
+        20.0
+      ],
+      [
+        127.073642,
+        37.615934,
+        17.0
+      ],
+      [
+        127.072704,
+        37.615279,
+        21.0
+      ],
+      [
+        127.07271,
+        37.615304,
+        21.0
+      ],
+      [
+        127.072735,
+        37.615418,
+        21.0
+      ],
+      [
+        127.072745,
+        37.615465,
+        21.0
+      ],
+      [
+        127.072789,
+        37.615707,
+        21.0
+      ],
+      [
+        127.072809,
+        37.615837,
+        15.0
+      ],
+      [
+        127.072786,
+        37.616142,
+        15.0
+      ],
+      [
+        127.072676,
+        37.616201,
+        12.5
+      ],
+      [
+        127.072497,
+        37.616185,
+        11.6
+      ],
+      [
+        127.072405,
+        37.616218,
+        10.0
+      ],
+      [
+        127.072328,
+        37.616376,
+        10.0
+      ],
+      [
+        127.072273,
+        37.616355,
+        10.0
+      ],
+      [
+        127.070386,
+        37.615803,
+        20.0
+      ],
+      [
+        127.070102,
+        37.615729,
+        20.0
+      ],
+      [
+        127.069996,
+        37.615701,
+        20.0
+      ],
+      [
+        127.069921,
+        37.615686,
+        20.0
+      ],
+      [
+        127.068851,
+        37.615466,
+        21.1
+      ],
+      [
+        127.068436,
+        37.615283,
+        21.3
+      ],
+      [
+        127.066675,
+        37.614797,
+        23.0
+      ],
+      [
+        127.066654,
+        37.614774,
+        23.0
+      ],
+      [
+        127.066562,
+        37.614673,
+        23.0
+      ],
+      [
+        127.066481,
+        37.614584,
+        23.0
+      ],
+      [
+        127.066204,
+        37.614443,
+        22.5
+      ],
+      [
+        127.06521,
+        37.614196,
+        22.0
+      ],
+      [
+        127.065081,
+        37.614125,
+        23.0
+      ],
+      [
+        127.065212,
+        37.613826,
+        23.0
+      ],
+      [
+        127.065182,
+        37.613687,
+        23.0
+      ],
+      [
+        127.065046,
+        37.613224,
+        23.0
+      ],
+      [
+        127.064828,
+        37.612855,
+        23.0
+      ],
+      [
+        127.064625,
+        37.612562,
+        23.0
+      ],
+      [
+        127.064373,
+        37.612247,
+        25.0
+      ],
+      [
+        127.064606,
+        37.611665,
+        24.0
+      ],
+      [
+        127.064663,
+        37.611494,
+        24.0
+      ],
+      [
+        127.064678,
+        37.61134,
+        24.0
+      ],
+      [
+        127.064762,
+        37.610787,
+        24.0
+      ],
+      [
+        127.064794,
+        37.610609,
+        24.0
+      ],
+      [
+        127.064834,
+        37.610389,
+        24.0
+      ],
+      [
+        127.064875,
+        37.610183,
+        24.0
+      ],
+      [
+        127.064786,
+        37.610124,
+        24.0
+      ],
+      [
+        127.064577,
+        37.609956,
+        22.0
+      ],
+      [
+        127.064309,
+        37.609792,
+        22.0
+      ],
+      [
+        127.064194,
+        37.609717,
+        22.0
+      ],
+      [
+        127.064054,
+        37.609632,
+        23.0
+      ],
+      [
+        127.06394,
+        37.60958,
+        23.0
+      ],
+      [
+        127.063827,
+        37.609528,
+        23.0
+      ],
+      [
+        127.06352,
+        37.609395,
+        23.0
+      ],
+      [
+        127.063302,
+        37.609334,
+        23.0
+      ],
+      [
+        127.063228,
+        37.609298,
+        23.0
+      ],
+      [
+        127.063062,
+        37.609187,
+        23.0
+      ],
+      [
+        127.062823,
+        37.609026,
+        22.0
+      ],
+      [
+        127.062693,
+        37.60892,
+        22.0
+      ],
+      [
+        127.062673,
+        37.608854,
+        22.0
+      ],
+      [
+        127.062581,
+        37.608838,
+        22.0
+      ],
+      [
+        127.062499,
+        37.608627,
+        22.0
+      ],
+      [
+        127.06268,
+        37.607845,
+        22.0
+      ],
+      [
+        127.062698,
+        37.607747,
+        22.0
+      ],
+      [
+        127.062772,
+        37.607327,
+        25.0
+      ],
+      [
+        127.062817,
+        37.607074,
+        25.0
+      ],
+      [
+        127.062918,
+        37.606946,
+        25.0
+      ],
+      [
+        127.062718,
+        37.606928,
+        25.0
+      ],
+      [
+        127.062766,
+        37.606443,
+        24.4
+      ],
+      [
+        127.062706,
+        37.606383,
+        24.0
+      ],
+      [
+        127.062803,
+        37.606267,
+        24.0
+      ],
+      [
+        127.062739,
+        37.606214,
+        24.0
+      ],
+      [
+        127.062771,
+        37.60609,
+        24.0
+      ],
+      [
+        127.062789,
+        37.605819,
+        26.0
+      ],
+      [
+        127.062543,
+        37.605629,
+        25.7
+      ],
+      [
+        127.06192,
+        37.60573,
+        25.0
+      ],
+      [
+        127.061962,
+        37.605547,
+        25.0
+      ],
+      [
+        127.061847,
+        37.60553,
+        23.7
+      ],
+      [
+        127.060852,
+        37.605247,
+        21.0
+      ],
+      [
+        127.060971,
+        37.604996,
+        21.0
+      ],
+      [
+        127.061006,
+        37.604966,
+        21.0
+      ],
+      [
+        127.060517,
+        37.604831,
+        23.3
+      ],
+      [
+        127.060146,
+        37.604698,
+        24.0
+      ],
+      [
+        127.060197,
+        37.604597,
+        24.0
+      ],
+      [
+        127.059416,
+        37.60424,
+        26.0
+      ],
+      [
+        127.058864,
+        37.604497,
+        24.0
+      ],
+      [
+        127.058755,
+        37.604437,
+        24.0
+      ],
+      [
+        127.058717,
+        37.604409,
+        24.6
+      ]
+    ]
+  },
+  "summary": {
+    "distance_m": 4551.8,
+    "distance_km": 4.5518,
+    "duration_seconds": 3277.3,
+    "duration_minutes": 54.62166666666667,
+    "ascent_m": 48.3,
+    "descent_m": 43.6,
+    "elevation_source": "ors_response",
+    "elevation_is_estimate": false,
+    "elevation_noise_filter_m": null,
+    "ascent_field": "properties.ascent",
+    "descent_field": "properties.descent"
+  },
+  "steps": [
+    {
+      "instruction": "Head north on 이화교 서편 출입로",
+      "distance_m": 17.8,
+      "duration_seconds": 12.8,
+      "type": 11,
+      "way_points": [
+        0,
+        1
+      ]
+    },
+    {
+      "instruction": "Turn right onto 이화교 서편 출입로",
+      "distance_m": 7.7,
+      "duration_seconds": 5.5,
+      "type": 1,
+      "way_points": [
+        1,
+        2
+      ]
+    },
+    {
+      "instruction": "Turn left onto 중랑천서자전거길",
+      "distance_m": 612.1,
+      "duration_seconds": 440.7,
+      "type": 0,
+      "way_points": [
+        2,
+        11
+      ]
+    },
+    {
+      "instruction": "Keep right",
+      "distance_m": 6.8,
+      "duration_seconds": 4.9,
+      "type": 13,
+      "way_points": [
+        11,
+        12
+      ]
+    },
+    {
+      "instruction": "Keep right",
+      "distance_m": 15.7,
+      "duration_seconds": 11.3,
+      "type": 13,
+      "way_points": [
+        12,
+        13
+      ]
+    },
+    {
+      "instruction": "Turn sharp right",
+      "distance_m": 6.7,
+      "duration_seconds": 4.8,
+      "type": 3,
+      "way_points": [
+        13,
+        14
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 105.9,
+      "duration_seconds": 76.3,
+      "type": 0,
+      "way_points": [
+        14,
+        17
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 760.1,
+      "duration_seconds": 547.3,
+      "type": 0,
+      "way_points": [
+        17,
+        27
+      ]
+    },
+    {
+      "instruction": "Keep right",
+      "distance_m": 5.1,
+      "duration_seconds": 3.7,
+      "type": 13,
+      "way_points": [
+        27,
+        28
+      ]
+    },
+    {
+      "instruction": "Keep right onto 묵동천 자전거길",
+      "distance_m": 68.4,
+      "duration_seconds": 49.2,
+      "type": 13,
+      "way_points": [
+        28,
+        31
+      ]
+    },
+    {
+      "instruction": "Continue straight onto 묵동천 자전거길",
+      "distance_m": 110.1,
+      "duration_seconds": 79.3,
+      "type": 6,
+      "way_points": [
+        31,
+        32
+      ]
+    },
+    {
+      "instruction": "Turn right",
+      "distance_m": 25.2,
+      "duration_seconds": 18.2,
+      "type": 1,
+      "way_points": [
+        32,
+        33
+      ]
+    },
+    {
+      "instruction": "Turn right",
+      "distance_m": 48.1,
+      "duration_seconds": 34.7,
+      "type": 1,
+      "way_points": [
+        33,
+        35
+      ]
+    },
+    {
+      "instruction": "Turn right",
+      "distance_m": 46.5,
+      "duration_seconds": 33.5,
+      "type": 1,
+      "way_points": [
+        35,
+        39
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 33.9,
+      "duration_seconds": 24.4,
+      "type": 0,
+      "way_points": [
+        39,
+        44
+      ]
+    },
+    {
+      "instruction": "Arrive at your destination, on the left",
+      "distance_m": 0.0,
+      "duration_seconds": 0.0,
+      "type": 10,
+      "way_points": [
+        44,
+        44
+      ]
+    },
+    {
+      "instruction": "Head northeast",
+      "distance_m": 33.9,
+      "duration_seconds": 24.4,
+      "type": 11,
+      "way_points": [
+        44,
+        49
+      ]
+    },
+    {
+      "instruction": "Turn right",
+      "distance_m": 46.5,
+      "duration_seconds": 33.5,
+      "type": 1,
+      "way_points": [
+        49,
+        53
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 48.1,
+      "duration_seconds": 34.7,
+      "type": 0,
+      "way_points": [
+        53,
+        55
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 25.2,
+      "duration_seconds": 18.2,
+      "type": 0,
+      "way_points": [
+        55,
+        56
+      ]
+    },
+    {
+      "instruction": "Turn left onto 묵동천 자전거길",
+      "distance_m": 110.1,
+      "duration_seconds": 79.3,
+      "type": 0,
+      "way_points": [
+        56,
+        57
+      ]
+    },
+    {
+      "instruction": "Turn sharp right",
+      "distance_m": 21.0,
+      "duration_seconds": 15.1,
+      "type": 3,
+      "way_points": [
+        57,
+        60
+      ]
+    },
+    {
+      "instruction": "Keep right",
+      "distance_m": 131.0,
+      "duration_seconds": 94.3,
+      "type": 13,
+      "way_points": [
+        60,
+        67
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 225.5,
+      "duration_seconds": 162.3,
+      "type": 0,
+      "way_points": [
+        67,
+        72
+      ]
+    },
+    {
+      "instruction": "Keep left",
+      "distance_m": 303.5,
+      "duration_seconds": 218.5,
+      "type": 12,
+      "way_points": [
+        72,
+        75
+      ]
+    },
+    {
+      "instruction": "Turn slight left",
+      "distance_m": 163.9,
+      "duration_seconds": 118.0,
+      "type": 4,
+      "way_points": [
+        75,
+        81
+      ]
+    },
+    {
+      "instruction": "Turn left onto 한천로66길",
+      "distance_m": 35.1,
+      "duration_seconds": 25.3,
+      "type": 0,
+      "way_points": [
+        81,
+        82
+      ]
+    },
+    {
+      "instruction": "Keep right onto 한천로78길",
+      "distance_m": 151.1,
+      "duration_seconds": 108.8,
+      "type": 13,
+      "way_points": [
+        82,
+        86
+      ]
+    },
+    {
+      "instruction": "Continue straight onto 한천로78길",
+      "distance_m": 41.4,
+      "duration_seconds": 29.8,
+      "type": 6,
+      "way_points": [
+        86,
+        87
+      ]
+    },
+    {
+      "instruction": "Turn left onto 한천로76길",
+      "distance_m": 104.7,
+      "duration_seconds": 75.4,
+      "type": 0,
+      "way_points": [
+        87,
+        90
+      ]
+    },
+    {
+      "instruction": "Continue straight onto 한천로76가길",
+      "distance_m": 129.9,
+      "duration_seconds": 93.5,
+      "type": 6,
+      "way_points": [
+        90,
+        94
+      ]
+    },
+    {
+      "instruction": "Turn right onto 한천로72길",
+      "distance_m": 247.6,
+      "duration_seconds": 178.2,
+      "type": 1,
+      "way_points": [
+        94,
+        108
+      ]
+    },
+    {
+      "instruction": "Turn right onto 돌곶이로14길",
+      "distance_m": 8.4,
+      "duration_seconds": 6.0,
+      "type": 1,
+      "way_points": [
+        108,
+        109
+      ]
+    },
+    {
+      "instruction": "Turn left onto 돌곶이로8다길",
+      "distance_m": 24.5,
+      "duration_seconds": 17.7,
+      "type": 0,
+      "way_points": [
+        109,
+        110
+      ]
+    },
+    {
+      "instruction": "Keep left onto 돌곶이로8다길",
+      "distance_m": 191.7,
+      "duration_seconds": 138.0,
+      "type": 12,
+      "way_points": [
+        110,
+        115
+      ]
+    },
+    {
+      "instruction": "Turn sharp right onto 돌곶이로8길",
+      "distance_m": 17.7,
+      "duration_seconds": 12.8,
+      "type": 3,
+      "way_points": [
+        115,
+        116
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 62.6,
+      "duration_seconds": 45.0,
+      "type": 0,
+      "way_points": [
+        116,
+        118
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 15.5,
+      "duration_seconds": 11.2,
+      "type": 0,
+      "way_points": [
+        118,
+        119
+      ]
+    },
+    {
+      "instruction": "Turn right",
+      "distance_m": 52.3,
+      "duration_seconds": 37.6,
+      "type": 1,
+      "way_points": [
+        119,
+        122
+      ]
+    },
+    {
+      "instruction": "Turn right",
+      "distance_m": 86.3,
+      "duration_seconds": 62.1,
+      "type": 1,
+      "way_points": [
+        122,
+        124
+      ]
+    },
+    {
+      "instruction": "Turn sharp left onto 돌곶이로",
+      "distance_m": 20.7,
+      "duration_seconds": 14.9,
+      "type": 2,
+      "way_points": [
+        124,
+        125
+      ]
+    },
+    {
+      "instruction": "Turn right onto 돌곶이로5길",
+      "distance_m": 103.5,
+      "duration_seconds": 74.5,
+      "type": 1,
+      "way_points": [
+        125,
+        127
+      ]
+    },
+    {
+      "instruction": "Turn left onto 돌곶이로9나길",
+      "distance_m": 34.5,
+      "duration_seconds": 24.8,
+      "type": 0,
+      "way_points": [
+        127,
+        129
+      ]
+    },
+    {
+      "instruction": "Turn sharp right onto 돌곶이로3길",
+      "distance_m": 81.5,
+      "duration_seconds": 58.7,
+      "type": 3,
+      "way_points": [
+        129,
+        131
+      ]
+    },
+    {
+      "instruction": "Turn left onto 화랑로32길",
+      "distance_m": 12.0,
+      "duration_seconds": 8.7,
+      "type": 0,
+      "way_points": [
+        131,
+        132
+      ]
+    },
+    {
+      "instruction": "Turn right onto 화랑로32길",
+      "distance_m": 79.4,
+      "duration_seconds": 57.2,
+      "type": 1,
+      "way_points": [
+        132,
+        133
+      ]
+    },
+    {
+      "instruction": "Turn right onto 화랑로32길",
+      "distance_m": 56.5,
+      "duration_seconds": 40.7,
+      "type": 1,
+      "way_points": [
+        133,
+        134
+      ]
+    },
+    {
+      "instruction": "Turn left",
+      "distance_m": 11.6,
+      "duration_seconds": 8.4,
+      "type": 0,
+      "way_points": [
+        134,
+        135
+      ]
+    },
+    {
+      "instruction": "Keep left",
+      "distance_m": 4.6,
+      "duration_seconds": 3.3,
+      "type": 12,
+      "way_points": [
+        135,
+        136
+      ]
+    },
+    {
+      "instruction": "Arrive at your destination, straight ahead",
+      "distance_m": 0.0,
+      "duration_seconds": 0.0,
+      "type": 10,
+      "way_points": [
+        136,
+        136
+      ]
+    }
+  ],
+  "steepness": {
+    "summary": [
+      {
+        "value": 0.0,
+        "distance": 4551.8,
+        "amount": 100.0
+      }
+    ],
+    "values": [
+      [
+        0,
+        136,
+        0
+      ]
+    ]
+  },
+  "elevation_available": true,
+  "data_notes": [
+    "장소 좌표는 사용자 제공 또는 지오코더 결과이며 실제 출입구와 일치하는지 검증되지 않았습니다.",
+    "장소 내부 보행 가능 여부는 확인하지 않았으며 목적지 좌표까지의 경로입니다.",
+    "고도와 경사도는 ORS 응답에 제공된 경우에만 기록했습니다.",
+    "상승·하강고도는 ORS 응답 필드에서 추출했습니다."
+  ],
+  "ors": {
+    "source": "OpenRouteService Directions API",
+    "profile": "foot-walking"
+  },
+  "ors_request_attempts": 1
+}
