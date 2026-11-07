@@ -2,6 +2,7 @@
 // 검색 · 목록/지도 전환 · 주제 칩 · 장소 카드("이야기 · 방문 정보" / "여기로 달리기")
 // "여기로 달리기"를 누르면 코스 고르기에 그 목적지가 미리 골라져요.
 // 코스 목적지 카드 아래에 "둘러볼 곳"(explore.json) 목록: 코스 도착지에서 가까운 순, 6곳 + 모두 보기. 누르면 둘러볼 곳 상세.
+// 아래로 스크롤하면 큰 목적지 캐러셀이 작아지며 사라지고, 맨 위에 목적지 3열 미니 줄이 내려와 붙어요 (스크롤 따라 움직임).
 // 장소 상세의 "근처 N곳 모두 보기"로 오면(app.placesNear) 그 목적지가 가장 가까운 곳만 걸러서 "{장소} 근처 · 해제" 칩을 보여줘요.
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -93,6 +94,48 @@ function DestCarousel({ items, render, label }) {
   );
 }
 
+// 스크롤로 접힌 뒤 맨 위에 붙는 목적지 3열 미니 줄 (둘러볼 곳 타일처럼 사진 + 이름)
+function DestMini({ items, courseCount, onOpen, label }) {
+  return (
+    <nav className="pl-mini" aria-label={label}>
+      <div className="pl-mini-grid">
+        {items.map((s) => (
+          <button key={s.id} type="button" className="pl-mini-tile" data-places-theme={groupOf(s)} onClick={() => onOpen(s)} aria-label={loc(s.name)}>
+            <span className="pl-mini-photo">
+              <PlaceThumb place={s} fallback={<GroupIcon group={groupOf(s)} size={22} />} />
+              <span className="pl-mini-count">{t("courses_n", { n: courseCount(s.id) })}</span>
+            </span>
+            <b>{loc(s.name)}</b>
+          </button>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+// 목적지 캐러셀이 화면 위로 지나간 정도(0~1)를 --collapse로 넣어요. React 다시 그리기 없이 CSS가 움직여요
+function useCollapse(scrollRef, targetRef, deps) {
+  useEffect(() => {
+    const sc = scrollRef.current, el = targetRef.current;
+    if (!sc || !el) return;
+    const screen = sc.parentElement;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const start = el.offsetTop - 70;               // 캐러셀 윗부분이 맨 위 미니 줄 근처에 닿을 때부터
+      const span = Math.max(80, el.offsetHeight * 0.75);
+      const p = Math.max(0, Math.min(1, (sc.scrollTop - start) / span));
+      screen.style.setProperty("--collapse", p.toFixed(3));
+      screen.classList.toggle("pl-collapsed", p > 0.6);
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    sc.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => { sc.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); cancelAnimationFrame(raf); };
+  }, deps); // eslint-disable-line react-hooks/exhaustive-deps
+}
+
 export default function Places() {
   const app = useApp();
   const { data } = app;
@@ -128,10 +171,16 @@ export default function Places() {
   const openPlace = (s) => { app.setSpot(s); app.setPlaceFrom("places"); app.go("place"); };
   const runHere = (s) => { app.setPick({ ...app.pick, dest: s.id }); app.go("courses"); };
 
+  // 스크롤하면 목적지 캐러셀 → 맨 위 3열 미니 줄
+  const scrollRef = useRef(null);
+  const destRef = useRef(null);
+  useCollapse(scrollRef, destRef, [view, list.length]);
+
   return (
     <section className="screen places-screen">
       <div className="hanji-layer" aria-hidden="true" />
-      <div className="places-scroll">
+      {list.length > 0 && <DestMini items={list} courseCount={courseCount} onOpen={openPlace} label={t("dest_title")} />}
+      <div className="places-scroll" ref={scrollRef}>
         <div className="pl-top">
           <button className="round-btn glass" onClick={() => app.go("home")} aria-label={t("back_home")}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
@@ -169,6 +218,7 @@ export default function Places() {
         {list.length ? <section className="pl-destinations" data-places-theme={topic}>
           <h2>{t("dest_title")} <span>{list.length}</span></h2>
           <p>{t("dest_description")}</p>
+          <div className="pl-dest-shrink" ref={destRef}>
           <DestCarousel key={topic + q} items={list} label={t("dest_title")} render={(s) => (
               <article className="pl-card">
                 <div className="pl-card-photo">
@@ -187,6 +237,7 @@ export default function Places() {
                 </div>
               </article>
             )} />
+          </div>
         </section> : <p className="pl-count">{t("dest_places_none")}</p>}
 
           <section className="pl-explore" data-places-theme={topic} ref={exploreRef} aria-label={t("explore_n", { n: explore.length })}>

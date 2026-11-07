@@ -1773,3 +1773,27 @@ div:has(> .spot-pin) { pointer-events: none; }
   .phone.bare .rp-card { padding: 9px 12px; }
   .phone.bare .rp-num { font-size: 22px; }
 }
+
+/* ---------- 장소와 이야기: 스크롤하면 목적지 캐러셀 → 맨 위 3열 미니 줄 ----------
+   --collapse(0~1)는 Places.jsx의 useCollapse가 스크롤에 맞춰 넣어요 */
+.places-screen { --collapse: 0; }
+.pl-dest-shrink { transform-origin: 50% 0; transform: scale(calc(1 - var(--collapse) * .14)) translateY(calc(var(--collapse) * 24px)); opacity: calc(1 - var(--collapse) * 1.1); will-change: transform, opacity; }
+.pl-mini { position: absolute; top: 0; left: 0; right: 0; z-index: 5; padding: calc(8px + var(--safe-top)) 18px 10px;
+  background: color-mix(in srgb, var(--bg-soft) 88%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 8px 18px -14px rgba(30, 60, 20, .45); border-bottom: 1px solid #E2ECD9;
+  opacity: var(--collapse); transform: translateY(calc((1 - var(--collapse)) * -100%)); pointer-events: none; will-change: transform, opacity; }
+.pl-collapsed .pl-mini { pointer-events: auto; }
+.pl-mini-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.pl-mini-tile { min-width: 0; display: flex; flex-direction: column; gap: 4px; padding: 0; border: 0; background: none; text-align: left; color: var(--text); font: inherit; cursor: pointer;
+  /* 왼쪽부터 차례로 쭈루룩 올라와요 */
+  transform: translateY(calc((1 - var(--collapse)) * 18px)); }
+.pl-mini-tile:nth-child(2) { transform: translateY(calc((1 - var(--collapse)) * 30px)); }
+.pl-mini-tile:nth-child(3) { transform: translateY(calc((1 - var(--collapse)) * 42px)); }
+.pl-mini-tile:active .pl-mini-photo { transform: scale(.97); }
+.pl-mini-tile:focus-visible { outline: 2px solid var(--places-theme); outline-offset: 3px; border-radius: 12px; }
+.pl-mini-photo { position: relative; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; background: #EEF3E8; border: 1px solid #E2ECD9; display: grid; place-items: center; transition: transform .15s; }
+.pl-mini-photo .mk-photo { width: 100%; height: 100%; border-radius: 0; box-shadow: none; }
+.pl-mini-photo .mk-photo-empty { color: var(--places-theme); background: color-mix(in srgb, var(--places-theme) 10%, #FFFFFF); }
+.pl-mini-count { position: absolute; right: 5px; bottom: 5px; padding: 1px 6px; border-radius: 999px; background: rgba(255, 255, 255, .94); color: #2E6B1C; font-size: 10px; font-weight: 800; }
+.pl-mini-tile b { font-size: 13px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; }
+@media (prefers-reduced-motion: reduce) { .pl-dest-shrink { transform: none; } .pl-mini, .pl-mini-tile { transform: none !important; } }
