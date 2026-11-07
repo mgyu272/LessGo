@@ -1359,10 +1359,10 @@ div:has(> .spot-pin) { pointer-events: none; }
 .pl-explore { display: flex; flex-direction: column; gap: 8px; flex: none; margin-top: 6px; }
 .pl-explore h2 { margin: 0; font-size: 18px; font-weight: 800; }
 .places-screen [data-places-theme="all"] { --places-theme: #2E6B1C; }
-.places-screen [data-places-theme="exhibit"] { --places-theme: #2F6DB5; }
-.places-screen [data-places-theme="heritage"] { --places-theme: #B4532A; }
-.places-screen [data-places-theme="religion"] { --places-theme: #7B4FA6; }
-.places-screen [data-places-theme="park"] { --places-theme: #2E7A1F; }
+.places-screen [data-places-theme="exhibit"] { --places-theme: #3478C2; }
+.places-screen [data-places-theme="heritage"] { --places-theme: #C8602F; }
+.places-screen [data-places-theme="religion"] { --places-theme: #A54C88; }
+.places-screen [data-places-theme="park"] { --places-theme: #4E9A2F; }
 .places-screen .pl-topics { display: flex; flex-wrap: nowrap; overflow-x: auto; }
 .places-screen .pl-topic { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; background: white; }
 .places-screen .pl-topic svg, .pl-explore h2 span { color: var(--places-theme); }
@@ -1724,10 +1724,10 @@ div:has(> .spot-pin) { pointer-events: none; }
 
 /* ---------- 테마 칩 (컴포넌트 시트 '칩과 꼬리표'): 기본 = 호버 색, 선택 = 테마 색으로 채움 ---------- */
 [data-theme-chip="all"]      { --tc: #2E7A1F; --tc-soft: #E2EFD6; --tc-on: #2E7A1F; --tc-on-text: #FFFFFF; }
-[data-theme-chip="exhibit"]  { --tc: #3D5C7A; --tc-soft: #E1E9F1; --tc-on: #3D5C7A; --tc-on-text: #FFFFFF; }
-[data-theme-chip="heritage"] { --tc: #9A5233; --tc-soft: #F5E5DC; --tc-on: #9A5233; --tc-on-text: #FFFFFF; }
-[data-theme-chip="religion"] { --tc: #86496A; --tc-soft: #F2E2EA; --tc-on: #86496A; --tc-on-text: #FFFFFF; }
-[data-theme-chip="park"]     { --tc: #4F7330; --tc-soft: #E6EEDB; --tc-on: #9ACD6E; --tc-on-text: #1F3D14; }
+[data-theme-chip="exhibit"]  { --tc: #3478C2; --tc-soft: #E2EDFA; --tc-on: #3478C2; --tc-on-text: #FFFFFF; }
+[data-theme-chip="heritage"] { --tc: #C8602F; --tc-soft: #FCE8DD; --tc-on: #C8602F; --tc-on-text: #FFFFFF; }
+[data-theme-chip="religion"] { --tc: #A54C88; --tc-soft: #F7E3F0; --tc-on: #A54C88; --tc-on-text: #FFFFFF; }
+[data-theme-chip="park"]     { --tc: #4E9A2F; --tc-soft: #E4F3D6; --tc-on: #A6D96A; --tc-on-text: #1F3D14; }
 .home-chips .chip[data-theme-chip], .places-screen .pl-topic[data-theme-chip] { background: var(--tc-soft); color: var(--tc); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; transition: background .2s, color .2s; }
 .home-chips .chip[data-theme-chip] .grp-icon, .places-screen .pl-topic[data-theme-chip] .grp-icon { color: var(--tc); }
 .home-chips .chip[data-theme-chip].on, .places-screen .pl-topic[data-theme-chip].on { background: var(--tc-on); color: var(--tc-on-text); box-shadow: 0 6px 14px -8px var(--tc-on); }
