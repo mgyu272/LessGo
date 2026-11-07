@@ -1537,17 +1537,15 @@ div:has(> .spot-pin) { pointer-events: none; }
 .cx-mode.on { background: #FFFFFF; color: #2F6512; }
 .cx-close { margin-left: auto; width: 40px; height: 40px; border: 0; background: none; color: #FFFFFF; cursor: pointer; }
 .cx-close svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
-.cx-box { border-radius: 12px; background: rgba(255,255,255,.16); overflow: hidden; }
+.cx-box { border-radius: 12px; background: #E9F6D4; color: #1A1A1A; overflow: hidden; }
 .cx-row { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 12px; }
-.cx-row + .cx-row { border-top: 1px solid rgba(255,255,255,.22); }
-.cx-k { flex: none; width: 30px; font-size: 12px; color: rgba(255,255,255,.75); }
-.cx-v { flex: 1; min-width: 0; font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cx-m { flex: none; font-size: 11px; color: rgba(255,255,255,.8); }
-.cx-link { flex: none; border: 0; background: none; color: #FFFFFF; font: 600 12.5px var(--sans, sans-serif); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 6px 0; }
+.cx-row + .cx-row { border-top: 1px solid #CFE3B4; }
+.cx-k { flex: none; width: 30px; font-size: 12px; color: #555; }
+.cx-v { color: #1A1A1A; flex: 1; min-width: 0; font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cx-m { flex: none; font-size: 11px; color: #555; }
+.cx-link { flex: none; border: 0; background: none; color: #1A1A1A; font: 600 12.5px var(--sans, sans-serif); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 6px 0; }
 .cx-map { position: relative; flex: 0 0 34%; min-height: 200px; }
 .cx-mapview { position: absolute; inset: 0; }
-.cx-fav { position: absolute; right: 10px; bottom: 10px; z-index: 5; width: 36px; height: 36px; border: 0; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,.2); display: grid; place-items: center; cursor: pointer; }
-.cx-fav svg { width: 18px; height: 18px; stroke: #E04A2F; stroke-width: 2; stroke-linejoin: round; }
 .cx-panel { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: calc(16px + var(--safe-bottom)); border-top: 1px solid #ECECEC; }
 .cx-tabs { display: flex; gap: 22px; padding: 0 20px; border-bottom: 1px solid #ECECEC; position: sticky; top: 0; background: #FFFFFF; z-index: 1; }
 .cx-tab { position: relative; height: 46px; border: 0; background: none; font: 600 15px var(--sans, sans-serif); color: #777; cursor: pointer; }

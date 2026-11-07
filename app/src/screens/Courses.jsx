@@ -4,7 +4,7 @@
 //   도착 줄을 누르면 목적지 고르기 시트. 시트 안에서 달리기/걷기 → 거리 탭, 경사는 완만한 길/언덕 허용 카드로 골라요
 // - 바텀시트: 가로로 넘기는 경로 카드(완만한 길 low / 언덕 허용 high). 고른 카드의 경로가 지도에서 굵게
 // - 시트를 끌어올리면 비교표(거리 · 예상 시간 · 오르막 · 급경사)와 지나가는 곳
-// - 아래 고정: 저장(하트) + "A 완만한 길 · 출발지로 이동" → 출발지로 이동 화면(ToCourseStart). 고른 move는 pick.move로 넘어가요
+// - 아래 고정: "A 완만한 길 · 출발지로 이동" → 출발지로 이동 화면(ToCourseStart). 고른 move는 pick.move로 넘어가요
 // 데이터: public/data/lessgo 번들 (lib/routes.js). 예상 시간은 달리기 1km 6분 30초, 걷기 1km 15분 기준.
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -55,7 +55,6 @@ export default function CoursePicker() {
   const [sel, setSel] = useState(pick.hill === "flat" ? "low" : "high");
   const course = pair.find((c) => c.properties.mode === sel) || pair[0];
   const [chip, setChip] = useState("");
-  const [favs, setFavs] = useState(readFavs);
 
   // 내 위치 (출발지까지 거리 표시용). 권한이 없으면 표시만 안 해요
   const [here, setHere] = useState(null);
@@ -98,8 +97,6 @@ export default function CoursePicker() {
     window.addEventListener("pointermove", move); window.addEventListener("pointerup", up); window.addEventListener("pointercancel", up);
   };
 
-  const saved = course && favs.has(course.id);
-  const toggleSave = () => { if (!course) return; const f = new Set(favs); f.has(course.id) ? f.delete(course.id) : f.add(course.id); writeFavs(f); setFavs(f); };
   const fromName = source === "here" ? loc({ ko: "현위치", en: "My location" }) : course ? startNameOf(course) : t("start_point");
   const fromM = source === "course" && here && course ? distance(here, course.path[0]) : null;
   // 안내 시작: 코스 출발지면 출발지 화면(카카오맵 길찾기 → 150m 안이면 시작, 시연 모드면 바로 자동), 현위치면 바로 시작
@@ -141,7 +138,7 @@ export default function CoursePicker() {
         </div>
       </header>
 
-      {/* ② 지도 (즐겨찾기는 지도 오른쪽 아래에 작게) */}
+      {/* ② 지도 */}
       <div className="cx-map">
         <MapView className="cx-mapview">
           {course && [
@@ -158,11 +155,6 @@ export default function CoursePicker() {
           ]}
           {data.spotById[dest] && <SpotMarker spot={data.spotById[dest]} />}
         </MapView>
-        {course && (
-          <button type="button" className="cx-fav" aria-label={t(saved ? "unsave_course" : "save_course")} aria-pressed={saved} onClick={toggleSave}>
-            <svg viewBox="0 0 24 24" aria-hidden="true" fill={saved ? "#E04A2F" : "none"}><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
-          </button>
-        )}
       </div>
 
       {/* ③ 길 목록 (카카오맵 길찾기 결과처럼) */}
@@ -359,5 +351,3 @@ const WalkIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true" className="mv
 const CheckIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>;
 
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
-function readFavs() { try { return new Set(JSON.parse(localStorage.getItem("runtrip.favs") || "[]")); } catch { return new Set(); } }
-function writeFavs(f) { try { localStorage.setItem("runtrip.favs", JSON.stringify([...f])); } catch {} }
