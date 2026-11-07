@@ -67,6 +67,7 @@ export function Login() {
   const [keep, setKeep] = useState(getKeepLogin);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+  const [step, setStep] = useState("choose"); // choose: 세 버튼 / id: 아이디·비밀번호 입력
   // 구글 리다이렉트에서 돌아와 실패했으면 그 안내를 보여줘요
   const shownErr = err || (user.authError ? t(user.authError) : "");
 
@@ -90,6 +91,8 @@ export function Login() {
     if (res.ok) afterLogin(app, res); else if (res.error !== "err_popup_closed") setErr(t(res.error));
   };
 
+  const guest = () => { user.clearAuthError(); afterLogin(app, user.signInGuest()); };
+
   return (
     <section className="screen login-screen">
       <div className="hanji-layer" aria-hidden="true" />
@@ -101,65 +104,73 @@ export function Login() {
         <span>SEONGBUK RUN</span>
       </div>
       <LoginScene />
-      <form className="login-form" onSubmit={submit} noValidate>
-        <div className="cred-box soft">
-          <label className="cred-row">
-            <Icon name="user" />
-            <span className="cred-field">
-              <small>{t("login_id")}</small>
-              <input value={id} placeholder={t("login_id_ph")} autoComplete="username" {...idInputProps} maxLength={local ? 20 : 254}
-                onChange={(e) => setId(e.target.value.toLowerCase())} />
-            </span>
-          </label>
+      {step === "choose" ? (
+        <div className="login-form login-choose">
+          {shownErr && <p className="note cream" role="alert">{shownErr}</p>}
+          <button type="button" className="btn-pill btn-guest" onClick={guest} disabled={busy}>{t("guest_start")}</button>
+          <button type="button" className="btn-pill btn-idlogin" onClick={() => { setErr(""); setStep("id"); }} disabled={busy}>{t("login_with_id")}</button>
           {!local && (
-            <>
-              <span className="cred-divider" aria-hidden="true" />
-              <div className="cred-row">
-                <Icon name="lock" />
-                <label className="cred-field">
-                  <small>{t("password")}</small>
-                  <input type={showPw ? "text" : "password"} value={pw} placeholder={t("password_ph")} autoComplete="current-password"
-                    onChange={(e) => setPw(e.target.value)} />
-                </label>
-                <button type="button" className="eye-btn" onClick={() => setShowPw(!showPw)}
-                  aria-label={t(showPw ? "pw_hide" : "pw_show")} aria-pressed={showPw}>
-                  <Icon name={showPw ? "eyeOff" : "eye"} />
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-        {/* 비밀번호 안내는 칸 밖(아래)에: 아이디 줄과 비밀번호 줄 높이를 똑같이 */}
-        {!local && (
-          <small className={`login-password-hint ${pw.length > 0 && pw.length < 8 ? "visible" : ""}`} aria-live="polite">
-            {pw.length > 0 && pw.length < 8 ? t("err_pw_short_login") : " "}
-          </small>
-        )}
-        <div className="login-opts">
-          <label className="keep">
-            <input type="checkbox" checked={keep} onChange={(e) => setKeep(e.target.checked)} />
-            <span>{t("keep_login_short")}</span>
-          </label>
-          {!local && <span className="login-find-links">
-            <button type="button" className="link" onClick={() => app.go("find")}>{t("find_id_short")}</button>
-            <i aria-hidden="true" />
-            <button type="button" className="link" onClick={() => app.go("find")}>{t("find_password_short")}</button>
-          </span>}
-        </div>
-        {shownErr && <p className="note cream" role="alert">{shownErr}</p>}
-        <button type="submit" className="btn login-submit" disabled={busy || !id.trim() || (!local && pw.length < 8)}>
-          {busy ? t("signing_in") : t("login_btn")}
-        </button>
-        {local ? <p className="foot">{t("local_login_note")}</p> : (
-          <>
-            <p className="or-line"><span>{t("or")}</span></p>
             <button type="button" className="btn-google" onClick={google} disabled={busy}>
               <GoogleG /><span>{t("google_continue")}</span>
             </button>
-            <p className="login-signup"><span>{t("signup_prompt")}</span><button type="button" className="link" onClick={() => app.go("signup")}>{t("to_signup")}</button></p>
-          </>
-        )}
-      </form>
+          )}
+          <p className="guest-note">{t("guest_note")}</p>
+          {!local && <p className="login-signup"><span>{t("signup_prompt")}</span><button type="button" className="link" onClick={() => app.go("signup")}>{t("to_signup")}</button></p>}
+        </div>
+      ) : (
+        <form className="login-form" onSubmit={submit} noValidate>
+          <button type="button" className="login-back" onClick={() => { setErr(""); setStep("choose"); }}>‹ {t("login_other_ways")}</button>
+          <div className="cred-box soft">
+            <label className="cred-row">
+              <Icon name="user" />
+              <span className="cred-field">
+                <small>{t("login_id")}</small>
+                <input value={id} placeholder={t("login_id_ph")} autoComplete="username" {...idInputProps} maxLength={local ? 20 : 254}
+                  onChange={(e) => setId(e.target.value.toLowerCase())} />
+              </span>
+            </label>
+            {!local && (
+              <>
+                <span className="cred-divider" aria-hidden="true" />
+                <div className="cred-row">
+                  <Icon name="lock" />
+                  <label className="cred-field">
+                    <small>{t("password")}</small>
+                    <input type={showPw ? "text" : "password"} value={pw} placeholder={t("password_ph")} autoComplete="current-password"
+                      onChange={(e) => setPw(e.target.value)} />
+                  </label>
+                  <button type="button" className="eye-btn" onClick={() => setShowPw(!showPw)}
+                    aria-label={t(showPw ? "pw_hide" : "pw_show")} aria-pressed={showPw}>
+                    <Icon name={showPw ? "eyeOff" : "eye"} />
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+          {/* 비밀번호 안내는 칸 밖(아래)에: 아이디 줄과 비밀번호 줄 높이를 똑같이 */}
+          {!local && (
+            <small className={`login-password-hint ${pw.length > 0 && pw.length < 8 ? "visible" : ""}`} aria-live="polite">
+              {pw.length > 0 && pw.length < 8 ? t("err_pw_short_login") : " "}
+            </small>
+          )}
+          <div className="login-opts">
+            <label className="keep">
+              <input type="checkbox" checked={keep} onChange={(e) => setKeep(e.target.checked)} />
+              <span>{t("keep_login_short")}</span>
+            </label>
+            {!local && <span className="login-find-links">
+              <button type="button" className="link" onClick={() => app.go("find")}>{t("find_id_short")}</button>
+              <i aria-hidden="true" />
+              <button type="button" className="link" onClick={() => app.go("find")}>{t("find_password_short")}</button>
+            </span>}
+          </div>
+          {shownErr && <p className="note cream" role="alert">{shownErr}</p>}
+          <button type="submit" className="btn login-submit" disabled={busy || !id.trim() || (!local && pw.length < 8)}>
+            {busy ? t("signing_in") : t("login_btn")}
+          </button>
+          {local && <p className="foot">{t("local_login_note")}</p>}
+        </form>
+      )}
     </section>
   );
 }

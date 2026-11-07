@@ -388,6 +388,18 @@ div:has(> .spot-pin) { pointer-events: none; }
 .btn-google:active { background: #EEF0F0; }
 .btn-google:disabled { opacity: .6; }
 .btn-google .g-logo { width: 20px; height: 20px; flex: none; }
+/* 첫 화면 세 버튼: 구글 버튼과 같은 타원형(48px, 999px) */
+.login-choose { gap: 0; }
+.login-choose .btn-google { margin-top: 10px; }
+.btn-pill { width: 100%; min-height: 48px; margin-top: 10px; display: flex; align-items: center; justify-content: center; padding: 0 12px; border-radius: 999px; font: 700 15px/20px var(--sans, sans-serif); letter-spacing: -.01em; cursor: pointer; transition: background .15s; }
+.btn-pill:first-of-type { margin-top: 0; }
+.btn-pill:disabled { opacity: .6; }
+.btn-guest { background: #CFEAA8; border: 1px solid #A9D47A; color: #1F4A14; }
+.btn-guest:active { background: #BFDF93; }
+.btn-idlogin { background: #2E7A1F; border: 1px solid #2E7A1F; color: #FFFFFF; }
+.btn-idlogin:active { background: #24631A; }
+.guest-note { margin: 10px 0 0; text-align: center; font-size: 12px; color: #6B7D60; }
+.login-back { align-self: flex-start; min-height: 40px; margin: 0 0 4px; padding: 0 2px; border: 0; background: none; color: #2E5A1A; font: 700 14px var(--sans, sans-serif); cursor: pointer; }
 .login-form .foot { color: var(--muted); }
 .lang-pill.glass { width: 44px; height: 44px; padding: 0; border-radius: 50%; color: var(--text); display: grid; place-items: center; }
 .login-top .lang-pill.expanded { display: inline-flex; width: auto; min-width: 44px; height: 44px; padding: 0 13px; gap: 7px; border-radius: 999px; background: #F8FBF4; border: 1px solid #D3E4C6; color: #1B3313; box-shadow: none; font-size: 13px; }

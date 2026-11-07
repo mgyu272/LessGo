@@ -119,6 +119,10 @@ export function useUserData() {
           try { await loadRemote(u.uid); } catch (e) { warn("load")(e); }
         } else if (!u && uidRef.current) {
           clearLocal();
+        } else if (!u) {
+          // 비회원으로 시작한 적 있으면 이 기기에 저장된 게스트 프로필로 이어가요
+          const lp = readLocalProfile();
+          if (lp?.guest) setProfile(lp);
         }
       }
       if (alive) setReady(true);
@@ -243,6 +247,15 @@ export function useUserData() {
     } catch (e) { return fail("reset", e); }
   }, []);
 
+  // 비회원으로 시작: 가입 없이 이 기기(localStorage)에만 기록을 저장해요
+  const signInGuest = useCallback(() => {
+    uidRef.current = null;
+    const p = { id: "guest", nickname: getLang() === "ko" ? "게스트" : "Guest", username: null, guest: true };
+    try { localStorage.setItem(LS.profile, JSON.stringify(p)); sessionStorage.removeItem(LS.profile); } catch {}
+    setNeedsNickname(false); setProfile(p);
+    return { ok: true };
+  }, []);
+
   const signOut = useCallback(async () => {
     authBusyRef.current = true;
     try { if (hasFirebase) await fbSignOut(auth); } catch (e) { warn("signOut")(e); }
@@ -301,7 +314,7 @@ export function useUserData() {
   return {
     ready, profile, runs, stamps, coupons, bonus, totalStars: bonus, starsEarned, getStarBalance, online: hasFirebase, needsNickname,
     authError, clearAuthError: () => setAuthError(null),
-    signIn, signInGoogle, signUp, setNickname, sendReset, signOut,
+    signIn, signInGoogle, signInGuest, signUp, setNickname, sendReset, signOut,
     addStamp, addRun, addCoupon, addBonus, sendReport,
   };
 }
