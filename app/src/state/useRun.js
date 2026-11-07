@@ -156,9 +156,9 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
       demo, path: simPath, speedup, onPosition,
       onError: (e) => { r.pill = e.code === 1 ? t("gps_denied") : t("gps_waiting"); push(); },
     });
+    if (course) { r.cuesFired.add(0); voice.speak(loc(course.cues[0]?.text) || "", { lang: getLang() }); }
     r.tracker.start();
     r.clock = setInterval(push, 1000);
-    if (course) { r.cuesFired.add(0); voice.speak(loc(course.cues[0]?.text) || "", { lang: getLang() }); }
     push();
     go("run");
   }, [dataRef, moveRef, onPosition, push, go]);

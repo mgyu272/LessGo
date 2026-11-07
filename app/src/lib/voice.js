@@ -57,10 +57,12 @@ export function speakManaged(text, { lang = "en", onstart, onend, onerror, onpau
 }
 
 export function unlock() {
-  if (!synth) return;
-  const u = new SpeechSynthesisUtterance(" ");
+  const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent)
+    || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (!ios || !speechSupported()) return;
+  const u = new window.SpeechSynthesisUtterance(" ");
   u.volume = 0;
-  synth.speak(u);
+  try { synth.speak(u); } catch {}
 }
 
 function speechParts(text, maxLength = 160) {
