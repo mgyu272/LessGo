@@ -4,10 +4,10 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Map, CustomOverlayMap, Polygon, Polyline, Circle, MarkerClusterer, useMap } from "react-kakao-maps-sdk";
-import { spotIconSvg, LABEL_OFFSETS } from "./SpotIcons.jsx";
+import { spotIconSvg, LABEL_OFFSETS, GROUP_SVG } from "./SpotIcons.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { CENTER } from "../state/AppContext.jsx";
-import { exploreColor, areaLabel, iconTypeOf } from "../lib/places.js";
+import { exploreColor, areaLabel, groupOf } from "../lib/places.js";
 
 const KAKAO_MAP_KEY = import.meta.env.NEXT_PUBLIC_KAKAO_MAP_KEY;
 
@@ -337,7 +337,7 @@ const EXPLORE_ICONS = {
   park: "M12 3L6 11h4l-4 6h12l-4-6h4zM12 17v4",
   info: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01",
 };
-// 흰 원 + 1.5px 분류 색 테두리 + 가운데 선 아이콘. size: "sm"(22px, 단계 6 이상) · "lg"(28px, 5 이하).
+// 흰 원 + 1.5px 분류 색 테두리 + 가운데 테마 그림(전시·역사·종교·공원, 칩 아이콘과 같아요). 예전 선 아이콘(EXPLORE_ICONS)은 지금 안 써요. size: "sm"(22px, 단계 6 이상) · "lg"(28px, 5 이하).
 // 고르면 36px로 커지고 원이 분류 색으로 채워지고(아이콘은 흰색) 아래에 이름 알약이 떠요. 누르는 칸은 최소 30px
 export function ExploreDot({ place, selected = false, size = "sm", onClick }) {
   const name = loc(place.name);
@@ -345,7 +345,7 @@ export function ExploreDot({ place, selected = false, size = "sm", onClick }) {
     <CustomOverlayMap position={{ lat: place.lat, lng: place.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={selected ? 2 : 1} clickable>
       <div className={`ex-pin ${size} ${selected ? "on" : ""}`} style={{ "--c": exploreColor(place) }}>
         <button type="button" className="ex-dot" aria-label={name} aria-pressed={selected} onClick={onClick}>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d={EXPLORE_ICONS[iconTypeOf(place)]} /></svg>
+          <svg className="ex-art" viewBox="0 0 32 32" aria-hidden="true" dangerouslySetInnerHTML={{ __html: GROUP_SVG[groupOf(place)] || GROUP_SVG.heritage }} />
         </button>
         {selected && <span className="ex-name" onClick={onClick} aria-hidden="true">{name}</span>}
       </div>
