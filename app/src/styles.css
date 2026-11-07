@@ -536,7 +536,9 @@ div:has(> .spot-pin) { pointer-events: none; }
 .script { background: var(--stone); border-radius: 14px; padding: 14px 16px; font-size: 15px; line-height: 1.75; margin-top: 8px; font-family: var(--display); }
 .ask { margin-top: 4px; }
 .ask-row { display: flex; gap: 8px; align-items: center; }
-.ask-row .input { margin: 0; }
+.ask-row .input { margin: 0; flex: 1; min-width: 0; }
+.ask-row .mic { width: 40px; height: 40px; }
+.ask-row .ask-btn { flex: none; height: 40px; padding: 0 14px; font-size: 13px; white-space: nowrap; }
 .ask-answer { background: var(--verdigris-soft); border-radius: 14px; padding: 13px 15px; margin-top: 10px; font-size: 14px; line-height: 1.65; animation: drop .3s var(--ease-out); }
 .ask-answer .src { display: block; margin-top: 8px; font-size: 12px; color: var(--verdigris); }
 .ask-answer .src a { color: inherit; }
