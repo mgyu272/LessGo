@@ -481,7 +481,6 @@ div:has(> .spot-pin) { pointer-events: none; }
 .cta-row.two .btn { flex: 1; }
 
 /* ---------- ⑤ 달리기 ---------- */
-.cue { position: relative; z-index: 5; margin: 12px 14px 0; background: var(--paper); color: var(--text); padding: 13px 15px 13px 18px; border-radius: 14px; font-size: 15px; line-height: 1.5; box-shadow: 0 10px 24px rgba(0,0,0,.35); border-left: 5px solid var(--vermilion); animation: drop .4s var(--ease-out); }
 
 /* ---------- ⑥ 스팟 도착 ---------- */
 /* ④ 도착: 흰빛 → 연두 원형 그라데이션 + 레코드판 */
@@ -724,10 +723,10 @@ div:has(> .spot-pin) { pointer-events: none; }
 .picker-chips, .picker-body { scrollbar-width: none; }
 
 /* ---------- ⑤ 달리는 중 (Run.dc.html) ---------- */
-.run-screen { background: var(--bg-soft); }
+.run-screen { background: var(--bg-soft); --run-green: #2E7A1F; --run-stop: #A1361F; --run-card: #F3F8EC; --run-card-line: #C9DFB6; --run-line: #E2ECD9; }
 .run-map { position: absolute; left: 0; right: 0; top: 0; height: 50%; overflow: hidden; }
 .run-map .map { position: absolute; inset: 0; }
-.run-locate { position: absolute; right: 14px; bottom: 40px; z-index: 2; color: var(--strong); width: 48px; height: 48px; border-radius: 24px; }
+.run-locate { position: absolute; right: 14px; top: calc(66px + var(--safe-top)); z-index: 2; color: var(--strong); width: 48px; height: 48px; border-radius: 24px; }
 .run-locate svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .run-top2 { position: absolute; left: 14px; right: 14px; top: calc(10px + var(--safe-top)); z-index: 4; display: flex; align-items: center; gap: 8px; justify-content: space-between; }
 .run-status, .run-left { height: 44px; padding: 0 14px; border-radius: 22px; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; white-space: nowrap; }
@@ -750,20 +749,84 @@ div:has(> .spot-pin) { pointer-events: none; }
 .rp-stats b { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
 .rp-stats small { font-size: 12px; font-weight: 500; color: var(--muted); }
 .rp-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
-.rp-card { min-width: 0; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; text-align: left; color: var(--text); }
-.rp-card small { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--muted); }
-.rp-card small svg { width: 12px; height: 12px; fill: none; stroke: var(--brand); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.rp-card small svg.fill { fill: var(--brand); stroke: none; }
-.rp-card > span { display: flex; align-items: center; justify-content: space-between; gap: 6px; min-width: 0; }
-.rp-card b { font-size: 17px; font-weight: 800; }
-.rp-card .ellipsis { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.rp-ctl { margin-top: auto; padding-top: 12px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; justify-items: center; }
-.ctl { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #3F5A2C; }
-.ctl-round { width: 56px; height: 56px; border-radius: 28px; background: #FFFFFF; color: var(--strong); display: grid; place-items: center; box-shadow: inset 0 0 0 1.5px var(--handle); }
-.ctl-main { width: 84px; height: 84px; border-radius: 42px; display: grid; place-items: center; background: var(--cta-bg); color: var(--cta-text); box-shadow: var(--cta-shadow); }
-.ctl svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.ctl-main svg { width: 32px; height: 32px; }
-.ctl svg.fill { fill: currentColor; stroke: none; }
+/* 달리는 중: 별·온도 카드 */
+.rp-card { min-width: 0; border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; text-align: left; color: var(--text); background: var(--run-card); border: 1.5px solid var(--run-card-line); box-shadow: none; }
+.rp-card small { font-size: 12.5px; font-weight: 700; color: #4A5E42; }
+.rp-num { font-size: 26px; font-weight: 800; line-height: 1.15; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.rp-num em { margin-left: 1px; font-size: 15px; font-weight: 700; font-style: normal; color: #6A7B62; }
+.rp-stars { display: flex; gap: 1px; margin-top: 2px; }
+.rp-stars svg { flex: 0 1 13px; min-width: 0; height: 13px; fill: #E3DDC8; }
+.rp-stars svg.on { fill: #E4B64B; }
+.rp-gauge { position: relative; display: block; height: 6px; margin: 6px 0 6px; border-radius: 3px; background: linear-gradient(90deg, #D6EBBF, #F2D27A 60%, #E39A5B); }
+.rp-gauge i { position: absolute; top: 50%; width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; background: var(--run-card); border: 3px solid #C77A3A; transform: translate(-50%, -50%); }
+.rp-line { margin: 2px 0 0; font-size: 13px; line-height: 1.3; color: #4A5E42; }
+.rp-line strong { font-weight: 800; color: var(--text); }
+
+/* 달리는 중: 하단 버튼 3개와 아래 라벨 */
+.rp-ctl { margin-top: auto; padding-top: 12px; }
+.rp-ctl-row, .rp-ctl-labels { display: grid; grid-template-columns: 1fr 76px 1fr; justify-items: center; align-items: center; }
+.rp-ctl-labels { margin-top: 6px; font-size: 13.5px; font-weight: 700; color: #3F5A2C; text-align: center; white-space: nowrap; }
+.rp-ctl-labels .end { color: var(--run-stop); }
+.rp-ctl svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rp-ctl svg.fill { fill: currentColor; stroke: none; }
+.ctl-round { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: #FFFFFF; color: var(--strong); border: 1.5px solid #CFE0C2; }
+.ctl-round svg { width: 22px; height: 22px; }
+.ctl-round:active { background: #E6F0DB; }
+@media (hover: hover) { .ctl-round:hover { background: var(--run-card); border-color: #B9D3A9; } .ctl-round:active { background: #E6F0DB; } }
+.ctl-main { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; background: #C2E68F; color: #1B3313; box-shadow: 0 0 0 2px rgba(130, 190, 75, .7), 0 0 12px 4px rgba(176, 222, 120, .6); transition: transform .12s; }
+.ctl-main svg { width: 28px; height: 28px; }
+.ctl-main:active { transform: scale(.96); }
+.ctl-main.paused { background: var(--run-green); color: #FFFFFF; box-shadow: 0 0 0 2px rgba(31, 90, 20, .45), 0 0 10px 3px rgba(46, 122, 31, .22); }
+.ctl-end-wrap { position: relative; width: 60px; height: 60px; display: grid; place-items: center; }
+.ctl-end { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: #FFFFFF; color: var(--run-stop); touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.ctl-end svg { width: 18px; height: 18px; }
+.ctl-ring { position: absolute; inset: 0; width: 60px; height: 60px; transform: rotate(-90deg); pointer-events: none; }
+.rp-ctl .ctl-ring circle { fill: none; stroke-width: 3; }
+.rp-ctl .ctl-ring .track { stroke: #E8D3CC; }
+.rp-ctl .ctl-ring .fill { fill: none; stroke: var(--run-stop); stroke-linecap: butt; stroke-dasharray: 100; stroke-dashoffset: 100; }
+.ctl-end-wrap.holding .ctl-ring .fill { stroke-dashoffset: 0; transition: stroke-dashoffset 1.2s linear; }
+
+/* 달리는 중: 패널 바로 위 안내 배너 */
+.cue-area { position: absolute; left: 14px; right: 14px; bottom: calc(53% + 10px); z-index: 4; display: flex; flex-direction: column; align-items: flex-start; pointer-events: none; }
+.cue-area > div { width: 100%; }
+.cue-area button { pointer-events: auto; }
+.cue-area svg { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.cue-area svg.flip { transform: scaleX(-1); }
+.cue-chip { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px 0 6px; border-radius: 20px; background: rgba(255, 255, 255, .96); border: 1px solid var(--run-line); color: var(--text); font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cue-dot { width: 28px; height: 28px; flex: none; border-radius: 50%; display: grid; place-items: center; background: #DDF0C8; color: var(--strong); }
+.cue-dot svg { width: 16px; height: 16px; }
+.cue-banner { position: relative; display: flex; align-items: center; gap: 12px; padding: 12px 8px 14px 12px; border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid var(--run-line); box-shadow: 0 8px 22px rgba(30, 55, 20, .2); color: var(--text); animation: cue-rise .28s ease both; pointer-events: auto; }
+@keyframes cue-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .cue-banner { animation: none; } }
+.cue-box { width: 44px; height: 44px; flex: none; border-radius: 14px; display: grid; place-items: center; background: var(--run-green); color: #FFFFFF; }
+.cue-box svg { width: 26px; height: 26px; }
+.cue-area .cue-box svg.fill { fill: currentColor; stroke: none; }
+.cue-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.cue-text b { font-size: 17px; font-weight: 800; line-height: 1.25; font-variant-numeric: tabular-nums; }
+.cue-text small { font-size: 12.5px; line-height: 1.35; color: #4A5E42; }
+.cue-fold { width: 40px; height: 40px; flex: none; display: grid; place-items: center; background: transparent; color: #4A5E42; border-radius: 50%; }
+.cue-fold svg { width: 22px; height: 22px; }
+.cue-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #E3EED8; }
+.cue-bar i { display: block; height: 100%; background: var(--run-green); transition: width .4s linear; }
+.cue-banner.dark { background: #2E4227; border-color: #2E4227; color: #FFFFFF; padding: 12px; }
+.cue-banner.dark .cue-box { background: rgba(255, 255, 255, .18); }
+.cue-banner.dark .cue-text small { color: rgba(255, 255, 255, .85); }
+/* 낮은 화면(667px 등): 간격과 큰 숫자만 줄여요 */
+@media (max-height: 700px) {
+  .run-panel2 { padding-top: 10px; padding-bottom: calc(8px + var(--safe-bottom)); }
+  .rp-big { font-size: 38px; }
+  .rp-big em { font-size: 15px; }
+  .rp-next { margin-top: 4px; }
+  .rp-stats { margin-top: 6px; }
+  .rp-stats b { font-size: 18px; }
+  .rp-cards { margin-top: 6px; }
+  .rp-card { padding: 7px 12px; gap: 0; }
+  .rp-num { font-size: 20px; }
+  .rp-line { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rp-ctl { padding-top: 4px; }
+  .rp-ctl-labels { margin-top: 2px; }
+}
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .km-mark { position: relative; width: 18px; height: 18px; border-radius: 50%; background: #FFFFFF; box-shadow: inset 0 0 0 3px var(--brand); }
 .km-mark i { position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: var(--brand); }
 .km-mark span { position: absolute; left: 24px; top: -2px; height: 22px; padding: 0 9px; border-radius: 11px; background: #FFFFFF; border: 1px solid var(--border); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--strong); white-space: nowrap; }
@@ -1132,9 +1195,6 @@ div:has(> .spot-pin) { pointer-events: none; }
 /* ---------- 별 → 쿠폰 (달리는 중 · 완주 · 내 기록 · 도장·쿠폰) ---------- */
 .gold-bar { display: block; height: 6px; border-radius: 3px; background: #F3E7C0; overflow: hidden; }
 .gold-bar i { display: block; height: 100%; border-radius: 3px; background: #E0B63A; transition: width .4s; }
-.rp-card small svg.gold { fill: #E0B63A; stroke: none; }
-.rp-card .rp-hold { font-style: normal; font-size: 12px; font-weight: 700; color: #7A5A0C; }
-.rp-card .gold-bar { margin-top: 6px; }
 .done-earn svg.fill { fill: #E0B63A; }
 .star-prog { display: flex; flex-direction: column; gap: 8px; }
 .sp-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }

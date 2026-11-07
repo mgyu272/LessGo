@@ -25,7 +25,7 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
     if (!r.course) pill = t("no_spot", { km: (r.meters / 1000).toFixed(1), t: fmtTime(seconds) });
     setView({
       course: r.course, demo: r.demo, move: r.move, meters: r.meters, seconds, ascent: currentAscent(r),
-      pill, cue: r.cue, paused: r.paused,
+      pill, cue: r.cue, paused: r.paused, nextCue: nextCue(r), cueDone: r.cueDone,
       trail: r.trail.slice(), me: r.me, freeShops: r.freeShops, courseDone: r.courseDone, visited: [...r.visited],
       stars: r.stars.map((x) => ({ at: x.at, got: x.got })), starsGot: r.starsGot, starsTotal: r.stars.length,
       nextStarM: nextStarM(r), starBalance: userRef.current.getStarBalance(), couponsMade: r.coupons.length,
@@ -33,12 +33,32 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
     });
   }, []);
 
+  // 길 안내 음성. 음성을 끄면 화면 안내만 남아요 (화면 표시는 nextCue가 맡아요)
+  const speakCue = useCallback((text) => {
+    if (ref.current.voice) voice.speak(text, { lang: getLang() });
+  }, []);
+
+  // 완주 같은 알림: 음성 + 잠깐 화면에 표시
   const showCue = useCallback((text) => {
     const r = ref.current;
     r.cue = text;
-    if (r.voice) voice.speak(text, { lang: getLang() }); // 음성을 끄면 화면 안내만
+    speakCue(text);
     clearTimeout(r.cueTimer);
     r.cueTimer = setTimeout(() => { if (ref.current) { ref.current.cue = null; push(); } }, 9000);
+  }, [push, speakCue]);
+
+  // 안내 지점을 지나면 "잘 꺾었어요"를 2초 보여주고 다음 안내로 넘어가요
+  const trackCuePassed = useCallback((r, p) => {
+    const cur = nextCue(r);
+    if (!cur) return;
+    const d = distance(p, r.course.cues[cur.i].pos);
+    r.cueClosest = Math.min(r.cueClosest ?? Infinity, d);
+    if (!r.cuesFired.has(cur.i) || (d > CUE_REACHED_M && d <= r.cueClosest + CUE_LEFT_M)) return;
+    r.cuePassedTo = cur.i;
+    r.cueClosest = null;
+    r.cueDone = { dir: cur.dir };
+    clearTimeout(r.cueDoneTimer);
+    r.cueDoneTimer = setTimeout(() => { if (ref.current) { ref.current.cueDone = null; push(); } }, CUE_DONE_MS);
   }, [push]);
 
   // 별 1개 줍기 → 저장, "별 +1" 알림, 10개가 모이면 쿠폰
@@ -89,8 +109,9 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
       r.course.cues.forEach((c, i) => {
         if (r.cuesFired.has(i) || distance(p, c.pos) > 25) return;
         r.cuesFired.add(i);
-        if (i > 0) showCue(loc(c.text)); // 출발 안내는 시작할 때 이미 말했어요
+        if (i > 0) speakCue(loc(c.text)); // 출발 안내는 시작할 때 이미 말했어요
       });
+      trackCuePassed(r, p);
     }
 
     // 스팟 도착 → 도장 찍고 도착 화면(해설)으로
@@ -117,10 +138,10 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
       r.courseDone = true;
       const dest = r.course && spotById[r.course.properties.dest];
       if (dest && !r.visited.has(dest.id)) return arrive(dest);
-      showCue(getLang() === "ko" ? "코스 완주! 종료 버튼을 눌러 기록을 저장하세요." : "Course complete! Tap Finish to save your run.");
+      showCue(getLang() === "ko" ? "코스 완주! 종료 버튼을 길게 눌러 기록을 저장하세요." : "Course complete! Press and hold Finish to save your run.");
     }
     push();
-  }, [dataRef, userRef, go, setSpot, push, showCue, pickStar]);
+  }, [dataRef, userRef, go, setSpot, push, showCue, speakCue, trackCuePassed, pickStar]);
 
   // move: "run" | "walk". 안 넘기면 코스는 코스 고르기에서 고른 값, 자유 달리기는 달리기
   const start = useCallback((course, { demo, speedup, move }) => {
@@ -131,7 +152,7 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
     const simPath = course ? course.path : courses[0]?.path || [{ lat: HOME_CENTER[0], lng: HOME_CENTER[1] }];
     const r = ref.current = {
       course, demo, simPath, move: (move || (course && moveRef?.current)) === "walk" ? "walk" : "run", meters: 0, last: null, trail: [], visited: new Set(),
-      cuesFired: new Set(), paused: false, ended: false, altUp: 0, lastAlt: null,
+      cuesFired: new Set(), cuePassedTo: 0, cueClosest: null, cueDone: null, paused: false, ended: false, altUp: 0, lastAlt: null,
       stars: course ? starPoints(course.path).map((at) => ({ at, got: false })) : [], starsGot: 0, coupons: [],
       cue: null, pill: demo ? "" : t("gps_waiting"), newStamps: 0, courseDone: false,
       me: [simPath[0].lat, simPath[0].lng], freeShops: [], voice: true,
@@ -175,7 +196,7 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
     const r = ref.current; if (!r || r.ended) return;
     const user = userRef.current;
     r.ended = true;
-    r.tracker.stop(); clearInterval(r.clock); clearTimeout(r.cueTimer);
+    r.tracker.stop(); clearInterval(r.clock); clearTimeout(r.cueTimer); clearTimeout(r.cueDoneTimer);
     voice.stop(); voice.releaseScreen();
     const seconds = r.tracker.elapsed();
 
@@ -192,6 +213,33 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
   }, [userRef, setFinish, go]);
 
   return { view, start, togglePause, toggleVoice, resume, finish, isRunning: () => !!ref.current, arrivedAt: () => ref.current?.arrivedAt };
+}
+
+// 안내 지점을 지났다고 보는 기준: 음성은 25m 앞에서 나오고, 화면은 실제로 지날 때까지 거리를 보여줘요
+const CUE_REACHED_M = 8; // 이만큼 가까이 가면 지난 걸로
+const CUE_LEFT_M = 5;    // 가장 가까웠던 때보다 이만큼 멀어져도 지난 걸로
+const CUE_DONE_MS = 2000;
+
+// 안내 방향: cue에 값이 있으면 그걸, 없으면 문구에서 찾아요
+function cueDir(c) {
+  if (c.dir) return c.dir;
+  const text = `${c.text?.ko || ""} ${c.text?.en || ""}`;
+  if (/오른쪽|우회전|\bright\b/i.test(text)) return "right";
+  if (/왼쪽|좌회전|\bleft\b/i.test(text)) return "left";
+  return "straight";
+}
+
+// 아직 지나지 않은 안내 중 가장 가까운 것 { i, text, m, dir }. 더 뒤의 안내를 지났으면 그 앞 안내는 건너뛰어요
+function nextCue(r) {
+  if (!r.course) return null;
+  const here = { lat: r.me[0], lng: r.me[1] };
+  let best = null;
+  r.course.cues.forEach((c, i) => {
+    if (i <= r.cuePassedTo) return;
+    const m = distance(here, c.pos);
+    if (!best || m < best.m) best = { i, m, c };
+  });
+  return best && { i: best.i, text: loc(best.c.text), m: Math.round(best.m), dir: cueDir(best.c) };
 }
 
 function currentAscent(r) {
