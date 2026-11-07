@@ -57,7 +57,7 @@ export default function SeongbukBoundary({ spots, safe, refitKey = 0, keepView =
     };
     const shapes = [new kakao.maps.Polygon({
       map, zIndex: 1, path: [MASK.map(([lat, lng]) => new kakao.maps.LatLng(lat, lng)), ...rings.map(toPath)],
-      fillColor: "#EEF1EA", fillOpacity: 0.55, strokeWeight: 0, strokeOpacity: 0,
+      fillColor: "#D3D8CE", fillOpacity: 0.6, strokeWeight: 0, strokeOpacity: 0,
     })];
     geo.features.filter((f) => f.properties.kind === "dong").forEach((f) => outerRings(f.geometry).forEach((ring) => {
       shapes.push(new kakao.maps.Polyline({ map, zIndex: 2, path: toPath(ring), strokeColor: "#C9DABB", strokeWeight: 1, strokeOpacity: 0.8 }));
