@@ -49,14 +49,9 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
 
   // 안내 지점을 지나면 "잘 꺾었어요"를 2초 보여주고 다음 안내로 넘어가요
   const trackCuePassed = useCallback((r, p) => {
-    const cur = nextCue(r);
-    if (!cur) return;
-    const d = distance(p, r.course.cues[cur.i].pos);
-    r.cueClosest = Math.min(r.cueClosest ?? Infinity, d);
-    if (!r.cuesFired.has(cur.i) || (d > CUE_REACHED_M && d <= r.cueClosest + CUE_LEFT_M)) return;
-    r.cuePassedTo = cur.i;
-    r.cueClosest = null;
-    r.cueDone = { dir: cur.dir };
+    const done = advanceCues(r, p);
+    if (!done) return;
+    r.cueDone = done;
     clearTimeout(r.cueDoneTimer);
     r.cueDoneTimer = setTimeout(() => { if (ref.current) { ref.current.cueDone = null; push(); } }, CUE_DONE_MS);
   }, [push]);
@@ -152,7 +147,7 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
     const simPath = course ? course.path : courses[0]?.path || [{ lat: HOME_CENTER[0], lng: HOME_CENTER[1] }];
     const r = ref.current = {
       course, demo, simPath, move: (move || (course && moveRef?.current)) === "walk" ? "walk" : "run", meters: 0, last: null, trail: [], visited: new Set(),
-      cuesFired: new Set(), cuePassedTo: 0, cueClosest: null, cueDone: null, paused: false, ended: false, altUp: 0, lastAlt: null,
+      cuesFired: new Set(), cuesPassed: new Set([0]), cueClosest: new Map(), cueDone: null, paused: false, ended: false, altUp: 0, lastAlt: null,
       stars: course ? starPoints(course.path).map((at) => ({ at, got: false })) : [], starsGot: 0, coupons: [],
       cue: null, pill: demo ? "" : t("gps_waiting"), newStamps: 0, courseDone: false,
       me: [simPath[0].lat, simPath[0].lng], freeShops: [], voice: true,
@@ -229,17 +224,34 @@ function cueDir(c) {
   return "straight";
 }
 
-// 아직 지나지 않은 안내 중 가장 가까운 것 { i, text, m, dir }. 더 뒤의 안내를 지났으면 그 앞 안내는 건너뛰어요
-function nextCue(r) {
+// 아직 지나지 않은 안내 중 가장 가까운 것 { i, text, m, dir }
+export function nextCue(r) {
   if (!r.course) return null;
   const here = { lat: r.me[0], lng: r.me[1] };
   let best = null;
   r.course.cues.forEach((c, i) => {
-    if (i <= r.cuePassedTo) return;
+    if (r.cuesPassed.has(i)) return;
     const m = distance(here, c.pos);
     if (!best || m < best.m) best = { i, m, c };
   });
   return best && { i: best.i, text: loc(best.c.text), m: Math.round(best.m), dir: cueDir(best.c) };
+}
+
+export function advanceCues(r, p) {
+  const cur = nextCue(r);
+  if (!cur) return null;
+  let completed = false;
+  r.course.cues.forEach((cue, i) => {
+    if (r.cuesPassed.has(i) || !r.cuesFired.has(i)) return;
+    const d = distance(p, cue.pos);
+    const closest = Math.min(r.cueClosest.get(i) ?? Infinity, d);
+    r.cueClosest.set(i, closest);
+    if (d > CUE_REACHED_M && (closest > 25 || d < closest + CUE_LEFT_M)) return;
+    r.cuesPassed.add(i);
+    r.cueClosest.delete(i);
+    if (i === cur.i) completed = true;
+  });
+  return completed ? { dir: cur.dir } : null;
 }
 
 function currentAscent(r) {
