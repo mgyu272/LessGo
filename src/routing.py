@@ -75,6 +75,7 @@ def fetch_walking_route_points(
     api_key: str,
     route_id: str,
     max_retries: int = 1,
+    avoid_steps: bool = False,
 ) -> dict[str, Any]:
     """Fetch a foot-walking route through ordered stops (lat/lon input)."""
     if len(stops) < 2:
@@ -86,6 +87,8 @@ def fetch_walking_route_points(
         "elevation": True,
         "extra_info": ["steepness"],
     }
+    if avoid_steps:
+        body["options"] = {"avoid_features": ["steps"]}
     response = None
     attempts = 0
     retryable_statuses = {500, 502, 503, 504}

@@ -1,0 +1,176 @@
+[
+  {
+    "slot": "simujang-10km-high",
+    "route_id": "simujang-10km-high-new-start-no-steps",
+    "summary": {
+      "distance_km": 10.015600000000001,
+      "duration_seconds": 7211.0,
+      "duration_minutes": 120.18333333333334,
+      "ascent_m": 248.0,
+      "descent_m": 134.0
+    },
+    "slope": {
+      "grade_burden_score": 41.35,
+      "uphill_8_share": 0.0814,
+      "uphill_10_share": 0.0554,
+      "max_sustained_100m_grade_percent": 15.0,
+      "max_sustained_100m_start_m": 9600.0,
+      "max_sustained_200m_grade_percent": null,
+      "max_sustained_200m_start_m": null,
+      "uphill_grade_metrics": {
+        "thresholds": {
+          "8_percent": {
+            "distance_m": 815.1,
+            "share": 0.0814,
+            "longest_continuous_m": 140.0
+          },
+          "10_percent": {
+            "distance_m": 555.1,
+            "share": 0.0554,
+            "longest_continuous_m": 60.0
+          }
+        },
+        "max_sustained_uphill_grade_percent": 15.0,
+        "max_sustained_window_start_m": 9600.0,
+        "max_sustained_window_end_m": 9700.0,
+        "max_sustained_window_elevation_gain_m": 15.0,
+        "sustained_window_m": 100.0,
+        "profile_sample_m": 20.0,
+        "smoothing_window_m": 60.0,
+        "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+      }
+    },
+    "running": {
+      "fitness_score": 71.9,
+      "friendly_share": 0.6894,
+      "longest_continuous_run_m": 1591.7
+    },
+    "walking_safety": {
+      "stairs_share": 0.0,
+      "stairs_status": "known",
+      "explicit_access_restricted_m": 0.0,
+      "restriction_check_available": true,
+      "repeat_segment_m": 4.4,
+      "repeat_mapped_edge_share": 0.0004,
+      "u_turn_count": 1
+    },
+    "elevation_confidence": "unknown",
+    "old_route_id": "10km-osm-park-edge-1981019398-via-osm-node-3401296562-osm-node-3401490122-simujang-high"
+  },
+  {
+    "slot": "simujang-5km-low",
+    "route_id": "simujang-5km-low-seongbukcheon-v3-no-steps",
+    "summary": {
+      "distance_km": 4.9613000000000005,
+      "duration_seconds": 3572.1,
+      "duration_minutes": 59.535,
+      "ascent_m": 172.4,
+      "descent_m": 85.4
+    },
+    "slope": {
+      "grade_burden_score": 53.36,
+      "uphill_8_share": 0.105,
+      "uphill_10_share": 0.0889,
+      "max_sustained_100m_grade_percent": 16.15,
+      "max_sustained_100m_start_m": 4500.0,
+      "max_sustained_200m_grade_percent": null,
+      "max_sustained_200m_start_m": null,
+      "uphill_grade_metrics": {
+        "thresholds": {
+          "8_percent": {
+            "distance_m": 521.1,
+            "share": 0.105,
+            "longest_continuous_m": 100.0
+          },
+          "10_percent": {
+            "distance_m": 441.1,
+            "share": 0.0889,
+            "longest_continuous_m": 60.0
+          }
+        },
+        "max_sustained_uphill_grade_percent": 16.15,
+        "max_sustained_window_start_m": 4500.0,
+        "max_sustained_window_end_m": 4600.0,
+        "max_sustained_window_elevation_gain_m": 16.15,
+        "sustained_window_m": 100.0,
+        "profile_sample_m": 20.0,
+        "smoothing_window_m": 60.0,
+        "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+      }
+    },
+    "running": {
+      "fitness_score": 19.43,
+      "friendly_share": 0.1483,
+      "longest_continuous_run_m": 293.5
+    },
+    "walking_safety": {
+      "stairs_share": 0.0,
+      "stairs_status": "known",
+      "explicit_access_restricted_m": 0.0,
+      "restriction_check_available": true,
+      "repeat_segment_m": 0.0,
+      "repeat_mapped_edge_share": 0.0,
+      "u_turn_count": 3
+    },
+    "elevation_confidence": "unknown",
+    "old_route_id": "5km-sungshin-exit-1-via-osm-node-3401296573-osm-node-3401490120-simujang-low"
+  },
+  {
+    "slot": "uiryeong-5km-low",
+    "route_id": "uiryeong-5km-low-imun-park-v3-no-steps",
+    "summary": {
+      "distance_km": 5.0404,
+      "duration_seconds": 3629.0,
+      "duration_minutes": 60.483333333333334,
+      "ascent_m": 81.4,
+      "descent_m": 76.7
+    },
+    "slope": {
+      "grade_burden_score": 21.23,
+      "uphill_8_share": 0.0278,
+      "uphill_10_share": 0.0238,
+      "max_sustained_100m_grade_percent": 8.8,
+      "max_sustained_100m_start_m": 1740.0,
+      "max_sustained_200m_grade_percent": null,
+      "max_sustained_200m_start_m": null,
+      "uphill_grade_metrics": {
+        "thresholds": {
+          "8_percent": {
+            "distance_m": 140.0,
+            "share": 0.0278,
+            "longest_continuous_m": 60.0
+          },
+          "10_percent": {
+            "distance_m": 120.0,
+            "share": 0.0238,
+            "longest_continuous_m": 40.0
+          }
+        },
+        "max_sustained_uphill_grade_percent": 8.8,
+        "max_sustained_window_start_m": 1740.0,
+        "max_sustained_window_end_m": 1840.0,
+        "max_sustained_window_elevation_gain_m": 8.8,
+        "sustained_window_m": 100.0,
+        "profile_sample_m": 20.0,
+        "smoothing_window_m": 60.0,
+        "note": "Positive uphill grade only; ORS elevation coordinates resampled by route distance and median-smoothed. This is a terrain estimate, not a field slope survey."
+      }
+    },
+    "running": {
+      "fitness_score": 63.12,
+      "friendly_share": 0.5544,
+      "longest_continuous_run_m": 1245.2
+    },
+    "walking_safety": {
+      "stairs_share": 0.0,
+      "stairs_status": "known",
+      "explicit_access_restricted_m": 0.0,
+      "restriction_check_available": true,
+      "repeat_segment_m": 358.3,
+      "repeat_mapped_edge_share": 0.0711,
+      "u_turn_count": 2
+    },
+    "elevation_confidence": "unknown",
+    "old_route_id": "5km-osm-node-3401382924-via-osm-way-1417439455-node-21536-osm-way-1417439455-node-21537-uiryeong-low"
+  }
+]
