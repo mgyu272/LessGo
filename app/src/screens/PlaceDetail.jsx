@@ -25,6 +25,7 @@ export default function PlaceDetail() {
   const spot = app.spot;
   const [tab, setTab] = useState("visit");
   const [playing, setPlaying] = useState(false);
+  const [audioError, setAudioError] = useState("");
   const [report, setReport] = useState(false);
   // 홈 지도 핀으로 열면 가운데 모달: X, 바깥 막, Esc로 닫고 눌렀던 핀으로 포커스를 돌려줘요
   const popup = app.placeFrom === "home";
@@ -79,8 +80,17 @@ export default function PlaceDetail() {
   const text = loc(spot.narration);
   const listen = () => {
     if (playing) { voice.stop(); setPlaying(false); return; }
+    setAudioError("");
     setPlaying(true);
-    voice.speak(text, { lang: getLang(), queue: false, onend: () => setPlaying(false) });
+    voice.speak(text, {
+      lang: getLang(), queue: false, chunk: true,
+      onend: () => setPlaying(false),
+      onerror: (event) => {
+        setPlaying(false);
+        setAudioError(t(event.error === "language-unavailable" || event.error === "voice-unavailable"
+          ? "place_voice_language_error" : "place_voice_error"));
+      },
+    });
   };
   const share = async () => {
     try {
@@ -142,6 +152,7 @@ export default function PlaceDetail() {
                 <span>{t(playing ? "listen_stop" : "listen_about", { t: fmtTime(voice.estimateSeconds(text, app.lang)) })}</span>
                 <span className="pd-play" aria-hidden="true">{playing ? "■" : "▶"}</span>
               </button>
+              {audioError && <p className="note cream" role="alert">{audioError}</p>}
               {spot.cards.map((c, i) => (
                 <article key={i} className="card pd-story">
                   <span>{t("story_i", { i: i + 1 })}</span>
