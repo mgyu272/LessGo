@@ -27,7 +27,7 @@ export const kakaoDirections = (name, lat, lng) => `https://map.kakao.com/link/t
 // 지도 점 색: 역사문화 · 공원 · 하천
 export const EXPLORE_COLORS = { history: "#2F6512", park: "#2E8A6B", stream: "#3B82C4" };
 // 테마 색 (컴포넌트 시트 팔레트): 전시 쪽빛 · 역사 황토 · 종교 자주 · 공원 솔잎
-export const THEME_COLORS = { all: "#2E7A1F", exhibit: "#3478C2", heritage: "#C8602F", religion: "#A54C88", park: "#4E9A2F" };
+export const THEME_COLORS = { all: "#23701A", exhibit: "#1F66D1", heritage: "#D9501A", religion: "#B02E86", park: "#3A9116" };
 export const exploreColor = (p) => THEME_COLORS[groupOf(p)] || THEME_COLORS.heritage;
 // 지도 아이콘 종류: explore.json의 kind·name·chip으로 정해요 (위에서부터 먼저 맞는 것)
 export function iconTypeOf(p) {

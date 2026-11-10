@@ -1372,11 +1372,11 @@ div:has(> .spot-pin) { pointer-events: none; }
 /* 장소와 이야기: 둘러볼 곳 목록 */
 .pl-explore { display: flex; flex-direction: column; gap: 8px; flex: none; margin-top: 6px; }
 .pl-explore h2 { margin: 0; font-size: 20px; font-weight: 800; }
-.places-screen [data-places-theme="all"] { --places-theme: #2E6B1C; }
-.places-screen [data-places-theme="exhibit"] { --places-theme: #3478C2; }
-.places-screen [data-places-theme="heritage"] { --places-theme: #C8602F; }
-.places-screen [data-places-theme="religion"] { --places-theme: #A54C88; }
-.places-screen [data-places-theme="park"] { --places-theme: #4E9A2F; }
+.places-screen [data-places-theme="all"] { --places-theme: #23701A; }
+.places-screen [data-places-theme="exhibit"] { --places-theme: #1F66D1; }
+.places-screen [data-places-theme="heritage"] { --places-theme: #D9501A; }
+.places-screen [data-places-theme="religion"] { --places-theme: #B02E86; }
+.places-screen [data-places-theme="park"] { --places-theme: #3A9116; }
 .places-screen .pl-topics { display: flex; flex-wrap: nowrap; overflow-x: auto; }
 .places-screen .pl-topic { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; background: white; }
 .places-screen .pl-topic svg, .pl-explore h2 span { color: var(--places-theme); }
@@ -1738,11 +1738,11 @@ div:has(> .spot-pin) { pointer-events: none; }
 .gx-dist strong { color: #2F6512; font-weight: 800; }
 
 /* ---------- 테마 칩 (컴포넌트 시트 '칩과 꼬리표'): 기본 = 호버 색, 선택 = 테마 색으로 채움 ---------- */
-[data-theme-chip="all"]      { --tc: #2E7A1F; --tc-soft: #E2EFD6; --tc-on: #2E7A1F; --tc-on-text: #FFFFFF; }
-[data-theme-chip="exhibit"]  { --tc: #3478C2; --tc-soft: #E2EDFA; --tc-on: #3478C2; --tc-on-text: #FFFFFF; }
-[data-theme-chip="heritage"] { --tc: #C8602F; --tc-soft: #FCE8DD; --tc-on: #C8602F; --tc-on-text: #FFFFFF; }
-[data-theme-chip="religion"] { --tc: #A54C88; --tc-soft: #F7E3F0; --tc-on: #A54C88; --tc-on-text: #FFFFFF; }
-[data-theme-chip="park"]     { --tc: #4E9A2F; --tc-soft: #E4F3D6; --tc-on: #A6D96A; --tc-on-text: #1F3D14; }
+[data-theme-chip="all"]      { --tc: #23701A; --tc-soft: #CDE8B6; --tc-on: #23701A; --tc-on-text: #FFFFFF; }
+[data-theme-chip="exhibit"]  { --tc: #1F66D1; --tc-soft: #CCDFFB; --tc-on: #1F66D1; --tc-on-text: #FFFFFF; }
+[data-theme-chip="heritage"] { --tc: #D9501A; --tc-soft: #FDD5BF; --tc-on: #D9501A; --tc-on-text: #FFFFFF; }
+[data-theme-chip="religion"] { --tc: #B02E86; --tc-soft: #F7CBE7; --tc-on: #B02E86; --tc-on-text: #FFFFFF; }
+[data-theme-chip="park"]     { --tc: #3A9116; --tc-soft: #D2EDB2; --tc-on: #7CC63A; --tc-on-text: #1F3D14; }
 .home-chips .chip[data-theme-chip], .places-screen .pl-topic[data-theme-chip] { background: var(--tc-soft); color: var(--tc); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; transition: background .2s, color .2s; }
 .home-chips .chip[data-theme-chip] .grp-icon, .places-screen .pl-topic[data-theme-chip] .grp-icon { color: var(--tc); }
 .home-chips .chip[data-theme-chip].on, .places-screen .pl-topic[data-theme-chip].on { background: var(--tc-on); color: var(--tc-on-text); box-shadow: 0 6px 14px -8px var(--tc-on); }
@@ -1879,3 +1879,8 @@ div:has(> .spot-pin) { pointer-events: none; }
 .ga-ai-play svg { width: 15px; height: 15px; }
 /* 지도 탭 카테고리 칩 글씨 두께를 장소와 이야기 탭(600)과 맞춰요 */
 .home-chips .chip { font-weight: 600; }
+
+/* 상권: 가게 이름 = 앱 지도로 가는 링크처럼 밑줄 + 핀 */
+.mk-name { display: block; min-width: 0; padding-bottom: 5px; margin-bottom: -3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: rgba(46, 122, 31, .6); }
+.mk-map-ic { width: 17px; height: 17px; flex: none; color: #2E7A1F; margin-left: -2px; }
+.mk-main:active .mk-name { text-decoration-color: #2E7A1F; }

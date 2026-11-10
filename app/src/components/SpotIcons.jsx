@@ -31,7 +31,7 @@ const GROUP_LINE = {
   park: "M12 3l4.5 6H14l4 5.5H6L10 9H7.5z M12 14.5V21",
 };
 // 테마 색은 --icon으로 넘겨요. 칩이 골라져 배경이 채워지면 styles.css에서 글자색을 따라가요
-const GROUP_COLOR = { all: "#2E6B1C", exhibit: "#3478C2", heritage: "#C8602F", religion: "#A54C88", park: "#4E9A2F" };
+const GROUP_COLOR = { all: "#23701A", exhibit: "#1F66D1", heritage: "#D9501A", religion: "#B02E86", park: "#3A9116" };
 const lineOf = (group) => GROUP_LINE[group] || GROUP_LINE.heritage;
 const colorOf = (group) => GROUP_COLOR[group] || GROUP_COLOR.heritage;
 

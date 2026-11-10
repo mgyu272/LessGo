@@ -86,7 +86,7 @@ export default function Market() {
               <button type="button" className="mk-main" onClick={() => showOnMap(s)} aria-label={loc({ ko: `${loc(s.name)} 지도에서 보기`, en: `Show ${loc(s.name)} on the map` })}>
                 <ShopPhoto shop={s} />
                 <span className="mk-text">
-                  <b>{loc(s.name)}{s.partner && <Badge>{loc({ ko: "제휴", en: "Partner" })}</Badge>}</b>
+                  <b><span className="mk-name">{loc(s.name)}</span><svg className="mk-map-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s7-6 7-11.5a7 7 0 10-14 0C5 15 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.4" /></svg>{s.partner && <Badge>{loc({ ko: "제휴", en: "Partner" })}</Badge>}</b>
                   <small>{meta}</small>
                   {s.address && <span className="mk-addr">{s.address}</span>}
                 </span>

@@ -16,7 +16,7 @@ import HistoryLens from "./HistoryLens.jsx";
 import PlacePhoto, { PlaceThumb } from "../components/PlacePhoto.jsx";
 import NearbyShops from "../components/NearbyShops.jsx";
 
-const TABS = ["visit", "story", "history_lens"]; // 장소 정보 → 이야기 → AI 역사 렌즈 (문화 활동 탭은 뺐어요)
+const TABS = ["visit", "history_lens", "story"]; // 장소 정보 → AI 역사 렌즈 → 이야기 (문화 활동 탭은 뺐어요)
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 const focusableIn = (root) => [...root.querySelectorAll(FOCUSABLE)].filter((el) => el.offsetParent !== null);
 
