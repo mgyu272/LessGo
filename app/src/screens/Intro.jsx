@@ -17,12 +17,13 @@ const PHRASE_MS = 2800; // 문장 하나: 페이드인 0.9초 · 머무름 1초 
 
 const POINTS = [
   ["route", "intro_p1"],
-  ["voice", "intro_p2"],
+  ["lens", "intro_p2"],
   ["star", "intro_p3"],
 ];
 const POINT_ICONS = {
   route: <><circle cx="6" cy="18" r="2.2" /><circle cx="18" cy="6" r="2.2" /><path d="M8 18h6.5a3.5 3.5 0 000-7h-5a3.5 3.5 0 010-7H16" /></>,
   voice: <><path d="M4 10v4h4l5 4V6L8 10z" /><path d="M16.5 8.5a5 5 0 010 7 M19 6a8.5 8.5 0 010 12" /></>,
+  lens: <><path d="M4 8.5A1.5 1.5 0 015.5 7H8l1.5-2h5L16 7h2.5A1.5 1.5 0 0120 8.5v9a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 17.5z" /><circle cx="12" cy="13" r="3.5" /></>,
   star: <path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" />,
 };
 

@@ -1,5 +1,5 @@
 // 로그인 직후 한 번 뜨는 사용법 카드 (카드뉴스처럼 넘겨 봐요)
-// 장소와 이야기(메인) → 코스 고르기 → 달리는 중 → 지도·상권 순서. 그림은 실제 화면을 작게 줄인 모양이에요.
+// 관광 코스 3선 → 코스 고르기 → AI 역사 렌즈 → 달리는 중 순서. 그림은 실제 화면을 작게 줄인 모양이에요.
 // 옆으로 쓸거나 "다음"으로 넘기고, "건너뛰기"·마지막 "시작하기"로 닫아요 (app.setGuide(false)).
 
 import { useEffect, useRef, useState } from "react";
@@ -44,7 +44,7 @@ function ArtPick() {
   );
 }
 
-// ③ 달리는 중: 음성 안내 배너 · 별
+// ④ 달리는 중: 음성 안내 배너 · 별
 function ArtRun() {
   return (
     <div className="ga-run">
@@ -55,19 +55,20 @@ function ArtRun() {
   );
 }
 
-// ④ 하단 메뉴: 지도 · 상권 강조
-function ArtTabs() {
-  const tabs = [
-    ["tab_places", <path key="p" d="M4 19.5V6a2 2 0 012-2h11v14H6a2 2 0 00-2 1.5zM4 19.5A2 2 0 006 21h12" />, false],
-    ["tab_map", <path key="p" d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z M12 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />, true],
-    ["tab_market", <path key="p" d="M4 9l1.5-5h13L20 9 M4 9h16v11H4z M10 20v-5h4v5" />, true],
-    ["tab_stats", <path key="p" d="M12 21a9 9 0 100-18 9 9 0 000 18z M12 7v5l3 2" />, false],
-  ];
+// ③ AI 역사 렌즈: 장소 상세 탭 · 카메라 프레임 · AI 해설
+function ArtLens() {
   return (
-    <div className="ga-tabs">
-      {tabs.map(([key, icon, hit]) => (
-        <span key={key} className={hit ? "hit" : ""}><Svg>{icon}</Svg>{t(key)}</span>
-      ))}
+    <div className="ga-lens">
+      <div className="ga-ptabs"><span>{t("pd_tab_visit")}</span><span>{t("pd_tab_story")}</span><span className="on">{t("pd_tab_history_lens")}</span></div>
+      <div className="ga-shot">
+        <i className="c tl" /><i className="c tr" /><i className="c bl" /><i className="c br" />
+        <svg viewBox="0 0 64 40" aria-hidden="true"><path d="M6 18L32 5l26 13" /><path d="M12 17v19h40V17" /><path d="M27 36V24h10v12" /></svg>
+      </div>
+      <div className="ga-ai">
+        <span className="ga-ai-badge">AI</span>
+        <b>{t("guide_art_lens_result")}</b>
+        <span className="ga-ai-play"><Svg><path d="M4 10v4h4l5 4V6L8 10z" /><path d="M16.5 8.5a5 5 0 010 7" /></Svg>{t("guide_art_listen")}</span>
+      </div>
     </div>
   );
 }
@@ -75,8 +76,8 @@ function ArtTabs() {
 const SLIDES = [
   { art: ArtCourses, title: "guide_t1", body: "guide_b1" },
   { art: ArtPick, title: "guide_t2", body: "guide_b2" },
-  { art: ArtRun, title: "guide_t3", body: "guide_b3" },
-  { art: ArtTabs, title: "guide_t4", body: "guide_b4" },
+  { art: ArtLens, title: "guide_t3", body: "guide_b3" },
+  { art: ArtRun, title: "guide_t4", body: "guide_b4" },
 ];
 
 export default function Guide() {

@@ -1861,7 +1861,21 @@ div:has(> .spot-pin) { pointer-events: none; }
 .ga-stars svg { width: 30px; height: 30px; color: #C9C2A8; fill: #E3DDC8; stroke-width: 1.5; }
 .ga-stars svg.on { color: #D9A21B; fill: #F6C945; }
 .ga-stamp { width: 66px; height: 66px; display: grid; place-items: center; border-radius: 16px; background: #C8432B; color: #FFF6EA; font-size: 15px; font-weight: 800; transform: rotate(-8deg); box-shadow: 0 6px 14px -6px rgba(140, 40, 20, .6); }
-.ga-tabs { width: 300px; display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 6px; border-radius: 22px; background: rgba(255, 255, 255, .85); box-shadow: var(--glass-shadow); }
-.ga-tabs span { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 2px; border-radius: 14px; font-size: 12px; font-weight: 600; color: #6B7D60; text-align: center; white-space: nowrap; }
-.ga-tabs svg { width: 24px; height: 24px; }
-.ga-tabs span.hit { background: #CFEAA8; color: #1F4A14; font-weight: 800; }
+.ga-lens { width: 270px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.ga-ptabs { width: 100%; display: grid; grid-template-columns: 1fr 1fr 1.35fr; border-bottom: 2px solid #CFE6B4; }
+.ga-ptabs span { padding: 0 0 6px; text-align: center; font-size: 12.5px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.ga-ptabs span.on { color: #2E7A1F; font-weight: 800; box-shadow: inset 0 -3px 0 #2E7A1F; margin-bottom: -2px; }
+.ga-shot { position: relative; width: 132px; height: 82px; display: grid; place-items: center; border-radius: 12px; background: linear-gradient(135deg, #DCEBCB, #C4DCA9); }
+.ga-shot svg { width: 72px; height: 46px; fill: none; stroke: #4B7A2C; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.ga-shot .c { position: absolute; width: 16px; height: 16px; border: 3px solid #2E7A1F; }
+.ga-shot .tl { top: -4px; left: -4px; border-right: 0; border-bottom: 0; border-radius: 6px 0 0 0; }
+.ga-shot .tr { top: -4px; right: -4px; border-left: 0; border-bottom: 0; border-radius: 0 6px 0 0; }
+.ga-shot .bl { bottom: -4px; left: -4px; border-right: 0; border-top: 0; border-radius: 0 0 0 6px; }
+.ga-shot .br { bottom: -4px; right: -4px; border-left: 0; border-top: 0; border-radius: 0 0 6px 0; }
+.ga-ai { width: 100%; display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 14px; background: #FFFFFF; box-shadow: var(--card-shadow); }
+.ga-ai-badge { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; background: #2E7A1F; color: #FFFFFF; font-size: 12px; font-weight: 800; }
+.ga-ai b { flex: 1; min-width: 0; font-size: 13.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ga-ai-play { flex: none; display: inline-flex; align-items: center; gap: 3px; padding: 5px 8px; border-radius: 999px; background: #CFEAA8; font-size: 12px; font-weight: 700; color: #1F4A14; }
+.ga-ai-play svg { width: 15px; height: 15px; }
+/* 지도 탭 카테고리 칩 글씨 두께를 장소와 이야기 탭(600)과 맞춰요 */
+.home-chips .chip { font-weight: 600; }
