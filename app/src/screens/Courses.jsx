@@ -8,7 +8,7 @@
 // 데이터: public/data/lessgo 번들 (lib/routes.js). 예상 시간은 달리기 1km 6분 30초, 걷기 1km 15분 기준.
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useApp } from "../state/AppContext.jsx";
+import { useApp, MAIN } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { aiRecommend } from "../lib/ai.js";
 import { distance } from "../lib/geo.js";
@@ -117,7 +117,7 @@ export default function CoursePicker() {
               <Ic /><span>{label}</span>
             </button>
           ))}
-          <button type="button" className="cx-close" onClick={() => app.go("home")} aria-label={t("close")}>
+          <button type="button" className="cx-close" onClick={() => app.go(MAIN)} aria-label={t("close")}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
           </button>
         </div>

@@ -12,7 +12,7 @@ import { LogoBird } from "../components/LogoBird.jsx";
 import { useBottomSheet, BottomSheet, ConfirmDialog } from "../components/ui.jsx";
 import HistoryLens from "./HistoryLens.jsx";
 import { RewardShop } from "./RewardShop.jsx";
-import { CENTER } from "../state/AppContext.jsx";
+import { CENTER, MAIN } from "../state/AppContext.jsx";
 
 const CAT = { history: ["History spot", "역사문화 스팟"], stream: ["Stream spot", "하천길 스팟"], park: ["Park & view spot", "공원·전망 스팟"] };
 
@@ -121,7 +121,7 @@ export function Spot() {
               <input className="input" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && ask()} placeholder={mic.listening ? t("listening") : t("ask_ph")} />
               {mic.supported && (
                 <button className={`mic ${mic.listening ? "on" : ""}`} onClick={mic.toggle} aria-label={t("mic")} title={t("mic")}>
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0014 0M12 18v3" /></svg>
+                  <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0014 0M12 18v3" /></svg>
                 </button>
               )}
               <button className="btn btn-ink sm ask-btn" onClick={() => ask()}>{t("ask_btn")}</button>
@@ -254,7 +254,7 @@ export function Coupon() {
   const save = () => {
     if (!s.couponTitle) app.user.addCoupon({ id: "c" + Date.now(), shopId: s.id, title: s.coupon, issued: Date.now() });
     app.toast(t("coupon_saved"));
-    app.run.isRunning() ? app.run.resume() : app.go("home");
+    app.run.isRunning() ? app.run.resume() : app.go(MAIN);
   };
   return (
     <section className="screen dark">

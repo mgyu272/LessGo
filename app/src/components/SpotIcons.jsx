@@ -37,7 +37,7 @@ const colorOf = (group) => GROUP_COLOR[group] || GROUP_COLOR.heritage;
 
 export const groupIconSvg = (group) => `<svg class="grp-icon" style="--icon:${colorOf(group)}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${lineOf(group)}"/></svg>`;
 // 리액트 화면용 테마 아이콘 (칩·목록·지도 핀)
-export function GroupIcon({ group, size = 18, className = "grp-icon" }) {
+export function GroupIcon({ group, size = 20, className = "grp-icon" }) {
   return (
     <svg className={className} style={{ "--icon": colorOf(group) }} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
       strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

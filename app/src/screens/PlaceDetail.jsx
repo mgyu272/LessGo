@@ -191,7 +191,7 @@ export default function PlaceDetail() {
                     {nearby.slice(0, 4).map((p) => (
                       <li key={p.id}>
                         <button type="button" onClick={() => openExplore(p)}>
-                          <PlaceThumb place={p} fallback={<GroupIcon group={groupOf(p)} size={30} />} />
+                          <PlaceThumb place={p} fallback={<GroupIcon group={groupOf(p)} size={34} />} />
                           <b>{loc(p.name)}</b>
                           <small>{t("about_m", { m: round10(p.nearest_course.straight_m) })}</small>
                         </button>

@@ -3,7 +3,7 @@
 // 사진·이름을 누르면 홈 지도에서 그 가게를 핀으로 보여주고, 오른쪽 노란 지도 아이콘은 카카오맵 가게 페이지를 열어요.
 
 import { useMemo, useState } from "react";
-import { useApp } from "../state/AppContext.jsx";
+import { useApp, MAIN } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
 import { destName } from "../lib/places.js";
@@ -57,14 +57,14 @@ export default function Market() {
       <div className="hanji-layer" aria-hidden="true" />
       <div className="places-scroll">
         <div className="pl-top">
-          <button className="round-btn glass" onClick={() => app.go("home")} aria-label={t("back_home")}>
+          <button className="round-btn glass" onClick={() => app.go(MAIN)} aria-label={t("back_home")}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
           </button>
           <h1>{loc({ ko: "동네 상권", en: "Local shops" })}</h1>
         </div>
 
         <label className="search glass pl-search">
-          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M20 20l-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+          <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M20 20l-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={loc({ ko: "가게 이름, 메뉴, 주소 검색", en: "Search shops, food, address" })} aria-label={loc({ ko: "가게 검색", en: "Search shops" })} />
         </label>
 

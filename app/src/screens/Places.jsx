@@ -1,7 +1,7 @@
-// ⑦ 장소와 이야기 (디자인 원본 docs/design/Places.dc.html)
+// ⑦ 장소와 이야기 = 로그인 뒤 메인 화면 (디자인 원본 docs/design/Places.dc.html)
 // 검색 · 목록/지도 전환 · 주제 칩 · 장소 카드("이야기 · 방문 정보" / "여기로 달리기")
 // "여기로 달리기"를 누르면 코스 고르기에 그 목적지가 미리 골라져요.
-// 코스 목적지 카드 아래에 "둘러볼 곳"(explore.json) 목록: 코스 도착지에서 가까운 순, 6곳 + 모두 보기. 누르면 둘러볼 곳 상세.
+// 추천 코스 3선(코스 목적지) 카드 아래에 "둘러볼 곳"(explore.json) 목록: 코스 도착지에서 가까운 순, 6곳 + 모두 보기. 누르면 둘러볼 곳 상세.
 // 장소 상세의 "근처 N곳 모두 보기"로 오면(app.placesNear) 그 목적지가 가장 가까운 곳만 걸러서 "{장소} 근처 · 해제" 칩을 보여줘요.
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -14,7 +14,7 @@ import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
 import { PlaceCover, PlaceThumb } from "../components/PlacePhoto.jsx";
 
 function PhotoIcon() {
-  return <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>;
+  return <svg width="38" height="38" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>;
 }
 
 // 둘러볼 곳 3열 타일: 네모 사진 + 분류 배지(왼쪽 위) · 무료(오른쪽 아래), 아래에 이름과 코스 도착지에서 거리 · 도보 시간
@@ -31,13 +31,13 @@ function ExploreTile({ place, data, onOpen }) {
     <button type="button" className="gx-tile" data-places-theme={groupOf(place)} onClick={() => onOpen(place)}
       aria-label={from && hasDist ? `${name}, ${from} ${distanceText}` : name}>
       <span className="gx-photo">
-        <PlaceThumb place={place} fallback={<GroupIcon group={groupOf(place)} size={30} />} />
+        <PlaceThumb place={place} fallback={<GroupIcon group={groupOf(place)} size={34} />} />
         {badge && <span className="gx-badge">{badge}</span>}
         {free && <span className="gx-free">{t("fee_free")}</span>}
       </span>
       <b className="gx-name">{name}</b>
       {hasDist && <span className="gx-dist">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><path d="M12 22s8-9 8-14a8 8 0 00-16 0c0 5 8 14 8 14z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><path d="M12 22s8-9 8-14a8 8 0 00-16 0c0 5 8 14 8 14z"/><circle cx="12" cy="9" r="2.5"/></svg>
         <strong>{distanceText}</strong> · {loc({ ko: `도보 ${walkMin}분`, en: `${walkMin} min walk` })}
       </span>}
     </button>
@@ -133,9 +133,6 @@ export default function Places() {
       <div className="hanji-layer" aria-hidden="true" />
       <div className="places-scroll">
         <div className="pl-top">
-          <button className="round-btn glass" onClick={() => app.go("home")} aria-label={t("back_home")}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
-          </button>
           <h1>{t("places_title")}</h1>
           <div className="pl-view" role="tablist" aria-label={t("view_mode")}>
             <button role="tab" aria-selected={view === "list"} className={view === "list" ? "on" : ""} onClick={() => setView("list")}>{t("view_list")}</button>
@@ -144,14 +141,14 @@ export default function Places() {
         </div>
 
         <label className="search glass pl-search">
-          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M20 20l-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+          <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M20 20l-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("places_search_ph")} aria-label={t("places_search")} />
         </label>
 
         <div className="pl-topics scroll" role="radiogroup" aria-label={t("topic")}>
           {GROUPS.map((k) => (
             <button key={k} role="radio" data-places-theme={k} data-theme-chip={k} aria-checked={topic === k} className={`pl-topic ${topic === k ? "on" : ""}`} onClick={() => setTopic(k)}>
-              <GroupIcon group={k} size={16} />{t("grp_" + k)}
+              <GroupIcon group={k} size={18} />{t("grp_" + k)}
             </button>
           ))}
         </div>
@@ -167,7 +164,7 @@ export default function Places() {
         )}
 
         {list.length ? <section className="pl-destinations" data-places-theme={topic}>
-          <h2>{t("dest_title")} <span>{list.length}</span></h2>
+          <h2>{t("dest_title")}</h2>
           <p>{t("dest_description")}</p>
           <DestCarousel key={topic + q} items={list} label={t("dest_title")} render={(s) => (
               <article className="pl-card">

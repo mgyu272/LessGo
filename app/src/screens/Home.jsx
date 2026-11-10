@@ -11,7 +11,6 @@ import { useApp, HOME_CENTER, HOME_LEVEL } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { MapView, FlyTo, FocusOn, SpotMarker, Me, PlainPin, ExploreLayer, MapWatch, Route } from "../components/MapView.jsx";
 import SeongbukBoundary from "../components/SeongbukBoundary.jsx";
-import { LangPill } from "../components/Bits.jsx";
 import { getCourse } from "../lib/data.js";
 import { GroupIcon } from "../components/SpotIcons.jsx";
 import { MODE_COLOR } from "./Courses.jsx";
@@ -167,15 +166,14 @@ export default function Home() {
       <div className="home-top">
         <div className="search-row">
           <label className="search glass">
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M20 20l-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+            <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M20 20l-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
             <input value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={search} placeholder={t("search_ph")} aria-label={t("search_ph")} />
           </label>
-          <LangPill glass />
         </div>
         <div className="chips scroll home-chips">
           {GROUPS.map((k) => (
             <button key={k} data-theme-chip={k} className={`chip ${filter === k ? "on" : "glass"}`} aria-pressed={filter === k} onClick={() => pickFilter(k)}>
-              <GroupIcon group={k} size={16} />
+              <GroupIcon group={k} size={18} />
               {t("grp_" + k)}<span className="chip-n">{groupCount[k] || 0}</span>
             </button>
           ))}
@@ -218,7 +216,7 @@ function ExploreCards({ cards, selId, bottom, onSelect, onOpen }) {
       {cards.slice(0, 12).map((p) => (
         <article key={p.id} className={`ex-card glass ${p.id === selId ? "on" : ""}`}>
           <button type="button" className="ex-card-name" onClick={() => p.id !== selId && onSelect(p)} aria-pressed={p.id === selId}>
-            <GroupIcon group={groupOf(p)} size={20} /><b>{loc(p.name)}</b>
+            <GroupIcon group={groupOf(p)} size={22} /><b>{loc(p.name)}</b>
           </button>
           <small>{exploreMeta(p)}</small>
           <div className="ex-card-foot">

@@ -51,7 +51,7 @@ export default function ExplorePlace() {
             <button className="round-btn glass" onClick={share} aria-label={t("share")}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg></button>
           </div>
           <div className="pd-id">
-            <span className="pd-ic ex-ic" style={{ "--c": exploreColor(place) }} aria-hidden="true"><GroupIcon group={groupOf(place)} size={44} /></span>
+            <span className="pd-ic ex-ic" style={{ "--c": exploreColor(place) }} aria-hidden="true"><GroupIcon group={groupOf(place)} size={48} /></span>
             <div>
               <small>{[kindLabel(place), areaLabel(place)].join(" · ")}</small>
               <h1>{name}</h1>

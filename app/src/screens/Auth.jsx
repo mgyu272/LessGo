@@ -7,7 +7,7 @@ import { useApp } from "../state/AppContext.jsx";
 import { t } from "../lib/i18n.js";
 import { checkSignup, checkUsername, checkLoginId, checkNickname, NICKNAME_MAX } from "../lib/auth.js";
 import { getKeepLogin, setKeepLogin } from "../lib/firebase.js";
-import { LangPill } from "../components/Bits.jsx";
+import { LangPill, LangSwitch } from "../components/Bits.jsx";
 import { Brand } from "../components/LogoBird.jsx";
 import LoginScene from "../components/LoginScene.jsx";
 
@@ -53,7 +53,7 @@ const GoogleG = () => (
 // 로그인 결과에 따라 다음 화면으로 (구글로 처음 들어왔으면 닉네임 정하기, 리다이렉트면 페이지가 바뀌니 그대로)
 const afterLogin = (app, res) => {
   if (res.redirect) return;
-  app.go(res.needsNickname ? "nickname" : "home");
+  if (res.needsNickname) app.go("nickname"); else app.enterApp();
 };
 
 // ---------------- 로그인 (시작 화면) ----------------
@@ -97,7 +97,7 @@ export function Login() {
     <section className="screen login-screen">
       <div className="hanji-layer" aria-hidden="true" />
       <header className="login-top">
-        <LangPill glass expanded />
+        <LangSwitch />
       </header>
       <div className="login-brand">
         <Brand size={108} name="성북런" subtitle={false} className="login-brand-mark" />
@@ -286,7 +286,7 @@ export function Nickname() {
     setBusy(true); setErr("");
     const res = await user.setNickname(nick);
     setBusy(false);
-    if (res.ok) app.go("home"); else setErr(t(res.error));
+    if (res.ok) app.enterApp(); else setErr(t(res.error));
   };
   const other = async () => { await user.signOut(); app.go("onboarding"); };
 

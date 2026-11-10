@@ -12,7 +12,7 @@ import { ascentOf } from "../lib/data.js";
 import { t, loc, getLang } from "../lib/i18n.js";
 import * as voice from "../lib/voice.js";
 import { STAR_RULES } from "./useUserData.js";
-import { HOME_CENTER } from "./AppContext.jsx";
+import { HOME_CENTER, MAIN } from "./AppContext.jsx";
 
 export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toast }) {
   const ref = useRef(null);        // 달리는 중 계속 바뀌는 값 (화면을 다시 그리지 않아도 되는 것)
@@ -182,7 +182,7 @@ export function useRun({ dataRef, userRef, moveRef, go, setSpot, setFinish, toas
   const resume = useCallback(() => {
     voice.stop();
     const r = ref.current;
-    if (!r || r.ended) return go("home");
+    if (!r || r.ended) return go(MAIN);
     if (r.demo && !r.paused) r.tracker.resume();
     go("run");
   }, [go]);

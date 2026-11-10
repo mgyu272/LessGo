@@ -11,7 +11,9 @@ const Ctx = createContext(null);
 export const useApp = () => useContext(Ctx);
 
 // 로그인 없이 볼 수 있는 화면
-const AUTH_SCREENS = new Set(["loading", "onboarding", "signup", "find", "nickname"]);
+const AUTH_SCREENS = new Set(["loading", "intro", "onboarding", "signup", "find", "nickname"]);
+// 로그인 뒤 첫 화면(메인) = 장소와 이야기. 지도(home)는 두 번째 탭이에요
+export const MAIN = "places";
 
 export const CENTER = [37.5915, 127.0035]; // 한성대입구역~성북동 사이
 export const HOME_CENTER = [37.5894, 127.0167]; // 홈 지도 첫 화면: 성북구 가운데
@@ -50,6 +52,8 @@ export function AppProvider({ children }) {
   const [finish, setFinish] = useState(null);
   const [shuffle, setShuffle] = useState(0);
   const [toastMsg, setToastMsg] = useState("");
+  // 로그인 직후 한 번 보여주는 사용법 카드 (components/Guide.jsx)
+  const [guide, setGuide] = useState(false);
   const [demo, setDemoState] = useState(() => { try { return localStorage.getItem("runtrip.demo") !== "off"; } catch { return true; } });
 
   const user = useUserData();
@@ -81,10 +85,10 @@ export function AppProvider({ children }) {
     return () => clearTimeout(id);
   }, [introDone]);
 
-  // 데이터와 로그인 확인이 끝나면 첫 화면으로 (구글로 처음 들어온 사람은 닉네임 정하기부터)
+  // 데이터와 로그인 확인이 끝나면 첫 화면으로 (로그인 전이면 소개 화면부터, 구글로 처음 들어온 사람은 닉네임 정하기부터)
   useEffect(() => {
     if (screen === "loading" && data && user.ready && introDone) {
-      setScreen(user.profile ? "home" : user.needsNickname ? "nickname" : "onboarding");
+      setScreen(user.profile ? MAIN : user.needsNickname ? "nickname" : "intro");
     }
   }, [screen, data, user.ready, user.profile, user.needsNickname, introDone]);
 
@@ -93,6 +97,8 @@ export function AppProvider({ children }) {
     if (user.ready && !user.profile && !user.needsNickname && !AUTH_SCREENS.has(screen)) setScreen("onboarding");
   }, [screen, user.ready, user.profile, user.needsNickname]);
 
+  // 로그인·가입·닉네임 정하기가 끝나면: 사용법 카드를 띄우고 메인으로
+  const enterApp = useCallback(() => { setGuide(true); go(MAIN); }, [go]);
   const changeLang = (l) => { setLang(l); setLangState(l); };
   const setDemo = (v) => { setDemoState(v); try { localStorage.setItem("runtrip.demo", v ? "on" : "off"); } catch {} };
   const toastTimer = useRef(null);
@@ -105,6 +111,7 @@ export function AppProvider({ children }) {
   const value = {
     lang, changeLang, screen, go, data, settings, setSettings, weather, course, setCourse, pick, setPick,
     spot, setSpot, explore, setExplore, placeFrom, setPlaceFrom, placesNear, setPlacesNear, homeMap, mapShop, setMapShop, couponShop, setCouponShop, finish, shuffle, setShuffle, toastMsg, toast,
+    guide, setGuide, enterApp,
     demo, setDemo, user, run,
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
