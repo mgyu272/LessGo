@@ -213,6 +213,22 @@ async function getGeminiAudio(chunk, lang, purpose, signal) {
   pendingAudio.set(key, promise);
   return promise;
 }
+// A build-time generated audio manifest lets fixed stories play without any Gemini wait.
+let staticManifestPromise;
+function staticManifest() {
+  if (!staticManifestPromise) staticManifestPromise = fetch("/audio/narrations/manifest.json")
+    .then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  return staticManifestPromise;
+}
+async function getStaticNarration(text, lang) {
+  const manifest = await staticManifest();
+  const entry = manifest?.[lang]?.[text];
+  if (!entry || !/^[-a-zA-Z0-9_./]+\\.wav$/.test(entry) || entry.includes("..")) return null;
+  const response = await fetch("/audio/narrations/" + entry);
+  if (!response.ok) return null;
+  const blob = await response.blob();
+  return blob.type.startsWith("audio/") ? blob : null;
+}
 // Start warming fixed destination narration as soon as app data is available.
 // One request at a time avoids flooding Gemini and preserves running navigation priority.
 const startupWarmups = new Set();
@@ -267,12 +283,13 @@ async function playGemini(text, options, generation) {
   const { lang = "en", queue = true, onstart, onend, onerror, onboundary } = options;
   const chunks = ttsChunks(text, queue ? 160 : 220);
   let started = false;
+  const staticAudio = !queue ? await getStaticNarration(text, lang).catch(() => null) : null;
   try {
-    for (const chunk of chunks) {
+    for (const chunk of (staticAudio ? [text] : chunks)) {
       if (generation !== audioGeneration) return;
       const controller = new AbortController();
       currentController = controller;
-      const blob = await getGeminiAudio(chunk, lang, queue ? "navigation" : "history", controller.signal);
+      const blob = staticAudio || await getGeminiAudio(chunk, lang, queue ? "navigation" : "history", controller.signal);
       if (generation !== audioGeneration) return;
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
@@ -302,6 +319,8 @@ async function playGemini(text, options, generation) {
 export function speak(text, options = {}) {
   if (!text) { options.onend?.(); return false; }
   const queue = options.queue !== false;
+  // Live navigation must never wait for a remote TTS request.
+  if (queue) return browserSpeak(text, { ...options, queue: true });
   if (!queue) stop();
   const generation = audioGeneration;
   const run = () => playGemini(text, options, generation);
