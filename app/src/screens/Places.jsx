@@ -1,6 +1,6 @@
 // ⑦ 이야기 탭 = 로그인 뒤 메인 화면
 // 맨 위 AI 역사 렌즈 카드("사진으로 물어보기" → 장소 고르기 → 그 장소 상세의 AI 역사 렌즈 탭)
-// 아래 추천 코스 3선: 코스 목적지(심우장·정릉·의릉) 사진 카드를 옆으로 넘겨 봐요 (장소 그림 + 질문형 제목 spots.json hook + "이야기 듣기" / "여기로 달리기")
+// 아래 추천 코스 3선: 코스 목적지(심우장·정릉·의릉) 사진 카드를 옆으로 넘겨 봐요 (장소 그림 + 큰 장소 이름 + 작은 질문 spots.json hook + 누가 살았는지 hook_meta + "이야기 듣기" / "여기로 달리기")
 // 둘러볼 곳·카테고리·지도는 장소 탭(PlacesHub.jsx)에 있어요.
 
 import { useEffect, useRef, useState } from "react";
@@ -31,16 +31,11 @@ export default function Places() {
       <div className="places-scroll">
         <div className="ph-head">
           <h1 className="st-brand" aria-label={t("st_brand_label")}><Brand size={40} name="성북런" subtitle={false} /></h1>
-          <p>{t("st_sub", { n: stories.length })}</p>
         </div>
 
         <section className="st-lens" aria-labelledby="st-lens-title">
           <span className="st-lens-label"><LensIcon />{t("pd_tab_history_lens")}</span>
           <h2 id="st-lens-title">{t("st_lens_title1")}<br />{t("st_lens_title2")}</h2>
-          <div className="st-lens-steps">
-            <span>{t("st_lens_step1")}</span>
-            <span>{t("st_lens_step2")}</span>
-          </div>
           <button type="button" ref={askBtn} className="st-lens-btn" onClick={() => setAsk(true)} aria-haspopup="dialog">
             <CameraIcon />{t("st_lens_ask")}
           </button>
@@ -59,9 +54,9 @@ export default function Places() {
               <span className="pl-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
             </div>
             <div className="pl-text">
-              <small>{t("st_story_no", { i: i + 1, name: destName(data, s.id) })}</small>
-              <h3>{loc(s.hook) || loc(s.name)}</h3>
-              {s.hook_meta && <p>{loc(s.hook_meta)}</p>}
+              <h3>{destName(data, s.id)}</h3>
+              {s.hook && <p className="pl-hook">{loc(s.hook)}</p>}
+              {s.hook_meta && <p className="pl-who">{loc(s.hook_meta)}</p>}
             </div>
             <div className="pl-actions">
               <button type="button" className="st-btn-listen" onClick={() => openPlace(s, "story")}

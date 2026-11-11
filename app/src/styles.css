@@ -2015,3 +2015,8 @@ div:has(> .spot-pin) { pointer-events: none; }
 .dc-dots span { width: 7px; height: 7px; border-radius: 4px; background: #C9DBB6; transition: width .35s cubic-bezier(.22, 1, .36, 1), background .35s; }
 .dc-dots span.on { width: 22px; background: #2F6512; }
 @media (prefers-reduced-motion: reduce) { .dc-slide, .dc-dots span { transition: none; } }
+
+/* 이야기 탭 카드: 장소 이름 크게, 질문은 작게, 누가 살았는지는 더 작게 */
+.st-screen .pl-text h3 { margin: 0; font-size: 24px; line-height: 1.25; letter-spacing: -.02em; }
+.st-screen .pl-text .pl-hook { margin: 6px 0 0; font-size: 15px; font-weight: 600; line-height: 1.4; color: #3F5A33; word-break: keep-all; }
+.st-screen .pl-text .pl-who { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
