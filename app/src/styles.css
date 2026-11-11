@@ -2020,8 +2020,10 @@ div:has(> .spot-pin) { pointer-events: none; }
 .st-lens-chip i { width: 7px; height: 7px; border-radius: 50%; background: #5FA52A; }
 /* 단서 박스 위치는 심우장 사진 속 현판·대문 자리에 맞춰요 (사진이 바뀌면 여기 %만 고치면 돼요) */
 .st-lens-box { border: 1.5px dashed #BEEC82; border-radius: 6px; }
-.st-lens-box-plaque { left: 40%; top: 38%; width: 24%; height: 14%; }
-.st-lens-box-gate { left: 12%; top: 56%; width: 17%; height: 30%; }
+/* public/test-photos/simujang.jpg(580×580) 기준: 현판 尋牛莊은 문 위 가운데, 대문은 그 아래 문틀 */
+.st-lens-box-plaque { left: 39%; top: 36%; width: 24%; height: 15%; }
+.st-lens-box-gate { left: 25%; top: 57%; width: 50%; height: 37%; }
+.st-lens-box-gate .st-lens-tag { left: 5px; top: 5px; bottom: auto; } /* 스캔 선·현판 박스와 겹치지 않게 박스 안쪽 위에 */
 .st-lens-tag { position: absolute; left: -1.5px; bottom: calc(100% + 4px); padding: 2px 7px; border-radius: 6px; background: #2F6512; color: #FFFFFF; font-size: 10.5px; font-weight: 800; white-space: nowrap; }
 .st-lens-tag.light { background: #FFFFFF; color: #2F6512; }
 .st-lens-scan { left: 0; right: 0; top: 50%; height: 2px; background: linear-gradient(90deg, transparent, #BEEC82 50%, transparent); }
