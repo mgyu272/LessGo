@@ -1,4 +1,4 @@
-// ① 홈: 지도 (디자인 원본 docs/design/Main.dc.html). 아래 바텀시트는 없앴어요
+// ① 큰 지도 (디자인 원본 docs/design/Main.dc.html). 장소 탭 안의 화면이라 하단 탭은 "장소"가 켜져 보여요
 // 코스 목적지 핀을 누르면 장소 상세(이야기 탭)로 가요.
 // 둘러볼 곳(explore.json): 장소마다 종류 아이콘. 멀리 볼 때도 묶지 않고 작은 아이콘 그대로 보여요.
 //   아이콘을 누르면 그곳을 가운데에 두고 한 단계 확대하고, 하단 탭 바로 위 카드 줄에 그곳부터 가까운 순 8곳이 떠요.
@@ -165,6 +165,13 @@ export default function Home() {
 
       <div className="home-top">
         <div className="search-row">
+          {/* 장소 탭의 큰 지도: 상권에서 온 게 아니면 장소 첫 화면으로 돌아가는 버튼 (상권에서 왔으면 아래 "← 동네 상권") */}
+          {!shop && (
+            <button type="button" className="home-back glass" onClick={() => app.go("placesHub")} aria-label={t("ph_back_places_label")}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+              <span>{t("ph_back_places")}</span>
+            </button>
+          )}
           <label className="search glass">
             <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M20 20l-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
             <input value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={search} placeholder={t("search_ph")} aria-label={t("search_ph")} />

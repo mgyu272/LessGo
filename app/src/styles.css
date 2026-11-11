@@ -1924,3 +1924,68 @@ div:has(> .spot-pin) { pointer-events: none; }
 .ga-img { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; max-width: none; object-fit: cover; }
 .ga-credit { position: absolute; z-index: 3; top: 5px; right: 6px; padding: 1px 6px; border-radius: 6px; background: rgba(0, 0, 0, .42); color: #FFFFFF; font-size: 9.5px; font-weight: 600; line-height: 1.5; }
 .guide-text h2 { font-family: "EF Cucumber", "Pretendard", system-ui, sans-serif; font-weight: 400; font-size: 27px; letter-spacing: 0; color: #1F4A14; -webkit-text-stroke: .9px currentColor; paint-order: stroke fill; }
+
+/* ---------- 장소 탭 (PlacesHub.jsx) ---------- */
+/* 큰 지도 왼쪽 위 "← 장소" */
+.home-back { flex: none; height: 48px; padding: 0 14px 0 8px; border-radius: 24px; display: inline-flex; align-items: center; gap: 4px; color: var(--text); font-size: 15px; font-weight: 800; white-space: nowrap; }
+.home-back svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+.ph-head h1 { margin: 4px 2px 0; font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+.ph-head p { margin: 4px 2px 0; font-size: 14.5px; color: var(--muted); word-break: keep-all; }
+.ph-h2 { margin: 10px 2px -4px; font-size: 18px; font-weight: 800; }
+.ph-h2-sub { margin: -8px 2px -2px; font-size: 13.5px; color: var(--muted); word-break: keep-all; }
+
+/* 카테고리 큰 카드 2×2 */
+.ph-cats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ph-cat { min-height: 172px; min-width: 0; display: flex; flex-direction: column; align-items: stretch; gap: 3px; padding: 14px 14px 13px; border: 0; border-radius: 22px; background: var(--tc-soft); color: var(--deep); text-align: left; font: inherit; cursor: pointer; transition: transform .12s ease; }
+.ph-cat:active { transform: scale(.97); }
+.ph-cat:focus-visible { outline: 3px solid var(--deep); outline-offset: 2px; }
+.ph-cat-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: auto; padding-bottom: 10px; }
+.ph-cat-ic { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--tc); }
+.ph-cat-ic .grp-icon { color: #FFFFFF; }
+.ph-cat-n { font-size: 28px; font-weight: 800; line-height: 1; letter-spacing: -.02em; color: var(--deep); }
+.ph-cat-name { font-size: 19px; font-weight: 800; color: var(--deep); }
+.ph-cat-desc { font-size: 12.5px; font-weight: 600; color: var(--deep); word-break: keep-all; }
+.ph-cat-more { display: flex; min-width: 0; font-size: 12.5px; color: var(--deep); white-space: pre; }
+.ph-cat-more > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ph-cat-suffix { flex: none; }
+
+/* 코스 따라 보기 3칸 */
+.ph-dests { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.ph-dest { min-height: 72px; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 10px 6px; border: 0; border-radius: 18px; font: inherit; color: var(--text); cursor: pointer; }
+.ph-dest b { font-size: 15.5px; letter-spacing: -.01em; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.ph-dest small { font-size: 13px; font-weight: 700; color: #2E7A1F; }
+.ph-dest:active { transform: scale(.97); }
+
+/* 작은 지도 */
+.ph-map { position: relative; height: 260px; border-radius: 22px; overflow: hidden; flex: none; }
+.ph-map-sm { height: 200px; }
+.ph-map .map { position: absolute; inset: 0; }
+.ph-map-tag { position: absolute; left: 10px; top: 10px; z-index: 3; padding: 6px 11px; border-radius: 999px; background: rgba(255, 255, 255, .94); color: var(--text); font-size: 13px; font-weight: 700; box-shadow: 0 4px 12px -6px rgba(31, 61, 20, .4); pointer-events: none; }
+.ph-map-big { position: absolute; right: 8px; top: 6px; z-index: 3; min-height: 44px; padding: 0 12px; border: 0; border-radius: 999px; background: none; font: inherit; font-size: 13px; font-weight: 800; color: #1F3D14; cursor: pointer; }
+.ph-map-big::before { content: ""; position: absolute; inset: 6px 0; z-index: -1; border-radius: 999px; background: rgba(255, 255, 255, .94); box-shadow: 0 4px 12px -6px rgba(31, 61, 20, .4); }
+
+/* 장소 카드 */
+.ph-row { flex: none; border-radius: 18px; border: 2px solid transparent; transition: border-color .2s; scroll-margin: 90px 0 120px; }
+.ph-row.on { border-color: #2E7A1F; }
+.ph-row-main { width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px; border: 0; background: none; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.ph-row-main:focus-visible { outline: 2px solid #2F6512; outline-offset: 2px; border-radius: 16px; }
+.ph-row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.ph-row-text b { max-width: 100%; font-size: 16px; font-weight: 800; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ph-row-text small { font-size: 13px; font-weight: 700; color: var(--link); }
+.ph-row-meta { font-size: 13px; color: var(--muted); word-break: keep-all; }
+.ph-row-text .badge, .ph-row-text [class*="badge"] { margin-top: 2px; }
+.ph-row-right { flex: none; max-width: 38%; text-align: right; font-size: 13px; font-weight: 700; color: #2E7A1F; word-break: keep-all; }
+
+/* 코스 따라 보기 */
+.ph-seg button { min-height: 48px; }
+.ph-seg .seg-main { font-size: 16px; }
+.ph-course-line { margin: -4px 2px -4px; font-size: 14px; font-weight: 700; color: var(--text); word-break: keep-all; }
+.ph-scroll-run { padding-bottom: calc(180px + var(--safe-bottom)); }
+.ph-run { position: absolute; left: 18px; right: 18px; bottom: calc(98px + var(--safe-bottom)); z-index: 19; width: auto; margin: 0; min-height: 52px; box-shadow: 0 10px 22px -10px rgba(31, 74, 20, .6); }
+.ph-screen .chip-n { margin-left: 5px; font-size: 13px; font-weight: 700; opacity: .8; }
+/* 장소 탭 칩: 360px 폭에서 4~5개가 한 줄에 들어가게 촘촘하게 (넘치면 가로로 넘겨요) */
+.ph-screen .ph-chips { gap: 6px; }
+.ph-screen .ph-chips .pl-topic { height: 44px; min-height: 44px; flex: 1 0 auto; justify-content: center; gap: 3px; padding: 0 9px; font-size: 14.5px; }
+.ph-screen .ph-chips .pl-topic .grp-icon { width: 16px; height: 16px; }
+.ph-screen .ph-chips .chip-n { margin-left: 3px; font-size: 12.5px; }

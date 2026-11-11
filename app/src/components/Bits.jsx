@@ -50,17 +50,21 @@ export function FakeQr({ seed = "x" }) {
 // 하단 메뉴: 장소·이야기(메인) · 지도 · 상권 · 내 기록 (문화 활동은 장소와 이야기 화면의 "이어진 문화 활동"으로 들어가요)
 export const TABS = [
   ["places", "tab_places", <path key="p" d="M4 19.5V6a2 2 0 012-2h11v14H6a2 2 0 00-2 1.5zM4 19.5A2 2 0 006 21h12 M9 8h5" />],
-  ["home", "tab_map", <path key="p" d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z M12 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />],
+  ["placesHub", "tab_map", <path key="p" d="M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z" />],
   ["market", "tab_market", <path key="p" d="M4 9l1.5-5h13L20 9 M4 9h16v11H4z M4 9a2.7 2.7 0 005.3 0 2.7 2.7 0 005.4 0 2.7 2.7 0 005.3 0 M10 20v-5h4v5" />],
   ["stats", "tab_stats", <path key="p" d="M12 21a9 9 0 100-18 9 9 0 000 18z M12 7v5l3 2" />],
 ];
 
+const TAB_OF = { home: "placesHub", placesCat: "placesHub", placesCourse: "placesHub" };
+
 export function TabBar() {
   const { screen, go } = useApp();
+  // 장소 탭 안의 화면(카테고리 · 코스 따라 보기 · 큰 지도)에서도 장소 탭이 켜져 보여요
+  const active = TAB_OF[screen] || screen;
   return (
     <nav className="tabbar" aria-label={t("main_menu")}>
       {TABS.map(([id, key, icon]) => (
-        <button key={id} className={screen === id ? "on" : ""} aria-current={screen === id ? "page" : undefined} onClick={() => go(id)}>
+        <button key={id} className={active === id ? "on" : ""} aria-current={active === id ? "page" : undefined} onClick={() => go(id)}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">{icon}</svg>
           <span>{t(key)}</span>
         </button>
