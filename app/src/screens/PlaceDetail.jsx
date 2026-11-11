@@ -98,7 +98,7 @@ export default function PlaceDetail() {
     setAudioError("");
     setPlaying(true);
     voice.speak(text, {
-      lang: getLang(), queue: false, chunk: true,
+      lang: getLang(), queue: false, chunk: true, assetKey: spot.id,
       onend: () => setPlaying(false),
       onboundary: (i) => setProgress((p) => Math.max(p, Math.min(0.98, i / Math.max(1, text.length)))),
       onerror: (event) => {
