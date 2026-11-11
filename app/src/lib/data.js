@@ -58,6 +58,7 @@ export async function loadData() {
     courseByKey: byKey,
     destinations,
     spotById,
+    placeById,                // 둘러볼 곳 전체 (상권 거리 계산용)
     explore: places.filter((p) => p.show_on_map && p.lat != null && !DESTINATIONS.includes(p.spot_id)),
     exploreBySpot,
     failed,
