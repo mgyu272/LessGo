@@ -167,6 +167,59 @@ let currentAudio = null;
 let currentController = null;
 const audioCache = new Map();
 const MAX_AUDIO_CACHE = 24;
+const pendingAudio = new Map();
+const CACHE_NAME = "lessgo-gemini-tts-v1";
+function audioCacheRequest(key) {
+  return new Request(new URL("/__tts_cache__/" + encodeURIComponent(key), location.origin).href);
+}
+async function storedAudio(key) {
+  if (!("caches" in window)) return null;
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const response = await cache.match(audioCacheRequest(key));
+    return response ? await response.blob() : null;
+  } catch { return null; }
+}
+async function saveAudio(key, blob) {
+  if (!("caches" in window)) return;
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.put(audioCacheRequest(key), new Response(blob, { headers: { "Content-Type": "audio/wav" } }));
+  } catch { /* private browsing and storage quotas may block persistent caching */ }
+}
+async function getGeminiAudio(chunk, lang, purpose, signal) {
+  const key = JSON.stringify([chunk, lang, purpose]);
+  const cached = audioCache.get(key) || await storedAudio(key);
+  if (cached) { audioCache.set(key, cached); return cached; }
+  // Multiple components may prefetch the same narration; only call Gemini once.
+  if (pendingAudio.has(key)) return pendingAudio.get(key);
+  const promise = (async () => {
+    const response = await fetch("/api/tts", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: chunk, lang, purpose }),
+      signal,
+    });
+    if (!response.ok) {
+      const details = await response.json().catch(() => ({}));
+      throw new Error(details.error || "gemini-tts-unavailable");
+    }
+    const blob = await response.blob();
+    if (!blob.size || !blob.type.startsWith("audio/")) throw new Error("invalid-tts-audio");
+    audioCache.set(key, blob);
+    if (audioCache.size > MAX_AUDIO_CACHE) audioCache.delete(audioCache.keys().next().value);
+    void saveAudio(key, blob);
+    return blob;
+  })().finally(() => pendingAudio.delete(key));
+  pendingAudio.set(key, promise);
+  return promise;
+}
+// Warm the first segment while the visitor reads the page; no autoplay.
+export function prefetchNarration(text, lang = "ko") {
+  const first = ttsChunks(text, 220)[0];
+  if (!first) return;
+  void getGeminiAudio(first, lang, "history").catch(() => {});
+}
+
 function fallbackSpeak(text, options) { return browserSpeak(text, options); }
 // Shorter requests reduce first-audio latency and avoid sending an entire story at once.
 function ttsChunks(text, limit = 220) {
@@ -190,25 +243,9 @@ async function playGemini(text, options, generation) {
   try {
     for (const chunk of chunks) {
       if (generation !== audioGeneration) return;
-      const key = JSON.stringify([chunk, lang, queue ? "navigation" : "history"]);
-      let blob = audioCache.get(key);
-      if (!blob) {
-        const controller = new AbortController();
-        currentController = controller;
-        const response = await fetch("/api/tts", {
-          method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: chunk, lang, purpose: queue ? "navigation" : "history" }),
-          signal: controller.signal,
-        });
-        if (!response.ok) {
-          const details = await response.json().catch(() => ({}));
-          throw new Error(details.error || "gemini-tts-unavailable");
-        }
-        blob = await response.blob();
-        if (!blob.size || !blob.type.startsWith("audio/")) throw new Error("invalid-tts-audio");
-        audioCache.set(key, blob);
-        if (audioCache.size > MAX_AUDIO_CACHE) audioCache.delete(audioCache.keys().next().value);
-      }
+      const controller = new AbortController();
+      currentController = controller;
+      const blob = await getGeminiAudio(chunk, lang, queue ? "navigation" : "history", controller.signal);
       if (generation !== audioGeneration) return;
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
