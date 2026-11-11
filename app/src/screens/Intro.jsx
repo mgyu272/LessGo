@@ -62,7 +62,7 @@ export default function Intro() {
         <p className="intro-tagline">{t("intro_tagline")}</p>
         <ul className="intro-points">
           {POINTS.map(([ic, key]) => (
-            <li key={key}>
+            <li key={key} className={`ip-${ic}`}>
               <span className="intro-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{POINT_ICONS[ic]}</svg></span>
               <span>{t(key)}</span>
             </li>

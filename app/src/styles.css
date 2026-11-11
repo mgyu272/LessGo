@@ -1819,13 +1819,11 @@ div:has(> .spot-pin) { pointer-events: none; }
 .guide-head { display: flex; justify-content: space-between; align-items: center; min-height: 40px; }
 .guide-step { font-size: 14px; font-weight: 700; color: var(--muted); letter-spacing: .04em; }
 .guide-skip { min-height: 40px; padding: 0 6px; font-size: 15px; font-weight: 600; color: var(--muted); }
-.guide-art { height: 210px; margin-top: 6px; border-radius: 22px; background: #E3F2CF; display: grid; place-items: center; overflow: hidden; animation: guideIn .35s ease-out both; }
+.guide-art { height: 220px; margin-top: 6px; border-radius: 22px; background: #E3F2CF; display: grid; place-items: center; overflow: hidden; animation: guideIn .35s ease-out both; }
 .guide-text { margin-top: 18px; text-align: center; animation: guideIn .35s ease-out both; }
 .guide-text h2 { margin: 0; font-size: 23px; line-height: 1.35; font-weight: 800; letter-spacing: -.02em; color: var(--text); word-break: keep-all; }
 .guide-text p { margin: 8px 0 0; font-size: 16.5px; line-height: 1.5; color: var(--muted); word-break: keep-all; min-height: 50px; }
 .guide-dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
-.guide-dots i, .ga-dots i { width: 7px; height: 7px; border-radius: 4px; background: #C6E59E; transition: width .2s; }
-.guide-dots i.on, .ga-dots i.on { width: 22px; background: #2E7A1F; }
 .guide-foot { display: flex; gap: 8px; margin-top: 16px; }
 .guide-foot .btn-pill { margin-top: 0; min-height: 52px; font-size: 17px; }
 .guide-foot .guide-prev { flex: 0 0 34%; }
@@ -1833,57 +1831,73 @@ div:has(> .spot-pin) { pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .guide-art, .guide-text, .guide-scrim { animation: none; } }
 
 /* 카드 그림: 실제 화면을 줄인 모양 */
-.ga-courses { position: relative; display: flex; align-items: center; gap: 8px; }
-.ga-peek { width: 22px; height: 140px; border-radius: 14px; background: rgba(255, 255, 255, .6); }
-.ga-card { width: 224px; padding-bottom: 10px; border-radius: 18px; background: #FFFFFF; box-shadow: var(--card-shadow); overflow: hidden; }
-.ga-photo { position: relative; height: 70px; background: linear-gradient(135deg, #DCEBCB, #C9DFB2); }
-.ga-count { position: absolute; top: 8px; right: 8px; padding: 3px 9px; border-radius: 999px; background: #FFFFFF; font-size: 12px; font-weight: 700; color: var(--text); }
-.ga-card b { display: block; padding: 9px 12px 0; font-size: 18px; font-weight: 800; color: var(--text); }
-.ga-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 9px 10px 0; }
-.ga-btn { display: grid; place-items: center; height: 34px; border-radius: 11px; font-size: 12px; font-weight: 700; white-space: nowrap; }
-.ga-btn.soft { background: #F0F8E6; border: 1px solid #CFE6B4; color: #2E5A1A; }
-.ga-btn.ink { background: #2E7A1F; color: #FFFFFF; }
-.ga-hit { box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 6px rgba(46, 122, 31, .45); animation: gaPulse 1.6s ease-in-out infinite; }
-.ga-dots { position: absolute; left: 0; right: 0; bottom: -18px; display: flex; justify-content: center; gap: 5px; }
-@keyframes gaPulse { 50% { box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 9px rgba(46, 122, 31, .2); } }
-.ga-pick { width: 250px; display: flex; flex-direction: column; gap: 10px; }
-.ga-seg { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 999px; background: #FFFFFF; }
-.ga-seg span { display: grid; place-items: center; height: 34px; border-radius: 999px; font-size: 15px; font-weight: 700; color: var(--muted); }
-.ga-seg span.on { background: #2E7A1F; color: #FFFFFF; }
-.ga-km { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-.ga-km span { display: grid; place-items: center; height: 36px; border-radius: 12px; background: #FFFFFF; font-size: 15px; font-weight: 700; color: var(--text); }
-.ga-km span.on { background: #CFEAA8; box-shadow: inset 0 0 0 2px #2E7A1F; }
-.ga-routes { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.ga-route { display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 12px; border-radius: 12px; background: #FFFFFF; font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; }
-.ga-route i { width: 18px; height: 5px; border-radius: 3px; flex: none; }
-.ga-route.low i { background: #2B6FD6; }
-.ga-route.high i { background: #E04A2F; }
-.ga-run { width: 250px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
-.ga-cue { width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 16px; background: #2F6512; color: #FFFFFF; font-size: 17px; font-weight: 800; }
-.ga-cue svg { width: 26px; height: 26px; flex: none; }
-.ga-stars { display: flex; gap: 8px; }
-.ga-stars svg { width: 30px; height: 30px; color: #C9C2A8; fill: #E3DDC8; stroke-width: 1.5; }
-.ga-stars svg.on { color: #D9A21B; fill: #F6C945; }
-.ga-stamp { width: 66px; height: 66px; display: grid; place-items: center; border-radius: 16px; background: #C8432B; color: #FFF6EA; font-size: 15px; font-weight: 800; transform: rotate(-8deg); box-shadow: 0 6px 14px -6px rgba(140, 40, 20, .6); }
-.ga-lens { width: 270px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.ga-ptabs { width: 100%; display: grid; grid-template-columns: 1fr 1fr 1.35fr; border-bottom: 2px solid #CFE6B4; }
-.ga-ptabs span { padding: 0 0 6px; text-align: center; font-size: 12.5px; font-weight: 600; color: var(--muted); white-space: nowrap; }
-.ga-ptabs span.on { color: #2E7A1F; font-weight: 800; box-shadow: inset 0 -3px 0 #2E7A1F; margin-bottom: -2px; }
-.ga-shot { position: relative; width: 132px; height: 82px; display: grid; place-items: center; border-radius: 12px; background: linear-gradient(135deg, #DCEBCB, #C4DCA9); }
-.ga-shot svg { width: 72px; height: 46px; fill: none; stroke: #4B7A2C; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-.ga-shot .c { position: absolute; width: 16px; height: 16px; border: 3px solid #2E7A1F; }
-.ga-shot .tl { top: -4px; left: -4px; border-right: 0; border-bottom: 0; border-radius: 6px 0 0 0; }
-.ga-shot .tr { top: -4px; right: -4px; border-left: 0; border-bottom: 0; border-radius: 0 6px 0 0; }
-.ga-shot .bl { bottom: -4px; left: -4px; border-right: 0; border-top: 0; border-radius: 0 0 0 6px; }
-.ga-shot .br { bottom: -4px; right: -4px; border-left: 0; border-top: 0; border-radius: 0 0 6px 0; }
-.ga-ai { width: 100%; display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 14px; background: #FFFFFF; box-shadow: var(--card-shadow); }
-.ga-ai-badge { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; background: #2E7A1F; color: #FFFFFF; font-size: 12px; font-weight: 800; }
-.ga-ai b { flex: 1; min-width: 0; font-size: 13.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ga-ai-play { flex: none; display: inline-flex; align-items: center; gap: 3px; padding: 5px 8px; border-radius: 999px; background: #CFEAA8; font-size: 12px; font-weight: 700; color: #1F4A14; }
-.ga-ai-play svg { width: 15px; height: 15px; }
 /* 지도 탭 카테고리 칩 글씨 두께를 장소와 이야기 탭(600)과 맞춰요 */
 .home-chips .chip { font-weight: 600; }
 
 /* 상권: 가게 이름 = 앱 지도로 가는 링크처럼 밑줄 + 핀 */
 .mk-name { display: block; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mk-map-ic { width: 17px; height: 17px; flex: none; color: #2E7A1F; margin-left: -2px; }
+
+.guide-dots i { width: 7px; height: 7px; border-radius: 4px; background: #C6E59E; transition: width .2s; }
+.guide-dots i.on { width: 22px; background: #2E7A1F; }
+
+/* 소개 화면 아이콘: 항목마다 다른 색 */
+.intro-points .ip-route .intro-ic { background: #D6E6FF; color: #1F66D1; }
+.intro-points .ip-lens .intro-ic { background: #FFE0CC; color: #D9501A; }
+.intro-points .ip-star .intro-ic { background: #FFF0B8; color: #B7860B; }
+.intro-points .ip-star .intro-ic svg { fill: #F6C945; }
+
+/* 사용법 카드 그림: 장마다 배경색 */
+.guide-art.tone-1 { background: #DDF1C4; }
+.guide-art.tone-2 { background: #DCE9FF; }
+.guide-art.tone-3 { background: #1E2A1A; }
+.guide-art.tone-4 { background: #FFE9DC; }
+
+/* ① 코스 카드 */
+.ga-card { width: min(212px, calc(100% - 40px)); padding-bottom: 12px; border-radius: 20px; background: #FFFFFF; box-shadow: 0 10px 24px -14px rgba(31, 74, 20, .55); overflow: hidden; text-align: center; }
+.ga-photo { position: relative; height: 92px; background: linear-gradient(135deg, #CFE6B4, #A9D07F); }
+.ga-card b { display: block; padding: 10px 12px 0; font-size: 20px; font-weight: 800; color: var(--text); }
+.ga-btn { display: inline-grid; place-items: center; margin-top: 10px; height: 38px; padding: 0 18px; border-radius: 12px; background: #2E7A1F; color: #FFFFFF; font-size: 14px; font-weight: 800; white-space: nowrap; }
+.ga-hit { animation: gaPulse 1.6s ease-in-out infinite; box-shadow: 0 0 0 0 rgba(46, 122, 31, .5); }
+@keyframes gaPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(46, 122, 31, .45); } 50% { box-shadow: 0 0 0 9px rgba(46, 122, 31, 0); } }
+
+/* ② 거리 · 길 */
+.ga-pick { width: min(270px, calc(100% - 28px)); display: flex; flex-direction: column; gap: 14px; }
+.ga-km { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ga-km span { display: grid; place-items: center; height: 64px; border-radius: 16px; background: #FFFFFF; font-size: 26px; font-weight: 800; color: #1F3B6B; line-height: 1; }
+.ga-km small { font-size: 13px; font-weight: 700; margin-top: -10px; }
+.ga-km span.on { background: #1F66D1; color: #FFFFFF; box-shadow: 0 8px 18px -10px #1F66D1; }
+.ga-routes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ga-route { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 6px; border-radius: 14px; background: #FFFFFF; font-size: 14px; font-weight: 800; white-space: nowrap; }
+.ga-route svg { width: 56px; height: 22px; fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.ga-route.low { color: #1F66D1; } .ga-route.low svg { stroke: #1F66D1; }
+.ga-route.high { color: #D9501A; } .ga-route.high svg { stroke: #D9501A; }
+
+/* ③ 카메라 */
+.ga-cam { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+.ga-cam-top { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; background: rgba(255, 255, 255, .14); color: #FFFFFF; font-size: 12.5px; font-weight: 700; }
+.ga-cam-top i { width: 7px; height: 7px; border-radius: 50%; background: #FF5A3C; box-shadow: 0 0 0 3px rgba(255, 90, 60, .25); }
+.ga-view { position: relative; width: min(240px, calc(100% - 28px)); height: 132px; border-radius: 10px; overflow: hidden; background: #2B3A26; }
+.ga-tomb { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ga-view .place-cover { z-index: 1; }
+.ga-focus { position: absolute; z-index: 2; inset: 18px 52px 34px; }
+.ga-focus i { position: absolute; width: 18px; height: 18px; border: 3px solid #FFD84A; }
+.ga-focus .tl { top: 0; left: 0; border-right: 0; border-bottom: 0; border-radius: 5px 0 0 0; }
+.ga-focus .tr { top: 0; right: 0; border-left: 0; border-bottom: 0; border-radius: 0 5px 0 0; }
+.ga-focus .bl { bottom: 0; left: 0; border-right: 0; border-top: 0; border-radius: 0 0 0 5px; }
+.ga-focus .br { bottom: 0; right: 0; border-left: 0; border-top: 0; border-radius: 0 0 5px 0; }
+.ga-ai { position: absolute; z-index: 2; left: 8px; right: 8px; bottom: 7px; display: flex; align-items: center; gap: 6px; padding: 4px 8px 4px 4px; border-radius: 999px; background: rgba(255, 255, 255, .94); font-size: 12px; font-weight: 700; color: #1B3313; white-space: nowrap; overflow: hidden; }
+.ga-ai b { flex: none; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #D9501A; color: #FFFFFF; font-size: 10px; font-weight: 800; }
+.ga-shutter { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; border: 3px solid #FFFFFF; }
+.ga-shutter i { width: 34px; height: 34px; border-radius: 50%; background: #FFFFFF; }
+
+/* ④ 도착 도장 */
+.ga-seal { width: 132px; height: 132px; display: grid; place-items: center; border-radius: 50%; background: #D3361E; color: #FFF6EA; transform: rotate(-10deg);
+  box-shadow: inset 0 0 0 6px #D3361E, inset 0 0 0 9px #FFF6EA, 0 14px 26px -12px rgba(160, 40, 15, .7); animation: gaStamp .5s cubic-bezier(.3, 1.6, .5, 1) both .1s; }
+.ga-seal span { font-family: "EF Cucumber", "Pretendard", system-ui, sans-serif; font-size: 40px; font-weight: 400; letter-spacing: 0; line-height: 1; -webkit-text-stroke: 1.2px currentColor; paint-order: stroke fill; }
+@keyframes gaStamp { from { opacity: 0; transform: scale(1.6) rotate(-10deg); } to { opacity: 1; transform: scale(1) rotate(-10deg); } }
+@media (prefers-reduced-motion: reduce) { .ga-hit, .ga-seal { animation: none; } }
+
+/* 사용법 카드 사진: 어느 브라우저든 칸을 꽉 채우게 (iOS Safari는 grid 안 % 높이를 잘못 계산해요) */
+.ga-photo .place-cover, .ga-view .place-cover { display: block; position: absolute; inset: 0; overflow: hidden; }
+.ga-photo .place-cover img, .ga-view .place-cover img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center; }
