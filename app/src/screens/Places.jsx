@@ -8,7 +8,7 @@ import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { DESTINATIONS } from "../lib/routes.js";
 import { destName } from "../lib/places.js";
-import { Seal, sealText } from "../components/Bits.jsx";
+import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { Brand } from "../components/LogoBird.jsx";
 import { PlaceCover } from "../components/PlacePhoto.jsx";
 import { TEST_PHOTOS, cameraUnavailable } from "../lib/testPhotos.js";
@@ -83,10 +83,10 @@ export default function Places() {
             <div className="pl-card-photo">
               <CoursePhoto spot={s} />
               <span className="pl-course-count">{t("courses_n", { n: data.courses.filter((c) => c.properties.dest === s.id).length })}</span>
-              <span className="pl-seal" aria-hidden="true"><Seal text={sealText(s)} size={28} /></span>
+              <span className="pl-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
             </div>
             <div className="pl-text">
-              <h3>{destName(data, s.id)}</h3>
+              <h3 className="place-name-font">{destName(data, s.id)}</h3>
               {s.hook && <p className="pl-hook">{loc(s.hook)}</p>}
               {s.hook_meta && <p className="pl-who">{loc(s.hook_meta)}</p>}
             </div>
@@ -157,11 +157,14 @@ function DestCarousel({ items, render, label }) {
 }
 
 // 추천 코스 카드 사진: public/test-photos의 심우장·정릉·의릉 사진, 없으면 장소 자료 사진
+// 추천 코스 카드 사진 = 원래 장소마다 정해 둔 사진 (렌즈 테스트 사진 아님).
+// 심우장·의릉은 앱에 들어 있는 같은 사진(public/guide)을 먼저 써서 바로 떠요. 정릉 등은 장소 사진(관광공사·위키백과).
+const LOCAL_COVER = { simujang: "/guide/simujang.webp", uiryeong: "/guide/uiryeong.webp" };
 function CoursePhoto({ spot }) {
-  const photo = TEST_PHOTOS.find((p) => p.spotId === spot.id);
-  const [failed, setFailed] = useState(!photo);
+  const src = LOCAL_COVER[spot.id];
+  const [failed, setFailed] = useState(!src);
   if (failed) return <PlaceCover place={spot} fallback={<PhotoIcon />} />;
-  return <img className="pl-photo-img" src={photo.src} alt="" onError={() => setFailed(true)} />;
+  return <img className="pl-photo-img" src={src} alt="" decoding="async" onError={() => setFailed(true)} />;
 }
 
 // 렌즈 카드의 흰 손가락(포인터)
@@ -215,8 +218,8 @@ function AskSheet({ stories, noCamera, onClose, onPick, onPickTest }) {
         <div className="st-ask-list">
           {stories.map((s, i) => (
             <button key={s.id} ref={i === 0 && !noCamera ? first : undefined}type="button" className="st-ask-place" onClick={() => onPick(s)}>
-              <Seal text={sealText(s)} size={36} />
-              <b>{destName(data, s.id)}</b>
+              <span className="st-ask-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
+              <b className="place-name-font">{destName(data, s.id)}</b>
               <span aria-hidden="true">›</span>
             </button>
           ))}

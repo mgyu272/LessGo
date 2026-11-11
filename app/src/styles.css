@@ -2160,3 +2160,13 @@ div:has(> .spot-pin) { pointer-events: none; }
 .st-screen .pl-text h3 { margin: 0; font-size: 24px; line-height: 1.25; letter-spacing: -.02em; }
 .st-screen .pl-text .pl-hook { margin: 6px 0 0; font-size: 15px; font-weight: 600; line-height: 1.4; color: #3F5A33; word-break: keep-all; }
 .st-screen .pl-text .pl-who { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+
+/* 이야기 탭: 장소 아이콘(원래 그림)과 장소명 글씨체(성북런 로고 글씨체) */
+.pl-ic { position: absolute; bottom: -28px; left: 16px; z-index: 2; display: grid; place-items: center; box-sizing: border-box; width: 56px; height: 56px; border: 3px solid #FFFFFF; border-radius: 15px; background: #F2F9E6; box-shadow: 0 3px 8px rgba(30, 60, 20, .16); }
+.pl-ic svg { width: 42px; height: 42px; }
+.st-ask-ic { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; background: #F2F9E6; }
+.st-ask-ic svg { width: 34px; height: 34px; }
+.place-name-font { font-family: "EF Cucumber", "Pretendard", system-ui, sans-serif !important; font-weight: 400 !important; letter-spacing: 0 !important; color: #1F4A14; -webkit-text-stroke: .9px currentColor; paint-order: stroke fill; }
+.st-screen .pl-text h3.place-name-font { font-size: 28px; }
+.st-ask-place b.place-name-font { font-size: 21px; }
+.st-screen .pl-text { padding-top: 36px; }
