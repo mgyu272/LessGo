@@ -1682,9 +1682,14 @@ div:has(> .spot-pin) { pointer-events: none; }
 .mk-count-row .pl-count { margin: 0 2px; }
 .mk-info-btn { flex: none; width: 44px; height: 44px; margin-right: -10px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--muted); cursor: pointer; }
 .mk-info-btn:focus-visible { outline: 2px solid #2F6512; outline-offset: -4px; }
-.mk-group { display: flex; flex-direction: column; gap: 14px; }
 .market-screen .mk-text small { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; word-break: keep-all; }
-.mk-group-title { margin: 16px 2px -6px; font-size: 15px; font-weight: 800; color: var(--text); }
+/* 상권 위 탭: 심우장 · 정릉 · 의릉 · 둘러볼 곳 (밑줄 탭) */
+.mk-dest-tabs { display: flex; justify-content: space-around; margin: 0 -18px -6px; padding: 0 8px; border-bottom: 1px solid var(--border); }
+.mk-dest-tabs button { position: relative; min-height: 46px; display: flex; align-items: center; justify-content: center; gap: 2px; padding: 0 4px; border: 0; background: none; font: inherit; font-size: 15px; font-weight: 600; color: var(--muted); white-space: nowrap; cursor: pointer; }
+.mk-dest-tabs button small { font-size: 12.5px; font-weight: 700; color: inherit; opacity: .75; }
+.mk-dest-tabs button.on { color: var(--text); font-weight: 800; }
+.mk-dest-tabs button.on::after { content: ""; position: absolute; left: 2px; right: 2px; bottom: -1px; height: 3px; border-radius: 3px 3px 0 0; background: #2E7A1F; }
+.mk-dest-tabs button:focus-visible { outline: 2px solid #2F6512; outline-offset: -4px; border-radius: 10px; }
 /* 안내 창은 하단 메뉴보다 위에 (통계 화면과 같은 방식) */
 .market-screen:has(> .ui-layer) { z-index: 21; }
 .mk-info p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--text); word-break: keep-all; }
