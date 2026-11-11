@@ -213,6 +213,33 @@ async function getGeminiAudio(chunk, lang, purpose, signal) {
   pendingAudio.set(key, promise);
   return promise;
 }
+// Start warming fixed destination narration as soon as app data is available.
+// One request at a time avoids flooding Gemini and preserves running navigation priority.
+const startupWarmups = new Set();
+export function prefetchDestinationNarrations(spotById, lang = "ko") {
+  if (!spotById) return;
+  const destinations = ["simujang", "jeongneung", "uiryeong"];
+  const work = destinations.map(id => {
+    const spot = spotById[id];
+    const narration = spot?.narration?.[lang];
+    return typeof narration === "string" ? narration.trim() : "";
+  }).filter(Boolean);
+  const fingerprint = JSON.stringify([lang, work]);
+  if (startupWarmups.has(fingerprint)) return;
+  startupWarmups.add(fingerprint);
+  // Prioritize first playable clip for every destination, then the remaining clips.
+  const segments = work.map(text => ttsChunks(text, 220));
+  void (async () => {
+    for (const chunks of segments) {
+      if (chunks[0]) await getGeminiAudio(chunks[0], lang, "history").catch(() => {});
+    }
+    for (const chunks of segments) {
+      for (const chunk of chunks.slice(1)) {
+        await getGeminiAudio(chunk, lang, "history").catch(() => {});
+      }
+    }
+  })();
+}
 // Warm the first segment while the visitor reads the page; no autoplay.
 export function prefetchNarration(text, lang = "ko") {
   const first = ttsChunks(text, 220)[0];
