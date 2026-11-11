@@ -45,7 +45,7 @@ export default function Places() {
         <section className="st-lens" aria-labelledby="st-lens-title">
           {/* 심우장 사진 위에 AI가 단서를 찾는 모습: 네 귀퉁이 꺾쇠 · 칩 2개 · 현판/대문 점선 박스 · 가운데 스캔 선 */}
           <div className="st-lens-photo">
-            <img src={TEST_PHOTOS[0].src} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            <PlaceCover place={data.spotById.simujang} fallback={<PhotoIcon />} />
             <span className="st-lens-corner tl" aria-hidden="true" />
             <span className="st-lens-corner tr" aria-hidden="true" />
             <span className="st-lens-corner bl" aria-hidden="true" />
@@ -157,10 +157,7 @@ function DestCarousel({ items, render, label }) {
 
 // 추천 코스 카드 사진: public/test-photos의 심우장·정릉·의릉 사진, 없으면 장소 자료 사진
 function CoursePhoto({ spot }) {
-  const photo = TEST_PHOTOS.find((p) => p.spotId === spot.id);
-  const [failed, setFailed] = useState(!photo);
-  if (failed) return <PlaceCover place={spot} fallback={<PhotoIcon />} />;
-  return <img className="pl-photo-img" src={photo.src} alt="" onError={() => setFailed(true)} />;
+  return <PlaceCover place={spot} fallback={<PhotoIcon />} />;
 }
 
 // 렌즈 카드의 흰 손가락(포인터)
