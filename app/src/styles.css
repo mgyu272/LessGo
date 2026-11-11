@@ -2120,8 +2120,11 @@ div:has(> .spot-pin) { pointer-events: none; }
 /* 이야기 3편: 사진 카드 캐러셀 (손으로 쓸어 한 장씩) */
 /* 추천 코스 3선 카드: 폭 250px, 사진 98px, 사진 아래 경계에 걸친 흰 배지 안 빨간 도장 */
 .pl-card { min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; border-radius: 20px; background: #FFFFFF; box-shadow: 0 8px 22px -16px rgba(47, 101, 18, .5); }
-.pl-card-photo { position: relative; height: 98px; display: grid; place-items: center; background: #E4F0D5; color: #798174; }
-.pl-card-photo > img, .pl-card-photo .pl-photo-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pl-card-photo { position: relative; flex: none; height: 98px; display: grid; place-items: center; background: #E4F0D5; color: #798174; }
+/* 사진은 98px 칸 안에 고정 (grid 안에서 height:100%만 주면 원래 사진 높이로 커져 글자·버튼을 덮어요).
+   overflow:hidden은 안 써요: 사진 아래 경계에 걸친 도장 배지가 잘리니까요 */
+.pl-card-photo > img, .pl-card-photo .pl-photo-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.pl-course-count, .pl-seal { z-index: 1; }
 .pl-course-count { position: absolute; top: 8px; right: 8px; background: #FFFFFF; padding: 3px 9px; border-radius: 999px; color: #2F6512; font-size: 12px; font-weight: 800; }
 .pl-seal { position: absolute; bottom: -19px; left: 12px; display: grid; place-items: center; box-sizing: border-box; width: 38px; height: 38px; border-radius: 10px; background: #FFFFFF; box-shadow: 0 3px 8px rgba(30, 60, 20, .16); }
 .pl-seal .seal { --vermilion: #B8352A; }
