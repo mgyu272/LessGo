@@ -89,7 +89,7 @@ function speechParts(text, maxLength = 160) {
 
 // queue: true면 앞의 말이 끝난 뒤 이어서 말해요 (길 안내용)
 // onboundary(charIndex): 단어를 읽기 시작할 때마다 몇 번째 글자인지 알려줘요 (지원하는 브라우저에서만)
-export function speak(text, { lang = "en", queue = true, chunk = false, onstart, onend, onerror, onboundary } = {}) {
+function browserSpeak(text, { lang = "en", queue = true, chunk = false, onstart, onend, onerror, onboundary } = {}) {
   if (!text) { onend?.(); return false; }
   if (!speechSupported()) {
     if (onerror) onerror({ error: "synthesis-unavailable" }); else onend?.();
@@ -137,7 +137,7 @@ export function speak(text, { lang = "en", queue = true, chunk = false, onstart,
   return true;
 }
 
-export function stop() {
+function browserStop() {
   activeSessions.forEach((session) => { session.cancelled = true; clearTimeout(session.timer); session.utterances.length = 0; });
   activeSessions.clear();
   synth?.cancel();
@@ -157,3 +157,75 @@ export function releaseScreen() { try { lock?.release(); } catch {} lock = null;
 document.addEventListener("visibilitychange", () => {
   if (lock && document.visibilityState === "visible") keepScreenOn();
 });
+
+ 
+// Gemini-generated audio. Browser synthesis remains the offline/error fallback.
+// Navigation requests are serialized; a history narration interrupts queued cues.
+let audioQueue = Promise.resolve();
+let audioGeneration = 0;
+let currentAudio = null;
+let currentController = null;
+const audioCache = new Map();
+const MAX_AUDIO_CACHE = 24;
+function fallbackSpeak(text, options) { return browserSpeak(text, options); }
+async function playGemini(text, options, generation) {
+  if (generation !== audioGeneration) return;
+  const { lang = "en", queue = true, onstart, onend, onerror, onboundary } = options;
+  const key = JSON.stringify([text, lang, queue ? "navigation" : "history"]);
+  let blob = audioCache.get(key);
+  try {
+    if (!blob) {
+      const controller = new AbortController();
+      currentController = controller;
+      const response = await fetch("/api/tts", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, lang, purpose: queue ? "navigation" : "history" }),
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new Error("gemini-tts-unavailable");
+      blob = await response.blob();
+      if (!blob.size || !blob.type.startsWith("audio/")) throw new Error("invalid-tts-audio");
+      audioCache.set(key, blob);
+      if (audioCache.size > MAX_AUDIO_CACHE) audioCache.delete(audioCache.keys().next().value);
+    }
+    if (generation !== audioGeneration) return;
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    currentAudio = audio;
+    await new Promise((resolve, reject) => {
+      audio.onended = resolve;
+      audio.onerror = () => reject(new Error("audio-playback-failed"));
+      audio.onplay = () => onstart?.();
+      audio.play().catch(reject);
+    });
+    URL.revokeObjectURL(url);
+    if (currentAudio === audio) currentAudio = null;
+    if (generation === audioGeneration) { onboundary?.(text.length); onend?.(); }
+  } catch (error) {
+    if (generation !== audioGeneration || error?.name === "AbortError") return;
+    // Keep safety-critical turn cues audible when network/API/playback fails.
+    fallbackSpeak(text, { ...options, onerror: (event) => { if (onerror) onerror(event); else onend?.(); } });
+  }
+}
+export function speak(text, options = {}) {
+  if (!text) { options.onend?.(); return false; }
+  const queue = options.queue !== false;
+  if (!queue) stop();
+  const generation = audioGeneration;
+  const run = () => playGemini(text, options, generation);
+  audioQueue = audioQueue.catch(() => {}).then(run);
+  return true;
+}
+export function stop() {
+  audioGeneration++;
+  currentController?.abort();
+  currentController = null;
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.removeAttribute("src");
+    currentAudio.load();
+    currentAudio = null;
+  }
+  audioQueue = Promise.resolve();
+  browserStop();
+}
