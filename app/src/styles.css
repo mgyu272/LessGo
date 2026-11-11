@@ -914,34 +914,10 @@ div:has(> .spot-pin) { pointer-events: none; }
 .places-scroll::-webkit-scrollbar, .pd-scroll::-webkit-scrollbar, .pl-topics::-webkit-scrollbar { display: none; }
 .pl-top { display: flex; align-items: center; gap: 8px; min-height: 48px; }
 .pl-top h1 { flex: 1; margin: 0; font-size: 24.5px; font-weight: 800; letter-spacing: -.02em; }
-.pl-view { display: flex; padding: 3px; border-radius: 14px; background: #DDEFC6; }
-.pl-view button { min-height: 38px; padding: 0 12px; border-radius: 11px; font-size: 14.5px; font-weight: 700; color: var(--muted); }
-.pl-view button.on { background: #FFFFFF; color: var(--text); box-shadow: 0 4px 12px -4px rgba(31, 61, 20, .3); }
-.pl-search { height: 48px; flex: none; }
 .pl-topics { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 -18px; padding: 0 18px 4px; flex: none; }
 .pl-topic { flex: none; min-height: 38px; padding: 0 14px; border-radius: 19px; font-size: 15.5px; font-weight: 600; color: var(--text); }
 .pl-topic.on { background: var(--strong); color: #FFFFFF; }
-.pl-map { position: relative; height: 260px; border-radius: 22px; overflow: hidden; flex: none; }
-.pl-map .map { position: absolute; inset: 0; }
 .pl-count { margin: 2px 2px -4px; font-size: 14.5px; font-weight: 600; color: var(--muted); }
-.pl-destinations { flex: none; min-width: 0; }
-.pl-destinations h2 { margin: 0; font-size: 23.5px; font-weight: 800; }
-.pl-destinations h2 span { color: var(--places-theme); }
-.pl-destinations > p { margin: 4px 0 8px; font-size: 15px; color: #4A5E42; }
-.pl-card { flex: 0 0 286px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; scroll-snap-align: start; overflow: hidden; border-radius: 22px; background: #FFF; border: 1px solid #E2ECD9; box-shadow: 0 3px 8px rgba(30,60,20,.08); }
-.pl-card-photo { position: relative; height: 150px; display: grid; place-items: center; background: #E6EDDF; color: #798174; }
-.pl-course-count { position: absolute; top: 10px; right: 10px; background: white; padding: 4px 10px; border-radius: 999px; color: #2E6B1C; font-size: 13.5px; font-weight: 800; }
-.pl-ic { position: absolute; bottom: -28px; left: 16px; display: grid; place-items: center; box-sizing: border-box; width: 56px; height: 56px; border: 3px solid white; border-radius: 15px; background: #F2F9E6; box-shadow: 0 3px 8px rgba(30,60,20,.16); }
-.pl-ic svg { width: 42px; height: 42px; }
-.pl-text { flex: 1; padding: 34px 14px 12px; }
-.pl-text h3 { margin: 0; font-size: 20px; font-weight: 800; }
-.pl-text small { font-size: 13px; font-weight: 700; color: var(--places-theme); }
-.pl-text p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.5; color: #4A5E42; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.pl-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; padding: 0 12px 12px; }
-.pl-actions button { height: 46px; padding: 0 3px; border-radius: 14px; font-size: 14.5px; line-height: 1.2; font-weight: 700; color: var(--strong); background: #F2F9E6; border: 1px solid #D3E4C6; }
-.pl-actions button:last-child { color: white; background: #2E7A1F; border-color: #2E7A1F; }
-.pl-actions button:last-child:active { background: #24631A; }
-.pl-actions button:focus-visible { outline: 2px solid var(--places-theme); outline-offset: 2px; }
 
 /* ---------- ⑧ 장소 상세 (PlaceDetail.dc.html) ---------- */
 .pd-scroll { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: none; padding-bottom: calc(110px + var(--safe-bottom)); }
@@ -1362,7 +1338,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .ex-card { flex: none; width: 264px; scroll-snap-align: start; border-radius: 18px; padding: 12px 12px 10px 14px; display: flex; flex-direction: column; gap: 4px; }
 .ex-card.on { box-shadow: inset 0 0 0 2px #2F6512, var(--glass-shadow); }
 .ex-card-name { display: flex; align-items: center; gap: 8px; text-align: left; color: var(--text); min-height: 28px; padding: 0; }
-.ex-card-name i, .pl-explore i, .pd-explore i { width: 10px; height: 10px; flex: none; border-radius: 50%; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 3px rgba(28, 43, 38, .12); }
+.ex-card-name i, .pd-explore i { width: 10px; height: 10px; flex: none; border-radius: 50%; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 3px rgba(28, 43, 38, .12); }
 .ex-card-name b { font-size: 17px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ex-card > small { font-size: 13.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ex-card-foot { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
@@ -1370,16 +1346,9 @@ div:has(> .spot-pin) { pointer-events: none; }
 .ex-card-foot .btn { width: auto; margin: 0; flex: none; min-height: 36px; padding: 0 14px; border-radius: 18px; font-size: 14.5px; font-weight: 700; color: var(--strong); }
 
 /* 장소와 이야기: 둘러볼 곳 목록 */
-.pl-explore { display: flex; flex-direction: column; gap: 8px; flex: none; margin-top: 6px; }
-.pl-explore h2 { margin: 0; font-size: 20px; font-weight: 800; }
-.places-screen [data-places-theme="all"] { --places-theme: #23701A; }
-.places-screen [data-places-theme="exhibit"] { --places-theme: #1F66D1; }
-.places-screen [data-places-theme="heritage"] { --places-theme: #D9501A; }
-.places-screen [data-places-theme="religion"] { --places-theme: #B02E86; }
-.places-screen [data-places-theme="park"] { --places-theme: #3A9116; }
 .places-screen .pl-topics { display: flex; flex-wrap: nowrap; overflow-x: auto; }
 .places-screen .pl-topic { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; background: white; }
-.places-screen .pl-topic svg, .pl-explore h2 span { color: var(--places-theme); }
+.places-screen .pl-topic svg { color: var(--places-theme); }
 .places-screen .pl-topic.on { background: var(--places-theme); color: white; }
 .places-screen .pl-topic.on svg { color: inherit; }
 .market-screen .pl-topic.on { background: var(--strong); color: #FFFFFF; }
@@ -1394,16 +1363,15 @@ div:has(> .spot-pin) { pointer-events: none; }
 .explore-caption > small { min-height: 18px; font-size: 14px; color: #5C6F54; }
 .explore-distance { display: flex; align-items: center; gap: 4px; font-size: 13.5px; white-space: nowrap; overflow: hidden; }
 .explore-distance svg { flex: none; color: #2E7A1F; }
-.pl-explore > p { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--muted); }
-.pl-explore ul, .pd-explore ul { list-style: none; margin: 0; padding: 2px 12px; border-radius: 20px; }
-.pl-explore li + li, .pd-explore li + li { border-top: 1px solid #EAF3DD; }
-.pl-explore li button, .pd-explore li button { width: 100%; min-height: 60px; display: flex; align-items: center; gap: 10px; text-align: left; color: var(--text); padding: 8px 0; }
+.pd-explore ul { list-style: none; margin: 0; padding: 2px 12px; border-radius: 20px; }
+.pd-explore li + li { border-top: 1px solid #EAF3DD; }
+.pd-explore li button { width: 100%; min-height: 60px; display: flex; align-items: center; gap: 10px; text-align: left; color: var(--text); padding: 8px 0; }
 .ple-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .ple-text b { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ple-text small { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ple-near { font-size: 13.5px; font-weight: 700; color: var(--link); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.pl-explore .chev, .pd-explore .chev { width: 16px; height: 16px; flex: none; fill: none; stroke: var(--muted); stroke-width: 2; }
-.ple-more, .pd-explore-all { margin: 0; min-height: 44px; border-radius: 14px; color: var(--strong); font-size: 15.5px; }
+.pd-explore .chev { width: 16px; height: 16px; flex: none; fill: none; stroke: var(--muted); stroke-width: 2; }
+.pd-explore-all { margin: 0; min-height: 44px; border-radius: 14px; color: var(--strong); font-size: 15.5px; }
 
 /* 장소 상세: 근처 둘러볼 곳 · 값 없는 방문 정보 */
 .pd-pending { color: var(--muted); font-weight: 600; }
@@ -1434,8 +1402,6 @@ div:has(> .spot-pin) { pointer-events: none; }
 .ex-survey { list-style: none; margin: 0; padding: 4px 16px; border-radius: 18px; }
 .ex-survey li { padding: 12px 0; font-size: 17px; font-weight: 700; }
 .ex-survey li + li { border-top: 1px solid #EAF3DD; }
-.pl-near { align-self: flex-start; min-height: 36px; padding: 0 14px; border-radius: 18px; background: var(--strong); color: #FFFFFF; font-size: 14.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
-.pl-near span { font-weight: 600; opacity: .85; }
 
 /* 홈 지도 핀으로 연 장소 상세: 가운데 모달. 머리·탭과 달리기 버튼은 고정, 내용만 스크롤 */
 .pd-scrim { z-index: 25; background: rgba(20, 35, 15, .35); }
@@ -1727,37 +1693,9 @@ div:has(> .spot-pin) { pointer-events: none; }
 .rw-coupon-text small { font-size: 13px; font-weight: 600; opacity: .85; }
 
 /* ---------- 장소와 이야기: 코스 목적지 캐러셀 (손으로 쓸어 한 장씩, 옆 카드 살짝 보임) ---------- */
-.dc { position: relative; margin-inline: -18px; outline: none; }
-.dc:focus-visible .dc-slide.on .pl-card { outline: 2px solid var(--places-theme, #2F6512); outline-offset: 2px; }
-.dc-track { display: flex; gap: 10px; padding: 5px 48px 12px; overflow-x: auto; overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory; scroll-padding-inline: 48px; scrollbar-width: none; -webkit-overflow-scrolling: touch; cursor: grab; }
-.dc-track::-webkit-scrollbar { display: none; }
-.dc-track.dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; -webkit-user-select: none; }
-.dc-slide { flex: 0 0 100%; min-width: 0; display: flex; scroll-snap-align: center; scroll-snap-stop: always;
-  transform: scale(.93); opacity: .55; transform-origin: center; transition: transform .45s cubic-bezier(.22, 1, .36, 1), opacity .45s ease; }
-.dc-slide.on { transform: scale(1); opacity: 1; }
-.dc-slide img { -webkit-user-drag: none; }
-.dc-slide .pl-card { flex: 1 1 auto; width: 100%; }
-.dc-slide.on .pl-card { box-shadow: 0 12px 26px -14px rgba(30, 60, 20, .45); }
-.dc-dots { display: flex; justify-content: center; gap: 6px; margin-top: 2px; }
-.dc-dots span { width: 7px; height: 7px; border-radius: 4px; background: #C9DBB6; transition: width .35s cubic-bezier(.22, 1, .36, 1), background .35s; }
-.dc-dots span.on { width: 22px; background: var(--places-theme, #2F6512); }
-@media (prefers-reduced-motion: reduce) { .dc-slide, .dc-dots span { transition: none; } }
+
 
 /* ---------- 장소와 이야기: 둘러볼 곳 3열 타일 ---------- */
-.gx-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 10px; }
-.gx-tile { min-width: 0; display: flex; flex-direction: column; gap: 4px; padding: 0; border: 0; background: none; text-align: left; color: var(--text); font: inherit; cursor: pointer; }
-.gx-tile:active .gx-photo { transform: scale(.97); }
-.gx-tile:focus-visible { outline: 2px solid var(--places-theme); outline-offset: 3px; border-radius: 16px; }
-.gx-photo { position: relative; aspect-ratio: 1; border-radius: 16px; overflow: hidden; background: #EEF3E8; border: 1px solid #E2ECD9; transition: transform .15s; }
-.gx-photo .mk-photo { width: 100%; height: 100%; border-radius: 0; box-shadow: none; }
-.gx-photo .mk-photo-empty { color: var(--places-theme); background: color-mix(in srgb, var(--places-theme) 10%, #FFFFFF); }
-.gx-badge { position: absolute; left: 6px; top: 6px; max-width: calc(100% - 12px); padding: 2px 7px; border-radius: 999px; background: rgba(255, 255, 255, .94); color: var(--places-theme); font-size: 12px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.gx-free { position: absolute; right: 6px; bottom: 6px; padding: 2px 7px; border-radius: 999px; background: #2F6512; color: #FFFFFF; font-size: 12px; font-weight: 800; }
-.gx-name { font-size: 15.5px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; }
-.gx-dist { display: flex; align-items: center; gap: 3px; padding: 0 2px; font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; }
-.gx-dist svg { flex: none; color: #2F6512; }
-.gx-dist strong { color: #2F6512; font-weight: 800; }
 
 /* ---------- 테마 칩 (컴포넌트 시트 '칩과 꼬리표'): 기본 = 호버 색, 선택 = 테마 색으로 채움 ---------- */
 [data-theme-chip="all"]      { --tc: #23701A; --tc-soft: #CDE8B6; --tc-on: #23701A; --tc-on-text: #FFFFFF; }
@@ -1989,3 +1927,70 @@ div:has(> .spot-pin) { pointer-events: none; }
 .ph-screen .ph-chips .pl-topic { height: 44px; min-height: 44px; flex: 1 0 auto; justify-content: center; gap: 3px; padding: 0 9px; font-size: 14.5px; }
 .ph-screen .ph-chips .pl-topic .grp-icon { width: 16px; height: 16px; }
 .ph-screen .ph-chips .chip-n { margin-left: 3px; font-size: 12.5px; }
+
+/* ---------- 이야기 탭 (Places.jsx) ---------- */
+.st-lens { flex: none; display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 24px; background: #1F3D14; color: #FFFFFF; box-shadow: 0 14px 28px -16px rgba(20, 45, 10, .8); }
+.st-lens-label { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: #BEEC82; letter-spacing: .02em; }
+.st-lens h2 { margin: 0; font-size: 20px; font-weight: 800; line-height: 1.4; color: #FFFFFF; word-break: keep-all; }
+.st-lens-steps { display: flex; flex-wrap: wrap; gap: 6px; }
+.st-lens-steps span { padding: 5px 10px; border-radius: 999px; background: #2F5A1E; color: #DDF2C4; font-size: 13px; font-weight: 700; }
+.st-lens-btn { margin-top: 4px; height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 14px; background: #BEEC82; color: #1C3A0C; font: inherit; font-size: 16px; font-weight: 800; cursor: pointer; }
+.st-lens-btn:active { transform: scale(.98); }
+.st-lens-btn:focus-visible { outline: 3px solid #BEEC82; outline-offset: 3px; }
+.st-head h2 { margin: 10px 2px 0; font-size: 19px; font-weight: 800; }
+.st-head p { margin: 4px 2px 0; font-size: 14px; color: var(--muted); word-break: keep-all; }
+.st-card { flex: none; display: flex; flex-direction: column; gap: 14px; padding: 16px; border-radius: 22px; }
+.st-card-top { display: flex; align-items: flex-start; gap: 14px; }
+.st-card-top .seal { margin-top: 2px; }
+.st-card-text { flex: 1; min-width: 0; }
+.st-card-text small { display: block; font-size: 12.5px; font-weight: 700; color: #3F7F1C; }
+.st-card-text h3 { margin: 4px 0 0; font-size: 17px; font-weight: 800; line-height: 1.4; color: var(--text); word-break: keep-all; }
+.st-card-text p { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.st-card-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.st-card-btns button { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 8px; border: 0; border-radius: 14px; font: inherit; font-size: 14.5px; font-weight: 800; white-space: nowrap; cursor: pointer; }
+.st-btn-listen { background: #1F5A12; color: #FFFFFF; }
+.st-btn-listen span { font-size: 12px; }
+.st-btn-run { background: #E3F2CF; color: #1F4A12; }
+.st-card-btns button:active { transform: scale(.98); }
+.st-ask .st-ask-list { display: flex; flex-direction: column; gap: 8px; }
+.st-ask-place { min-height: 56px; display: flex; align-items: center; gap: 12px; padding: 8px 14px; border: 1px solid var(--border); border-radius: 16px; background: #FFFFFF; font: inherit; color: var(--text); text-align: left; cursor: pointer; }
+.st-ask-place b { flex: 1; font-size: 17px; font-weight: 800; }
+.st-ask-place > span:last-child { font-size: 22px; color: var(--muted); }
+
+/* ---------- 장소 상세 이야기 탭 ---------- */
+.pd-hook { display: flex; align-items: flex-start; gap: 14px; padding: 2px 2px 4px; }
+.pd-hook .seal { margin-top: 4px; }
+.pd-hook h2 { margin: 0; font-size: 27px; font-weight: 800; line-height: 1.32; letter-spacing: -.02em; color: var(--text); word-break: keep-all; text-wrap: balance; }
+.pd-hook p { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+.pd-audio { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; }
+.pd-audio-btn { flex: none; width: 48px; height: 48px; display: grid; place-items: center; border: 0; border-radius: 50%; background: #1F5A12; color: #FFFFFF; cursor: pointer; }
+.pd-audio-btn:focus-visible { outline: 3px solid #2F6512; outline-offset: 2px; }
+.pd-audio-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.pd-audio-text b { font-size: 15.5px; font-weight: 800; color: var(--text); }
+.pd-audio-bar { display: block; height: 6px; border-radius: 3px; background: #E3F2CF; overflow: hidden; }
+.pd-audio-bar i { display: block; height: 100%; border-radius: 3px; background: #2E7A1F; transition: width .3s linear; }
+.pd-cards { display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 20px; }
+.pd-cards-head { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 700; color: #3F7F1C; }
+.pd-dots { display: inline-flex; gap: 5px; }
+.pd-dots i { width: 7px; height: 7px; border-radius: 4px; background: #C6E59E; transition: width .2s; }
+.pd-dots i.on { width: 18px; background: #2E7A1F; }
+.pd-cards h3 { margin: 2px 0 0; font-size: 19px; font-weight: 800; line-height: 1.4; word-break: keep-all; }
+.pd-cards p { margin: 6px 0 0; font-size: 15.5px; line-height: 1.75; color: #3F5A2C; word-break: keep-all; }
+.pd-cards-nav { display: flex; justify-content: space-between; gap: 8px; margin-top: 4px; }
+.pd-cards-nav button { min-height: 44px; padding: 0 14px; border: 0; border-radius: 12px; background: #EEF7E2; color: #1F4A12; font: inherit; font-size: 14.5px; font-weight: 800; cursor: pointer; }
+.pd-cards-nav button:last-child { background: #1F5A12; color: #FFFFFF; }
+.pd-cards-nav button:disabled { opacity: .45; cursor: default; }
+.pd-lens-cta { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 0; border-radius: 20px; background: #1F3D14; color: #FFFFFF; text-align: left; font: inherit; cursor: pointer; }
+.pd-lens-cta > span:nth-child(2) { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.pd-lens-cta b { font-size: 15.5px; font-weight: 800; line-height: 1.4; word-break: keep-all; }
+.pd-lens-cta small { font-size: 13px; color: #DDF2C4; }
+.pd-lens-ic { flex: none; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: #2F5A1E; color: #BEEC82; }
+.pd-lens-ic svg { width: 22px; height: 22px; }
+.pd-lens-go { font-size: 24px; color: #BEEC82; }
+.pd-lens-cta:focus-visible { outline: 3px solid #2F6512; outline-offset: 2px; }
+/* 이야기 탭·장소 상세 이야기의 도장: 빨간 바탕 + 안쪽 흰 선 */
+.st-screen .seal, .pd-hook .seal { background: #B8352A; color: #FFFFFF; box-shadow: inset 0 0 0 3px #B8352A, inset 0 0 0 4.5px rgba(255, 255, 255, .9); }
+/* 이야기 탭 맨 위: 로고 + 성북런 (로고 글씨체) */
+.st-brand { margin: 2px 0 0; }
+.st-brand .brand { gap: 10px; }
+.st-brand .brand-name b { font-family: "EF Cucumber", "Pretendard", system-ui, sans-serif; font-weight: 400; font-size: 30px; letter-spacing: 0; color: #1F4A14; -webkit-text-stroke: 1px currentColor; paint-order: stroke fill; }

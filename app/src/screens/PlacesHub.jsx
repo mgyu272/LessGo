@@ -1,5 +1,5 @@
 // 장소 탭: 성북구 둘러볼 곳을 종류(전시·역사·종교·공원)와 코스로 나눠 보여줘요.
-// - PlacesHub      : 장소 첫 화면. 카테고리 큰 카드 4장 + 코스 따라 보기(심우장·정릉·의릉)
+// - PlacesHub      : 장소 첫 화면. 카테고리 큰 카드 4장 + 코스 따라 보기(심우장·정릉·의릉). 검색창은 없어요
 // - PlacesCategory : 카테고리 하나. 작은 지도 + 코스 목적지에서 가까운 순 목록 (핀 ↔ 카드 연결)
 // - PlacesCourse   : 코스 따라 보기. 그 목적지의 가장 짧은 코스 + 코스 근처 장소 (300m 안, 없으면 500m → 800m)
 // 큰 지도는 Home.jsx ("지도 크게 보기"). 고른 카테고리·목적지는 app.placesView에 남겨서 상세에 갔다 와도 그대로예요.
@@ -55,15 +55,8 @@ export function PlacesHub() {
   const app = useApp();
   const { data } = app;
   const st = app.placesView.current;
-  const [q, setQ] = useState(st.q || "");
-  useEffect(() => { st.q = q; }, [st, q]);
   const items = usePlaceItems(data);
   const byCat = useMemo(() => Object.fromEntries(CATS.map((c) => [c, items.filter((p) => groupOf(p) === c).sort(byNearest)])), [items]);
-  const results = useMemo(() => {
-    const qq = q.trim().toLowerCase();
-    if (!qq) return null;
-    return items.filter((p) => [p.name?.ko, p.name?.en, p.kind, p.address, p.area_ko, t("grp_" + groupOf(p))].some((x) => (x || "").toLowerCase().includes(qq))).sort(byNearest);
-  }, [items, q]);
   // 코스 따라 보기 화면과 같은 기준으로 센 개수
   const nearCount = useMemo(() => Object.fromEntries(DESTINATIONS.map((d) => [d, courseNear(data, shortestCourse(data, d), d).list.length])), [data]);
   const openCat = (c) => { st.cat = c; app.go("placesCat"); };
@@ -77,52 +70,36 @@ export function PlacesHub() {
           <h1>{t("ph_title")}</h1>
           <p>{t("ph_sub", { n: items.length })}</p>
         </div>
-        <label className="search glass pl-search">
-          <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M20 20l-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("ph_search_ph")} aria-label={t("ph_search")} />
-        </label>
+        <h2 className="ph-h2">{t("ph_by_cat")}</h2>
+        <div className="ph-cats">
+          {CATS.map((c) => {
+            const list = byCat[c];
+            const names = list.slice(0, 3).map((p) => loc(p.name).replace(/\s*\(.*\)/, "")).join(", ");
+            return (
+              <button key={c} type="button" className="ph-cat" data-theme-chip={c} style={{ "--deep": DEEP[c] }} onClick={() => openCat(c)}
+                aria-label={`${t("grp_" + c)} ${t("ph_n", { n: list.length })}`}>
+                <span className="ph-cat-top">
+                  <span className="ph-cat-ic" aria-hidden="true"><GroupIcon group={c} size={24} /></span>
+                  <b className="ph-cat-n">{t("ph_n", { n: list.length })}</b>
+                </span>
+                <span className="ph-cat-name">{t("grp_" + c)}</span>
+                <span className="ph-cat-desc">{t("ph_desc_" + c)}</span>
+                <span className="ph-cat-more"><span>{names}</span>{list.length > 3 && <span className="ph-cat-suffix">{t("ph_more_suffix")}</span>}</span>
+              </button>
+            );
+          })}
+        </div>
 
-        {results ? (
-          <>
-            <p className="pl-count">{results.length ? t("ph_results", { n: results.length }) : t("ph_none")}</p>
-            {results.map((p) => (
-              <PlaceRow key={p.id} p={p} meta={fromDest(data, p)} onOpen={() => openItem(app, p, "placesHub")} />
-            ))}
-          </>
-        ) : (
-          <>
-            <h2 className="ph-h2">{t("ph_by_cat")}</h2>
-            <div className="ph-cats">
-              {CATS.map((c) => {
-                const list = byCat[c];
-                const names = list.slice(0, 3).map((p) => loc(p.name).replace(/\s*\(.*\)/, "")).join(", ");
-                return (
-                  <button key={c} type="button" className="ph-cat" data-theme-chip={c} style={{ "--deep": DEEP[c] }} onClick={() => openCat(c)}
-                    aria-label={`${t("grp_" + c)} ${t("ph_n", { n: list.length })}`}>
-                    <span className="ph-cat-top">
-                      <span className="ph-cat-ic" aria-hidden="true"><GroupIcon group={c} size={24} /></span>
-                      <b className="ph-cat-n">{t("ph_n", { n: list.length })}</b>
-                    </span>
-                    <span className="ph-cat-name">{t("grp_" + c)}</span>
-                    <span className="ph-cat-desc">{t("ph_desc_" + c)}</span>
-                    <span className="ph-cat-more"><span>{names}</span>{list.length > 3 && <span className="ph-cat-suffix">{t("ph_more_suffix")}</span>}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            <h2 className="ph-h2">{t("ph_by_course")}</h2>
-            <p className="ph-h2-sub">{t("ph_by_course_sub")}</p>
-            <div className="ph-dests">
-              {DESTINATIONS.map((d) => (
-                <button key={d} type="button" className="card ph-dest" onClick={() => openCourse(d)}>
-                  <b>{destName(data, d)}</b>
-                  <small>{t("ph_near_n", { n: nearCount[d] })}</small>
-                </button>
-              ))}
-            </div>
-          </>
-        )}
+        <h2 className="ph-h2">{t("ph_by_course")}</h2>
+        <p className="ph-h2-sub">{t("ph_by_course_sub")}</p>
+        <div className="ph-dests">
+          {DESTINATIONS.map((d) => (
+            <button key={d} type="button" className="card ph-dest" onClick={() => openCourse(d)}>
+              <b>{destName(data, d)}</b>
+              <small>{t("ph_near_n", { n: nearCount[d] })}</small>
+            </button>
+          ))}
+        </div>
       </div>
     </section>
   );

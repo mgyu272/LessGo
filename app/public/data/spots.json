@@ -172,6 +172,8 @@
         "en": "Simujang"
       },
       "seal": "심우",
+      "hook": { "ko": "왜 이 한옥은 북쪽을 보고 있을까?", "en": "Why does this hanok face north?" },
+      "hook_meta": { "ko": "만해 한용운 · 1933–1944", "en": "Han Yong-un (Manhae) · 1933–1944" },
       "category": "history",
       "lat": 37.5936268,
       "lng": 126.9916662,
@@ -231,6 +233,8 @@
         "en": "Jeongneung"
       },
       "seal": "정릉",
+      "hook": { "ko": "왕비의 무덤은 왜 도성 밖으로 옮겨졌을까?", "en": "Why was the queen's tomb moved outside the city walls?" },
+      "hook_meta": { "ko": "신덕왕후 · 1409년 이장", "en": "Queen Sindeok · moved in 1409" },
       "category": "history",
       "lat": 37.601177158215,
       "lng": 127.007591783521,
@@ -290,6 +294,8 @@
         "en": "Uireung"
       },
       "seal": "의릉",
+      "hook": { "ko": "왕과 왕비의 무덤이 왜 위아래로 놓였을까?", "en": "Why do the king's and queen's tombs sit one above the other?" },
+      "hook_meta": { "ko": "경종 · 선의왕후 · 상하이봉릉", "en": "King Gyeongjong · Queen Seonui" },
       "category": "history",
       "lat": 37.6044099656019,
       "lng": 127.058716558469,
