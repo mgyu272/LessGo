@@ -1678,7 +1678,20 @@ div:has(> .spot-pin) { pointer-events: none; }
 .mk-text small { font-size: 12px; font-weight: 600; color: var(--link); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .mk-addr { font-size: 13.5px; color: var(--muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .mk-onmap { font-size: 12.5px; font-weight: 700; color: #2E7A1F; white-space: nowrap; }
-.mk-hint { margin: 0 2px -4px; font-size: 13px; color: var(--muted); word-break: keep-all; }
+.mk-count-row { display: flex; align-items: center; justify-content: space-between; gap: 4px; margin: 0 0 -14px; }
+.mk-count-row .pl-count { margin: 0 2px; }
+.mk-info-btn { flex: none; width: 44px; height: 44px; margin-right: -10px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--muted); cursor: pointer; }
+.mk-info-btn:focus-visible { outline: 2px solid #2F6512; outline-offset: -4px; }
+.mk-group { display: flex; flex-direction: column; gap: 14px; }
+.market-screen .mk-text small { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; word-break: keep-all; }
+.mk-group-title { margin: 16px 2px -6px; font-size: 15px; font-weight: 800; color: var(--text); }
+/* 안내 창은 하단 메뉴보다 위에 (통계 화면과 같은 방식) */
+.market-screen:has(> .ui-layer) { z-index: 21; }
+.mk-info p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--text); word-break: keep-all; }
+.mk-info h3 { margin: 4px 0 -6px; font-size: 16px; font-weight: 800; }
+.mk-info ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; font-size: 15px; line-height: 1.5; word-break: keep-all; }
+/* 마지막 가게가 하단 메뉴에 가리지 않게: 메뉴 높이(약 72px) + 아래 띄움(12px) + safe-area + 여유 */
+.market-screen .places-scroll::after { content: ""; flex: none; height: 16px; }
 .mk-kakao { position: relative; flex: none; height: 36px; padding: 0 10px; display: inline-flex; align-items: center; gap: 3px; border-radius: 999px; background: #FEE500; color: #3C1E1E; font-size: 13px; font-weight: 700; white-space: nowrap; text-decoration: none; }
 .mk-kakao::before { content: ""; position: absolute; inset: -4px 0; }
 .mk-kakao svg { flex: none; }
