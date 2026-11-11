@@ -5,18 +5,41 @@
 import { useEffect, useRef, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t } from "../lib/i18n.js";
-import { PlaceCover } from "./PlacePhoto.jsx";
+import { preloadPlacePhoto } from "./PlacePhoto.jsx";
 
 
 const spotOf = (data, id) => data?.spots?.find((x) => x.id === id);
 
+// 카드 사진(심우장·의릉)은 로그인 전 소개 화면에서 미리 받아 둬요 → 카드가 뜰 때 바로 보여요
+const GUIDE_SPOTS = ["simujang", "uiryeong"];
+const guidePhotos = {};
+export function preloadGuidePhotos(data) {
+  if (!data) return;
+  GUIDE_SPOTS.forEach((id) => { if (!guidePhotos[id]) guidePhotos[id] = preloadPlacePhoto(spotOf(data, id), data); });
+}
+function GuidePhoto({ id }) {
+  const { data } = useApp();
+  const [url, setUrl] = useState(null);
+  const [ok, setOk] = useState(false);
+  useEffect(() => {
+    let live = true;
+    preloadGuidePhotos(data);
+    guidePhotos[id]?.then((u) => live && setUrl(u));
+    return () => { live = false; };
+  }, [id, data]);
+  if (!url) return null;
+  return (
+    <img className={`ga-img ${ok ? "on" : ""}`} src={url} alt="" decoding="async" fetchpriority="high" referrerPolicy="no-referrer"
+      ref={(el) => { if (el?.complete && el.naturalWidth && !ok) setOk(true); }}
+      onLoad={() => setOk(true)} onError={() => setUrl(null)} />
+  );
+}
+
 // ① 관광 코스 3선: 사진 카드 + "여기로 달리기"만
 function ArtCourses() {
-  const { data } = useApp();
-  const spot = spotOf(data, "simujang");
   return (
     <div className="ga-card">
-      <div className="ga-photo">{spot && <PlaceCover place={spot} fallback={null} />}</div>
+      <div className="ga-photo"><GuidePhoto id="simujang" /></div>
       <b>{t("guide_art_place")}</b>
       <span className="ga-btn ga-hit">{t("run_here")} →</span>
     </div>
@@ -50,14 +73,12 @@ const TOMB = (
 
 // ③ AI 역사 렌즈: 의릉을 카메라로 찍는 화면
 function ArtLens() {
-  const { data } = useApp();
-  const spot = spotOf(data, "uiryeong");
   return (
     <div className="ga-cam">
       <span className="ga-cam-top"><i />{t("pd_tab_history_lens")}</span>
       <div className="ga-view">
         {TOMB}
-        {spot && <PlaceCover place={spot} fallback={null} />}
+        <GuidePhoto id="uiryeong" />
         <span className="ga-focus" aria-hidden="true"><i className="tl" /><i className="tr" /><i className="bl" /><i className="br" /></span>
         <span className="ga-ai"><b>AI</b>{t("guide_art_lens_result")}</span>
       </div>

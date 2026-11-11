@@ -1914,3 +1914,8 @@ div:has(> .spot-pin) { pointer-events: none; }
 /* 사용법 카드 사진: 어느 브라우저든 칸을 꽉 채우게 (iOS Safari는 grid 안 % 높이를 잘못 계산해요) */
 .ga-photo .place-cover, .ga-view .place-cover { display: block; position: absolute; inset: 0; overflow: hidden; }
 .ga-photo .place-cover img, .ga-view .place-cover img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center; }
+
+/* 사용법 카드 사진 (미리 받아 둔 것) · 큰 제목은 성북런 로고 글씨체 */
+.ga-img { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; max-width: none; object-fit: cover; opacity: 0; transition: opacity .25s; }
+.ga-img.on { opacity: 1; }
+.guide-text h2 { font-family: "EF Cucumber", "Pretendard", system-ui, sans-serif; font-weight: 400; font-size: 27px; letter-spacing: 0; color: #1F4A14; -webkit-text-stroke: .9px currentColor; paint-order: stroke fill; }
