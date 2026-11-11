@@ -2169,4 +2169,23 @@ div:has(> .spot-pin) { pointer-events: none; }
 .place-name-font { font-family: "EF Cucumber", "Pretendard", system-ui, sans-serif !important; font-weight: 400 !important; letter-spacing: 0 !important; color: #1F4A14; -webkit-text-stroke: .9px currentColor; paint-order: stroke fill; }
 .st-screen .pl-text h3.place-name-font { font-size: 28px; }
 .st-ask-place b.place-name-font { font-size: 21px; }
-.st-screen .pl-text { padding-top: 36px; }
+
+
+/* 이야기 탭 추천 코스 3선 카드: 예전(11/11 오전) 디자인으로 맞춤 — 큰 사진 · 왼쪽 아래 장소 아이콘 · 큰 버튼 */
+.st-screen .dc-track { padding: 5px 40px 12px; }
+.st-screen .dc-slide { flex: 0 0 100%; }
+.st-screen .dc-slide.on .pl-card { box-shadow: 0 12px 26px -14px rgba(30, 60, 20, .45); }
+.st-screen .pl-card { border-radius: 22px; border: 1px solid #E2ECD9; box-shadow: 0 3px 8px rgba(30, 60, 20, .08); }
+.st-screen .pl-card-photo { height: 150px; background: #E6EDDF; }
+.st-screen .pl-course-count { top: 10px; right: 10px; padding: 4px 10px; color: #2E6B1C; font-size: 13.5px; }
+.st-screen .pl-text { padding: 34px 16px 12px; }
+.st-screen .pl-actions { gap: 8px; padding: 0 12px 12px; }
+.st-screen .pl-actions button { height: auto; min-height: 46px; border-radius: 14px; font-size: 14.5px; gap: 6px; }
+.st-screen .st-btn-listen { background: #1F5A12; }
+.st-screen .st-btn-listen span { font-size: 12px; }
+.st-screen .st-btn-run { background: #E3F2CF; color: #1F4A12; }
+.st-screen .dc-dots span { width: 7px; height: 7px; border-radius: 4px; background: #C9DBB6; }
+.st-screen .dc-dots span.on { width: 22px; background: #2F6512; }
+.st-screen .dc-track { scroll-padding-inline: 40px; }
+.st-screen .dc-slide { transform: scale(.93); opacity: .55; transform-origin: center; transition: transform .45s cubic-bezier(.22, 1, .36, 1), opacity .45s ease; }
+.st-screen .dc-slide.on { transform: scale(1); opacity: 1; }
