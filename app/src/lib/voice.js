@@ -3,6 +3,7 @@
 // 그래서 "달리기 시작" 버튼을 누를 때 unlock()을 불러요.
 
 const synth = window.speechSynthesis;
+const mobileBrowser = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 let voices = [];
 const activeSessions = new Set();
 function loadVoices() { voices = synth ? synth.getVoices() : []; }
@@ -96,8 +97,9 @@ function browserSpeak(text, { lang = "en", queue = true, chunk = false, onstart,
     return false;
   }
   if (!queue && (activeSessions.size || synth.speaking || synth.pending)) stop();
+  if (synth.paused) synth.resume();
   loadVoices();
-  const parts = chunk ? speechParts(text) : [{ text, offset: 0 }];
+  const parts = chunk ? speechParts(text, 100) : [{ text, offset: 0 }];
   const session = { utterances: [], cancelled: false, started: false, completed: 0, timer: null };
   const release = () => { clearTimeout(session.timer); activeSessions.delete(session); session.utterances.length = 0; };
   const fail = (event) => {
@@ -319,6 +321,10 @@ async function playGemini(text, options, generation) {
 export function speak(text, options = {}) {
   if (!text) { options.onend?.(); return false; }
   const queue = options.queue !== false;
+  // Mobile browsers often block audio.play() after an asynchronous Gemini fetch.
+  // Speak directly inside the user gesture for historical narration on mobile.
+  // Short chunks also avoid mobile speechSynthesis stopping on long paragraphs.
+  if (mobileBrowser) return browserSpeak(text, { ...options, queue, chunk: !queue });
   // Live navigation must never wait for a remote TTS request.
   if (queue) return browserSpeak(text, { ...options, queue: true });
   if (!queue) stop();
