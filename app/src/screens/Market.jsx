@@ -1,11 +1,13 @@
 // ⑧ 상권: 코스 근처 동네 가게(식당 · 카페 등) 목록 (shops.json의 카카오맵 조사 자료)
 // 위에서부터: "달리고, 들르고 / 동네 상권" + 검색 버튼 → 목적지 고르기(심우장·정릉·의릉·그 외)
-// → 미니 지도(코스 선 + 번호 핀) → 종류 칩 + 정렬 → 가게 목록(흰 패널 없이 줄마다 구분선).
+// → 미니 지도(카카오 지도: 코스 경로 + 번호 핀) → 종류 칩 + 정렬 → 가게 목록(흰 패널 없이 줄마다 구분선).
 // 줄을 누르면 홈 지도에서 그 가게를 핀으로 보여주고, 오른쪽 노란 원 버튼은 카카오맵 가게 페이지를 새 창으로 열어요.
 // 지도 핀 번호 = 목록 번호예요.
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { CustomOverlayMap, useMap } from "react-kakao-maps-sdk";
 import { useApp } from "../state/AppContext.jsx";
+import { MapView, Route } from "../components/MapView.jsx";
 import { loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
 import { destName } from "../lib/places.js";
@@ -53,12 +55,11 @@ export default function Market() {
   const [dest, setDest] = useState(DESTS[0]);
   const [kind, setKind] = useState("all");
   const [sort, setSort] = useState("near");
-  const [search, setSearch] = useState(false);
-  const [query, setQuery] = useState("");
+  const [query] = useState(""); // (가게 검색은 없앴어요. 머리의 ? 버튼은 가게 고른 기준 안내)
   const [bigMap, setBigMap] = useState(false);
-  const searchInput = useRef(null);
+  const [info, setInfo] = useState(false);
+  const infoBtn = useRef(null);
   const bigBtn = useRef(null);
-  useEffect(() => { if (search) searchInput.current?.focus(); }, [search]);
 
   const stores = useMemo(() => (data.shops || []).filter(isStore), [data.shops]);
   // 목적지 칸 숫자
@@ -113,6 +114,10 @@ export default function Market() {
   const showOnMap = (s) => { app.setMapShop(s); app.go("home"); };
   const closeBig = () => { setBigMap(false); bigBtn.current?.focus(); };
   const legend = KINDS.filter(([k]) => k !== "all" && count[k]);
+  // 지도 핀: 목록 번호 그대로. 좌표가 없는 가게는 지도에서 빼요 (좌표를 지어내지 않아요)
+  const pins = useMemo(() => list.map((shop, i) => ({ shop, no: i + 1 })).filter(({ shop }) => shop.lat != null && shop.lng != null), [list]);
+  const missing = useMemo(() => list.filter((s) => s.lat == null || s.lng == null), [list]);
+  const describe = (s) => ({ cat: catLabel(s), walk: walkLabel(s) });
 
   return (
     <section className="screen places-screen market-screen mk2">
@@ -123,15 +128,12 @@ export default function Market() {
             <small>{loc({ ko: "달리고, 들르고", en: "Run, then stop by" })}</small>
             <h1>{loc({ ko: "동네 상권", en: "Local shops" })}</h1>
           </div>
-          <button type="button" className="mk2-search-btn" onClick={() => { setSearch((v) => !v); if (search) setQuery(""); }}
-            aria-label={loc({ ko: "가게 검색", en: "Search shops" })} aria-expanded={search}>
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" /></svg>
+          <button type="button" ref={infoBtn} className="mk2-search-btn mk2-info-btn" onClick={() => setInfo((v) => !v)}
+            aria-label={loc({ ko: "가게를 고른 기준", en: "How we picked these shops" })} aria-expanded={info} aria-controls="mk2-criteria">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9.2 9.2a2.9 2.9 0 015.6 1c0 1.9-2.8 2.5-2.8 4.3 M12 18.3v.1" /></svg>
           </button>
+          {info && <CriteriaPopover anchor={infoBtn} onClose={() => { setInfo(false); infoBtn.current?.focus(); }} />}
         </header>
-        {search && (
-          <input ref={searchInput} className="mk2-search" type="search" value={query} onChange={(e) => setQuery(e.target.value)}
-            placeholder={loc({ ko: "가게 이름 · 종류 · 주소", en: "Name, type or address" })} aria-label={loc({ ko: "가게 검색", en: "Search shops" })} />
-        )}
 
         <div className="mk2-seg" role="radiogroup" aria-label={loc({ ko: "어디 근처", en: "Near" })}>
           {[...DESTS, "explore"].map((d) => (
@@ -142,7 +144,7 @@ export default function Market() {
         </div>
 
         <div className="mk2-map">
-          <ShopMap shops={list} course={course} height={132} />
+          <ShopMap pins={pins} course={course} pad={[16, 16, 44, 16]} />
           <span className="mk2-legend">
             {legend.map(([k, label]) => (
               <span key={k}><i style={{ background: KIND_COLOR[k] }} aria-hidden="true" />{loc(label)} {count[k]}</span>
@@ -214,7 +216,7 @@ export default function Market() {
           })}
         </ol>
       </div>
-      {bigMap && <BigMap shops={list} course={course} title={tabName(dest)} legend={legend} count={count} onClose={closeBig} />}
+      {bigMap && <BigMap pins={pins} missing={missing} course={course} title={tabName(dest)} legend={legend} count={count} describe={describe} onClose={closeBig} />}
     </section>
   );
 }
@@ -228,77 +230,123 @@ function ShopTile({ shop, kind }) {
     : <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M7 3v7a2 2 0 002 2v9 M5 3v5 M9 3v5 M5 8a2 2 0 002 2 M17 21V3c-2 1.5-3 4-3 7v3h3" /></svg>;
 }
 
-// 미니 지도 (실제 좌표 → SVG): 점무늬 바탕 + 코스 선(연두 띠 위 초록 선, 출발 흰 원 · 도착 초록 원) + 번호 핀.
-// 핀이 겹치면 서로 살짝 밀어서 띄워요. 지도 타일 없이 그려서 가볍고 바로 떠요
-function ShopMap({ shops, course, height }) {
-  const box = useRef(null);
-  const [w, setW] = useState(340);
-  useEffect(() => {
-    const el = box.current;
-    if (!el) return undefined;
-    const ro = new ResizeObserver(([e]) => setW(Math.max(120, Math.round(e.contentRect.width))));
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-  // 아래쪽은 범례 칩·"지도 크게" 버튼 자리(약 40px)라 핀이 거기 가리지 않게 비워요
-  const R = 9, PAD = 16, PAD_B = height > 200 ? 52 : 50;
-  const geo = useMemo(() => {
-    const path = course ? course.path.filter((_, i, a) => i % Math.max(1, Math.floor(a.length / 120)) === 0 || i === a.length - 1) : [];
-    const pts = [...path, ...shops.filter((s) => s.lat != null)];
-    if (!pts.length) return null;
-    const lat0 = pts.reduce((a, p) => a + p.lat, 0) / pts.length;
-    const kx = Math.cos((lat0 * Math.PI) / 180);
-    const xs = pts.map((p) => p.lng * kx), ys = pts.map((p) => -p.lat);
-    const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
-    const s = Math.min((w - PAD * 2) / Math.max(x1 - x0, 1e-6), (height - PAD - PAD_B) / Math.max(y1 - y0, 1e-6));
-    const ox = (w - (x1 - x0) * s) / 2, oy = PAD + (height - PAD - PAD_B - (y1 - y0) * s) / 2;
-    const at = (p) => [ox + (p.lng * kx - x0) * s, oy + (-p.lat - y0) * s];
-    // 핀 위치: 겹치면 서로 밀어내요 (지도 칸 안에서)
-    const pins = shops.filter((x) => x.lat != null).map((x) => ({ shop: x, no: shops.indexOf(x) + 1, p: at(x) }));
-    for (let it = 0; it < 40; it++) {
-      for (let a = 0; a < pins.length; a++) for (let b = a + 1; b < pins.length; b++) {
-        const [ax, ay] = pins[a].p, [bx, by] = pins[b].p;
-        const dx = bx - ax, dy = by - ay, d = Math.hypot(dx, dy) || 0.01, min = R * 2 + 2;
-        if (d < min) {
-          const push = (min - d) / 2, ux = d > 0.02 ? dx / d : 1, uy = d > 0.02 ? dy / d : 0;
-          pins[a].p = [ax - ux * push, ay - uy * push];
-          pins[b].p = [bx + ux * push, by + uy * push];
-        }
-      }
-      pins.forEach((q) => { q.p = [Math.min(w - R - 2, Math.max(R + 2, q.p[0])), Math.min(height - PAD_B + R, Math.max(R + 2, q.p[1]))]; });
-    }
-    return { line: path.map((p) => at(p).map((v) => v.toFixed(1)).join(",")).join(" "), start: path[0] && at(path[0]), end: path.length > 1 && at(path[path.length - 1]), pins };
-  }, [shops, course, w, height]);
-
+// 가게 지도 (카카오 지도 · 장소 탭과 같은 MapView 부품): 코스 경로(연두 띠 위 초록 선) + 출발 흰 원 · 도착 초록 원 + 번호 핀.
+// 핀 번호 = 아래 목록 번호. 화면에서 핀이 붙으면 2개는 옆으로 살짝 띄우고, 3개 이상은 숫자 묶음 핀으로 보여줘요.
+// interactive={false}면 미리보기(끌기·확대 막음, 화면 스크롤을 가로채지 않게 손가락 이벤트도 지도에 안 줘요)
+const GROUP_PX = 20; // 핀 중심이 이보다 가까우면 겹친다고 봐요
+function ShopMap({ pins, course, interactive = false, pad = [16, 16, 16, 16], picked, onPick }) {
+  // 지도 범위: 코스 경로 + 가게 좌표가 모두 보이게
+  const fit = useMemo(() => {
+    const path = course ? course.path.filter((_, i, a) => i % Math.max(1, Math.floor(a.length / 80)) === 0 || i === a.length - 1) : [];
+    return [...path.map((p) => [p.lat, p.lng]), ...pins.map(({ shop }) => [shop.lat, shop.lng])];
+  }, [course, pins]);
+  const fitKey = `${course?.id || "none"}:${pins.map((x) => x.shop.id).join(",")}`;
+  const start = course?.path[0], end = course?.path[course.path.length - 1];
+  const [top, right, bottom, left] = pad;
   return (
-    <div ref={box} className="mk2-mapbox" style={{ height }}>
-      {geo && (
-        <svg width={w} height={height} viewBox={`0 0 ${w} ${height}`} aria-hidden="true">
-          {geo.line && <polyline points={geo.line} fill="none" stroke="#9FD25E" strokeOpacity=".35" strokeWidth="22" strokeLinecap="round" strokeLinejoin="round" />}
-          {geo.line && <polyline points={geo.line} fill="none" stroke="#2F6512" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />}
-          {geo.start && <circle cx={geo.start[0]} cy={geo.start[1]} r="5.5" fill="#FFFFFF" stroke="#2F6512" strokeWidth="2.5" />}
-          {geo.end && <circle cx={geo.end[0]} cy={geo.end[1]} r="6.5" fill="#2F6512" stroke="#FFFFFF" strokeWidth="2.5" />}
-          {geo.pins.map(({ shop, no, p }) => (
-            <g key={shop.id} transform={`translate(${p[0].toFixed(1)} ${p[1].toFixed(1)})`}>
-              <circle r={R} fill={KIND_COLOR[kindOf(shop)]} stroke="#FFFFFF" strokeWidth="2" />
-              <text y="3.6" textAnchor="middle" fontSize="10.5" fontWeight="800" fill="#FFFFFF">{no}</text>
-            </g>
-          ))}
-        </svg>
-      )}
-    </div>
+    <MapView className={`mk2-kmap ${interactive ? "" : "locked"}`} interactive={interactive}>
+      {course && <Route path={course.path} color="#9FD25E" weight={14} opacity={0.35} zIndex={1} />}
+      {course && <Route path={course.path} color="#2F6512" weight={4} opacity={1} zIndex={2} />}
+      {start && <CustomOverlayMap position={{ lat: start.lat, lng: start.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={3}><span className="mk2-pt start" aria-hidden="true" /></CustomOverlayMap>}
+      {end && <CustomOverlayMap position={{ lat: end.lat, lng: end.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={3}><span className="mk2-pt end" aria-hidden="true" /></CustomOverlayMap>}
+      <ShopPins pins={pins} interactive={interactive} picked={picked} onPick={onPick} />
+      <FitAll points={fit} pad={[top, right, bottom, left]} fitKey={fitKey} />
+    </MapView>
   );
 }
 
-// "지도 크게": 같은 지도를 크게 보여주는 창 (막 · 닫기 · Esc로 닫혀요)
-function BigMap({ shops, course, title, legend, count, onClose }) {
+// 지도 범위를 코스 + 가게에 맞춰요 (LatLngBounds → setBounds). 시트가 올라오는 동안 지도 칸 크기가 바뀌어서
+// 열리고 조금 뒤에 한 번 더 맞춰요
+function FitAll({ points, pad, fitKey }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!points.length) return undefined;
+    const { kakao } = window;
+    const run = () => {
+      if (points.length === 1) { map.setCenter(new kakao.maps.LatLng(points[0][0], points[0][1])); return; }
+      const b = new kakao.maps.LatLngBounds();
+      points.forEach(([lat, lng]) => b.extend(new kakao.maps.LatLng(lat, lng)));
+      map.relayout();
+      map.setBounds(b, pad[0], pad[1], pad[2], pad[3]);
+    };
+    run();
+    const timer = setTimeout(run, 380);
+    return () => clearTimeout(timer);
+  }, [fitKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  return null;
+}
+
+// 번호 핀 묶기: 지금 화면 좌표로 가까운 핀끼리 모아요 (지도를 움직이거나 확대하면 다시 계산)
+function ShopPins({ pins, interactive, picked, onPick }) {
+  const map = useMap();
+  const [view, setView] = useState(0);
+  useEffect(() => {
+    const { kakao } = window;
+    const bump = () => setView((v) => v + 1);
+    kakao.maps.event.addListener(map, "idle", bump);
+    return () => kakao.maps.event.removeListener(map, "idle", bump);
+  }, [map]);
+  const groups = useMemo(() => {
+    const { kakao } = window;
+    const proj = map.getProjection();
+    const out = [];
+    pins.forEach((pin) => {
+      const pt = proj.containerPointFromCoords(new kakao.maps.LatLng(pin.shop.lat, pin.shop.lng));
+      const g = out.find((x) => Math.hypot(x.x - pt.x, x.y - pt.y) < GROUP_PX);
+      if (g) { g.items.push(pin); g.x = (g.x * (g.items.length - 1) + pt.x) / g.items.length; g.y = (g.y * (g.items.length - 1) + pt.y) / g.items.length; }
+      else out.push({ x: pt.x, y: pt.y, items: [pin] });
+    });
+    return out;
+  }, [pins, map, view]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const zoomTo = (g) => {
+    const { kakao } = window;
+    const b = new kakao.maps.LatLngBounds();
+    g.items.forEach(({ shop }) => b.extend(new kakao.maps.LatLng(shop.lat, shop.lng)));
+    map.setBounds(b, 60, 60, 60, 60);
+    if (map.getLevel() > 1 && g.items.every(({ shop }) => shop.lat === g.items[0].shop.lat && shop.lng === g.items[0].shop.lng)) map.setLevel(1);
+  };
+
+  return groups.flatMap((g) => {
+    if (g.items.length >= 3) {
+      const lat = g.items.reduce((a, { shop }) => a + shop.lat, 0) / g.items.length;
+      const lng = g.items.reduce((a, { shop }) => a + shop.lng, 0) / g.items.length;
+      const label = loc({ ko: `가게 ${g.items.length}곳 (${g.items.map((x) => x.no).join(", ")}번)`, en: `${g.items.length} shops (#${g.items.map((x) => x.no).join(", ")})` });
+      const Tag = interactive ? "button" : "span";
+      return [(
+        <CustomOverlayMap key={`g-${g.items[0].shop.id}`} position={{ lat, lng }} xAnchor={0.5} yAnchor={0.5} zIndex={5} clickable={interactive}>
+          <Tag {...(interactive ? { type: "button", onClick: () => zoomTo(g), "aria-label": label } : { "aria-hidden": true })} className="mk2-pin mk2-pin-group">{g.items.length}</Tag>
+        </CustomOverlayMap>
+      )];
+    }
+    // 2개가 붙으면 옆으로 10px씩 띄워서 번호가 읽히게
+    return g.items.map((pin, i) => {
+      const dx = g.items.length === 2 ? (i === 0 ? -10 : 10) : 0;
+      const on = picked === pin.shop.id;
+      const Tag = interactive ? "button" : "span";
+      return (
+        <CustomOverlayMap key={pin.shop.id} position={{ lat: pin.shop.lat, lng: pin.shop.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={on ? 7 : 6} clickable={interactive}>
+          <Tag {...(interactive ? { type: "button", onClick: () => onPick?.(pin.shop), "aria-label": `${pin.no}. ${loc(pin.shop.name)}`, "aria-pressed": on } : { "aria-hidden": true })}
+            className={`mk2-pin ${on ? "on" : ""}`} style={{ background: KIND_COLOR[kindOf(pin.shop)], transform: `translateX(${dx}px)` }}>{pin.no}</Tag>
+        </CustomOverlayMap>
+      );
+    });
+  });
+}
+
+// "지도 크게": 전체 높이 시트 안 지도 (끌기·확대 돼요). 핀을 누르면 가게 카드(이름 · 종류 · 도보 · 카카오맵)가 떠요.
+// 막 · 닫기 · Esc로 닫혀요
+function BigMap({ pins, missing, course, title, legend, count, describe, onClose }) {
   const closeBtn = useRef(null);
+  const [picked, setPicked] = useState(null);
   useEffect(() => {
     closeBtn.current?.focus();
     const onKey = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+  const sel = pins.find((x) => x.shop.id === picked);
+  const info = sel ? describe(sel.shop) : null;
   return (
     <div className="ui-layer">
       <div className="ui-scrim" onClick={onClose} />
@@ -310,17 +358,66 @@ function BigMap({ shops, course, title, legend, count, onClose }) {
           </button>
         </div>
         <div className="mk2-map mk2-map-big">
-          <ShopMap shops={shops} course={course} height={360} />
+          <ShopMap pins={pins} course={course} interactive pad={[40, 24, 48, 24]} picked={picked} onPick={(s) => setPicked(s.id)} />
           <span className="mk2-legend">
             {legend.map(([k, label]) => (
               <span key={k}><i style={{ background: KIND_COLOR[k] }} aria-hidden="true" />{loc(label)} {count[k]}</span>
             ))}
           </span>
         </div>
-        <ol className="mk2-biglist">
-          {shops.map((s, i) => <li key={s.id}><span className="mk2-no" style={{ background: KIND_COLOR[kindOf(s)] }}>{i + 1}</span>{loc(s.name)}</li>)}
-        </ol>
+        {sel ? (
+          <div className="mk2-pick" aria-live="polite">
+            <span className="mk2-no" style={{ background: KIND_COLOR[kindOf(sel.shop)] }}>{sel.no}</span>
+            <span className="mk2-text">
+              <b>{loc(sel.shop.name)}</b>
+              {info.cat && <span className="mk2-meta"><span style={{ color: KIND_COLOR[kindOf(sel.shop)] }}>{info.cat}</span></span>}
+              {info.walk && <span className="mk2-walk">{info.walk}</span>}
+            </span>
+            {sel.shop.kakao_url && (
+              <a className="mk2-kakao" href={sel.shop.kakao_url.replace(/^http:/, "https:")} target="_blank" rel="noopener noreferrer"
+                aria-label={loc({ ko: `${loc(sel.shop.name)} 카카오맵에서 열기`, en: `Open ${loc(sel.shop.name)} in Kakao Map` })}>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 6h10v10 M18 6L6 18" /></svg>
+              </a>
+            )}
+          </div>
+        ) : (
+          <p className="mk2-pick-hint">{loc({ ko: "핀을 누르면 가게 정보가 떠요", en: "Tap a pin to see the shop" })}</p>
+        )}
+        {missing.length > 0 && (
+          <p className="mk2-missing">{loc({ ko: `위치 정보가 없어 지도에 없는 가게: ${missing.map((s) => loc(s.name)).join(", ")}`, en: `Not on the map (no location): ${missing.map((s) => loc(s.name)).join(", ")}` })}</p>
+        )}
       </section>
+    </div>
+  );
+}
+
+// 머리의 ? 버튼 아래에 뜨는 작은 안내 창: 가게를 어떻게 골랐는지 (shops.json 조사 자료 기준)
+// X · Esc · 바깥 누르기로 닫혀요
+function CriteriaPopover({ anchor, onClose }) {
+  const box = useRef(null);
+  useEffect(() => {
+    box.current?.focus();
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    const onDown = (e) => { if (!box.current?.contains(e.target) && !anchor.current?.contains(e.target)) onClose(); };
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onDown);
+    return () => { window.removeEventListener("keydown", onKey); document.removeEventListener("pointerdown", onDown); };
+  }, [anchor, onClose]);
+  return (
+    <div ref={box} id="mk2-criteria" className="mk2-pop" role="dialog" aria-labelledby="mk2-pop-title" tabIndex={-1}>
+      <div className="mk2-pop-head">
+        <h2 id="mk2-pop-title">{loc({ ko: "가게는 이렇게 골랐어요", en: "How we picked these shops" })}</h2>
+        <button type="button" className="mk2-pop-x" onClick={onClose} aria-label={loc({ ko: "닫기", en: "Close" })}>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </button>
+      </div>
+      <ul>
+        <li>{loc({ ko: "코스 도착지(심우장·정릉·의릉)와 둘러볼 곳 근처 가게를 팀이 직접 조사해서 골랐어요 (2026년 10~11월 상권 조사)", en: "Our team surveyed and picked shops near the course finishes (Simujang, Jeongneung, Uireung) and places to explore (Oct–Nov 2026)" })}</li>
+        <li>{loc({ ko: "주차장이나 상인회 같은 곳은 빼고, 들러서 먹고 마실 수 있는 가게만 넣었어요", en: "Parking lots and associations are left out — only places to eat and drink" })}</li>
+        <li>{loc({ ko: "이름·종류·주소·사진은 카카오맵 자료예요", en: "Names, types, addresses and photos come from Kakao Map" })}</li>
+        <li>{loc({ ko: "도보 시간은 목적지에서 가게까지 직선거리로 잰 대략적인 시간이에요", en: "Walking times are rough, based on straight-line distance from the destination" })}</li>
+        <li>{loc({ ko: "아직 제휴 가게가 아니라 쿠폰은 없어요", en: "These aren't partner shops yet, so there are no coupons" })}</li>
+      </ul>
     </div>
   );
 }

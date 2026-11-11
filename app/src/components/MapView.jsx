@@ -48,7 +48,8 @@ const toLatLng = (p) => (Array.isArray(p) ? { lat: p[0], lng: p[1] } : { lat: p.
 // Leaflet 확대 단계(zoom, 클수록 가까이) → 카카오 레벨(level, 작을수록 가까이)
 const levelOf = (zoom) => Math.min(14, Math.max(1, 19 - zoom));
 
-export function MapView({ dark, className = "", center = CENTER, zoom = 15, level, children }) {
+// interactive={false}: 미리보기 지도 (끌기 · 확대 · 더블클릭 확대 · 휠 확대를 막아요)
+export function MapView({ dark, className = "", center = CENTER, zoom = 15, level, interactive = true, children }) {
   const status = useKakaoMaps();
   // 처음 위치만 쓰고, 이후 이동은 FitBounds·Follow·FlyTo 가 맡아요
   const [initialCenter] = useState(() => toLatLng(center));
@@ -56,7 +57,8 @@ export function MapView({ dark, className = "", center = CENTER, zoom = 15, leve
   if (status !== "ready") {
     return <div className={`${cls} map-fallback`}>{status === "loading" ? null : <p>{t(status === "no-key" ? "map_no_key" : "map_error")}</p>}</div>;
   }
-  return <Map className={cls} center={initialCenter} level={level ?? levelOf(zoom)}><AutoRelayout />{children}</Map>;
+  const lock = interactive ? {} : { draggable: false, zoomable: false, scrollwheel: false, disableDoubleClickZoom: true, keyboardShortcuts: false };
+  return <Map className={cls} center={initialCenter} level={level ?? levelOf(zoom)} {...lock}><AutoRelayout />{children}</Map>;
 }
 
 // 지도 칸 크기가 바뀌면(화면 전환·창 크기·시트) 카카오맵에 다시 맞추라고 알려요. 안 하면 타일이 일부만 그려져요

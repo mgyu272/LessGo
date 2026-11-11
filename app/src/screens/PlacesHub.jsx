@@ -1,12 +1,13 @@
 // 장소 탭: 성북구 둘러볼 곳을 종류(전시·역사·종교·공원)와 코스로 나눠 보여줘요.
-// - PlacesHub      : 장소 첫 화면. 카테고리 칩(전체·전시·역사·종교·공원, 옆으로 밀기) + 성북구 작은 지도(카테고리 그림 아이콘, 심우장·정릉·의릉은 전체·역사에서만 큰 그림 핀) + 코스 따라 보기(심우장·정릉·의릉). 검색창은 없어요
+// - PlacesHub      : 장소 첫 화면. "성북구 둘러볼 곳 N / 장소" + 검색 버튼(누르면 이름·종류로 찾기) → 카테고리 칩(전체·전시·역사·종교·공원, 옆으로 밀기)
+//                    → 성북구 작은 지도(물방울 핀, 심우장·정릉·의릉은 흰 점 + 이름) → 코스 따라 보기 세 줄(코스 모양 · 출발지 → 목적지 · 거리 · 근처 장소 미리보기)
 //                    (예전 카테고리 화면 PlacesCategory는 없앴어요. 장소 안내는 지도 핀 → PlaceSheet)
 // - PlacesCourse   : 코스 따라 보기. 그 목적지의 가장 짧은 코스 + 코스 근처 장소 (300m 안, 없으면 500m → 800m)
 // 큰 지도는 Home.jsx ("지도 크게 보기"). 고른 카테고리·목적지는 app.placesView에 남겨서 상세에 갔다 와도 그대로예요.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Polygon } from "react-kakao-maps-sdk";
+import { CustomOverlayMap, Polygon } from "react-kakao-maps-sdk";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
@@ -20,8 +21,6 @@ import { GROUPS, groupOf, kindLabel, shortFee, destName, round10, byNearest, THE
 
 const CATS = GROUPS.filter((g) => g !== "all");
 const CHIPS = GROUPS; // 칩 줄: 전체 + 카테고리 4개 (옆으로 밀어요)
-// 코스 목적지(심우장·정릉·의릉) 큰 그림 핀은 전체·역사에서만 보여요
-const SHOW_DEST = new Set(["all", "heritage"]);
 // 연한 배경 위 작은 글씨용 진한 카테고리 색 (대비 4.5:1 이상)
 const DEEP = { all: "#1F5A12", exhibit: "#17489A", heritage: "#9A350B", religion: "#82205F", park: "#2A6A0F" };
 // 카테고리 연한 색 (칩 바탕 · 시트 아이콘 타일)
@@ -70,61 +69,172 @@ export function PlacesHub() {
   const count = useMemo(() => ({ all: items.length, ...Object.fromEntries(CATS.map((c) => [c, items.filter((p) => groupOf(p) === c).length])) }), [items]);
   // 코스 목적지는 따로 큰 그림 핀으로 그려서, 카테고리 아이콘에서는 빼요
   const list = useMemo(() => items.filter((p) => !p.isDest && (cat === "all" || groupOf(p) === cat)).sort(byNearest), [items, cat]);
-  const dests = useMemo(() => (SHOW_DEST.has(cat) ? items.filter((p) => p.isDest) : []), [items, cat]);
+  // 심우장·정릉·의릉은 어떤 칩에서든 흰 원 + 초록 테두리 작은 점 + 이름으로 보여요
+  const dests = useMemo(() => items.filter((p) => p.isDest), [items]);
+  // 검색: 검색 버튼을 누르면 입력창이 열리고, 이름·분류로 장소를 걸러 아래에 결과를 보여줘요
+  const [searching, setSearching] = useState(false);
+  const [query, setQuery] = useState("");
+  const searchInput = useRef(null);
+  useEffect(() => { if (searching) searchInput.current?.focus(); }, [searching]);
+  const q = query.trim().toLowerCase();
+  const found = useMemo(() => (q ? items.filter((p) => [loc(p.name), p.name?.ko, p.name?.en, p.kind].some((x) => String(x || "").toLowerCase().includes(q))).slice(0, 8) : []), [items, q]);
   const [sel, setSel] = useState(null);
   const screenRef = useRef(null);
   useEffect(() => { setSel(null); }, [cat]);
   // 코스 따라 보기 화면과 같은 기준으로 센 개수
-  const nearCount = useMemo(() => Object.fromEntries(DESTINATIONS.map((d) => [d, courseNear(data, shortestCourse(data, d), d).list.length])), [data]);
+  // 코스 따라 보기 줄: 가장 짧은 코스 + 그 코스 근처 장소 (코스 따라 보기 화면과 같은 기준)
+  const courseRows = useMemo(() => DESTINATIONS.map((d) => {
+    const course = shortestCourse(data, d);
+    const near = courseNear(data, course, d).list;
+    const by = {};
+    near.forEach(({ p }) => { const g = groupOf(p); by[g] = (by[g] || 0) + 1; });
+    const groups = Object.entries(by).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([g]) => g);
+    const props = course?.properties;
+    const start = props?.route?.start?.name;
+    return {
+      d, course, n: near.length, groups,
+      names: near.slice(0, 3).map(({ p }) => loc(p.name).replace(/\s*\(.*\)/, "")).filter(Boolean),
+      start: start && !start.startsWith("OSM ") ? start : "",
+      km: props?.distance_km ?? null,
+    };
+  }), [data]);
   const openCourse = (d) => { st.dest = d; app.go("placesCourse"); };
   // 큰 지도: 같은 카테고리 칩이 켜진 상태로 성북구 전체부터
   const bigMap = () => { app.homeMap.current = { filter: cat, selId: null, view: null, origin: null }; app.go("home"); };
   const fitPts = useMemo(() => [...list, ...dests].map((p) => [p.lat, p.lng]), [list, dests]);
 
   return (
-    <section ref={screenRef} className="screen places-screen ph-screen">
+    <section ref={screenRef} className="screen places-screen ph-screen ph2">
       <div className="hanji-layer" aria-hidden="true" />
-      <div className="places-scroll">
-        <div className="ph-head">
-          <h1>{t("ph_title")}</h1>
-          <p>{t("ph_sub", { n: items.length })}</p>
-        </div>
+      <div className="places-scroll ph2-scroll">
+        <header className="ph2-head">
+          <div>
+            <small>{t("ph2_kicker", { n: items.length })}</small>
+            <h1>{t("ph_title")}</h1>
+          </div>
+          <button type="button" className="ph2-search-btn" onClick={() => { setSearching((v) => !v); if (searching) setQuery(""); }}
+            aria-label={t("places_search")} aria-expanded={searching}>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" /></svg>
+          </button>
+        </header>
+        {searching && (
+          <div className="ph2-search">
+            <input ref={searchInput} type="search" value={query} onChange={(e) => setQuery(e.target.value)}
+              placeholder={t("ph2_search_ph")} aria-label={t("places_search")} />
+            {q && (
+              <ul className="ph2-found" aria-live="polite">
+                {!found.length && <li className="ph2-none">{t("ph2_search_none")}</li>}
+                {found.map((p) => (
+                  <li key={p.id}>
+                    <button type="button" onClick={() => setSel(p)} style={{ "--c": THEME_COLORS[groupOf(p)] }}>
+                      <span className="ph2-dot" aria-hidden="true"><GroupIcon group={groupOf(p)} size={13} /></span>
+                      <b>{loc(p.name)}</b><small>{t("grp_" + groupOf(p))}</small>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
 
-        <div className="ph-hub-chips" role="radiogroup" aria-label={t("ph_kind")}>
+        <div className="ph-hub-chips ph2-chips" role="radiogroup" aria-label={t("ph_kind")}>
           {CHIPS.map((c) => (
-            <button key={c} type="button" role="radio" aria-checked={cat === c} className={`ph-hub-chip ${cat === c ? "on" : ""}`}
-              style={{ "--c": THEME_COLORS[c], "--soft": SOFT[c], "--deep": DEEP[c] }} onClick={() => setCat(c)}>
-              {c !== "all" && <GroupIcon group={c} size={17} />}{t("grp_" + c)}<span className="chip-n">{count[c]}</span>
+            <button key={c} type="button" role="radio" aria-checked={cat === c} className={`ph2-chip ${cat === c ? "on" : ""}`}
+              style={{ "--c": THEME_COLORS[c] }} onClick={() => setCat(c)}>
+              {c !== "all" && <GroupIcon group={c} size={16} />}{t("grp_" + c)}<span className="chip-n">{count[c]}</span>
             </button>
           ))}
         </div>
 
-        <div className="card ph-map ph-hub-map" style={{ "--c": THEME_COLORS[cat], "--soft": SOFT[cat] }}>
+        <div className="ph-map ph-hub-map ph2-map" style={{ "--c": THEME_COLORS[cat] }}>
           <MapView>
             <DistrictShape />
             <ExploreLayer key={cat} cluster={false} places={list} selectedId={sel?.id} level={6} onSelect={setSel} />
-            {dests.map((p) => <SpotMarker key={p.id} spot={data.spotById[p.id] || p} label onClick={() => setSel(p)} />)}
-            <FitBounds points={fitPts} padTL={[48, 30]} padBR={[30, 30]} fitKey={cat} />
+            {dests.map((p) => <DestPin key={p.id} p={p} on={sel?.id === p.id} onClick={() => setSel(p)} />)}
+            <FitBounds points={fitPts} padTL={[52, 30]} padBR={[44, 30]} fitKey={cat} />
           </MapView>
-          {cat !== "all" && <span className="ph-map-tag"><i aria-hidden="true" />{t("ph_cat_only", { name: t("grp_" + cat) })}</span>}
+          <span className="ph-map-tag"><i aria-hidden="true" />{t("ph2_cat_n", { name: t("grp_" + cat), n: count[cat] })}</span>
           <button type="button" className="ph-map-big" onClick={bigMap} aria-label={t("ph_big_map")}>
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
           </button>
+          <span className="ph2-hint" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11V5a1.6 1.6 0 013.2 0v5 M12.2 9.5a1.6 1.6 0 013.2 0V11 M15.4 10.5a1.6 1.6 0 013.2 0v3.5a6 6 0 01-6 6h-1a6 6 0 01-4.7-2.3l-2.3-3a1.6 1.6 0 012.5-2L9 15" /></svg>
+            {t("ph2_pin_hint")}
+          </span>
         </div>
 
-        <h2 className="ph-h2">{t("ph_by_course")}</h2>
-        <p className="ph-h2-sub">{t("ph_by_course_sub")}</p>
-        <div className="ph-dests">
-          {DESTINATIONS.map((d) => (
-            <button key={d} type="button" className="card ph-dest" onClick={() => openCourse(d)}>
-              <b>{destName(data, d)}</b>
-              <small>{t("ph_near_n", { n: nearCount[d] })}</small>
-            </button>
-          ))}
+        <div className="ph2-course-head">
+          <h2>{t("ph_by_course")}</h2>
+          <p>{t("ph_by_course_sub")}</p>
         </div>
+        <ul className="ph2-courses">
+          {courseRows.map((r) => (
+            <li key={r.d}>
+              <button type="button" className="ph2-course" onClick={() => openCourse(r.d)}
+                aria-label={t("ph2_course_label", { name: destName(data, r.d), n: r.n })}>
+                <span className="ph2-course-tile" aria-hidden="true"><CourseShape course={r.course} /></span>
+                <span className="ph2-course-text">
+                  <span className="ph2-course-l1"><b>{destName(data, r.d)}</b><small>{t("ph_near_n", { n: r.n })}</small></span>
+                  {(r.start || r.km != null) && (
+                    <span className="ph2-course-l2">
+                      {[r.start ? `${r.start} → ${destName(data, r.d)}` : "", r.km != null ? `${r.km}km` : ""].filter(Boolean).join(" · ")}
+                    </span>
+                  )}
+                  {(r.groups.length > 0 || r.names.length > 0) && (
+                    <span className="ph2-course-l3">
+                      <span className="ph2-dots">
+                        {r.groups.map((g) => (
+                          <span key={g} className="ph2-dot" style={{ "--c": THEME_COLORS[g] }}><GroupIcon group={g} size={12} /></span>
+                        ))}
+                      </span>
+                      <span className="ph2-names">{r.names.join(" · ")}</span>
+                    </span>
+                  )}
+                </span>
+                <svg className="ph2-chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
       {sel && <PlaceSheet p={sel} onClose={() => setSel(null)} host={screenRef.current?.parentElement} />}
     </section>
+  );
+}
+
+// 코스 목적지 핀: 흰 원 + 초록(#2F6512) 테두리 작은 점 + 이름 라벨 (styles.css .ph-dest-pin)
+function DestPin({ p, on, onClick }) {
+  const name = loc(p.name).replace(/\s*\(.*\)/, "");
+  return (
+    <CustomOverlayMap position={{ lat: p.lat, lng: p.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={on ? 4 : 3} clickable>
+      <div className={`ph-dest-pin ${on ? "on" : ""}`}>
+        <button type="button" onClick={onClick} aria-label={name} aria-pressed={on} />
+        <span aria-hidden="true">{name}</span>
+      </div>
+    </CustomOverlayMap>
+  );
+}
+
+// 코스 따라 보기 줄의 52px 타일: 실제 코스 경로를 작게 (연두 굵은 선 위 초록 선)
+function CourseShape({ course }) {
+  const d = useMemo(() => {
+    const path = course?.path || [];
+    if (path.length < 2) return null;
+    const lat0 = path[0].lat, kx = Math.cos((lat0 * Math.PI) / 180);
+    const xs = path.map((q) => q.lng * kx), ys = path.map((q) => -q.lat);
+    const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+    const S = 52, P = 9, s = (S - P * 2) / Math.max(x1 - x0, y1 - y0, 1e-6);
+    const ox = (S - (x1 - x0) * s) / 2, oy = (S - (y1 - y0) * s) / 2;
+    const step = Math.max(1, Math.floor(path.length / 60));
+    return path.filter((_, i) => i % step === 0 || i === path.length - 1)
+      .map((q, i) => `${i ? "L" : "M"}${(ox + (q.lng * kx - x0) * s).toFixed(1)} ${(oy + (-q.lat - y0) * s).toFixed(1)}`).join(" ");
+  }, [course]);
+  if (!d) return null;
+  return (
+    <svg viewBox="0 0 52 52" width="52" height="52">
+      <path d={d} fill="none" stroke="#CFE3B8" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={d} fill="none" stroke="#2F6512" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
@@ -145,7 +255,7 @@ function DistrictShape() {
   }, []);
   if (!rings) return null;
   return rings.map((path, i) => (
-    <Polygon key={i} path={path} fillColor="#E4F0D5" fillOpacity={0.55} strokeColor="#8DBA6A" strokeWeight={2} strokeStyle="shortdash" strokeOpacity={1} zIndex={0} />
+    <Polygon key={i} path={path} fillColor="#E4F0D5" fillOpacity={0.35} strokeColor="#7FB25A" strokeWeight={2} strokeStyle="shortdash" strokeOpacity={1} zIndex={0} />
   ));
 }
 
