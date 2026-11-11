@@ -55,7 +55,7 @@ export const TABS = [
   ["stats", "tab_stats", <path key="p" d="M12 21a9 9 0 100-18 9 9 0 000 18z M12 7v5l3 2" />],
 ];
 
-const TAB_OF = { home: "placesHub", placesCat: "placesHub", placesCourse: "placesHub" };
+const TAB_OF = { home: "placesHub", placesCourse: "placesHub" };
 
 export function TabBar() {
   const { screen, go } = useApp();

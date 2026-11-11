@@ -1,10 +1,12 @@
 // 장소 탭: 성북구 둘러볼 곳을 종류(전시·역사·종교·공원)와 코스로 나눠 보여줘요.
-// - PlacesHub      : 장소 첫 화면. 카테고리 큰 카드 4장 + 코스 따라 보기(심우장·정릉·의릉). 검색창은 없어요
-// - PlacesCategory : 카테고리 하나. 작은 지도 + 코스 목적지에서 가까운 순 목록 (핀 ↔ 카드 연결)
+// - PlacesHub      : 장소 첫 화면. 카테고리 칩 + 성북구 작은 지도(핀을 누르면 장소 안내 시트) + 코스 따라 보기(심우장·정릉·의릉). 검색창은 없어요
+//                    (예전 카테고리 화면 PlacesCategory는 없앴어요. 장소 안내는 지도 핀 → PlaceSheet)
 // - PlacesCourse   : 코스 따라 보기. 그 목적지의 가장 짧은 코스 + 코스 근처 장소 (300m 안, 없으면 500m → 800m)
 // 큰 지도는 Home.jsx ("지도 크게 보기"). 고른 카테고리·목적지는 app.placesView에 남겨서 상세에 갔다 와도 그대로예요.
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { CustomOverlayMap, Polygon } from "react-kakao-maps-sdk";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
@@ -14,11 +16,13 @@ import { GroupIcon } from "../components/SpotIcons.jsx";
 import { PlaceThumb } from "../components/PlacePhoto.jsx";
 import { Badge, Segment } from "../components/ui.jsx";
 import { MODE_COLOR } from "./Courses.jsx";
-import { GROUPS, groupOf, kindLabel, shortFee, destName, round10, byNearest } from "../lib/places.js";
+import { GROUPS, groupOf, kindLabel, shortFee, destName, round10, byNearest, THEME_COLORS, kakaoDirections } from "../lib/places.js";
 
 const CATS = GROUPS.filter((g) => g !== "all");
 // 연한 배경 위 작은 글씨용 진한 카테고리 색 (대비 4.5:1 이상)
 const DEEP = { exhibit: "#17489A", heritage: "#9A350B", religion: "#82205F", park: "#2A6A0F" };
+// 카테고리 연한 색 (칩 바탕 · 시트 아이콘 타일)
+const SOFT = { exhibit: "#CCDFFB", heritage: "#FDD5BF", religion: "#F7CBE7", park: "#D2EDB2" };
 // 코스 따라 보기: 코스 선에서 300m 안. 한 곳도 없으면 500m, 그래도 없으면 800m까지 넓혀요
 const COURSE_RADII = [300, 500, 800];
 const BESIDE_M = 50;       // 이보다 가까우면 "코스 바로 옆"
@@ -51,43 +55,58 @@ function fromDest(data, p) {
 }
 
 // ---------- 장소 첫 화면 ----------
+// 카테고리 칩 줄 → 바로 아래 성북구 지도(고른 카테고리 핀 + 코스 목적지 핀, 가까이 모이면 숫자 묶음) → 코스 따라 보기.
+// 핀을 누르면 아래에서 장소 안내 시트(PlaceSheet)가 올라와요
 export function PlacesHub() {
   const app = useApp();
   const { data } = app;
   const st = app.placesView.current;
   const items = usePlaceItems(data);
-  const byCat = useMemo(() => Object.fromEntries(CATS.map((c) => [c, items.filter((p) => groupOf(p) === c).sort(byNearest)])), [items]);
+  const [cat, setCat] = useState(CATS.includes(st.cat) ? st.cat : CATS[0]);
+  useEffect(() => { st.cat = cat; }, [st, cat]);
+  const count = useMemo(() => Object.fromEntries(CATS.map((c) => [c, items.filter((p) => groupOf(p) === c).length])), [items]);
+  // 코스 목적지는 따로 흰 원 핀으로 그려서, 카테고리 핀에서는 빼요
+  const list = useMemo(() => items.filter((p) => !p.isDest && groupOf(p) === cat).sort(byNearest), [items, cat]);
+  const dests = useMemo(() => items.filter((p) => p.isDest), [items]);
+  const [sel, setSel] = useState(null);
+  const screenRef = useRef(null);
+  useEffect(() => { setSel(null); }, [cat]);
   // 코스 따라 보기 화면과 같은 기준으로 센 개수
   const nearCount = useMemo(() => Object.fromEntries(DESTINATIONS.map((d) => [d, courseNear(data, shortestCourse(data, d), d).list.length])), [data]);
-  const openCat = (c) => { st.cat = c; app.go("placesCat"); };
   const openCourse = (d) => { st.dest = d; app.go("placesCourse"); };
+  // 큰 지도: 같은 카테고리 칩이 켜진 상태로 성북구 전체부터
+  const bigMap = () => { app.homeMap.current = { filter: cat, selId: null, view: null, origin: null }; app.go("home"); };
+  const fitPts = useMemo(() => [...list, ...dests].map((p) => [p.lat, p.lng]), [list, dests]);
 
   return (
-    <section className="screen places-screen ph-screen">
+    <section ref={screenRef} className="screen places-screen ph-screen">
       <div className="hanji-layer" aria-hidden="true" />
       <div className="places-scroll">
         <div className="ph-head">
           <h1>{t("ph_title")}</h1>
           <p>{t("ph_sub", { n: items.length })}</p>
         </div>
-        <h2 className="ph-h2">{t("ph_by_cat")}</h2>
-        <div className="ph-cats">
-          {CATS.map((c) => {
-            const list = byCat[c];
-            const names = list.slice(0, 3).map((p) => loc(p.name).replace(/\s*\(.*\)/, "")).join(", ");
-            return (
-              <button key={c} type="button" className="ph-cat" data-theme-chip={c} style={{ "--deep": DEEP[c] }} onClick={() => openCat(c)}
-                aria-label={`${t("grp_" + c)} ${t("ph_n", { n: list.length })}`}>
-                <span className="ph-cat-top">
-                  <span className="ph-cat-ic" aria-hidden="true"><GroupIcon group={c} size={24} /></span>
-                  <b className="ph-cat-n">{t("ph_n", { n: list.length })}</b>
-                </span>
-                <span className="ph-cat-name">{t("grp_" + c)}</span>
-                <span className="ph-cat-desc">{t("ph_desc_" + c)}</span>
-                <span className="ph-cat-more"><span>{names}</span>{list.length > 3 && <span className="ph-cat-suffix">{t("ph_more_suffix")}</span>}</span>
-              </button>
-            );
-          })}
+
+        <div className="ph-hub-chips" role="radiogroup" aria-label={t("ph_kind")}>
+          {CATS.map((c) => (
+            <button key={c} type="button" role="radio" aria-checked={cat === c} className={`ph-hub-chip ${cat === c ? "on" : ""}`}
+              style={{ "--c": THEME_COLORS[c], "--soft": SOFT[c], "--deep": DEEP[c] }} onClick={() => setCat(c)}>
+              <GroupIcon group={c} size={17} />{t("grp_" + c)}<span className="chip-n">{count[c]}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="card ph-map ph-hub-map" style={{ "--c": THEME_COLORS[cat], "--soft": SOFT[cat] }}>
+          <MapView>
+            <DistrictShape />
+            <ExploreLayer key={cat} cluster clusterMinLevel={5} places={list} selectedId={sel?.id} level={6} onSelect={setSel} />
+            {dests.map((p) => <DestPin key={p.id} p={p} on={sel?.id === p.id} onClick={() => setSel(p)} />)}
+            <FitBounds points={fitPts} padTL={[48, 30]} padBR={[30, 30]} fitKey={cat} />
+          </MapView>
+          <span className="ph-map-tag"><i aria-hidden="true" />{t("ph_cat_only", { name: t("grp_" + cat) })}</span>
+          <button type="button" className="ph-map-big" onClick={bigMap} aria-label={t("ph_big_map")}>
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
+          </button>
         </div>
 
         <h2 className="ph-h2">{t("ph_by_course")}</h2>
@@ -101,60 +120,114 @@ export function PlacesHub() {
           ))}
         </div>
       </div>
+      {sel && <PlaceSheet p={sel} onClose={() => setSel(null)} host={screenRef.current?.parentElement} />}
     </section>
   );
 }
 
-// ---------- 카테고리 화면 ----------
-export function PlacesCategory() {
+// 코스 목적지 핀: 흰 원 + 초록(#2F6512) 테두리 + 이름 라벨
+function DestPin({ p, on, onClick }) {
+  const name = loc(p.name).replace(/\s*\(.*\)/, "");
+  return (
+    <CustomOverlayMap position={{ lat: p.lat, lng: p.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={on ? 4 : 3} clickable>
+      <div className={`ph-dest-pin ${on ? "on" : ""}`}>
+        <button type="button" onClick={onClick} aria-label={name} aria-pressed={on} />
+        <span aria-hidden="true">{name}</span>
+      </div>
+    </CustomOverlayMap>
+  );
+}
+
+// 작은 지도의 성북구 경계: 연두 채움 + 점선 테두리 (경계 파일을 못 불러오면 그냥 없이)
+let boundaryReq = null;
+function DistrictShape() {
+  const [rings, setRings] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    boundaryReq ??= fetch("/data/seongbuk-boundary.geojson").then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    boundaryReq.then((geo) => {
+      const f = geo?.features?.find((x) => x.properties?.kind === "district");
+      if (!alive || !f) return;
+      const polys = f.geometry.type === "Polygon" ? [f.geometry.coordinates] : f.geometry.coordinates;
+      setRings(polys.map((poly) => poly[0].map(([lng, lat]) => ({ lat, lng }))));
+    });
+    return () => { alive = false; };
+  }, []);
+  if (!rings) return null;
+  return rings.map((path, i) => (
+    <Polygon key={i} path={path} fillColor="#E4F0D5" fillOpacity={0.55} strokeColor="#8DBA6A" strokeWeight={2} strokeStyle="shortdash" strokeOpacity={1} zIndex={0} />
+  ));
+}
+
+// ---------- 장소 안내 시트 ----------
+// 지도 핀을 누르면 어두운 막 위로 아래에서 올라와요 (하단 탭바도 덮어요).
+// 막 누르기 · 아래로 끌기 · X · Esc로 닫혀요. 열리면 X에 포커스, 닫히면 지도 핀으로 돌아가요
+// .screen은 isolation: isolate라 그 안에서는 하단 탭바를 덮을 수 없어요. 그래서 화면 바깥(휴대폰 틀, host)에 portal로 띄워요
+function PlaceSheet({ p, onClose, host }) {
   const app = useApp();
   const { data } = app;
-  const st = app.placesView.current;
-  const [cat, setCat] = useState(CATS.includes(st.cat) ? st.cat : CATS[0]);
-  useEffect(() => { st.cat = cat; }, [st, cat]);
-  const items = usePlaceItems(data);
-  const count = useMemo(() => Object.fromEntries(CATS.map((c) => [c, items.filter((p) => groupOf(p) === c).length])), [items]);
-  const list = useMemo(() => items.filter((p) => groupOf(p) === cat).sort(byNearest), [items, cat]);
-  const link = usePinLink([cat]);
-  // 큰 지도: 같은 카테고리 칩이 켜진 상태로 성북구 전체부터
-  const bigMap = () => { app.homeMap.current = { filter: cat, selId: null, view: null, origin: null }; app.go("home"); };
+  const g = groupOf(p);
+  const closeBtn = useRef(null);
+  const opener = useRef(document.activeElement);
+  const [dy, setDy] = useState(0);
+  const drag = useRef(null);
+  // onClose는 부모가 그릴 때마다 새로 만들어져서, 최신 것을 ref로 들고 있어요 (포커스가 매번 X로 튀지 않게)
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+  useEffect(() => {
+    closeBtn.current?.focus();
+    const onKey = (e) => { if (e.key === "Escape") closeRef.current(); };
+    window.addEventListener("keydown", onKey);
+    const el = opener.current;
+    return () => { window.removeEventListener("keydown", onKey); if (el?.isConnected) el.focus?.(); };
+  }, []);
+  useEffect(() => { setDy(0); }, [p.id]);
 
-  return (
-    <section className="screen places-screen ph-screen">
-      <div className="hanji-layer" aria-hidden="true" />
-      <div className="places-scroll">
-        <div className="pl-top">
-          <button className="round-btn glass" onClick={() => app.go("placesHub")} aria-label={t("ph_back_places_label")}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+  const down = (e) => { if (e.target.closest("button, a")) return; drag.current = { y: e.clientY, id: e.pointerId }; e.currentTarget.setPointerCapture?.(e.pointerId); };
+  const move = (e) => { if (drag.current) setDy(Math.max(0, e.clientY - drag.current.y)); };
+  const up = () => { if (!drag.current) return; drag.current = null; if (dy > 80) onClose(); else setDy(0); };
+
+  const name = loc(p.name).replace(/\s*\(.*\)/, "");
+  const kinds = String(p.kind || "").split(/\s*·\s*/).filter(Boolean);
+  const dist = p.isDest ? t("ph_dest_self") : fromDest(data, p);
+  const dest = p.nearest_course?.dest || (p.isDest ? p.id : null);
+  const info = [["visit_fee", p.fee], ["visit_hours", p.hours], ["visit_address", p.address]];
+  const run = () => { if (dest) app.setPick({ ...app.pick, dest }); app.go("courses"); };
+
+  const sheet = (
+    <div className="ui-layer ph-sheet-layer">
+      <div className="ph-sheet-scrim" onClick={onClose} />
+      <section className="ph-sheet" role="dialog" aria-modal="true" aria-label={t("ph_sheet_label", { name })}
+        style={{ "--c": THEME_COLORS[g], "--soft": SOFT[g], "--deep": DEEP[g], transform: dy ? `translateY(${dy}px)` : undefined, transition: drag.current ? "none" : undefined }}
+        onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
+        <span className="ph-sheet-grip" aria-hidden="true" />
+        <div className="ph-sheet-head">
+          <span className="ph-sheet-ic" aria-hidden="true"><GroupIcon group={g} size={30} /></span>
+          <div className="ph-sheet-title">
+            <small><b>{t("grp_" + g)}</b>{kinds.map((k) => ` · ${k}`).join("")}</small>
+            <h2>{name}</h2>
+            {dist && <p>{dist}</p>}
+          </div>
+          <button type="button" ref={closeBtn} className="ph-sheet-x" onClick={onClose} aria-label={t("close")}>
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
           </button>
-          <h1>{t("ph_cat_title", { name: t("grp_" + cat), n: list.length })}</h1>
         </div>
-
-        <div className="pl-topics scroll ph-chips" role="radiogroup" aria-label={t("ph_kind")}>
-          {CATS.map((c) => (
-            <button key={c} type="button" role="radio" data-theme-chip={c} aria-checked={cat === c} className={`pl-topic ${cat === c ? "on" : ""}`} onClick={() => setCat(c)}>
-              <GroupIcon group={c} size={18} />{t("grp_" + c)}<span className="chip-n">{count[c]}</span>
-            </button>
+        <dl className="ph-sheet-info">
+          {info.map(([k, v]) => (
+            <div key={k}><dt>{t(k)}</dt><dd className={!v ? "pd-pending" : k === "visit_fee" && isFree(p) ? "free" : ""}>{v || t("info_pending")}</dd></div>
           ))}
+        </dl>
+        <div className="ph-sheet-actions">
+          <a className="ph-sheet-way" href={kakaoDirections(p.name.ko, p.lat, p.lng)} target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+            {t("directions")}
+          </a>
+          <button type="button" className="ph-sheet-run" onClick={run}>{t("ph_sheet_run")} →</button>
         </div>
-
-        <div className="card ph-map">
-          <MapView>
-            <ExploreLayer key={cat} cluster={false} places={list} selectedId={link.pinId} level={6} onSelect={link.pickPin} />
-            <FitBounds points={list.map((p) => [p.lat, p.lng])} padTL={[28, 60]} padBR={[28, 28]} fitKey={cat} />
-          </MapView>
-          <span className="ph-map-tag">{t("ph_cat_only", { name: t("grp_" + cat) })}</span>
-          <button type="button" className="ph-map-big" onClick={bigMap}>{t("ph_big_map")}</button>
-        </div>
-
-        <h2 className="ph-h2">{t("ph_by_dest")}</h2>
-        {list.map((p) => (
-          <PlaceRow key={p.id} p={p} meta={fromDest(data, p)} on={link.selId === p.id} rowRef={link.rowRef(p.id)} {...link.hover(p.id)}
-            onOpen={() => openItem(app, p, "placesCat")} />
-        ))}
-      </div>
-    </section>
+      </section>
+    </div>
   );
+  return host ? createPortal(sheet, host) : sheet;
 }
 
 // ---------- 코스 따라 보기 ----------

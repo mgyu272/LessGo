@@ -365,7 +365,8 @@ const CLUSTER_STYLE = { width: "auto", height: "auto", background: "none", borde
 // level: 지금 확대 단계 (아이콘 크기를 정해요). 고른 아이콘은 묶음에 들어가지 않게 밖에 따로 그려요.
 export const CLUSTER_MIN_LEVEL = 9;
 const ZOOM_IN_MAX = 3; // 가까운 장소 2개짜리 묶음도 너무 깊이 들어가지 않게
-export function ExploreLayer({ places, selectedId, cluster = true, level = 6, onSelect, pad }) {
+// clusterMinLevel: 이 단계부터 묶어요 (기본은 아주 멀리 볼 때만. 장소 탭 작은 지도는 더 가까이서도 묶어요)
+export function ExploreLayer({ places, selectedId, cluster = true, clusterMinLevel = CLUSTER_MIN_LEVEL, level = 6, onSelect, pad }) {
   const byPos = useMemo(() => {
     const m = {};
     places.forEach((p) => { m[posKey(p.lat, p.lng)] = p; });
@@ -406,9 +407,9 @@ export function ExploreLayer({ places, selectedId, cluster = true, level = 6, on
     const [top, right, bottom, left] = pad?.() || [40, 40, 40, 40];
     map.setBounds(bounds, top, right, bottom, left);
     // 그래도 묶이는 단계면 묶음이 풀리는 단계까지 들어가요
-    if (map.getLevel() >= CLUSTER_MIN_LEVEL) map.setLevel(CLUSTER_MIN_LEVEL - 1, { anchor: center });
+    if (map.getLevel() >= clusterMinLevel) map.setLevel(clusterMinLevel - 1, { anchor: center });
     if (map.getLevel() < ZOOM_IN_MAX) map.setLevel(ZOOM_IN_MAX, { anchor: center });
-  }, [pad]);
+  }, [pad, clusterMinLevel]);
 
   const sel = places.find((p) => p.id === selectedId);
   const size = level >= 6 ? "sm" : "lg";
@@ -417,7 +418,7 @@ export function ExploreLayer({ places, selectedId, cluster = true, level = 6, on
   return (
     <>
       {cluster
-        ? <MarkerClusterer averageCenter minLevel={CLUSTER_MIN_LEVEL} gridSize={64} styles={[CLUSTER_STYLE]} disableClickZoom onClusterclick={zoomIn} onClustered={relabel} onCreate={(c) => { clusterer.current = c; }}>{dots}</MarkerClusterer>
+        ? <MarkerClusterer averageCenter minLevel={clusterMinLevel} gridSize={64} styles={[CLUSTER_STYLE]} disableClickZoom onClusterclick={zoomIn} onClustered={relabel} onCreate={(c) => { clusterer.current = c; }}>{dots}</MarkerClusterer>
         : dots}
       {sel && <ExploreDot place={sel} selected size={size} onClick={() => onSelect?.(sel)} />}
     </>

@@ -3,6 +3,7 @@ import { t } from "../lib/i18n.js";
 import { useApp } from "../state/AppContext.jsx";
 import { analyzeImage, generateImageExplanation, localizeImageAnalysis } from "../lib/ai.js";
 import * as voice from "../lib/voice.js";
+import { TEST_PHOTOS, testPhotoById, loadTestPhotoFile } from "../lib/testPhotos.js";
 
 const MAX_SOURCE_BYTES = 15 * 1024 * 1024;
 const MAX_PROCESSED_BYTES = 3 * 1024 * 1024;
@@ -273,10 +274,49 @@ export default function HistoryLens({ spotId, spotName }) {
     setLocalizationError("");
   }, [spotId]);
 
+  // 이야기 탭에서 테스트 사진을 골라 들어왔으면 그 사진을 바로 분석해요 (app.lensTest는 한 번 쓰고 비워요)
+  useEffect(() => {
+    const id = app.lensTest.current;
+    if (!id) return;
+    app.lensTest.current = null;
+    const testPhoto = testPhotoById(id);
+    if (testPhoto?.spotId === spotId) void pickTestPhoto(testPhoto);
+  }, [spotId]);
+
   const choosePhoto = async (event) => {
     const input = event.currentTarget;
     const file = input.files?.[0];
     input.value = "";
+    clearForNewPhoto();
+    if (!file) return;
+    await loadPhoto(file);
+  };
+
+  // 테스트 사진도 카메라·갤러리 사진과 같은 과정(압축 → 사진 분석 → 공식 자료 확인 → 해설)을 거쳐요.
+  // 다른 장소의 사진이면 그 장소의 렌즈로 옮겨 가서 분석해요
+  const pickTestPhoto = async (testPhoto) => {
+    if (busy) return;
+    const testSpot = app.data.spotById[testPhoto.spotId];
+    if (testPhoto.spotId !== spotId && testSpot) {
+      app.lensTest.current = testPhoto.id;
+      app.setSpot(testSpot);
+      return;
+    }
+    clearForNewPhoto();
+    setBusy(true);
+    let file;
+    try {
+      file = await loadTestPhotoFile(testPhoto);
+    } catch {
+      setBusy(false);
+      setNotice(t("lens_test_failed"));
+      return;
+    }
+    const nextPhoto = await loadPhoto(file, testPhoto);
+    if (nextPhoto) void runAnalysis(nextPhoto, true);
+  };
+
+  const clearForNewPhoto = () => {
     stopNarration();
     analysisController.current?.abort();
     localizationController.current?.abort();
@@ -287,33 +327,41 @@ export default function HistoryLens({ spotId, spotName }) {
     setLocalizationError("");
     setAnalysisError("");
     setNotice("");
-    if (!file) return;
+  };
 
+  const loadPhoto = async (file, test = null) => {
     const imageType = getImageType(file);
     if (imageType === "unsupported_heic") {
       setNotice(t("history_lens_heic_unsupported"));
-      return;
+      setBusy(false);
+      return null;
     }
     if (!SUPPORTED_TYPES.has(imageType)) {
       setNotice(t("history_lens_type_unsupported"));
-      return;
+      setBusy(false);
+      return null;
     }
     if (file.size > MAX_SOURCE_BYTES) {
       setNotice(t("history_lens_too_large"));
-      return;
+      setBusy(false);
+      return null;
     }
 
     setBusy(true);
     try {
       const processedFile = await resizeAndCompress(file, imageType);
       const previewUrl = URL.createObjectURL(processedFile);
-      setPhoto({
+      const nextPhoto = {
         file: processedFile,
         previewUrl,
         originalSize: file.size,
-      });
+        test,
+      };
+      setPhoto(nextPhoto);
+      return nextPhoto;
     } catch {
       setNotice(t("history_lens_process_failed"));
+      return null;
     } finally {
       setBusy(false);
     }
@@ -333,8 +381,9 @@ export default function HistoryLens({ spotId, spotName }) {
     setNotice("");
   };
 
-  const runAnalysis = async () => {
-    if (!photo || analyzing) return;
+  // target: 방금 고른 테스트 사진처럼 아직 photo 상태에 반영되기 전의 사진 (force면 진행 중 분석을 끊고 새로 시작)
+  const runAnalysis = async (target = photo, force = false) => {
+    if (!target || (analyzing && !force)) return;
     stopNarration();
     localizationController.current?.abort();
     setLocalizing(false);
@@ -348,13 +397,13 @@ export default function HistoryLens({ spotId, spotName }) {
     setAnalysisError("");
     setNotice("");
     try {
-      const imageBase64 = await fileToBase64(photo.file);
+      const imageBase64 = await fileToBase64(target.file);
       const requestLang = langRef.current;
       const result = await analyzeImage({
         spotId,
         spotName,
         lang: requestLang,
-        mimeType: photo.file.type,
+        mimeType: target.file.type,
         imageBase64,
       }, { signal: controller.signal });
       if (!controller.signal.aborted) {
@@ -409,6 +458,31 @@ export default function HistoryLens({ spotId, spotName }) {
       if (!controller.signal.aborted) setAnalyzing(false);
     }
   };
+
+  // 사진 바로 아래 "테스트 사진으로 해보기" 한 줄 (사진이 없을 땐 사진 고르기 버튼 아래)
+  const testPhotoRow = (
+    <div className="lens-test">
+      <div className="lens-test-copy">
+        <b>{t("lens_test_title")}</b>
+        <span>{t("lens_test_sub")}</span>
+      </div>
+      <div className="lens-test-thumbs">
+        {TEST_PHOTOS.map((testPhoto) => (
+          <button
+            key={testPhoto.id}
+            type="button"
+            className="lens-test-thumb"
+            aria-pressed={photo?.test?.id === testPhoto.id}
+            aria-label={t("lens_test_pick", { name: testPhoto.name[lang] })}
+            onClick={() => pickTestPhoto(testPhoto)}
+            disabled={busy}
+          >
+            <img src={testPhoto.src} alt="" />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <div className="rise pd-col history-lens-page" style={{maxWidth: 720, margin: "0 auto", paddingBottom: 28}}>
@@ -474,9 +548,15 @@ export default function HistoryLens({ spotId, spotName }) {
         <p className="history-lens-empty-hint"><span aria-hidden="true">◎</span> {t("history_lens_select_hint")}</p>
       )}
 
+      {!photo && testPhotoRow}
+
       {photo && (
         <section className="history-lens-preview card" style={{borderRadius:22,overflow:"hidden",padding:16}} aria-label={t("history_lens_preview_title")}>
-          <img className="history-lens-image" style={{width:"100%",maxHeight:380,objectFit:"cover",borderRadius:16}} src={photo.previewUrl} alt={t("history_lens_preview_alt")} />
+          <div className="lens-photo-wrap">
+            <img className="history-lens-image" style={{width:"100%",maxHeight:380,objectFit:"cover",borderRadius:16}} src={photo.previewUrl} alt={t("history_lens_preview_alt")} />
+            {photo.test && <span className="lens-photo-label">{t("lens_test_label", { name: photo.test.name[lang] })}</span>}
+          </div>
+          {testPhotoRow}
           <p className="history-lens-size">
             {t("history_lens_file_size", {
               original: formatBytes(photo.originalSize),
@@ -495,7 +575,7 @@ export default function HistoryLens({ spotId, spotName }) {
             type="button"
             className="btn btn-cta history-lens-analyze"
             style={{minHeight:48,borderRadius:13,boxShadow:"none",fontSize:15,fontWeight:700}}
-            onClick={runAnalysis}
+            onClick={() => runAnalysis()}
             disabled={analyzing}
           >
             {t(analyzing ? "history_lens_analyzing" : "history_lens_analyze")}
@@ -504,7 +584,7 @@ export default function HistoryLens({ spotId, spotName }) {
           {analysisError && (
             <div className="history-lens-result" role="alert">
               <p className="note cream">{analysisError}</p>
-              <button type="button" className="btn btn-soft" onClick={runAnalysis} disabled={analyzing}>{t("history_lens_retry")}</button>
+              <button type="button" className="btn btn-soft" onClick={() => runAnalysis()} disabled={analyzing}>{t("history_lens_retry")}</button>
             </div>
           )}
           {analysis && analysisLang === lang && !localizing && (

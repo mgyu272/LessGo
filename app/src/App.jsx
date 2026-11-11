@@ -21,7 +21,7 @@ import ExplorePlace from "./screens/ExplorePlace.jsx";
 import Market from "./screens/Market.jsx";
 import Intro from "./screens/Intro.jsx";
 import Guide from "./components/Guide.jsx";
-import { PlacesHub, PlacesCategory, PlacesCourse } from "./screens/PlacesHub.jsx";
+import { PlacesHub, PlacesCourse } from "./screens/PlacesHub.jsx";
 
 const SCREENS = {
   intro: [Intro],                  // 로그인 전 소개 (행사 문구 → 성북런 소개)
@@ -30,8 +30,7 @@ const SCREENS = {
   find: [FindAccount],
   nickname: [Nickname],            // 구글로 처음 들어온 사람
   home: [Home],                    // 큰 지도 (장소 탭 안: "지도 크게 보기" · 상권 "지도에서 보기" · 달리기 끝 "지도로 돌아가기")
-  placesHub: [PlacesHub],          // 장소 탭 첫 화면 (카테고리 카드 · 코스 따라 보기)
-  placesCat: [PlacesCategory],     // 장소 > 카테고리 하나 (작은 지도 + 목록)
+  placesHub: [PlacesHub],          // 장소 탭 첫 화면 (카테고리 칩 · 작은 지도 + 장소 안내 시트 · 코스 따라 보기)
   placesCourse: [PlacesCourse],    // 장소 > 코스 따라 보기 (코스 300m 안 장소)
   courses: [CoursePicker],         // 코스 고르기 (예전 조건 시트 · 코스 3개 · 코스 상세를 합침)
   places: [Places],                // 이야기 탭 = 로그인 뒤 메인
@@ -50,7 +49,7 @@ const SCREENS = {
   stats: [Stats],                  // 내 기록 (오늘 · 주간 · 배지)
 };
 // 하단 메뉴가 보이는 화면
-const WITH_TABS = new Set(["home", "placesHub", "placesCat", "placesCourse", "places", "market", "events", "stats", "stars", "records"]);
+const WITH_TABS = new Set(["home", "placesHub", "placesCourse", "places", "market", "events", "stats", "stars", "records"]);
 const DARK = new Set(["stars", "coupon"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
 
 export default function App() {

@@ -4,6 +4,7 @@
 // - flap                        : 양쪽 날개를 0.9초마다 펄럭여요 (로딩 화면). 움직임 줄이기 설정이면 멈춰요.
 
 import { useEffect, useState } from "react";
+import { Wordmark } from "./Wordmark.jsx";
 
 const VIEWBOX = "20 0 672 512";
 // 성북구 윤곽 꼭짓점 (viewBox 20 0 672 512 기준)
@@ -77,6 +78,15 @@ export function LogoBird({ size = 40, variant = "mark", flap = false, fill, stro
 
 // 로고 + 이름 (로그인 화면 왼쪽 위 등)
 export function Brand({ size = 34, subtitle = true, name = "LessGo", className = "" }) {
+  // "성북런"은 글꼴 대신 글자 패스 SVG(Wordmark)로 그려서, 첫 화면부터 최종 글씨체 그대로 보여요 (글꼴 바뀜 깜빡임 없음)
+  if (name === "성북런") {
+    return (
+      <span className={`brand ${className}`} role="img" aria-label="성북런">
+        <LogoBird variant="icon" size={size} />
+        <span className="brand-name"><b className="brand-wordmark"><Wordmark /></b>{subtitle && <small>RUN · SEONGBUK</small>}</span>
+      </span>
+    );
+  }
   return (
     <span className={`brand ${className}`}>
       <LogoBird variant="icon" size={size} />

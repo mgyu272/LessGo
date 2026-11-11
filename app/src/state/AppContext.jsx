@@ -43,6 +43,8 @@ export function AppProvider({ children }) {
   const [placeFrom, setPlaceFrom] = useState("places");
   // 장소 상세를 열 때 처음 보여줄 탭 (story · history_lens · visit). 비어 있으면 이야기 탭
   const placeTab = useRef(null);
+  // AI 역사 렌즈를 열면서 바로 분석할 테스트 사진 id (lib/testPhotos.js). 렌즈 화면이 읽고 비워요
+  const lensTest = useRef(null);
   // 홈 지도 상태 { filter, selId, view, focus, sheet }: 둘러볼 곳 상세에 갔다 와도 그대로예요. 앱을 새로 열 때만 처음으로
   const homeMap = useRef(null);
   // 장소 탭 상태 { cat, dest, kind }: 고른 카테고리·코스 목적지는 상세에 갔다 와도 그대로예요
@@ -110,7 +112,7 @@ export function AppProvider({ children }) {
 
   const value = {
     lang, changeLang, screen, go, data, settings, setSettings, weather, course, setCourse, pick, setPick,
-    spot, setSpot, explore, setExplore, placeFrom, setPlaceFrom, placeTab, homeMap, placesView, mapShop, setMapShop, couponShop, setCouponShop, finish, shuffle, setShuffle, toastMsg, toast,
+    spot, setSpot, explore, setExplore, placeFrom, setPlaceFrom, placeTab, lensTest,homeMap, placesView, mapShop, setMapShop, couponShop, setCouponShop, finish, shuffle, setShuffle, toastMsg, toast,
     guide, setGuide, enterApp,
     demo, setDemo, user, run,
   };

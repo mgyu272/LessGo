@@ -1,6 +1,6 @@
 // ⑦ 이야기 탭 = 로그인 뒤 메인 화면
 // 맨 위 AI 역사 렌즈 카드("사진으로 물어보기" → 장소 고르기 → 그 장소 상세의 AI 역사 렌즈 탭)
-// 아래 추천 코스 3선: 코스 목적지(심우장·정릉·의릉) 사진 카드를 옆으로 넘겨 봐요 (장소 그림 + 큰 장소 이름 + 작은 질문 spots.json hook + 누가 살았는지 hook_meta + "이야기 듣기" / "여기로 달리기")
+// 아래 추천 코스 3선: 코스 목적지(심우장·정릉·의릉) 사진 카드를 옆으로 넘겨 봐요 (빨간 도장 + 큰 장소 이름 + 작은 질문 spots.json hook + 누가 살았는지 hook_meta + "이야기 듣기" / "여기로 달리기")
 // 둘러볼 곳·카테고리·지도는 장소 탭(PlacesHub.jsx)에 있어요.
 
 import { useEffect, useRef, useState } from "react";
@@ -10,8 +10,8 @@ import { DESTINATIONS } from "../lib/routes.js";
 import { destName } from "../lib/places.js";
 import { Seal, sealText } from "../components/Bits.jsx";
 import { Brand } from "../components/LogoBird.jsx";
-import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { PlaceCover } from "../components/PlacePhoto.jsx";
+import { TEST_PHOTOS, cameraUnavailable } from "../lib/testPhotos.js";
 
 export default function Places() {
   const app = useApp();
@@ -24,6 +24,16 @@ export default function Places() {
   const openPlace = (s, tab) => { app.placeTab.current = tab; app.setSpot(s); app.setPlaceFrom("places"); app.go("place"); };
   const runHere = (s) => { app.setPick({ ...app.pick, dest: s.id }); app.go("courses"); };
   const closeAsk = () => { setAsk(false); askBtn.current?.focus(); };
+  // 카메라를 못 쓰는 환경(데스크톱 · 권한 거부 · 카메라 없음)이면 장소 고르기 창에 테스트 사진을 먼저 보여줘요
+  const [noCamera, setNoCamera] = useState(false);
+  const openAsk = async () => { setNoCamera(await cameraUnavailable()); setAsk(true); };
+  // 테스트 사진을 고르면 그 장소의 AI 역사 렌즈를 열고 바로 분석해요
+  const pickTest = (p) => {
+    const s = data.spotById[p.spotId];
+    if (!s) return;
+    app.lensTest.current = p.id;
+    openPlace(s, "history_lens");
+  };
 
   return (
     <section className="screen places-screen st-screen">
@@ -34,11 +44,33 @@ export default function Places() {
         </div>
 
         <section className="st-lens" aria-labelledby="st-lens-title">
-          <span className="st-lens-label"><LensIcon />{t("pd_tab_history_lens")}</span>
-          <h2 id="st-lens-title">{t("st_lens_title1")}<br />{t("st_lens_title2")}</h2>
-          <button type="button" ref={askBtn} className="st-lens-btn" onClick={() => setAsk(true)} aria-haspopup="dialog">
-            <CameraIcon />{t("st_lens_ask")}
-          </button>
+          {/* 심우장 사진 위에 AI가 단서를 찾는 모습: 네 귀퉁이 꺾쇠 · 칩 2개 · 현판/대문 점선 박스 · 가운데 스캔 선 */}
+          <div className="st-lens-photo">
+            <img src={TEST_PHOTOS[0].src} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            <span className="st-lens-corner tl" aria-hidden="true" />
+            <span className="st-lens-corner tr" aria-hidden="true" />
+            <span className="st-lens-corner bl" aria-hidden="true" />
+            <span className="st-lens-corner br" aria-hidden="true" />
+            <span className="st-lens-box st-lens-box-plaque" aria-hidden="true"><span className="st-lens-tag">{t("st_lens_tag_plaque")}</span></span>
+            <span className="st-lens-box st-lens-box-gate" aria-hidden="true"><span className="st-lens-tag light">{t("st_lens_tag_gate")}</span></span>
+            <span className="st-lens-scan" aria-hidden="true" />
+            <span className="st-lens-chip st-lens-chip-left"><i aria-hidden="true" />{t("pd_tab_history_lens")}</span>
+            <span className="st-lens-chip st-lens-chip-right">{t("st_lens_flow")}</span>
+          </div>
+          <div className="st-lens-body">
+            <div className="st-lens-copy">
+              <h2 id="st-lens-title">{t("st_lens_title")}</h2>
+              <p>{t("st_lens_desc")}</p>
+            </div>
+            {/* 손가락이 다가와 버튼을 꾹 누르는 안내 애니메이션 (손가락은 누르기를 막지 않아요) */}
+            <span className="st-lens-btn-wrap">
+              <span className="st-lens-ripple" aria-hidden="true" />
+              <button type="button" ref={askBtn} className="st-lens-btn" onClick={openAsk} aria-haspopup="dialog" aria-label={t("st_lens_ask")}>
+                <CameraIcon />
+              </button>
+              <FingerIcon />
+            </span>
+          </div>
         </section>
 
         <div className="st-head">
@@ -49,9 +81,9 @@ export default function Places() {
         <DestCarousel key={app.lang} items={stories} label={t("dest_title")} render={(s, i) => (
           <article className="pl-card">
             <div className="pl-card-photo">
-              <PlaceCover place={s} fallback={<PhotoIcon />} />
+              <CoursePhoto spot={s} />
               <span className="pl-course-count">{t("courses_n", { n: data.courses.filter((c) => c.properties.dest === s.id).length })}</span>
-              <span className="pl-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
+              <span className="pl-seal" aria-hidden="true"><Seal text={sealText(s)} size={28} /></span>
             </div>
             <div className="pl-text">
               <h3>{destName(data, s.id)}</h3>
@@ -70,7 +102,7 @@ export default function Places() {
         )} />
       </div>
 
-      {ask && <AskSheet stories={stories} onClose={closeAsk} onPick={(s) => openPlace(s, "history_lens")} />}
+      {ask && <AskSheet stories={stories} noCamera={noCamera} onClose={closeAsk} onPick={(s) => openPlace(s, "history_lens")} onPickTest={pickTest} />}
     </section>
   );
 }
@@ -124,13 +156,32 @@ function DestCarousel({ items, render, label }) {
   );
 }
 
+// 추천 코스 카드 사진: public/test-photos의 심우장·정릉·의릉 사진, 없으면 장소 자료 사진
+function CoursePhoto({ spot }) {
+  const photo = TEST_PHOTOS.find((p) => p.spotId === spot.id);
+  const [failed, setFailed] = useState(!photo);
+  if (failed) return <PlaceCover place={spot} fallback={<PhotoIcon />} />;
+  return <img className="pl-photo-img" src={photo.src} alt="" onError={() => setFailed(true)} />;
+}
+
+// 렌즈 카드의 흰 손가락(포인터)
+function FingerIcon() {
+  return (
+    <svg className="st-lens-finger" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
+      <path d="M6 14V4a2 2 0 014 0v5a2 2 0 014 0v1a2 2 0 014 0v1a2 2 0 014 0v3a8 8 0 01-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 012.83-2.82L6 15z"
+        fill="#FFFFFF" stroke="#1F3D14" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M10 9v2.5M14 10v1.5M18 11v1.5" fill="none" stroke="#1F3D14" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function PhotoIcon() {
   return <svg width="38" height="38" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>;
 }
 
 // "어느 장소에서 찍었나요?" 작은 창 (아래에서 올라와요). 바깥 누르기 · 닫기 · Esc로 닫혀요
-function AskSheet({ stories, onClose, onPick }) {
-  const { data } = useApp();
+function AskSheet({ stories, noCamera, onClose, onPick, onPickTest }) {
+  const { data, lang } = useApp();
   const first = useRef(null);
   useEffect(() => {
     first.current?.focus();
@@ -143,10 +194,27 @@ function AskSheet({ stories, onClose, onPick }) {
       <div className="ui-scrim" onClick={onClose} />
       <section className="ui-optsheet hanji-sheet rise st-ask" role="dialog" aria-modal="true" aria-labelledby="st-ask-title">
         <span className="grip" aria-hidden="true" />
+        {noCamera && (
+          <div className="st-ask-test">
+            <p>{t("st_ask_test")}</p>
+            <div className="st-ask-test-list">
+              {TEST_PHOTOS.map((p, i) => {
+                const name = p.name[lang === "ko" ? "ko" : "en"];
+                return (
+                  <button key={p.id} ref={i === 0 ? first : undefined} type="button" className="st-ask-test-btn"
+                    onClick={() => onPickTest(p)} aria-label={t("lens_test_pick", { name })}>
+                    <img src={p.src} alt="" />
+                    <span>{name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
         <h2 id="st-ask-title">{t("st_ask_where")}</h2>
         <div className="st-ask-list">
           {stories.map((s, i) => (
-            <button key={s.id} ref={i === 0 ? first : undefined} type="button" className="st-ask-place" onClick={() => onPick(s)}>
+            <button key={s.id} ref={i === 0 && !noCamera ? first : undefined}type="button" className="st-ask-place" onClick={() => onPick(s)}>
               <Seal text={sealText(s)} size={36} />
               <b>{destName(data, s.id)}</b>
               <span aria-hidden="true">›</span>
