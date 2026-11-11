@@ -11,7 +11,7 @@ import { destName } from "../lib/places.js";
 import { Seal, sealText } from "../components/Bits.jsx";
 import { Brand } from "../components/LogoBird.jsx";
 import { PlaceCover } from "../components/PlacePhoto.jsx";
-import { TEST_PHOTOS, cameraUnavailable } from "../lib/testPhotos.js";
+import { TEST_PHOTOS } from "../lib/testPhotos.js";
 
 export default function Places() {
   const app = useApp();
@@ -25,8 +25,7 @@ export default function Places() {
   const runHere = (s) => { app.setPick({ ...app.pick, dest: s.id }); app.go("courses"); };
   const closeAsk = () => { setAsk(false); askBtn.current?.focus(); };
   // 카메라를 못 쓰는 환경(데스크톱 · 권한 거부 · 카메라 없음)이면 장소 고르기 창에 테스트 사진을 먼저 보여줘요
-  const [noCamera, setNoCamera] = useState(false);
-  const openAsk = async () => { setNoCamera(await cameraUnavailable()); setAsk(true); };
+  const openAsk = () => setAsk(true);
   // 테스트 사진을 고르면 그 장소의 AI 역사 렌즈를 열고 바로 분석해요
   const pickTest = (p) => {
     const s = data.spotById[p.spotId];
@@ -102,7 +101,7 @@ export default function Places() {
         )} />
       </div>
 
-      {ask && <AskSheet stories={stories} noCamera={noCamera} onClose={closeAsk} onPick={(s) => openPlace(s, "history_lens")} onPickTest={pickTest} />}
+      {ask && <AskSheet stories={stories} onClose={closeAsk} onPick={(s) => openPlace(s, "history_lens")} onPickTest={pickTest} />}
     </section>
   );
 }
@@ -180,7 +179,7 @@ function PhotoIcon() {
 }
 
 // "어느 장소에서 찍었나요?" 작은 창 (아래에서 올라와요). 바깥 누르기 · 닫기 · Esc로 닫혀요
-function AskSheet({ stories, noCamera, onClose, onPick, onPickTest }) {
+function AskSheet({ stories, onClose, onPick, onPickTest }) {
   const { data, lang } = useApp();
   const first = useRef(null);
   useEffect(() => {
@@ -194,9 +193,9 @@ function AskSheet({ stories, noCamera, onClose, onPick, onPickTest }) {
       <div className="ui-scrim" onClick={onClose} />
       <section className="ui-optsheet hanji-sheet rise st-ask" role="dialog" aria-modal="true" aria-labelledby="st-ask-title">
         <span className="grip" aria-hidden="true" />
-        {noCamera && (
+        {(
           <div className="st-ask-test">
-            <p>{t("st_ask_test")}</p>
+            <p>{lang === "ko" ? "현장에 가지 않아도 AI 역사 렌즈를 체험할 수 있어요. 아래 예시 사진을 선택하면 실제 AI 분석을 시작합니다." : "Try the AI History Lens without visiting the site. Choose a sample photo to start a live AI analysis."}</p>
             <div className="st-ask-test-list">
               {TEST_PHOTOS.map((p, i) => {
                 const name = p.name[lang === "ko" ? "ko" : "en"];
@@ -214,7 +213,7 @@ function AskSheet({ stories, noCamera, onClose, onPick, onPickTest }) {
         <h2 id="st-ask-title">{t("st_ask_where")}</h2>
         <div className="st-ask-list">
           {stories.map((s, i) => (
-            <button key={s.id} ref={i === 0 && !noCamera ? first : undefined}type="button" className="st-ask-place" onClick={() => onPick(s)}>
+            <button key={s.id} ref={undefined}type="button" className="st-ask-place" onClick={() => onPick(s)}>
               <Seal text={sealText(s)} size={36} />
               <b>{destName(data, s.id)}</b>
               <span aria-hidden="true">›</span>
