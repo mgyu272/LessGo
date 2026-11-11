@@ -1,28 +1,23 @@
-# Offline MP3 audio (work in progress)
+# Less GO: offline historical narration audio
 
-Place audio files under `app/public/audio/`. The app attempts to play a local file first and falls back to the existing browser TTS if the file is absent or cannot play.
+This branch uses local MP3 files **only for historical narration** in `PlaceDetail` and `Spot`. Navigation retains the existing browser TTS implementation; no navigation MP3s are needed.
 
-## Navigation files
-- `navigation/start-ko.mp3`, `start-en.mp3`
-- `navigation/left-ko.mp3`, `left-en.mp3`
-- `navigation/right-ko.mp3`, `right-en.mp3`
-- `navigation/straight-ko.mp3`, `straight-en.mp3`
-- `navigation/arrive-ko.mp3`, `arrive-en.mp3`
+Put these files in `app/public/audio/narration/`:
 
-Only messages matching the built-in phrase patterns use these fixed files. Other dynamic guidance remains browser TTS.
+| Place ID | Korean | English |
+| --- | --- | --- |
+| simujang | simujang-ko.mp3 | simujang-en.mp3 |
+| jeongneung | jeongneung-ko.mp3 | jeongneung-en.mp3 |
+| uiryeong | uiryeong-ko.mp3 | uiryeong-en.mp3 |
 
-## Narration files
-- `narration/simujang-ko.mp3`, `simujang-en.mp3`
-- `narration/jeongneung-ko.mp3`, `jeongneung-en.mp3`
-- `narration/uiryeong-ko.mp3`, `uiryeong-en.mp3`
+Use the actual `spot.id` as filename stem and the exact approved story text in each language. Keep the selected Korean Kokoro voice `km_junho` and synthesis settings consistent. English voice may be a separate consistent English model.
 
-The filename stem must match the actual `spot.id` in the data. Verify spelling before publishing. Files should contain the exact approved narration for the corresponding language.
+When an MP3 is absent or fails to play, the app falls back to browser speech synthesis. No Gemini API is used for these narration plays.
 
-## Status
-The English navigation MP3 ZIP was produced locally and is provided separately in the conversation; binary files are not yet committed to this branch. Korean narration and navigation audio, and English narration audio, are **not yet produced**. Do not merge this PR until the MP3 assets have been added and mobile playback has been verified. A fallback to browser TTS does not guarantee audio on every mobile device.
+**Not ready to merge:** the six approved audio assets are not yet committed, and phone playback has not been verified.
 
-## Manual verification
-1. Add files under `app/public/audio/` in this branch.
-2. Run `npm ci && npm run build` from `app/`.
-3. Open the preview deployment on iPhone and Android. Test start, left, right, straight, arrival, each place's narration, and pause/stop.
-4. Confirm there are no `/api/tts` requests during playback.
+Validation before merging:
+1. Add the six MP3 files to this branch.
+2. Run `npm ci && npm run build` in `app/`.
+3. Test Korean and English narration on both place detail and arrival screens on real mobile browsers.
+4. Confirm stopping narration works, and check the browser network panel for successful MP3 requests and no `/api/tts` requests.
