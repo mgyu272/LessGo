@@ -1,6 +1,6 @@
 // ⑧ 상권: 코스 근처 동네 가게(식당 · 카페 등) 목록 (shops.json의 카카오맵 조사 자료)
 // 위에서부터: "달리고, 들르고 / 동네 상권" + 검색 버튼 → 목적지 고르기(심우장·정릉·의릉·그 외)
-// 종류 칩(장소 탭 칩처럼 색·아이콘) → 미니 지도(코스 경로 + 종류 아이콘 핀) → 목적지 고르기(심우장·정릉·의릉·그 외) + 정렬 → 가게 목록.
+// 종류 칩(장소 탭 칩처럼 색·아이콘) → 미니 지도(장소 탭 지도와 같은 모양 · 끌기·확대 · 핀 누르면 가게 카드) → 목적지 고르기(심우장·정릉·의릉·그 외) + 정렬 → 가게 목록.
 // 줄을 누르면 홈 지도에서 그 가게를 핀으로 보여주고, 오른쪽 노란 원 버튼은 카카오맵 가게 페이지를 새 창으로 열어요.
 // 지도 핀 번호 = 목록 번호예요.
 
@@ -129,6 +129,10 @@ export default function Market() {
   const pins = useMemo(() => list.map((shop, i) => ({ shop, no: i + 1 })).filter(({ shop }) => shop.lat != null && shop.lng != null), [list]);
   const missing = useMemo(() => list.filter((s) => s.lat == null || s.lng == null), [list]);
   const describe = (s) => ({ cat: catLabel(s), walk: walkLabel(s) });
+  // 미니 지도에서 누른 핀 (목적지 · 종류를 바꾸면 지워요)
+  const [picked, setPicked] = useState(null);
+  useEffect(() => { setPicked(null); }, [dest, curKind]);
+  const miniSel = pins.find((x) => x.shop.id === picked) || null;
 
   return (
     <section className="screen places-screen market-screen mk2">
@@ -155,11 +159,39 @@ export default function Market() {
           ))}
         </div>
 
-        <div className="mk2-map">
-          <ShopMap pins={pins} course={course} pad={[16, 16, 44, 16]} />
-          <button type="button" ref={bigBtn} className="mk2-big" onClick={() => setBigMap(true)} aria-haspopup="dialog">
-            {loc({ ko: "지도 크게", en: "Bigger map" })} <span aria-hidden="true">›</span>
+        {/* 미니 지도: 장소 탭 지도와 같은 모양 (왼쪽 위 "전체 N곳" · 오른쪽 위 크게 보기 · 왼쪽 아래 핀 안내). 끌기·확대 · 핀 누르기 돼요 */}
+        <div className="mk2-map mk2-map-mini" style={{ "--c": KIND_COLOR[curKind] }}>
+          <ShopMap pins={pins} course={course} interactive pad={[52, 30, 44, 30]} picked={picked} onPick={(s) => setPicked((v) => (v === s.id ? null : s.id))} />
+          <span className="ph-map-tag mk2-map-tag"><i aria-hidden="true" />{loc({ ko: `${loc(KINDS.find(([k]) => k === curKind)[1])} ${list.length}곳`, en: `${loc(KINDS.find(([k]) => k === curKind)[1])} ${list.length}` })}</span>
+          <button type="button" ref={bigBtn} className="mk2-big-ic" onClick={() => setBigMap(true)} aria-haspopup="dialog" aria-label={loc({ ko: "지도 크게 보기", en: "Bigger map" })}>
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
           </button>
+          {miniSel ? (
+            <div className="mk2-pick mk2-pick-mini" aria-live="polite">
+              <button type="button" className="mk2-pick-main" onClick={() => showOnMap(miniSel.shop)}
+                aria-label={loc({ ko: `${miniSel.no}. ${loc(miniSel.shop.name)} 지도에서 보기`, en: `${miniSel.no}. Show ${loc(miniSel.shop.name)} on the map` })}>
+                <span className="mk2-no" style={{ background: KIND_COLOR[kindOf(miniSel.shop)] }}>{miniSel.no}</span>
+                <span className="mk2-text">
+                  <b>{loc(miniSel.shop.name)}</b>
+                  {walkLabel(miniSel.shop) && <span className="mk2-walk">{walkLabel(miniSel.shop)}</span>}
+                </span>
+              </button>
+              {miniSel.shop.kakao_url && (
+                <a className="mk2-kakao" href={miniSel.shop.kakao_url.replace(/^http:/, "https:")} target="_blank" rel="noopener noreferrer"
+                  aria-label={loc({ ko: `${loc(miniSel.shop.name)} 카카오맵에서 열기`, en: `Open ${loc(miniSel.shop.name)} in Kakao Map` })}>
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 6h10v10 M18 6L6 18" /></svg>
+                </a>
+              )}
+              <button type="button" className="mk2-pick-x" onClick={() => setPicked(null)} aria-label={loc({ ko: "닫기", en: "Close" })}>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+              </button>
+            </div>
+          ) : (
+            <span className="ph2-hint" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11V5a1.6 1.6 0 013.2 0v5 M12.2 9.5a1.6 1.6 0 013.2 0V11 M15.4 10.5a1.6 1.6 0 013.2 0v3.5a6 6 0 01-6 6h-1a6 6 0 01-4.7-2.3l-2.3-3a1.6 1.6 0 012.5-2L9 15" /></svg>
+              {loc({ ko: "핀을 누르면 안내가 떠요", en: "Tap a pin for details" })}
+            </span>
+          )}
         </div>
 
         <div className="mk2-seg" role="radiogroup" aria-label={loc({ ko: "어디 근처", en: "Near" })}>

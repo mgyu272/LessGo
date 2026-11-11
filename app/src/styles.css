@@ -2407,3 +2407,20 @@ button.mk2-pin:focus-visible { outline: 2px solid #1F3D14; outline-offset: 2px; 
 .ph-dest-ic.on button { width: 48px; height: 48px; box-shadow: 0 0 0 6px rgba(47, 101, 18, .2), 0 3px 8px -2px rgba(20, 31, 14, .4); }
 .ph-dest-ic span { top: 24px; }
 .ph-dest-ic.on span { top: 27px; }
+
+/* ---------- 상권 미니 지도: 장소 탭 지도와 통일 (전체 N곳 · 크게 보기 아이콘 · 핀 안내 · 핀 카드) ---------- */
+.mk2-map-mini { background: #F6F9F1; }
+.mk2-map-mini::after { z-index: 4; }
+.mk2-map-mini img[src*="daumcdn"] { filter: saturate(.45) brightness(1.05); }
+.mk2-map-mini .ph-map-tag { display: inline-flex; align-items: center; gap: 6px; left: 10px; top: 10px; padding: 6px 11px; background: #FFFFFF; color: #1F3D14; font-size: 13px; }
+.mk2-map-mini .ph-map-tag i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.mk2-big-ic { position: absolute; top: 10px; right: 10px; z-index: 3; width: 40px; height: 40px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 14px; background: #FFFFFF; color: #1F3D14; box-shadow: 0 4px 12px -6px rgba(31, 61, 20, .4); cursor: pointer; }
+.mk2-big-ic::before { content: ""; position: absolute; inset: -2px; } /* 누르는 칸 44px */
+.mk2-big-ic:focus-visible { outline: 2px solid #1F3D14; outline-offset: 2px; }
+.mk2-pick-mini { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 5; gap: 8px; padding: 6px 6px 6px 10px; box-shadow: 0 8px 20px -10px rgba(20, 31, 14, .5); }
+.mk2-pick-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; text-align: left; font: inherit; color: inherit; cursor: pointer; min-height: 44px; }
+.mk2-pick-main:focus-visible { outline: 2px solid #2F6512; outline-offset: 2px; border-radius: 10px; }
+.mk2-pick-mini .mk2-no { position: static; flex: none; min-width: 24px; height: 24px; border-radius: 12px; box-shadow: none; }
+.mk2-pick-mini .mk2-text b { font-size: 14px; }
+.mk2-pick-mini .mk2-kakao { width: 40px; height: 40px; }
+.mk2-pick-x { flex: none; width: 36px; height: 44px; display: grid; place-items: center; padding: 0; border: 0; background: none; color: #4F6B3B; cursor: pointer; }
