@@ -55,7 +55,6 @@ export default function Places() {
             <span className="st-lens-box st-lens-box-gate" aria-hidden="true"><span className="st-lens-tag light">{t("st_lens_tag_gate")}</span></span>
             <span className="st-lens-scan" aria-hidden="true" />
             <span className="st-lens-chip st-lens-chip-left"><i aria-hidden="true" />{t("pd_tab_history_lens")}</span>
-            <span className="st-lens-chip st-lens-chip-right">{t("st_lens_flow")}</span>
           </div>
           <div className="st-lens-body">
             <div className="st-lens-copy">
