@@ -8,6 +8,7 @@ import { useApp } from "../state/AppContext.jsx";
 import { t } from "../lib/i18n.js";
 import { Brand, useReducedMotion } from "../components/LogoBird.jsx";
 import { LangSwitch } from "../components/Bits.jsx";
+import { preloadGuidePhotos } from "../components/Guide.jsx";
 
 const PHRASES = [
   <>오늘은 <mark>한성대 분수마루</mark>에<br />방문해주셨네요!</>,
@@ -32,6 +33,7 @@ export default function Intro() {
   const reduced = useReducedMotion();
   const [i, setI] = useState(0); // 0·1 = 문장, 2 = 소개
   const done = i >= PHRASES.length;
+  useEffect(() => { preloadGuidePhotos(app.data); }, [app.data]); // 로그인 뒤 사용법 카드 사진을 미리
 
   useEffect(() => {
     if (done || reduced) return;
