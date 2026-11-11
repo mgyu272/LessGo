@@ -1677,7 +1677,11 @@ div:has(> .spot-pin) { pointer-events: none; }
 .mk-text b { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 800; color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .mk-text small { font-size: 12px; font-weight: 600; color: var(--link); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .mk-addr { font-size: 13.5px; color: var(--muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.mk-kakao { flex: none; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; }
+.mk-onmap { font-size: 12.5px; font-weight: 700; color: #2E7A1F; white-space: nowrap; }
+.mk-hint { margin: 0 2px -4px; font-size: 13px; color: var(--muted); word-break: keep-all; }
+.mk-kakao { position: relative; flex: none; height: 36px; padding: 0 10px; display: inline-flex; align-items: center; gap: 3px; border-radius: 999px; background: #FEE500; color: #3C1E1E; font-size: 13px; font-weight: 700; white-space: nowrap; text-decoration: none; }
+.mk-kakao::before { content: ""; position: absolute; inset: -4px 0; }
+.mk-kakao svg { flex: none; }
 .mk-kakao:active { transform: scale(.94); }
 .mk-kakao:focus-visible, .mk-main:focus-visible { outline: 2px solid #2F6512; outline-offset: 2px; }
 .plain-pin { display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,.3)); }
@@ -1881,6 +1885,5 @@ div:has(> .spot-pin) { pointer-events: none; }
 .home-chips .chip { font-weight: 600; }
 
 /* 상권: 가게 이름 = 앱 지도로 가는 링크처럼 밑줄 + 핀 */
-.mk-name { display: block; min-width: 0; padding-bottom: 5px; margin-bottom: -3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: rgba(46, 122, 31, .6); }
+.mk-name { display: block; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mk-map-ic { width: 17px; height: 17px; flex: none; color: #2E7A1F; margin-left: -2px; }
-.mk-main:active .mk-name { text-decoration-color: #2E7A1F; }

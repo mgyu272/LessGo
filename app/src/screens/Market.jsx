@@ -77,6 +77,9 @@ export default function Market() {
         <p className="pl-count">{list.length
           ? loc({ ko: `코스 근처 가게 ${list.length}곳`, en: `${list.length} shops near the courses` })
           : loc({ ko: "조건에 맞는 가게가 없어요", en: "No shops match" })}</p>
+        {list.length > 0 && (
+          <p className="mk-hint">{loc({ ko: "가게를 누르면 앱 지도에서, 카카오맵 버튼은 카카오맵에서 열려요", en: "Tap a shop to see it on the app map. The Kakao Map button opens Kakao Map." })}</p>
+        )}
 
         {list.map((s) => {
           const near = s.near && data.spotById[s.near] ? destName(data, s.near) : null;
@@ -89,12 +92,14 @@ export default function Market() {
                   <b><span className="mk-name">{loc(s.name)}</span><svg className="mk-map-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s7-6 7-11.5a7 7 0 10-14 0C5 15 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.4" /></svg>{s.partner && <Badge>{loc({ ko: "제휴", en: "Partner" })}</Badge>}</b>
                   <small>{meta}</small>
                   {s.address && <span className="mk-addr">{s.address}</span>}
+                  <span className="mk-onmap">{loc({ ko: "지도에서 보기 ›", en: "View on map ›" })}</span>
                 </span>
               </button>
               {s.kakao_url && (
                 <a className="mk-kakao" href={s.kakao_url.replace(/^http:/, "https:")} target="_blank" rel="noreferrer"
-                  aria-label={loc({ ko: "카카오맵에서 보기", en: "Open in Kakao Map" })} title={loc({ ko: "카카오맵에서 보기", en: "Open in Kakao Map" })}>
-                  <KakaoMapIcon />
+                  aria-label={loc({ ko: "카카오맵에서 열기 (새 창)", en: "Open in Kakao Map (new tab)" })}>
+                  <span>{loc({ ko: "카카오맵", en: "Kakao Map" })}</span>
+                  <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 2.5h5.5V8 M9.5 2.5L2.5 9.5" /></svg>
                 </a>
               )}
             </article>
