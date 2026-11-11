@@ -168,43 +168,71 @@ let currentController = null;
 const audioCache = new Map();
 const MAX_AUDIO_CACHE = 24;
 function fallbackSpeak(text, options) { return browserSpeak(text, options); }
+// Shorter requests reduce first-audio latency and avoid sending an entire story at once.
+function ttsChunks(text, limit = 220) {
+  const chunks = [];
+  let remaining = String(text || "").trim();
+  while (remaining.length) {
+    if (remaining.length <= limit) { chunks.push(remaining); break; }
+    const windowText = remaining.slice(0, limit + 1);
+    const breaks = [...windowText.matchAll(/[.!?。！？]\s*|\s+/g)].filter(m => m.index >= Math.floor(limit * 0.55));
+    const cut = breaks.length ? breaks[breaks.length - 1].index + breaks[breaks.length - 1][0].length : limit;
+    chunks.push(remaining.slice(0, cut).trim());
+    remaining = remaining.slice(cut).trimStart();
+  }
+  return chunks.filter(Boolean);
+}
 async function playGemini(text, options, generation) {
   if (generation !== audioGeneration) return;
   const { lang = "en", queue = true, onstart, onend, onerror, onboundary } = options;
-  const key = JSON.stringify([text, lang, queue ? "navigation" : "history"]);
-  let blob = audioCache.get(key);
+  const chunks = ttsChunks(text, queue ? 160 : 220);
+  let started = false;
   try {
-    if (!blob) {
-      const controller = new AbortController();
-      currentController = controller;
-      const response = await fetch("/api/tts", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, lang, purpose: queue ? "navigation" : "history" }),
-        signal: controller.signal,
-      });
-      if (!response.ok) throw new Error("gemini-tts-unavailable");
-      blob = await response.blob();
-      if (!blob.size || !blob.type.startsWith("audio/")) throw new Error("invalid-tts-audio");
-      audioCache.set(key, blob);
-      if (audioCache.size > MAX_AUDIO_CACHE) audioCache.delete(audioCache.keys().next().value);
+    for (const chunk of chunks) {
+      if (generation !== audioGeneration) return;
+      const key = JSON.stringify([chunk, lang, queue ? "navigation" : "history"]);
+      let blob = audioCache.get(key);
+      if (!blob) {
+        const controller = new AbortController();
+        currentController = controller;
+        const response = await fetch("/api/tts", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: chunk, lang, purpose: queue ? "navigation" : "history" }),
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          const details = await response.json().catch(() => ({}));
+          throw new Error(details.error || "gemini-tts-unavailable");
+        }
+        blob = await response.blob();
+        if (!blob.size || !blob.type.startsWith("audio/")) throw new Error("invalid-tts-audio");
+        audioCache.set(key, blob);
+        if (audioCache.size > MAX_AUDIO_CACHE) audioCache.delete(audioCache.keys().next().value);
+      }
+      if (generation !== audioGeneration) return;
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      currentAudio = audio;
+      try {
+        await new Promise((resolve, reject) => {
+          audio.onended = resolve;
+          audio.onerror = () => reject(new Error("audio-playback-failed"));
+          audio.onplay = () => { if (!started) { started = true; onstart?.(); } };
+          audio.play().catch(reject);
+        });
+      } finally {
+        URL.revokeObjectURL(url);
+        if (currentAudio === audio) currentAudio = null;
+      }
     }
-    if (generation !== audioGeneration) return;
-    const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    currentAudio = audio;
-    await new Promise((resolve, reject) => {
-      audio.onended = resolve;
-      audio.onerror = () => reject(new Error("audio-playback-failed"));
-      audio.onplay = () => onstart?.();
-      audio.play().catch(reject);
-    });
-    URL.revokeObjectURL(url);
-    if (currentAudio === audio) currentAudio = null;
     if (generation === audioGeneration) { onboundary?.(text.length); onend?.(); }
   } catch (error) {
     if (generation !== audioGeneration || error?.name === "AbortError") return;
-    // Keep safety-critical turn cues audible when network/API/playback fails.
+    console.error("[Gemini TTS] playback failed", error);
+    if (started) { onerror?.(error); onend?.(); return; }
     fallbackSpeak(text, { ...options, onerror: (event) => { if (onerror) onerror(event); else onend?.(); } });
+  } finally {
+    currentController = null;
   }
 }
 export function speak(text, options = {}) {
