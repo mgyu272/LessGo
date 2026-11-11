@@ -46,6 +46,8 @@ export function AppProvider({ children }) {
   const [placesNear, setPlacesNear] = useState(null);
   // 홈 지도 상태 { filter, selId, view, focus, sheet }: 둘러볼 곳 상세에 갔다 와도 그대로예요. 앱을 새로 열 때만 처음으로
   const homeMap = useRef(null);
+  // 장소 탭 상태 { cat, dest, kind, q }: 고른 카테고리·코스 목적지는 상세에 갔다 와도 그대로예요
+  const placesView = useRef({ cat: "exhibit", dest: "simujang", kind: "all", q: "" });
   // 상권 탭에서 가게 사진·이름을 누르면 홈 지도에 그 가게를 핀 하나로 보여줘요. 지도 밖 다른 화면으로 가면 풀려요
   const [mapShop, setMapShop] = useState(null);
   const [couponShop, setCouponShop] = useState(null);
@@ -110,7 +112,7 @@ export function AppProvider({ children }) {
 
   const value = {
     lang, changeLang, screen, go, data, settings, setSettings, weather, course, setCourse, pick, setPick,
-    spot, setSpot, explore, setExplore, placeFrom, setPlaceFrom, placesNear, setPlacesNear, homeMap, mapShop, setMapShop, couponShop, setCouponShop, finish, shuffle, setShuffle, toastMsg, toast,
+    spot, setSpot, explore, setExplore, placeFrom, setPlaceFrom, placesNear, setPlacesNear, homeMap, placesView, mapShop, setMapShop, couponShop, setCouponShop, finish, shuffle, setShuffle, toastMsg, toast,
     guide, setGuide, enterApp,
     demo, setDemo, user, run,
   };
