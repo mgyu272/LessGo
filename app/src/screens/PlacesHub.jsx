@@ -1,12 +1,12 @@
 // 장소 탭: 성북구 둘러볼 곳을 종류(전시·역사·종교·공원)와 코스로 나눠 보여줘요.
-// - PlacesHub      : 장소 첫 화면. 카테고리 칩 + 성북구 작은 지도(핀을 누르면 장소 안내 시트) + 코스 따라 보기(심우장·정릉·의릉). 검색창은 없어요
+// - PlacesHub      : 장소 첫 화면. 카테고리 칩(전체·전시·역사·종교·공원, 옆으로 밀기) + 성북구 작은 지도(카테고리 그림 아이콘, 심우장·정릉·의릉은 전체·역사에서만 큰 그림 핀) + 코스 따라 보기(심우장·정릉·의릉). 검색창은 없어요
 //                    (예전 카테고리 화면 PlacesCategory는 없앴어요. 장소 안내는 지도 핀 → PlaceSheet)
 // - PlacesCourse   : 코스 따라 보기. 그 목적지의 가장 짧은 코스 + 코스 근처 장소 (300m 안, 없으면 500m → 800m)
 // 큰 지도는 Home.jsx ("지도 크게 보기"). 고른 카테고리·목적지는 app.placesView에 남겨서 상세에 갔다 와도 그대로예요.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { CustomOverlayMap, Polygon } from "react-kakao-maps-sdk";
+import { Polygon } from "react-kakao-maps-sdk";
 import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
@@ -19,10 +19,13 @@ import { MODE_COLOR } from "./Courses.jsx";
 import { GROUPS, groupOf, kindLabel, shortFee, destName, round10, byNearest, THEME_COLORS, kakaoDirections } from "../lib/places.js";
 
 const CATS = GROUPS.filter((g) => g !== "all");
+const CHIPS = GROUPS; // 칩 줄: 전체 + 카테고리 4개 (옆으로 밀어요)
+// 코스 목적지(심우장·정릉·의릉) 큰 그림 핀은 전체·역사에서만 보여요
+const SHOW_DEST = new Set(["all", "heritage"]);
 // 연한 배경 위 작은 글씨용 진한 카테고리 색 (대비 4.5:1 이상)
-const DEEP = { exhibit: "#17489A", heritage: "#9A350B", religion: "#82205F", park: "#2A6A0F" };
+const DEEP = { all: "#1F5A12", exhibit: "#17489A", heritage: "#9A350B", religion: "#82205F", park: "#2A6A0F" };
 // 카테고리 연한 색 (칩 바탕 · 시트 아이콘 타일)
-const SOFT = { exhibit: "#CCDFFB", heritage: "#FDD5BF", religion: "#F7CBE7", park: "#D2EDB2" };
+const SOFT = { all: "#CDE8B6", exhibit: "#CCDFFB", heritage: "#FDD5BF", religion: "#F7CBE7", park: "#D2EDB2" };
 // 코스 따라 보기: 코스 선에서 300m 안. 한 곳도 없으면 500m, 그래도 없으면 800m까지 넓혀요
 const COURSE_RADII = [300, 500, 800];
 const BESIDE_M = 50;       // 이보다 가까우면 "코스 바로 옆"
@@ -62,12 +65,12 @@ export function PlacesHub() {
   const { data } = app;
   const st = app.placesView.current;
   const items = usePlaceItems(data);
-  const [cat, setCat] = useState(CATS.includes(st.cat) ? st.cat : CATS[0]);
+  const [cat, setCat] = useState(CHIPS.includes(st.cat) ? st.cat : "all");
   useEffect(() => { st.cat = cat; }, [st, cat]);
-  const count = useMemo(() => Object.fromEntries(CATS.map((c) => [c, items.filter((p) => groupOf(p) === c).length])), [items]);
-  // 코스 목적지는 따로 흰 원 핀으로 그려서, 카테고리 핀에서는 빼요
-  const list = useMemo(() => items.filter((p) => !p.isDest && groupOf(p) === cat).sort(byNearest), [items, cat]);
-  const dests = useMemo(() => items.filter((p) => p.isDest), [items]);
+  const count = useMemo(() => ({ all: items.length, ...Object.fromEntries(CATS.map((c) => [c, items.filter((p) => groupOf(p) === c).length])) }), [items]);
+  // 코스 목적지는 따로 큰 그림 핀으로 그려서, 카테고리 아이콘에서는 빼요
+  const list = useMemo(() => items.filter((p) => !p.isDest && (cat === "all" || groupOf(p) === cat)).sort(byNearest), [items, cat]);
+  const dests = useMemo(() => (SHOW_DEST.has(cat) ? items.filter((p) => p.isDest) : []), [items, cat]);
   const [sel, setSel] = useState(null);
   const screenRef = useRef(null);
   useEffect(() => { setSel(null); }, [cat]);
@@ -88,10 +91,10 @@ export function PlacesHub() {
         </div>
 
         <div className="ph-hub-chips" role="radiogroup" aria-label={t("ph_kind")}>
-          {CATS.map((c) => (
+          {CHIPS.map((c) => (
             <button key={c} type="button" role="radio" aria-checked={cat === c} className={`ph-hub-chip ${cat === c ? "on" : ""}`}
               style={{ "--c": THEME_COLORS[c], "--soft": SOFT[c], "--deep": DEEP[c] }} onClick={() => setCat(c)}>
-              <GroupIcon group={c} size={17} />{t("grp_" + c)}<span className="chip-n">{count[c]}</span>
+              {c !== "all" && <GroupIcon group={c} size={17} />}{t("grp_" + c)}<span className="chip-n">{count[c]}</span>
             </button>
           ))}
         </div>
@@ -99,11 +102,11 @@ export function PlacesHub() {
         <div className="card ph-map ph-hub-map" style={{ "--c": THEME_COLORS[cat], "--soft": SOFT[cat] }}>
           <MapView>
             <DistrictShape />
-            <ExploreLayer key={cat} cluster clusterMinLevel={5} places={list} selectedId={sel?.id} level={6} onSelect={setSel} />
-            {dests.map((p) => <DestPin key={p.id} p={p} on={sel?.id === p.id} onClick={() => setSel(p)} />)}
+            <ExploreLayer key={cat} cluster={false} places={list} selectedId={sel?.id} level={6} onSelect={setSel} />
+            {dests.map((p) => <SpotMarker key={p.id} spot={data.spotById[p.id] || p} label onClick={() => setSel(p)} />)}
             <FitBounds points={fitPts} padTL={[48, 30]} padBR={[30, 30]} fitKey={cat} />
           </MapView>
-          <span className="ph-map-tag"><i aria-hidden="true" />{t("ph_cat_only", { name: t("grp_" + cat) })}</span>
+          {cat !== "all" && <span className="ph-map-tag"><i aria-hidden="true" />{t("ph_cat_only", { name: t("grp_" + cat) })}</span>}
           <button type="button" className="ph-map-big" onClick={bigMap} aria-label={t("ph_big_map")}>
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
           </button>
@@ -122,19 +125,6 @@ export function PlacesHub() {
       </div>
       {sel && <PlaceSheet p={sel} onClose={() => setSel(null)} host={screenRef.current?.parentElement} />}
     </section>
-  );
-}
-
-// 코스 목적지 핀: 흰 원 + 초록(#2F6512) 테두리 + 이름 라벨
-function DestPin({ p, on, onClick }) {
-  const name = loc(p.name).replace(/\s*\(.*\)/, "");
-  return (
-    <CustomOverlayMap position={{ lat: p.lat, lng: p.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={on ? 4 : 3} clickable>
-      <div className={`ph-dest-pin ${on ? "on" : ""}`}>
-        <button type="button" onClick={onClick} aria-label={name} aria-pressed={on} />
-        <span aria-hidden="true">{name}</span>
-      </div>
-    </CustomOverlayMap>
   );
 }
 

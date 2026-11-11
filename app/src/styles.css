@@ -1934,11 +1934,6 @@ div:has(> .spot-pin) { pointer-events: none; }
 .ph-hub-map .ph-map-tag i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
 .ph-hub-map .ph-map-big { top: 10px; right: 10px; width: 40px; height: 40px; min-height: 40px; padding: 0; display: grid; place-items: center; border-radius: 12px; background: rgba(255, 255, 255, .94); box-shadow: 0 4px 12px -6px rgba(31, 61, 20, .4); }
 .ph-hub-map .ph-map-big::before { inset: -2px; background: none; box-shadow: none; } /* 누르는 칸 44px */
-.ph-hub-map .ex-pin, .ph-hub-map .ex-pin.lg { --s: 16px; }
-.ph-hub-map .ex-dot { background: var(--c); border: 2px solid #FFFFFF; box-shadow: 0 1px 4px rgba(20, 31, 14, .35); }
-.ph-hub-map .ex-dot svg { display: none; }
-.ph-hub-map .ex-pin.on { --s: 22px; }
-.ph-hub-map .ex-pin.on .ex-dot { background: var(--c); border: 3px solid #FFFFFF; box-shadow: 0 0 0 6px color-mix(in srgb, var(--c) 20%, transparent), 0 2px 6px rgba(20, 31, 14, .35); }
 .ph-hub-map .ex-name { display: none; }
 /* 가까이 모인 핀: 숫자 원(반지름 14px) + 연한 바깥 원. 동네 이름은 빼요 */
 .ph-hub-map .ex-cluster { width: 28px; height: 28px; padding: 0; gap: 0; justify-content: center; border: 2px solid #FFFFFF; border-radius: 50%; background: var(--c); color: #FFFFFF; box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 25%, transparent); }
@@ -2198,3 +2193,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .me-place-ic { display: grid; place-items: center; width: 52px; height: 52px; margin: 0 auto; border-radius: 14px; background: #F2F9E6; }
 .me-place-ic svg { width: 40px; height: 40px; }
 .seal-grid figure.off .me-place-ic { filter: grayscale(1); opacity: .45; }
+
+/* 장소 탭 칩: 전체 포함 5개, 내용 폭대로 두고 옆으로 밀어요 */
+.ph-hub-chip { flex: none; }
+.ph-hub-chips { touch-action: pan-x; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
