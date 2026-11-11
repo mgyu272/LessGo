@@ -166,6 +166,33 @@ document.addEventListener("visibilitychange", () => {
 let audioQueue = Promise.resolve();
 let audioGeneration = 0;
 let currentAudio = null;
+let mobileAudioContext = null;
+let currentWebAudioSource = null;
+function unlockMobileAudio() {
+  if (!mobileBrowser) return;
+  try {
+    const Context = window.AudioContext || window.webkitAudioContext;
+    if (!Context) return;
+    mobileAudioContext ||= new Context();
+    if (mobileAudioContext.state === "suspended") void mobileAudioContext.resume();
+  } catch (error) { console.warn("[Gemini TTS] AudioContext unlock failed", error); }
+}
+async function playMobileAudio(blob, generation, onplay) {
+  const ctx = mobileAudioContext;
+  if (!ctx) throw new Error("mobile-audio-context-unavailable");
+  await ctx.resume();
+  const buffer = await ctx.decodeAudioData(await blob.arrayBuffer());
+  if (generation !== audioGeneration) return;
+  await new Promise((resolve, reject) => {
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(ctx.destination);
+    currentWebAudioSource = source;
+    source.onended = resolve;
+    try { source.start(); onplay?.(); } catch (error) { reject(error); }
+  });
+  currentWebAudioSource = null;
+}
 let currentController = null;
 const audioCache = new Map();
 const MAX_AUDIO_CACHE = 24;
@@ -293,6 +320,10 @@ async function playGemini(text, options, generation) {
       currentController = controller;
       const blob = staticAudio || await getGeminiAudio(chunk, lang, queue ? "navigation" : "history", controller.signal);
       if (generation !== audioGeneration) return;
+      if (mobileBrowser && mobileAudioContext) {
+        await playMobileAudio(blob, generation, () => { if (!started) { started = true; onstart?.(); } });
+        continue;
+      }
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       currentAudio = audio;
@@ -321,10 +352,9 @@ async function playGemini(text, options, generation) {
 export function speak(text, options = {}) {
   if (!text) { options.onend?.(); return false; }
   const queue = options.queue !== false;
-  // Mobile browsers often block audio.play() after an asynchronous Gemini fetch.
-  // Speak directly inside the user gesture for historical narration on mobile.
-  // Short chunks also avoid mobile speechSynthesis stopping on long paragraphs.
-  if (mobileBrowser) return browserSpeak(text, { ...options, queue, chunk: !queue });
+  // Unlock Web Audio synchronously on the narration button tap, before
+  // any async Gemini request. This preserves the Gemini voice on mobile.
+  if (mobileBrowser && !queue) unlockMobileAudio();
   // Live navigation must never wait for a remote TTS request.
   if (queue) return browserSpeak(text, { ...options, queue: true });
   if (!queue) stop();
@@ -335,6 +365,10 @@ export function speak(text, options = {}) {
 }
 export function stop() {
   audioGeneration++;
+  if (currentWebAudioSource) {
+    try { currentWebAudioSource.stop(); } catch {}
+    currentWebAudioSource = null;
+  }
   currentController?.abort();
   currentController = null;
   if (currentAudio) {
