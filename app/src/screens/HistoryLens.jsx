@@ -467,7 +467,7 @@ export default function HistoryLens({ spotId, spotName }) {
         <span>{t("lens_test_sub")}</span>
       </div>
       <div className="lens-test-thumbs">
-        {TEST_PHOTOS.map((testPhoto) => (
+        {TEST_PHOTOS.filter((testPhoto) => testPhoto.spotId === spotId).map((testPhoto) => (
           <button
             key={testPhoto.id}
             type="button"
