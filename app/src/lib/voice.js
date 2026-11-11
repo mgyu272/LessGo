@@ -289,10 +289,7 @@ async function playGemini(text, options, generation) {
   const chunks = ttsChunks(text, queue ? 160 : 220);
   let started = false;
   const staticAudio = !queue ? await getStaticNarration(text, lang).catch(() => null) : null;
-  if (!queue && !staticAudio) {
-    onerror?.({ error: "narration-file-missing" });
-    return;
-  }
+
   try {
     for (const chunk of (staticAudio ? [text] : chunks)) {
       if (generation !== audioGeneration) return;
