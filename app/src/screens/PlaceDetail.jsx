@@ -53,6 +53,7 @@ export default function PlaceDetail() {
   // 진행 막대: 예상 길이만큼 시간이 흐르면 채우고, 읽는 위치를 알려 주는 브라우저면 그 위치로도 맞춰요
   const narration = spot ? loc(spot.narration) : "";
   const estSec = voice.estimateSeconds(narration, app.lang);
+  useEffect(() => { if (spot && !spot.preparing) voice.prefetchNarration(narration, app.lang); }, [spot?.id, spot?.preparing, narration, app.lang]);
   useEffect(() => {
     if (!playing) { setProgress(0); return; }
     const t0 = Date.now();
