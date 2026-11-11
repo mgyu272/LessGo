@@ -272,11 +272,11 @@ const STRINGS = {
     // 사용법 카드 (로그인 직후)
     guide_label: "How to use", guide_skip: "Skip", guide_next: "Next", guide_prev: "Back", guide_done: "Start",
     guide_t1: "Top 3 Seongbuk tour courses", guide_b1: "Pick a place and tap \"Run here\".",
-    guide_t2: "Choose a distance and a path", guide_b2: "Run or walk, 3·5·10km, gentle or hilly.",
+    guide_t2: "Choose a distance and a path", guide_b2: "Choose 3, 5 or 10km, and a gentle or hilly path.",
     guide_t3: "AI History Lens", guide_b3: "Take a photo of a heritage site in a place's page, and AI analyzes it and explains its story.",
-    guide_t4: "Voice guides you as you go", guide_b4: "Pick up a star every 500m. Get a stamp and a story at the finish.",
+    guide_t4: "Get a tour stamp on arrival", guide_b4: "Follow the voice directions. At the finish you get a stamp and the story.",
     guide_art_place: "Simujang", guide_art_run: "Run", guide_art_walk: "Walk", guide_art_low: "Gentle", guide_art_high: "Hilly",
-    guide_art_cue: "Turn left in 50m", guide_art_stamp: "Arrived!", guide_art_lens_result: "Joseon hanok gate", guide_art_listen: "Listen",
+    guide_art_cue: "Turn left in 50m", guide_art_stamp: "Arrived!", guide_art_lens_result: "Uireung · Joseon royal tomb", guide_art_listen: "Listen",
 
     err_pw_short_login: "Password must be at least 8 characters.",
     pw_show: "Show password", pw_hide: "Hide password",
@@ -580,11 +580,11 @@ const STRINGS = {
     // 사용법 카드 (로그인 직후)
     guide_label: "사용법", guide_skip: "건너뛰기", guide_next: "다음", guide_prev: "이전", guide_done: "시작하기",
     guide_t1: "성북구 관광 코스 3선", guide_b1: "가고 싶은 장소에서 ‘여기로 달리기’를 눌러요.",
-    guide_t2: "거리와 길을 고르고 출발", guide_b2: "달리기·걷기, 3·5·10km, 완만한 길·언덕 허용 중에서 골라요.",
+    guide_t2: "거리와 길을 고르고 출발", guide_b2: "3·5·10km 중 거리와 완만한 길·언덕 허용 중 길을 골라요.",
     guide_t3: "AI 역사 렌즈", guide_b3: "장소 상세에서 문화유산 사진을 찍으면 AI가 분석하고 이야기를 들려줘요.",
-    guide_t4: "음성으로 길을 안내해요", guide_b4: "500m마다 별을 줍고, 도착하면 도장과 해설을 받아요.",
+    guide_t4: "도착하면 관광 도장", guide_b4: "음성 안내를 따라 달리고, 도착하면 도장과 해설을 받아요.",
     guide_art_place: "심우장", guide_art_run: "달리기", guide_art_walk: "걷기", guide_art_low: "완만한 길", guide_art_high: "언덕 허용",
-    guide_art_cue: "50m 앞 좌회전", guide_art_stamp: "도착!", guide_art_lens_result: "조선 후기 한옥 대문", guide_art_listen: "해설 듣기",
+    guide_art_cue: "50m 앞 좌회전", guide_art_stamp: "도착!", guide_art_lens_result: "의릉 · 조선 경종의 왕릉", guide_art_listen: "해설 듣기",
 
     err_pw_short_login: "비밀번호는 8자 이상이에요.",
     pw_show: "비밀번호 보기", pw_hide: "비밀번호 숨기기",
