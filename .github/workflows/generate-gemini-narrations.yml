@@ -1,0 +1,34 @@
+name: Generate fixed Gemini narration audio
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/gemini-tts-navigation-history
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate six narration WAV files
+        working-directory: app
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          test -n "$GEMINI_API_KEY" || { echo "Set repository Actions secret GEMINI_API_KEY first"; exit 1; }
+          node scripts/generate-narration-audio.mjs
+      - name: Commit generated audio to preview branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/public/audio/narrations/
+          if ! git diff --cached --quiet; then
+            git commit -m "assets: add pre-generated Gemini heritage narration WAV files"
+            git push origin HEAD:feat/gemini-tts-navigation-history
+          fi

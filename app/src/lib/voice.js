@@ -89,7 +89,7 @@ function speechParts(text, maxLength = 160) {
 
 // queue: true면 앞의 말이 끝난 뒤 이어서 말해요 (길 안내용)
 // onboundary(charIndex): 단어를 읽기 시작할 때마다 몇 번째 글자인지 알려줘요 (지원하는 브라우저에서만)
-export function speak(text, { lang = "en", queue = true, chunk = false, onstart, onend, onerror, onboundary } = {}) {
+function browserSpeak(text, { lang = "en", queue = true, chunk = false, onstart, onend, onerror, onboundary } = {}) {
   if (!text) { onend?.(); return false; }
   if (!speechSupported()) {
     if (onerror) onerror({ error: "synthesis-unavailable" }); else onend?.();
@@ -137,7 +137,7 @@ export function speak(text, { lang = "en", queue = true, chunk = false, onstart,
   return true;
 }
 
-export function stop() {
+function browserStop() {
   activeSessions.forEach((session) => { session.cancelled = true; clearTimeout(session.timer); session.utterances.length = 0; });
   activeSessions.clear();
   synth?.cancel();
@@ -157,3 +157,186 @@ export function releaseScreen() { try { lock?.release(); } catch {} lock = null;
 document.addEventListener("visibilitychange", () => {
   if (lock && document.visibilityState === "visible") keepScreenOn();
 });
+
+ 
+// Gemini-generated audio. Browser synthesis remains the offline/error fallback.
+// Navigation requests are serialized; a history narration interrupts queued cues.
+let audioQueue = Promise.resolve();
+let audioGeneration = 0;
+let currentAudio = null;
+let currentController = null;
+const audioCache = new Map();
+const MAX_AUDIO_CACHE = 24;
+const pendingAudio = new Map();
+const CACHE_NAME = "lessgo-gemini-tts-v1";
+function audioCacheRequest(key) {
+  return new Request(new URL("/__tts_cache__/" + encodeURIComponent(key), location.origin).href);
+}
+async function storedAudio(key) {
+  if (!("caches" in window)) return null;
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const response = await cache.match(audioCacheRequest(key));
+    return response ? await response.blob() : null;
+  } catch { return null; }
+}
+async function saveAudio(key, blob) {
+  if (!("caches" in window)) return;
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.put(audioCacheRequest(key), new Response(blob, { headers: { "Content-Type": "audio/wav" } }));
+  } catch { /* private browsing and storage quotas may block persistent caching */ }
+}
+async function getGeminiAudio(chunk, lang, purpose, signal) {
+  const key = JSON.stringify([chunk, lang, purpose]);
+  const cached = audioCache.get(key) || await storedAudio(key);
+  if (cached) { audioCache.set(key, cached); return cached; }
+  // Multiple components may prefetch the same narration; only call Gemini once.
+  if (pendingAudio.has(key)) return pendingAudio.get(key);
+  const promise = (async () => {
+    const response = await fetch("/api/tts", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: chunk, lang, purpose }),
+      signal,
+    });
+    if (!response.ok) {
+      const details = await response.json().catch(() => ({}));
+      throw new Error(details.error || "gemini-tts-unavailable");
+    }
+    const blob = await response.blob();
+    if (!blob.size || !blob.type.startsWith("audio/")) throw new Error("invalid-tts-audio");
+    audioCache.set(key, blob);
+    if (audioCache.size > MAX_AUDIO_CACHE) audioCache.delete(audioCache.keys().next().value);
+    void saveAudio(key, blob);
+    return blob;
+  })().finally(() => pendingAudio.delete(key));
+  pendingAudio.set(key, promise);
+  return promise;
+}
+// A build-time generated audio manifest lets fixed stories play without any Gemini wait.
+let staticManifestPromise;
+function staticManifest() {
+  if (!staticManifestPromise) staticManifestPromise = fetch("/audio/narrations/manifest.json")
+    .then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  return staticManifestPromise;
+}
+async function getStaticNarration(text, lang) {
+  const manifest = await staticManifest();
+  const entry = manifest?.[lang]?.[text];
+  if (!entry || !/^[-a-zA-Z0-9_./]+\\.wav$/.test(entry) || entry.includes("..")) return null;
+  const response = await fetch("/audio/narrations/" + entry);
+  if (!response.ok) return null;
+  const blob = await response.blob();
+  return blob.type.startsWith("audio/") ? blob : null;
+}
+// Start warming fixed destination narration as soon as app data is available.
+// One request at a time avoids flooding Gemini and preserves running navigation priority.
+const startupWarmups = new Set();
+export function prefetchDestinationNarrations(spotById, lang = "ko") {
+  if (!spotById) return;
+  const destinations = ["simujang", "jeongneung", "uiryeong"];
+  const work = destinations.map(id => {
+    const spot = spotById[id];
+    const narration = spot?.narration?.[lang];
+    return typeof narration === "string" ? narration.trim() : "";
+  }).filter(Boolean);
+  const fingerprint = JSON.stringify([lang, work]);
+  if (startupWarmups.has(fingerprint)) return;
+  startupWarmups.add(fingerprint);
+  // Prioritize first playable clip for every destination, then the remaining clips.
+  const segments = work.map(text => ttsChunks(text, 220));
+  void (async () => {
+    for (const chunks of segments) {
+      if (chunks[0]) await getGeminiAudio(chunks[0], lang, "history").catch(() => {});
+    }
+    for (const chunks of segments) {
+      for (const chunk of chunks.slice(1)) {
+        await getGeminiAudio(chunk, lang, "history").catch(() => {});
+      }
+    }
+  })();
+}
+// Warm the first segment while the visitor reads the page; no autoplay.
+export function prefetchNarration(text, lang = "ko") {
+  const first = ttsChunks(text, 220)[0];
+  if (!first) return;
+  void getGeminiAudio(first, lang, "history").catch(() => {});
+}
+
+function fallbackSpeak(text, options) { return browserSpeak(text, options); }
+// Shorter requests reduce first-audio latency and avoid sending an entire story at once.
+function ttsChunks(text, limit = 220) {
+  const chunks = [];
+  let remaining = String(text || "").trim();
+  while (remaining.length) {
+    if (remaining.length <= limit) { chunks.push(remaining); break; }
+    const windowText = remaining.slice(0, limit + 1);
+    const breaks = [...windowText.matchAll(/[.!?。！？]\s*|\s+/g)].filter(m => m.index >= Math.floor(limit * 0.55));
+    const cut = breaks.length ? breaks[breaks.length - 1].index + breaks[breaks.length - 1][0].length : limit;
+    chunks.push(remaining.slice(0, cut).trim());
+    remaining = remaining.slice(cut).trimStart();
+  }
+  return chunks.filter(Boolean);
+}
+async function playGemini(text, options, generation) {
+  if (generation !== audioGeneration) return;
+  const { lang = "en", queue = true, onstart, onend, onerror, onboundary } = options;
+  const chunks = ttsChunks(text, queue ? 160 : 220);
+  let started = false;
+  const staticAudio = !queue ? await getStaticNarration(text, lang).catch(() => null) : null;
+  try {
+    for (const chunk of (staticAudio ? [text] : chunks)) {
+      if (generation !== audioGeneration) return;
+      const controller = new AbortController();
+      currentController = controller;
+      const blob = staticAudio || await getGeminiAudio(chunk, lang, queue ? "navigation" : "history", controller.signal);
+      if (generation !== audioGeneration) return;
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      currentAudio = audio;
+      try {
+        await new Promise((resolve, reject) => {
+          audio.onended = resolve;
+          audio.onerror = () => reject(new Error("audio-playback-failed"));
+          audio.onplay = () => { if (!started) { started = true; onstart?.(); } };
+          audio.play().catch(reject);
+        });
+      } finally {
+        URL.revokeObjectURL(url);
+        if (currentAudio === audio) currentAudio = null;
+      }
+    }
+    if (generation === audioGeneration) { onboundary?.(text.length); onend?.(); }
+  } catch (error) {
+    if (generation !== audioGeneration || error?.name === "AbortError") return;
+    console.error("[Gemini TTS] playback failed", error);
+    if (started) { onerror?.(error); onend?.(); return; }
+    fallbackSpeak(text, { ...options, onerror: (event) => { if (onerror) onerror(event); else onend?.(); } });
+  } finally {
+    currentController = null;
+  }
+}
+export function speak(text, options = {}) {
+  if (!text) { options.onend?.(); return false; }
+  const queue = options.queue !== false;
+  // Live navigation must never wait for a remote TTS request.
+  if (queue) return browserSpeak(text, { ...options, queue: true });
+  if (!queue) stop();
+  const generation = audioGeneration;
+  const run = () => playGemini(text, options, generation);
+  audioQueue = audioQueue.catch(() => {}).then(run);
+  return true;
+}
+export function stop() {
+  audioGeneration++;
+  currentController?.abort();
+  currentController = null;
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.removeAttribute("src");
+    currentAudio.load();
+    currentAudio = null;
+  }
+  audioQueue = Promise.resolve();
+  browserStop();
+}
