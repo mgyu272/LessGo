@@ -2195,3 +2195,80 @@ div:has(> .spot-pin) { pointer-events: none; }
 /* 장소 탭 칩: 전체 포함 5개, 내용 폭대로 두고 옆으로 밀어요 */
 .ph-hub-chip { flex: none; }
 .ph-hub-chips { touch-action: pan-x; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+
+/* ---------- ⑧ 동네 상권 (새 디자인) ---------- */
+.market-screen.mk2 { background: #EEF5E4; }
+.mk2-scroll { padding: max(56px, calc(var(--safe-top) + 12px)) 20px calc(112px + var(--safe-bottom)); gap: 16px; } /* 아래 여백 = 탭바 높이 + 24px */
+.market-screen.mk2 .places-scroll::after { display: none; }
+.mk2-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.mk2-head small { display: block; font-size: 13px; font-weight: 700; color: #3F7F1C; }
+.mk2-head h1 { margin: 2px 0 0; font-size: 28px; font-weight: 800; letter-spacing: -.8px; line-height: 1.2; color: #1F3D14; }
+.mk2-search-btn { flex: none; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: #FFFFFF; color: #1F3D14; box-shadow: 0 6px 14px -8px rgba(47, 101, 18, .45); cursor: pointer; }
+.mk2-search-btn[aria-expanded="true"] { background: #1F3D14; color: #FFFFFF; }
+.mk2-search-btn:focus-visible { outline: 2px solid #2F6512; outline-offset: 2px; }
+.mk2-search { height: 44px; padding: 0 16px; border: 0; border-radius: 14px; background: #FFFFFF; box-shadow: inset 0 0 0 1px #DCE8CF; font: inherit; font-size: 15px; color: #1F3D14; }
+.mk2-search:focus-visible { outline: 2px solid #2F6512; outline-offset: 1px; }
+/* 목적지 고르기: 회색 바 안 4칸 */
+.mk2-seg { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; padding: 4px; border-radius: 16px; background: #DCEBC9; }
+.mk2-seg button { position: relative; height: 40px; padding: 0 2px; border: 0; border-radius: 12px; background: transparent; font: inherit; font-size: 14px; font-weight: 600; color: #3E5530; white-space: nowrap; cursor: pointer; }
+.mk2-seg button::before { content: ""; position: absolute; left: 0; right: 0; top: -2px; bottom: -2px; } /* 누르는 칸 44px */
+.mk2-seg button b { font-weight: inherit; }
+.mk2-seg button.on { background: #FFFFFF; font-weight: 800; color: #1F3D14; box-shadow: 0 4px 10px -6px rgba(47, 101, 18, .5); }
+.mk2-seg button.on b { color: #3F7F1C; }
+.mk2-seg button:focus-visible { outline: 2px solid #2F6512; outline-offset: 1px; }
+/* 미니 지도: 점무늬 바탕 + 코스 선 + 번호 핀 */
+.mk2-map { position: relative; flex: none; border-radius: 20px; overflow: hidden; background: #F6F9F1 radial-gradient(circle, #DCE8CF 1.2px, transparent 1.6px) 0 0 / 14px 14px; box-shadow: inset 0 0 0 1px #DCE8CF; }
+.mk2-mapbox { width: 100%; }
+.mk2-mapbox svg { display: block; }
+.mk2-mapbox text { font-family: var(--sans); }
+.mk2-legend { position: absolute; left: 10px; bottom: 10px; display: inline-flex; gap: 10px; padding: 5px 10px; border-radius: 999px; background: rgba(255, 255, 255, .95); font-size: 12px; font-weight: 700; color: #1F3D14; box-shadow: 0 4px 10px -6px rgba(31, 61, 20, .4); }
+.mk2-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.mk2-legend i { width: 8px; height: 8px; border-radius: 50%; }
+.mk2-big { position: absolute; right: 8px; bottom: 4px; z-index: 0; min-height: 44px; padding: 0 12px; border: 0; background: none; font: inherit; font-size: 12.5px; font-weight: 800; color: #FFFFFF; cursor: pointer; }
+.mk2-big::before { content: ""; position: absolute; inset: 7px 0; z-index: -1; border-radius: 999px; background: #1F3D14; }
+.mk2-big:focus-visible { outline: 2px solid #1F3D14; outline-offset: -4px; border-radius: 999px; }
+/* 종류 칩 + 정렬 */
+.mk2-tools { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: -6px; }
+.mk2-kinds { display: flex; gap: 6px; min-width: 0; overflow-x: auto; scrollbar-width: none; padding: 5px 0; }
+.mk2-kinds::-webkit-scrollbar { display: none; }
+.mk2-kinds button { position: relative; flex: none; height: 34px; padding: 0 13px; border: 0; border-radius: 17px; background: #FFFFFF; box-shadow: inset 0 0 0 1px #DCE8CF; font: inherit; font-size: 13.5px; font-weight: 600; color: #1F3D14; cursor: pointer; }
+.mk2-kinds button::before { content: ""; position: absolute; left: 0; right: 0; top: -5px; bottom: -5px; } /* 누르는 칸 44px */
+.mk2-kinds button.on { background: #1F3D14; color: #FFFFFF; font-weight: 700; box-shadow: none; }
+.mk2-kinds button:focus-visible { outline: 2px solid #2F6512; outline-offset: 2px; }
+.mk2-sort { position: relative; flex: none; display: inline-flex; align-items: center; color: #4F6B3B; }
+.mk2-sort select { appearance: none; -webkit-appearance: none; min-height: 44px; padding: 0 18px 0 6px; border: 0; background: none; font: inherit; font-size: 13px; font-weight: 600; color: #4F6B3B; cursor: pointer; }
+.mk2-sort svg { position: absolute; right: 2px; pointer-events: none; }
+.mk2-sort select:focus-visible { outline: 2px solid #2F6512; outline-offset: -4px; border-radius: 10px; }
+/* 가게 목록: 흰 패널 없이 줄마다 구분선 */
+.mk2-list { margin: 0; padding: 0; list-style: none; }
+.mk2-row { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #D5E4C3; }
+.mk2-empty { padding: 24px 0; text-align: center; font-size: 14px; color: #4F6B3B; }
+.mk2-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 14px; padding: 12px 0 12px 5px; border: 0; background: none; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.mk2-main:focus-visible { outline: 2px solid #2F6512; outline-offset: 2px; border-radius: 12px; }
+.mk2-tile { position: relative; flex: none; width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; }
+.mk2-tile.food { background: #FDE6D8; color: #C2410C; }
+.mk2-tile.cafe { background: #F1E6DA; color: #7A4A22; }
+.mk2-tile.bar, .mk2-tile.etc { background: #E1F1CC; color: #4F6B3B; }
+.mk2-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.mk2-no { position: absolute; left: -5px; top: -5px; z-index: 1; min-width: 20px; height: 20px; padding: 0 4px; box-sizing: border-box; display: grid; place-items: center; border-radius: 10px; background: #1F3D14; color: #FFFFFF; font-size: 11px; font-weight: 800; box-shadow: 0 0 0 2px #EEF5E4; }
+.mk2-text { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.mk2-text b { max-width: 100%; font-size: 15.5px; font-weight: 700; color: #1F3D14; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mk2-meta { max-width: 100%; display: flex; align-items: center; gap: 6px; font-size: 12.5px; white-space: nowrap; }
+.mk2-meta > span:first-child { flex: none; font-weight: 700; }
+.mk2-meta i { flex: none; width: 2px; height: 2px; border-radius: 50%; background: #5E7650; }
+.mk2-addr { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: #5E7650; }
+.mk2-walk { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 11px; background: #E1F1CC; color: #2F6512; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.mk2-kakao { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: #FEE500; color: #191600; text-decoration: none; }
+.mk2-kakao:active { transform: scale(.94); }
+.mk2-kakao:focus-visible { outline: 2px solid #1F3D14; outline-offset: 2px; }
+/* 지도 크게 창 */
+.mk2-bigsheet { gap: 12px; max-height: 88%; overflow-y: auto; background: #EEF5E4; }
+.mk2-bighead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.mk2-bighead h2 { font-size: 20px; color: #1F3D14; }
+.mk2-x { flex: none; width: 44px; height: 44px; margin-right: -8px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: none; color: #1F3D14; cursor: pointer; }
+.mk2-x:focus-visible { outline: 2px solid #2F6512; outline-offset: -4px; }
+.mk2-biglist { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; font-size: 13.5px; font-weight: 600; color: #1F3D14; }
+.mk2-biglist li { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.mk2-biglist .mk2-no { position: static; flex: none; box-shadow: none; }
+/* 상권 탭에 있을 때 탭바의 '상권' 선택 표시 */
+.phone:has(.market-screen.mk2) .tabbar button.on { background: #E1F1CC; color: #2F6512; font-weight: 800; }
