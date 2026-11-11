@@ -1916,6 +1916,6 @@ div:has(> .spot-pin) { pointer-events: none; }
 .ga-photo .place-cover img, .ga-view .place-cover img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center; }
 
 /* 사용법 카드 사진 (미리 받아 둔 것) · 큰 제목은 성북런 로고 글씨체 */
-.ga-img { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; max-width: none; object-fit: cover; opacity: 0; transition: opacity .25s; }
-.ga-img.on { opacity: 1; }
+.ga-img { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.ga-credit { position: absolute; z-index: 3; top: 5px; right: 6px; padding: 1px 6px; border-radius: 6px; background: rgba(0, 0, 0, .42); color: #FFFFFF; font-size: 9.5px; font-weight: 600; line-height: 1.5; }
 .guide-text h2 { font-family: "EF Cucumber", "Pretendard", system-ui, sans-serif; font-weight: 400; font-size: 27px; letter-spacing: 0; color: #1F4A14; -webkit-text-stroke: .9px currentColor; paint-order: stroke fill; }

@@ -70,24 +70,6 @@ function wikiPhoto(place) {
   return wikiCache.get(key);
 }
 
-// 사진을 미리 받아 둬요 (사용법 카드처럼 바로 떠야 하는 곳). 위키백과는 줄을 서지 않고 바로 조회해요.
-// 결과는 같은 저장소에 넣어서 다른 화면도 그대로 써요. 사진 주소(또는 null)를 돌려줘요.
-export function preloadPlacePhoto(place, data) {
-  if (!place) return Promise.resolve(null);
-  const first = photoSources(place, data).find((x) => x.kind !== "wiki");
-  let job;
-  if (first) job = Promise.resolve(first.url);
-  else {
-    const key = place.spot_id || place.id;
-    if (!wikiCache.has(key)) wikiCache.set(key, findWiki(place).catch(() => { wikiCache.delete(key); return null; }));
-    job = wikiCache.get(key).then((w) => w?.url || null);
-  }
-  return job.then((url) => {
-    if (url) { const im = new Image(); im.decoding = "async"; im.referrerPolicy = "no-referrer"; im.src = url; }
-    return url;
-  });
-}
-
 // 이 장소의 사진 후보를 우선순위대로
 export function photoSources(place, data) {
   const linked = place.photo_url ? place : data?.exploreBySpot?.[place.id] || data?.explore?.find((p) => p.id === place.id);

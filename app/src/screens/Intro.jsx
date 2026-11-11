@@ -33,7 +33,7 @@ export default function Intro() {
   const reduced = useReducedMotion();
   const [i, setI] = useState(0); // 0·1 = 문장, 2 = 소개
   const done = i >= PHRASES.length;
-  useEffect(() => { preloadGuidePhotos(app.data); }, [app.data]); // 로그인 뒤 사용법 카드 사진을 미리
+  useEffect(() => { preloadGuidePhotos(); }, []); // 로그인 뒤 사용법 카드 사진을 미리
 
   useEffect(() => {
     if (done || reduced) return;

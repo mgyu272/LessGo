@@ -5,33 +5,27 @@
 import { useEffect, useRef, useState } from "react";
 import { useApp } from "../state/AppContext.jsx";
 import { t } from "../lib/i18n.js";
-import { preloadPlacePhoto } from "./PlacePhoto.jsx";
 
 
-const spotOf = (data, id) => data?.spots?.find((x) => x.id === id);
 
-// 카드 사진(심우장·의릉)은 로그인 전 소개 화면에서 미리 받아 둬요 → 카드가 뜰 때 바로 보여요
-const GUIDE_SPOTS = ["simujang", "uiryeong"];
-const guidePhotos = {};
-export function preloadGuidePhotos(data) {
-  if (!data) return;
-  GUIDE_SPOTS.forEach((id) => { if (!guidePhotos[id]) guidePhotos[id] = preloadPlacePhoto(spotOf(data, id), data); });
+// 카드 사진(심우장·의릉)은 앱에 같이 들어 있어요 (public/guide). 로그인 전 소개 화면에서 미리 받아 둬서 카드가 뜰 때 바로 보여요.
+const GUIDE_PHOTOS = {
+  simujang: { src: "/guide/simujang.webp", credit: "사진: 한국관광공사" },
+  uiryeong: { src: "/guide/uiryeong.webp", credit: "사진: 위키미디어 공용" },
+};
+let preloaded = false;
+export function preloadGuidePhotos() {
+  if (preloaded) return;
+  preloaded = true;
+  Object.values(GUIDE_PHOTOS).forEach(({ src }) => { const im = new Image(); im.decoding = "async"; im.src = src; });
 }
 function GuidePhoto({ id }) {
-  const { data } = useApp();
-  const [url, setUrl] = useState(null);
-  const [ok, setOk] = useState(false);
-  useEffect(() => {
-    let live = true;
-    preloadGuidePhotos(data);
-    guidePhotos[id]?.then((u) => live && setUrl(u));
-    return () => { live = false; };
-  }, [id, data]);
-  if (!url) return null;
+  const { src, credit } = GUIDE_PHOTOS[id];
   return (
-    <img className={`ga-img ${ok ? "on" : ""}`} src={url} alt="" decoding="async" fetchpriority="high" referrerPolicy="no-referrer"
-      ref={(el) => { if (el?.complete && el.naturalWidth && !ok) setOk(true); }}
-      onLoad={() => setOk(true)} onError={() => setUrl(null)} />
+    <>
+      <img className="ga-img" src={src} alt="" decoding="async" fetchpriority="high" />
+      <span className="ga-credit">{credit}</span>
+    </>
   );
 }
 
