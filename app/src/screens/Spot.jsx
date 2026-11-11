@@ -65,7 +65,7 @@ export function Spot() {
     setPlaying(true);
     timer.current = setInterval(() => setCur(elapsed()), 250);
     voice.speak(text.slice(from), {
-      lang: getLang(), queue: false,
+      lang: getLang(), queue: false, assetKey: spot.id,
       onboundary: (i) => { if (p.token === token) { p.at = from + i; p.atTime = Date.now(); } },
       onend: () => {
         if (p.token !== token) return; // 멈춤·다시 듣기로 끊긴 건 무시
