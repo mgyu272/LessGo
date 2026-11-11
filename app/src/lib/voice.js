@@ -88,19 +88,13 @@ function speechParts(text, maxLength = 160) {
 }
 
 
-// Offline MP3 playback. No TTS API calls are made here.
+// Offline historical narration MP3 playback only; navigation remains browser TTS.
 // Missing files fall back to the existing browser speech implementation.
 let fileAudio = null;
 let fileGeneration = 0;
-function fileKey(text, lang, assetKey) {
-  if (assetKey && /^[a-z0-9_-]+$/.test(assetKey)) return `/audio/narration/${assetKey}-${lang}.mp3`;
-  const s = String(text || "").toLowerCase();
-  const key = /왼쪽|좌회전|turn left/.test(s) ? "left"
-    : /오른쪽|우회전|turn right/.test(s) ? "right"
-    : /직진|계속 이동|continue straight|go straight/.test(s) ? "straight"
-    : /도착|arrived|destination/.test(s) ? "arrive"
-    : /시작|start your run|starting/.test(s) ? "start" : null;
-  return key ? `/audio/navigation/${key}-${lang}.mp3` : null;
+function fileKey(lang, assetKey) {
+  if (!assetKey || !/^[a-z0-9_-]+$/.test(assetKey)) return null;
+  return `/audio/narration/${assetKey}-${lang}.mp3`;
 }
 function playFile(url, fallback, { onstart, onend, onerror } = {}) {
   const generation = ++fileGeneration;
@@ -123,7 +117,7 @@ function playFile(url, fallback, { onstart, onend, onerror } = {}) {
 // queue: true면 앞의 말이 끝난 뒤 이어서 말해요 (길 안내용)
 // onboundary(charIndex): 단어를 읽기 시작할 때마다 몇 번째 글자인지 알려줘요 (지원하는 브라우저에서만)
 export function speak(text, { lang = "en", queue = true, chunk = false, onstart, onend, onerror, onboundary, assetKey, preferFile = true } = {}) {
-  const url = preferFile ? fileKey(text, lang, assetKey) : null;
+  const url = preferFile ? fileKey(lang, assetKey) : null;
   if (url) return playFile(url, () => speak(text, { lang, queue, chunk, onstart, onend, onerror, onboundary, preferFile: false }), { onstart, onend, onerror });
   if (!text) { onend?.(); return false; }
   if (!speechSupported()) {
