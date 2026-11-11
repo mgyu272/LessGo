@@ -1851,7 +1851,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .guide-art.tone-4 { background: #FFE9DC; }
 
 /* ① 코스 카드 */
-.ga-card { width: 212px; padding-bottom: 12px; border-radius: 20px; background: #FFFFFF; box-shadow: 0 10px 24px -14px rgba(31, 74, 20, .55); overflow: hidden; text-align: center; }
+.ga-card { width: min(212px, calc(100% - 40px)); padding-bottom: 12px; border-radius: 20px; background: #FFFFFF; box-shadow: 0 10px 24px -14px rgba(31, 74, 20, .55); overflow: hidden; text-align: center; }
 .ga-photo { position: relative; height: 92px; background: linear-gradient(135deg, #CFE6B4, #A9D07F); }
 .ga-card b { display: block; padding: 10px 12px 0; font-size: 20px; font-weight: 800; color: var(--text); }
 .ga-btn { display: inline-grid; place-items: center; margin-top: 10px; height: 38px; padding: 0 18px; border-radius: 12px; background: #2E7A1F; color: #FFFFFF; font-size: 14px; font-weight: 800; white-space: nowrap; }
@@ -1859,7 +1859,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 @keyframes gaPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(46, 122, 31, .45); } 50% { box-shadow: 0 0 0 9px rgba(46, 122, 31, 0); } }
 
 /* ② 거리 · 길 */
-.ga-pick { width: 270px; display: flex; flex-direction: column; gap: 14px; }
+.ga-pick { width: min(270px, calc(100% - 28px)); display: flex; flex-direction: column; gap: 14px; }
 .ga-km { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .ga-km span { display: grid; place-items: center; height: 64px; border-radius: 16px; background: #FFFFFF; font-size: 26px; font-weight: 800; color: #1F3B6B; line-height: 1; }
 .ga-km small { font-size: 13px; font-weight: 700; margin-top: -10px; }
@@ -1874,7 +1874,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .ga-cam { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
 .ga-cam-top { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; background: rgba(255, 255, 255, .14); color: #FFFFFF; font-size: 12.5px; font-weight: 700; }
 .ga-cam-top i { width: 7px; height: 7px; border-radius: 50%; background: #FF5A3C; box-shadow: 0 0 0 3px rgba(255, 90, 60, .25); }
-.ga-view { position: relative; width: 240px; height: 132px; border-radius: 10px; overflow: hidden; background: #2B3A26; }
+.ga-view { position: relative; width: min(240px, calc(100% - 28px)); height: 132px; border-radius: 10px; overflow: hidden; background: #2B3A26; }
 .ga-tomb { position: absolute; inset: 0; width: 100%; height: 100%; }
 .ga-view .place-cover { z-index: 1; }
 .ga-focus { position: absolute; z-index: 2; inset: 18px 52px 34px; }
@@ -1891,6 +1891,10 @@ div:has(> .spot-pin) { pointer-events: none; }
 /* ④ 도착 도장 */
 .ga-seal { width: 132px; height: 132px; display: grid; place-items: center; border-radius: 50%; background: #D3361E; color: #FFF6EA; transform: rotate(-10deg);
   box-shadow: inset 0 0 0 6px #D3361E, inset 0 0 0 9px #FFF6EA, 0 14px 26px -12px rgba(160, 40, 15, .7); animation: gaStamp .5s cubic-bezier(.3, 1.6, .5, 1) both .1s; }
-.ga-seal span { font-size: 34px; font-weight: 900; letter-spacing: -.02em; }
+.ga-seal span { font-family: "EF Cucumber", "Pretendard", system-ui, sans-serif; font-size: 40px; font-weight: 400; letter-spacing: 0; line-height: 1; -webkit-text-stroke: 1.2px currentColor; paint-order: stroke fill; }
 @keyframes gaStamp { from { opacity: 0; transform: scale(1.6) rotate(-10deg); } to { opacity: 1; transform: scale(1) rotate(-10deg); } }
 @media (prefers-reduced-motion: reduce) { .ga-hit, .ga-seal { animation: none; } }
+
+/* 사용법 카드 사진: 어느 브라우저든 칸을 꽉 채우게 (iOS Safari는 grid 안 % 높이를 잘못 계산해요) */
+.ga-photo .place-cover, .ga-view .place-cover { display: block; position: absolute; inset: 0; overflow: hidden; }
+.ga-photo .place-cover img, .ga-view .place-cover img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center; }
