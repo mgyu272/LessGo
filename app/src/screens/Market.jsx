@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CustomOverlayMap, useMap } from "react-kakao-maps-sdk";
 import { useApp } from "../state/AppContext.jsx";
 import { MapView, Route } from "../components/MapView.jsx";
+import { useHere, HerePin } from "./PlacesHub.jsx";
 import { loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
 import { destName } from "../lib/places.js";
@@ -249,6 +250,7 @@ function ShopMap({ pins, course, interactive = false, pad = [16, 16, 16, 16], pi
   const fitKey = `${course?.id || "none"}:${pins.map((x) => x.shop.id).join(",")}`;
   const start = course?.path[0], end = course?.path[course.path.length - 1];
   const [top, right, bottom, left] = pad;
+  const here = useHere(); // 내 위치 빨간 핀 (지도 범위에는 넣지 않아요)
   return (
     <MapView className={`mk2-kmap ${interactive ? "" : "locked"}`} interactive={interactive}>
       {course && <Route path={course.path} color="#9FD25E" weight={14} opacity={0.35} zIndex={1} />}
@@ -256,6 +258,7 @@ function ShopMap({ pins, course, interactive = false, pad = [16, 16, 16, 16], pi
       {start && <CustomOverlayMap position={{ lat: start.lat, lng: start.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={3}><span className="mk2-pt start" aria-hidden="true" /></CustomOverlayMap>}
       {end && <CustomOverlayMap position={{ lat: end.lat, lng: end.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={3}><span className="mk2-pt end" aria-hidden="true" /></CustomOverlayMap>}
       <ShopPins pins={pins} interactive={interactive} picked={picked} onPick={onPick} />
+      {here && <HerePin at={here} />}
       <FitAll points={fit} pad={[top, right, bottom, left]} fitKey={fitKey} />
     </MapView>
   );

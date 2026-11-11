@@ -2390,3 +2390,7 @@ button.mk2-pin:focus-visible { outline: 2px solid #1F3D14; outline-offset: 2px; 
 .mk2-ipin-no { position: absolute; right: -7px; top: -6px; min-width: 15px; height: 15px; padding: 0 3px; box-sizing: border-box; display: grid; place-items: center; border-radius: 8px; background: #1F3D14; color: #FFFFFF; font: 800 9.5px/1 var(--sans); border: 1.5px solid #FFFFFF; }
 .mk2-ipin.on .mk2-ipin-body { width: 28px; height: 28px; left: -2px; top: -6px; box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 22%, transparent), -1px 4px 8px -2px rgba(20, 31, 14, .45); }
 .mk2-ipin.on .mk2-ipin-ic { width: 14px; height: 14px; }
+
+/* 현위치 핀 아래 이름표: 장소 이름표(심우장 등)와 같은 모양, 빨간 글씨 */
+.here-wrap { position: relative; display: block; width: 26px; height: 26px; pointer-events: none; }
+.here-label { position: absolute; left: 50%; top: 28px; transform: translateX(-50%); padding: 1px 6px; border-radius: 6px; background: rgba(255, 255, 255, .94); color: #D92B20; font-size: 11.5px; font-weight: 800; white-space: nowrap; box-shadow: 0 1px 3px rgba(20, 31, 14, .18); }

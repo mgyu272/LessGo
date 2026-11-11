@@ -241,7 +241,7 @@ function CourseShape({ course }) {
 }
 
 // 내 위치: 위치 권한이 있으면 빨간 핀으로 (지도 범위 맞추기에는 넣지 않아요)
-function useHere() {
+export function useHere() {
   const [here, setHere] = useState(null);
   useEffect(() => {
     if (!navigator.geolocation) return undefined;
@@ -255,7 +255,10 @@ function useHere() {
 export function HerePin({ at }) {
   return (
     <CustomOverlayMap position={at} xAnchor={0.5} yAnchor={1} zIndex={8}>
-      <span className="here-pin" role="img" aria-label={loc({ ko: "내 위치", en: "My location" })}><i /></span>
+      <span className="here-wrap" role="img" aria-label={loc({ ko: "현위치", en: "You are here" })}>
+        <span className="here-pin"><i /></span>
+        <span className="here-label" aria-hidden="true">{loc({ ko: "현위치", en: "You're here" })}</span>
+      </span>
     </CustomOverlayMap>
   );
 }
