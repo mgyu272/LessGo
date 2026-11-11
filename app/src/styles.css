@@ -2285,7 +2285,6 @@ button.mk2-pin:focus-visible { outline: 2px solid #1F3D14; outline-offset: 2px; 
 .mk2-x { flex: none; width: 44px; height: 44px; margin-right: -8px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: none; color: #1F3D14; cursor: pointer; }
 .mk2-x:focus-visible { outline: 2px solid #2F6512; outline-offset: -4px; }
 /* 상권 탭에 있을 때 탭바의 '상권' 선택 표시 */
-.phone:has(.market-screen.mk2) .tabbar button.on { background: #E1F1CC; color: #2F6512; font-weight: 800; }
 
 /* ---------- 상권: 머리의 ? 버튼 → 가게 고른 기준 작은 안내 창 ---------- */
 .mk2-head { position: relative; z-index: 5; }
@@ -2362,7 +2361,6 @@ button.mk2-pin:focus-visible { outline: 2px solid #1F3D14; outline-offset: 2px; 
 .ph2-names { min-width: 0; font-size: 12.5px; font-weight: 600; color: #3E5530; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .ph2-chev { flex: none; color: #4F6B3B; }
 /* 장소 탭에 있을 때 탭바의 '장소' 칸 선택 표시 */
-.phone:has(.ph-screen.ph2) .tabbar button.on { background: #E1F1CC; color: #2F6512; font-weight: 800; }
 
 /* ---------- 장소 탭: 지도 아이콘 조금 작게 · 내 위치 빨간 핀 ---------- */
 .ph2-map .ex-pin, .ph2-map .ex-pin.lg { --s: 22px; --i: 11px; }
@@ -2394,3 +2392,11 @@ button.mk2-pin:focus-visible { outline: 2px solid #1F3D14; outline-offset: 2px; 
 /* 현위치 핀 아래 이름표: 장소 이름표(심우장 등)와 같은 모양, 빨간 글씨 */
 .here-wrap { position: relative; display: block; width: 26px; height: 26px; pointer-events: none; }
 .here-label { position: absolute; left: 50%; top: 28px; transform: translateX(-50%); padding: 1px 6px; border-radius: 6px; background: rgba(255, 255, 255, .94); color: #D92B20; font-size: 11.5px; font-weight: 800; white-space: nowrap; box-shadow: 0 1px 3px rgba(20, 31, 14, .18); }
+
+/* 하단 탭: 지금 탭은 진한 초록 알약 + 흰 아이콘·글씨, 누르는 순간 살짝 눌림 */
+.tabbar button { position: relative; transition: background-color .2s ease, color .2s ease, transform .12s ease; -webkit-tap-highlight-color: transparent; }
+.tabbar button:active { transform: scale(.94); }
+.tabbar button.on { background: #2F6512; color: #FFFFFF; font-weight: 800; box-shadow: 0 6px 14px -8px rgba(47, 101, 18, .9), inset 0 1px 0 rgba(255, 255, 255, .18); }
+.tabbar button.on svg { stroke-width: 2.3; }
+.tabbar button:not(.on):hover { background: rgba(47, 101, 18, .07); }
+@media (prefers-reduced-motion: reduce) { .tabbar button { transition: none; } .tabbar button:active { transform: none; } }
