@@ -61,9 +61,8 @@ export function unlock() {
   const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent)
     || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   if (!ios || !speechSupported()) return;
-  const u = new window.SpeechSynthesisUtterance(" ");
-  u.volume = 0;
-  try { synth.speak(u); } catch {}
+  // Avoid queuing a silent utterance: some iOS voices remain blocked behind it.
+  try { if (synth.paused) synth.resume(); } catch {}
 }
 
 function speechParts(text, maxLength = 160) {
@@ -93,49 +92,59 @@ function speechParts(text, maxLength = 160) {
 function browserSpeak(text, { lang = "en", queue = true, chunk = false, onstart, onend, onerror, onboundary } = {}) {
   if (!text) { onend?.(); return false; }
   if (!speechSupported()) {
-    if (onerror) onerror({ error: "synthesis-unavailable" }); else onend?.();
+    onerror?.({ error: "synthesis-unavailable" });
     return false;
   }
-  if (!queue && (activeSessions.size || synth.speaking || synth.pending)) stop();
-  if (synth.paused) synth.resume();
+  // On mobile, enqueuing an entire paragraph at once often fails with
+  // "interrupted"/"canceled". Keep one utterance alive at a time.
+  if (!queue) browserStop();
+  try { if (synth.paused) synth.resume(); } catch {}
   loadVoices();
   const parts = chunk ? speechParts(text, 100) : [{ text, offset: 0 }];
   const session = { utterances: [], cancelled: false, started: false, completed: 0, timer: null };
-  const release = () => { clearTimeout(session.timer); activeSessions.delete(session); session.utterances.length = 0; };
+  const release = () => {
+    clearTimeout(session.timer);
+    activeSessions.delete(session);
+    session.utterances.length = 0;
+  };
   const fail = (event) => {
     if (session.cancelled) return;
     session.cancelled = true;
-    stop();
-    if (onerror) onerror(event); else onend?.();
+    release();
+    // Do not cancel other navigation or narration sessions here.
+    onerror?.({ error: event?.error || "synthesis-failed" });
   };
   activeSessions.add(session);
-  if (chunk && !queue) {
-    session.timer = setTimeout(() => {
-      if (!session.started && !synth.speaking) fail({ error: "not-started" });
-    }, 8000);
-  }
   const selected = pickVoice(lang);
-  for (const part of parts) {
+  const speakPart = (index) => {
+    if (session.cancelled) return;
+    if (index >= parts.length) { release(); onend?.(); return; }
+    const part = parts[index];
     const utterance = new window.SpeechSynthesisUtterance(part.text);
     utterance.lang = lang === "ko" ? "ko-KR" : "en-US";
     if (selected) utterance.voice = selected;
     utterance.rate = 0.98;
     utterance.onstart = () => {
-      if (session.cancelled || session.started) return;
-      session.started = true;
+      if (session.cancelled) return;
       clearTimeout(session.timer);
-      onstart?.();
+      if (!session.started) { session.started = true; onstart?.(); }
     };
     utterance.onend = () => {
       if (session.cancelled) return;
       session.completed++;
-      if (session.completed === parts.length) { release(); onend?.(); }
+      speakPart(index + 1);
     };
     utterance.onerror = fail;
     if (onboundary) utterance.onboundary = (event) => onboundary(part.offset + event.charIndex);
+    session.utterances.length = 0;
     session.utterances.push(utterance);
-    try { synth.speak(utterance); } catch (error) { fail({ error: error?.name || "synthesis-failed" }); return false; }
-  }
+    try { synth.speak(utterance); }
+    catch (error) { fail({ error: error?.name || "synthesis-failed" }); }
+  };
+  session.timer = setTimeout(() => {
+    if (!session.started && !session.cancelled) fail({ error: "not-started" });
+  }, 7000);
+  speakPart(0);
   return true;
 }
 
