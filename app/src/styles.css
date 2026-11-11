@@ -2363,3 +2363,30 @@ button.mk2-pin:focus-visible { outline: 2px solid #1F3D14; outline-offset: 2px; 
 .ph2-chev { flex: none; color: #4F6B3B; }
 /* 장소 탭에 있을 때 탭바의 '장소' 칸 선택 표시 */
 .phone:has(.ph-screen.ph2) .tabbar button.on { background: #E1F1CC; color: #2F6512; font-weight: 800; }
+
+/* ---------- 장소 탭: 지도 아이콘 조금 작게 · 내 위치 빨간 핀 ---------- */
+.ph2-map .ex-pin, .ph2-map .ex-pin.lg { --s: 22px; --i: 11px; }
+.ph2-map .ex-pin.on { --s: 30px; --i: 15px; }
+.here-pin { position: relative; display: block; width: 26px; height: 26px; pointer-events: none; }
+.here-pin::before { content: ""; position: absolute; left: 50%; top: 0; width: 22px; height: 22px; margin-left: -11px; box-sizing: border-box; background: #E5352B; border: 2.5px solid #FFFFFF;
+  border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: -1px 3px 6px -1px rgba(120, 20, 10, .5); }
+.here-pin i { position: absolute; left: 50%; top: 7px; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: #FFFFFF; }
+
+/* ---------- 상권 탭: 장소 탭과 같은 느낌 ---------- */
+.mk2-kchips { margin-bottom: -4px; }
+.mk2-map { height: 212px; border-radius: 24px; box-shadow: 0 10px 24px -18px rgba(47, 101, 18, .6); }
+.mk2-tools { justify-content: flex-end; margin: -10px 0 -10px; }
+/* 가게 이름 = 누르면 앱 지도로: 밑줄 */
+.mk2-name-link { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; text-decoration-color: rgba(31, 61, 20, .45); padding-bottom: 2px; }
+/* 사진 타일: 줄 높이에 맞게 조금 크게 */
+.mk2-tile { width: 72px; height: 72px; border-radius: 18px; }
+.mk2-tile svg { width: 32px; height: 32px; }
+.mk2-row .mk2-main { padding: 12px 0 12px 5px; }
+/* 지도 핀: 종류 색 물방울 + 흰 아이콘 + 작은 번호 */
+.mk2-ipin { width: 24px !important; height: 30px !important; padding: 0; border: 0 !important; border-radius: 0; background: none !important; box-shadow: none !important; display: block; }
+.mk2-ipin-body { position: absolute; left: 1px; top: 0; width: 22px; height: 22px; box-sizing: border-box; display: grid; place-items: center; background: var(--c); border: 2px solid #FFFFFF;
+  border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: -1px 3px 6px -2px rgba(20, 31, 14, .45); }
+.mk2-ipin-ic { width: 11px; height: 11px; color: #FFFFFF; transform: rotate(45deg); }
+.mk2-ipin-no { position: absolute; right: -7px; top: -6px; min-width: 15px; height: 15px; padding: 0 3px; box-sizing: border-box; display: grid; place-items: center; border-radius: 8px; background: #1F3D14; color: #FFFFFF; font: 800 9.5px/1 var(--sans); border: 1.5px solid #FFFFFF; }
+.mk2-ipin.on .mk2-ipin-body { width: 28px; height: 28px; left: -2px; top: -6px; box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 22%, transparent), -1px 4px 8px -2px rgba(20, 31, 14, .45); }
+.mk2-ipin.on .mk2-ipin-ic { width: 14px; height: 14px; }

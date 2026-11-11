@@ -1,6 +1,6 @@
 // ⑧ 상권: 코스 근처 동네 가게(식당 · 카페 등) 목록 (shops.json의 카카오맵 조사 자료)
 // 위에서부터: "달리고, 들르고 / 동네 상권" + 검색 버튼 → 목적지 고르기(심우장·정릉·의릉·그 외)
-// → 미니 지도(카카오 지도: 코스 경로 + 번호 핀) → 종류 칩 + 정렬 → 가게 목록(흰 패널 없이 줄마다 구분선).
+// 종류 칩(장소 탭 칩처럼 색·아이콘) → 미니 지도(코스 경로 + 종류 아이콘 핀) → 목적지 고르기(심우장·정릉·의릉·그 외) + 정렬 → 가게 목록.
 // 줄을 누르면 홈 지도에서 그 가게를 핀으로 보여주고, 오른쪽 노란 원 버튼은 카카오맵 가게 페이지를 새 창으로 열어요.
 // 지도 핀 번호 = 목록 번호예요.
 
@@ -20,7 +20,17 @@ const KINDS = [
   ["bar", { ko: "술집", en: "Bars" }],
   ["etc", { ko: "기타", en: "Other" }],
 ];
-const KIND_COLOR = { food: "#C2410C", cafe: "#7A4A22", bar: "#4F6B3B", etc: "#4F6B3B" };
+const KIND_COLOR = { all: "#2F6512", food: "#E0591F", cafe: "#8A5A2B", bar: "#7A3FB0", etc: "#4F7A3B" };
+// 종류 아이콘 (장소 탭 카테고리 아이콘처럼 한 줄 그림): 식당 = 포크·나이프, 카페 = 커피잔, 술집 = 잔, 기타 = 가게
+const KIND_ICON = {
+  food: <path d="M7 3v7a2 2 0 002 2v9 M5 3v5 M9 3v5 M5 8a2 2 0 002 2 M17 21V3c-2 1.5-3 4-3 7v3h3" />,
+  cafe: <path d="M4 9h12v5a5 5 0 01-5 5H9a5 5 0 01-5-5z M16 10h1.5a2.5 2.5 0 010 5H16 M8 3.5v2.5 M12 3.5v2.5" />,
+  bar: <path d="M7 4h10l-1 6a4 4 0 01-8 0z M12 14v6 M8.5 20h7" />,
+  etc: <path d="M4 9l1.5-5h13L20 9 M4 9h16v11H4z M10 20v-5h4v5" />,
+};
+export function KindIcon({ kind, size = 16, className = "grp-icon" }) {
+  return <svg className={className} viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{KIND_ICON[kind] || KIND_ICON.etc}</svg>;
+}
 function kindOf(s) {
   const c = s.category || "";
   if (c.includes("카페") || c.includes("제과") || c.includes("간식")) return "cafe";
@@ -135,6 +145,22 @@ export default function Market() {
           {info && <CriteriaPopover anchor={infoBtn} onClose={() => { setInfo(false); infoBtn.current?.focus(); }} />}
         </header>
 
+        <div className="ph-hub-chips ph2-chips mk2-kchips" role="radiogroup" aria-label={loc({ ko: "가게 종류", en: "Shop type" })}>
+          {KINDS.filter(([k]) => k === "all" || count[k]).map(([k, label]) => (
+            <button key={k} type="button" role="radio" aria-checked={curKind === k} className={`ph2-chip ${curKind === k ? "on" : ""}`}
+              style={{ "--c": KIND_COLOR[k] }} onClick={() => setKind(k)}>
+              {k !== "all" && <KindIcon kind={k} />}{loc(label)}<span className="chip-n">{count[k] || 0}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="mk2-map">
+          <ShopMap pins={pins} course={course} pad={[16, 16, 44, 16]} />
+          <button type="button" ref={bigBtn} className="mk2-big" onClick={() => setBigMap(true)} aria-haspopup="dialog">
+            {loc({ ko: "지도 크게", en: "Bigger map" })} <span aria-hidden="true">›</span>
+          </button>
+        </div>
+
         <div className="mk2-seg" role="radiogroup" aria-label={loc({ ko: "어디 근처", en: "Near" })}>
           {[...DESTS, "explore"].map((d) => (
             <button key={d} type="button" role="radio" aria-checked={dest === d} className={dest === d ? "on" : ""} onClick={() => setDest(d)}>
@@ -142,27 +168,7 @@ export default function Market() {
             </button>
           ))}
         </div>
-
-        <div className="mk2-map">
-          <ShopMap pins={pins} course={course} pad={[16, 16, 44, 16]} />
-          <span className="mk2-legend">
-            {legend.map(([k, label]) => (
-              <span key={k}><i style={{ background: KIND_COLOR[k] }} aria-hidden="true" />{loc(label)} {count[k]}</span>
-            ))}
-          </span>
-          <button type="button" ref={bigBtn} className="mk2-big" onClick={() => setBigMap(true)} aria-haspopup="dialog">
-            {loc({ ko: "지도 크게", en: "Bigger map" })} <span aria-hidden="true">›</span>
-          </button>
-        </div>
-
         <div className="mk2-tools">
-          <div className="mk2-kinds" role="radiogroup" aria-label={loc({ ko: "가게 종류", en: "Shop type" })}>
-            {KINDS.filter(([k]) => k === "all" || count[k]).map(([k, label]) => (
-              <button key={k} type="button" role="radio" aria-checked={curKind === k} className={curKind === k ? "on" : ""} onClick={() => setKind(k)}>
-                {loc(label)} {count[k]}
-              </button>
-            ))}
-          </div>
           <label className="mk2-sort">
             <span className="sr-only">{loc({ ko: "정렬", en: "Sort" })}</span>
             <select value={sort} onChange={(e) => setSort(e.target.value)}>
@@ -189,7 +195,7 @@ export default function Market() {
                     <span className="mk2-no">{i + 1}</span>
                   </span>
                   <span className="mk2-text">
-                    <b>{loc(s.name)}</b>
+                    <b className="mk2-name-link">{loc(s.name)}</b>
                     {(cat || addr) && (
                       <span className="mk2-meta">
                         {cat && <span style={{ color: KIND_COLOR[k] }}>{cat}</span>}
@@ -325,9 +331,12 @@ function ShopPins({ pins, interactive, picked, onPick }) {
       const on = picked === pin.shop.id;
       const Tag = interactive ? "button" : "span";
       return (
-        <CustomOverlayMap key={pin.shop.id} position={{ lat: pin.shop.lat, lng: pin.shop.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={on ? 7 : 6} clickable={interactive}>
+        <CustomOverlayMap key={pin.shop.id} position={{ lat: pin.shop.lat, lng: pin.shop.lng }} xAnchor={0.5} yAnchor={1} zIndex={on ? 7 : 6} clickable={interactive}>
           <Tag {...(interactive ? { type: "button", onClick: () => onPick?.(pin.shop), "aria-label": `${pin.no}. ${loc(pin.shop.name)}`, "aria-pressed": on } : { "aria-hidden": true })}
-            className={`mk2-pin ${on ? "on" : ""}`} style={{ background: KIND_COLOR[kindOf(pin.shop)], transform: `translateX(${dx}px)` }}>{pin.no}</Tag>
+            className={`mk2-pin mk2-ipin ${on ? "on" : ""}`} style={{ "--c": KIND_COLOR[kindOf(pin.shop)], transform: `translateX(${dx}px)` }}>
+            <span className="mk2-ipin-body"><KindIcon kind={kindOf(pin.shop)} size={12} className="mk2-ipin-ic" /></span>
+            <span className="mk2-ipin-no">{pin.no}</span>
+          </Tag>
         </CustomOverlayMap>
       );
     });

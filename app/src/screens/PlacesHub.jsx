@@ -102,6 +102,7 @@ export function PlacesHub() {
   // 큰 지도: 같은 카테고리 칩이 켜진 상태로 성북구 전체부터
   const bigMap = () => { app.homeMap.current = { filter: cat, selId: null, view: null, origin: null }; app.go("home"); };
   const fitPts = useMemo(() => [...list, ...dests].map((p) => [p.lat, p.lng]), [list, dests]);
+  const here = useHere();
 
   return (
     <section ref={screenRef} className="screen places-screen ph-screen ph2">
@@ -152,6 +153,7 @@ export function PlacesHub() {
             <ExploreLayer key={cat} cluster={false} places={list} selectedId={sel?.id} level={6} onSelect={setSel} />
             {dests.map((p) => <DestPin key={p.id} p={p} on={sel?.id === p.id} onClick={() => setSel(p)} />)}
             <FitBounds points={fitPts} padTL={[52, 30]} padBR={[44, 30]} fitKey={cat} />
+            {here && <HerePin at={here} />}
           </MapView>
           <span className="ph-map-tag"><i aria-hidden="true" />{t("ph2_cat_n", { name: t("grp_" + cat), n: count[cat] })}</span>
           <button type="button" className="ph-map-big" onClick={bigMap} aria-label={t("ph_big_map")}>
@@ -235,6 +237,26 @@ function CourseShape({ course }) {
       <path d={d} fill="none" stroke="#CFE3B8" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
       <path d={d} fill="none" stroke="#2F6512" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+  );
+}
+
+// 내 위치: 위치 권한이 있으면 빨간 핀으로 (지도 범위 맞추기에는 넣지 않아요)
+function useHere() {
+  const [here, setHere] = useState(null);
+  useEffect(() => {
+    if (!navigator.geolocation) return undefined;
+    const id = navigator.geolocation.watchPosition(
+      (pos) => setHere({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => {}, { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 });
+    return () => navigator.geolocation.clearWatch(id);
+  }, []);
+  return here;
+}
+export function HerePin({ at }) {
+  return (
+    <CustomOverlayMap position={at} xAnchor={0.5} yAnchor={1} zIndex={8}>
+      <span className="here-pin" role="img" aria-label={loc({ ko: "내 위치", en: "My location" })}><i /></span>
+    </CustomOverlayMap>
   );
 }
 
