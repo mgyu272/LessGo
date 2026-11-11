@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     ? "Speak clearly, brightly, and concisely like a friendly female running navigation guide."
     : "Speak warmly and naturally like a friendly female cultural heritage tour guide.";
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 18000);
+  const timer = setTimeout(() => controller.abort(), 45000);
   try {
     const upstream = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`, {
       method: "POST",
@@ -21,10 +21,14 @@ export default async function handler(req, res) {
       }),
       signal: controller.signal,
     });
-    if (!upstream.ok) return res.status(502).json({ error: "Gemini TTS request failed" });
+    if (!upstream.ok) {
+      const details = (await upstream.text()).slice(0, 1200);
+      console.error("[Gemini TTS] upstream error", { status: upstream.status, details });
+      return res.status(502).json({ error: "Gemini TTS request failed", upstreamStatus: upstream.status });
+    }
     const result = await upstream.json();
     const part = result.candidates?.[0]?.content?.parts?.find(p => p.inlineData?.data);
-    if (!part) return res.status(502).json({ error: "Gemini returned no audio" });
+    if (!part) { console.error("[Gemini TTS] response contained no audio", { candidateCount: result.candidates?.length ?? 0 }); return res.status(502).json({ error: "Gemini returned no audio" }); }
     const pcm = Buffer.from(part.inlineData.data, "base64");
     // Gemini TTS emits raw 16-bit mono PCM at 24 kHz.
     const wav = Buffer.alloc(44 + pcm.length);
@@ -36,7 +40,9 @@ export default async function handler(req, res) {
     res.setHeader("Content-Type", "audio/wav");
     res.setHeader("Cache-Control", "private, no-store");
     return res.status(200).send(wav);
-  } catch {
-    return res.status(502).json({ error: "Gemini TTS unavailable" });
+  } catch (error) {
+    const timeout = controller.signal.aborted;
+    console.error("[Gemini TTS] request failed", { type: timeout ? "timeout" : (error?.name || "unknown"), message: String(error?.message || "").slice(0, 300) });
+    return res.status(502).json({ error: timeout ? "Gemini TTS timed out" : "Gemini TTS unavailable" });
   } finally { clearTimeout(timer); }
 }
