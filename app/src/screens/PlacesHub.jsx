@@ -1,7 +1,7 @@
 // 장소 탭: 성북구 둘러볼 곳을 종류(전시·역사·종교·공원)와 코스로 나눠 보여줘요.
 // - PlacesHub      : 장소 첫 화면. 카테고리 큰 카드 4장 + 코스 따라 보기(심우장·정릉·의릉)
 // - PlacesCategory : 카테고리 하나. 작은 지도 + 코스 목적지에서 가까운 순 목록 (핀 ↔ 카드 연결)
-// - PlacesCourse   : 코스 따라 보기. 그 목적지의 가장 짧은 코스 + 코스 300m 안 장소
+// - PlacesCourse   : 코스 따라 보기. 그 목적지의 가장 짧은 코스 + 코스 근처 장소 (300m 안, 없으면 500m → 800m)
 // 큰 지도는 Home.jsx ("지도 크게 보기"). 고른 카테고리·목적지는 app.placesView에 남겨서 상세에 갔다 와도 그대로예요.
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -19,7 +19,8 @@ import { GROUPS, groupOf, kindLabel, shortFee, destName, round10, byNearest } fr
 const CATS = GROUPS.filter((g) => g !== "all");
 // 연한 배경 위 작은 글씨용 진한 카테고리 색 (대비 4.5:1 이상)
 const DEEP = { exhibit: "#17489A", heritage: "#9A350B", religion: "#82205F", park: "#2A6A0F" };
-const NEAR_COURSE_M = 300; // 코스 따라 보기: 코스 선에서 이 거리 안
+// 코스 따라 보기: 코스 선에서 300m 안. 한 곳도 없으면 500m, 그래도 없으면 800m까지 넓혀요
+const COURSE_RADII = [300, 500, 800];
 const BESIDE_M = 50;       // 이보다 가까우면 "코스 바로 옆"
 // 걸어서 몇 분 (1분 = 67m, 최소 1분)
 const walkMin = (m) => Math.max(1, Math.round(m / 67));
@@ -63,7 +64,8 @@ export function PlacesHub() {
     if (!qq) return null;
     return items.filter((p) => [p.name?.ko, p.name?.en, p.kind, p.address, p.area_ko, t("grp_" + groupOf(p))].some((x) => (x || "").toLowerCase().includes(qq))).sort(byNearest);
   }, [items, q]);
-  const nearCount = (d) => data.explore.filter((p) => p.nearest_course?.dest === d).length;
+  // 코스 따라 보기 화면과 같은 기준으로 센 개수
+  const nearCount = useMemo(() => Object.fromEntries(DESTINATIONS.map((d) => [d, courseNear(data, shortestCourse(data, d), d).list.length])), [data]);
   const openCat = (c) => { st.cat = c; app.go("placesCat"); };
   const openCourse = (d) => { st.dest = d; app.go("placesCourse"); };
 
@@ -115,7 +117,7 @@ export function PlacesHub() {
               {DESTINATIONS.map((d) => (
                 <button key={d} type="button" className="card ph-dest" onClick={() => openCourse(d)}>
                   <b>{destName(data, d)}</b>
-                  <small>{t("ph_near_n", { n: nearCount(d) })}</small>
+                  <small>{t("ph_near_n", { n: nearCount[d] })}</small>
                 </button>
               ))}
             </div>
@@ -186,14 +188,7 @@ export function PlacesCourse() {
   const [dest, setDest] = useState(DESTINATIONS.includes(st.dest) ? st.dest : DESTINATIONS[0]);
   const [kind, setKind] = useState(st.kind || "all");
   const course = useMemo(() => shortestCourse(data, dest), [data, dest]);
-  // 코스 선 위 점들까지 가장 가까운 거리가 300m 안인 둘러볼 곳 (목적지 자신은 빼요)
-  const near = useMemo(() => {
-    if (!course) return [];
-    return data.explore.filter((p) => p.spot_id !== dest && p.id !== dest)
-      .map((p) => ({ p, d: Math.min(...course.path.map((q) => distance(q, p))) }))
-      .filter((x) => x.d <= NEAR_COURSE_M)
-      .sort((a, b) => a.d - b.d);
-  }, [data, course, dest]);
+  const { radius, list: near } = useMemo(() => courseNear(data, course, dest), [data, course, dest]);
   const count = useMemo(() => {
     const n = { all: near.length };
     near.forEach(({ p }) => { const g = groupOf(p); n[g] = (n[g] || 0) + 1; });
@@ -244,7 +239,7 @@ export function PlacesCourse() {
             <ExploreLayer key={dest + curKind} cluster={false} places={shown.map((x) => x.p)} selectedId={link.pinId} level={6} onSelect={link.pickPin} />
             <FitBounds points={fitPts} padTL={[24, 52]} padBR={[24, 24]} fitKey={dest + curKind} />
           </MapView>
-          <span className="ph-map-tag">{t("ph_course_within", { n: near.length })}</span>
+          <span className="ph-map-tag">{t("ph_course_within", { r: radius, n: near.length })}</span>
         </div>
 
         <div className="pl-topics scroll ph-chips" role="radiogroup" aria-label={t("ph_kind")}>
@@ -256,7 +251,7 @@ export function PlacesCourse() {
         </div>
 
         <h2 className="ph-h2">{t("ph_course_near")}</h2>
-        {!shown.length && <p className="pl-count">{t("ph_course_none")}</p>}
+        {!shown.length && <p className="pl-count">{t("ph_course_none", { r: radius })}</p>}
         {shown.map(({ p, d }) => (
           <PlaceRow key={p.id} p={p} kindColor on={link.selId === p.id} rowRef={link.rowRef(p.id)} {...link.hover(p.id)}
             right={d < BESIDE_M ? t("ph_course_beside") : t("ph_course_walk", { min: walkMin(d) })}
@@ -268,6 +263,17 @@ export function PlacesCourse() {
       )}
     </section>
   );
+}
+
+// 코스 근처 둘러볼 곳: 코스 선 위 점들까지 가장 가까운 거리로 재고(목적지 자신은 빼요), 가까운 순.
+// 300m 안에 한 곳도 없으면 500m → 800m로 넓혀요. { radius, list: [{ p, d }] }
+function courseNear(data, course, dest) {
+  if (!course) return { radius: COURSE_RADII[0], list: [] };
+  const all = data.explore.filter((p) => p.spot_id !== dest && p.id !== dest)
+    .map((p) => ({ p, d: Math.min(...course.path.map((q) => distance(q, p))) }))
+    .sort((a, b) => a.d - b.d);
+  const radius = COURSE_RADII.find((r) => all.some((x) => x.d <= r)) ?? COURSE_RADII[COURSE_RADII.length - 1];
+  return { radius, list: all.filter((x) => x.d <= radius) };
 }
 
 // 그 목적지의 가장 짧은 코스 하나
