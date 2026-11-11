@@ -2189,3 +2189,8 @@ div:has(> .spot-pin) { pointer-events: none; }
 .st-screen .dc-track { scroll-padding-inline: 40px; }
 .st-screen .dc-slide { transform: scale(.93); opacity: .55; transform-origin: center; transition: transform .45s cubic-bezier(.22, 1, .36, 1), opacity .45s ease; }
 .st-screen .dc-slide.on { transform: scale(1); opacity: 1; }
+
+/* 빨간 이름 도장 없애고: 내 기록은 장소 그림 아이콘 (아직 안 간 곳은 흐리게) */
+.me-place-ic { display: grid; place-items: center; width: 52px; height: 52px; margin: 0 auto; border-radius: 14px; background: #F2F9E6; }
+.me-place-ic svg { width: 40px; height: 40px; }
+.seal-grid figure.off .me-place-ic { filter: grayscale(1); opacity: .45; }

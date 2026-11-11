@@ -13,7 +13,6 @@ import { fmtTime } from "../lib/geo.js";
 import * as voice from "../lib/voice.js";
 import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections, byNearest, round10, CHECKED_DATE, groupOf } from "../lib/places.js";
 import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
-import { Seal, sealText } from "../components/Bits.jsx";
 import { LensIcon } from "./Places.jsx";
 import HistoryLens from "./HistoryLens.jsx";
 import PlacePhoto, { PlaceThumb } from "../components/PlacePhoto.jsx";
@@ -169,9 +168,8 @@ export default function PlaceDetail() {
           )}
           {!prep && tab === "story" && (
             <div className="rise pd-col">
-              {/* 1. 도장 + 질문형 제목 */}
+              {/* 1. 질문형 제목 */}
               <div className="pd-hook">
-                <Seal text={sealText(spot)} size={46} />
                 <div>
                   <h2>{loc(spot.hook) || name}</h2>
                   {spot.hook_meta && <p>{loc(spot.hook_meta)}</p>}

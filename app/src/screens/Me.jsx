@@ -4,7 +4,7 @@ import { useApp } from "../state/AppContext.jsx";
 import { t, loc } from "../lib/i18n.js";
 import { fmtTime, fmtPace } from "../lib/geo.js";
 import { STAR_RULES } from "../state/useUserData.js";
-import { Seal, sealText } from "../components/Bits.jsx";
+import { spotIconSvg } from "../components/SpotIcons.jsx";
 
 // ---------------- 완주 요약 ----------------
 // ---------------- ⑨ 스탬프·별 + 내 영역 + 랭킹 ----------------
@@ -25,7 +25,7 @@ export function Stars() {
         <h4>{t("my_seals")} {user.stamps.size}/{data.spots.length}</h4>
         <div className="seal-grid">
           {data.spots.map((sp) => (
-            <figure key={sp.id}><Seal text={sealText(sp)} size={52} off={!user.stamps.has(sp.id)} /><figcaption>{loc(sp.name)}</figcaption></figure>
+            <figure key={sp.id} className={user.stamps.has(sp.id) ? "" : "off"}><span className="me-place-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(sp) }} /><figcaption>{loc(sp.name)}</figcaption></figure>
           ))}
         </div>
 
