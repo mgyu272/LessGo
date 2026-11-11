@@ -1,8 +1,9 @@
 // ⑧ 장소 상세 (디자인 원본 docs/design/PlaceDetail.dc.html)
-// 탭: 이야기(해설 듣기 + spots.json cards + 출처) / 방문 정보 / 문화 활동
+// 탭: 이야기 → AI 역사 렌즈 → 방문 정보. 처음엔 이야기 탭 (app.placeTab으로 다른 탭을 먼저 열 수 있어요)
+// 이야기 탭: 도장 + 질문형 제목(hook) → 음성 해설 카드 → 이야기 카드 한 장씩 넘기기 → AI 역사 렌즈 안내 → 출처
 // "정보가 달라요" → 신고 시트 → Firestore reports 컬렉션에 저장
 // 관람 시간·휴관일·관람료·주소는 explore.json의 같은 장소(spot_id)에서 가져오고, 없으면 "정보 준비 중"이에요 (가짜 값을 넣지 않아요).
-// 방문 정보 탭 아래에 "근처 둘러볼 곳": 이 목적지가 가장 가까운 둘러볼 곳 4곳 + 모두 보기(장소와 이야기).
+// 방문 정보 탭 아래에 "근처 둘러볼 곳": 이 목적지가 가장 가까운 둘러볼 곳 4곳 + 모두 보기(장소 탭 > 코스 따라 보기).
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -12,19 +13,24 @@ import { fmtTime } from "../lib/geo.js";
 import * as voice from "../lib/voice.js";
 import { PLACE_TOPICS, REPORT_REASONS, kakaoDirections, byNearest, round10, CHECKED_DATE, groupOf } from "../lib/places.js";
 import { spotIconSvg, GroupIcon } from "../components/SpotIcons.jsx";
+import { Seal, sealText } from "../components/Bits.jsx";
+import { LensIcon } from "./Places.jsx";
 import HistoryLens from "./HistoryLens.jsx";
 import PlacePhoto, { PlaceThumb } from "../components/PlacePhoto.jsx";
 import NearbyShops from "../components/NearbyShops.jsx";
 
-const TABS = ["visit", "history_lens", "story"]; // 장소 정보 → AI 역사 렌즈 → 이야기 (문화 활동 탭은 뺐어요)
+const TABS = ["story", "history_lens", "visit"]; // 이야기 → AI 역사 렌즈 → 방문 정보 (문화 활동 탭은 뺐어요)
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 const focusableIn = (root) => [...root.querySelectorAll(FOCUSABLE)].filter((el) => el.offsetParent !== null);
 
 export default function PlaceDetail() {
   const app = useApp();
   const spot = app.spot;
-  const [tab, setTab] = useState("visit");
+  // 처음 탭: 이야기 탭의 "사진으로 물어보기"로 오면 AI 역사 렌즈, 그 밖에는 이야기
+  const [tab, setTab] = useState(() => (TABS.includes(app.placeTab.current) ? app.placeTab.current : "story"));
+  useEffect(() => { app.placeTab.current = null; }, [app.placeTab]);
   const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0); // 음성 해설 진행 (0~1)
   const [audioError, setAudioError] = useState("");
   const [report, setReport] = useState(false);
   // 홈 지도 핀으로 열면 가운데 모달: X, 바깥 막, Esc로 닫고 눌렀던 핀으로 포커스를 돌려줘요
@@ -44,6 +50,15 @@ export default function PlaceDetail() {
     }, 0);
   };
   useEffect(() => () => voice.stop(), []);
+  // 진행 막대: 예상 길이만큼 시간이 흐르면 채우고, 읽는 위치를 알려 주는 브라우저면 그 위치로도 맞춰요
+  const narration = spot ? loc(spot.narration) : "";
+  const estSec = voice.estimateSeconds(narration, app.lang);
+  useEffect(() => {
+    if (!playing) { setProgress(0); return; }
+    const t0 = Date.now();
+    const id = setInterval(() => setProgress((p) => Math.max(p, Math.min(0.98, (Date.now() - t0) / 1000 / Math.max(1, estSec)))), 300);
+    return () => clearInterval(id);
+  }, [playing, estSec]);
   // 열리면 포커스를 모달 안으로. 신고 시트가 열려 있으면 그 안으로
   useEffect(() => {
     if (!popup) return;
@@ -85,6 +100,7 @@ export default function PlaceDetail() {
     voice.speak(text, {
       lang: getLang(), queue: false, chunk: true,
       onend: () => setPlaying(false),
+      onboundary: (i) => setProgress((p) => Math.max(p, Math.min(0.98, i / Math.max(1, text.length)))),
       onerror: (event) => {
         setPlaying(false);
         setAudioError(t(event.error === "language-unavailable" || event.error === "voice-unavailable"
@@ -105,6 +121,11 @@ export default function PlaceDetail() {
   const nearby = app.data.explore.filter((p) => p.nearest_course?.dest === spot.id).sort(byNearest);
   const openExplore = (p) => { voice.stop(); app.setExplore({ place: p, from: "place" }); app.go("explore"); };
   const runHere = () => { voice.stop(); app.setPick({ ...app.pick, dest: spot.id }); app.go("courses"); };
+  const short = name.replace(/\s*\(.*\)/, "");
+  const courseCount = app.data.courses.filter((c) => c.properties.dest === spot.id).length;
+  // 근처 둘러볼 곳 모두 보기 → 장소 탭의 코스 따라 보기 (이 목적지를 고른 상태로)
+  const openAlongCourse = () => { voice.stop(); app.placesView.current.dest = spot.id; app.placesView.current.kind = "all"; app.go("placesCourse"); };
+  const toLens = () => { voice.stop(); setPlaying(false); setTab("history_lens"); };
 
   return (
     <>
@@ -134,8 +155,8 @@ export default function PlaceDetail() {
         </div>
 
         <div className="pd-body">
-          {/* 대표 사진을 맨 위에. AI 역사 렌즈는 카메라 화면이라 빼고, 사진이 없을 때 안내는 장소 정보 탭에서만 */}
-          {tab !== "history_lens" && <div className="pd-lead"><PlacePhoto spot={spot} fallback={tab === "visit" ? undefined : null} /></div>}
+          {/* 대표 사진은 방문 정보 탭에서만 맨 위에 */}
+          {tab === "visit" && <div className="pd-lead"><PlacePhoto spot={spot} /></div>}
           {prep && (
             <div className="rise pd-col">
               <article className="card pd-story pd-prep">
@@ -148,18 +169,38 @@ export default function PlaceDetail() {
           )}
           {!prep && tab === "story" && (
             <div className="rise pd-col">
-              <button className="btn btn-cta pd-listen" onClick={listen} aria-pressed={playing}>
-                <span>{t(playing ? "listen_stop" : "listen_about", { t: fmtTime(voice.estimateSeconds(text, app.lang)) })}</span>
-                <span className="pd-play" aria-hidden="true">{playing ? "■" : "▶"}</span>
-              </button>
+              {/* 1. 도장 + 질문형 제목 */}
+              <div className="pd-hook">
+                <Seal text={sealText(spot)} size={46} />
+                <div>
+                  <h2>{loc(spot.hook) || name}</h2>
+                  {spot.hook_meta && <p>{loc(spot.hook_meta)}</p>}
+                </div>
+              </div>
+              {/* 2. 음성 해설 */}
+              {text && (
+                <div className="card pd-audio">
+                  <button type="button" className="pd-audio-btn" onClick={listen} aria-pressed={playing}
+                    aria-label={playing ? t("pd_listen_stop_card") : t("pd_listen_card", { t: fmtTime(estSec) })}>
+                    {playing
+                      ? <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" /></svg>
+                      : <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg>}
+                  </button>
+                  <div className="pd-audio-text">
+                    <b>{playing ? t("pd_listen_stop_card") : t("pd_listen_card", { t: fmtTime(estSec) })}</b>
+                    {playing && <span className="pd-audio-bar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></span>}
+                  </div>
+                </div>
+              )}
               {audioError && <p className="note cream" role="alert">{audioError}</p>}
-              {spot.cards.map((c, i) => (
-                <article key={i} className="card pd-story">
-                  <span>{t("story_i", { i: i + 1 })}</span>
-                  <h3>{loc(c.title)}</h3>
-                  <p>{loc(c.body)}</p>
-                </article>
-              ))}
+              {/* 3. 이야기 카드 한 장씩 */}
+              <StoryCards cards={spot.cards || []} />
+              {/* 4. AI 역사 렌즈로 */}
+              <button type="button" className="pd-lens-cta" onClick={toLens}>
+                <span className="pd-lens-ic" aria-hidden="true"><LensIcon /></span>
+                <span><b>{t("pd_lens_cta", { name: short })}</b><small>{t("pd_lens_cta_sub")}</small></span>
+                <span className="pd-lens-go" aria-hidden="true">›</span>
+              </button>
               {/* 출처: spots.json의 source(원고 작성)와 sources(참고 자료) */}
               <p className="pd-src">
                 {spot.source === "lessgo" && <span>{t("script_by_team")}</span>}
@@ -198,7 +239,7 @@ export default function PlaceDetail() {
                       </li>
                     ))}
                   </ul>
-                  <button type="button" className="btn btn-soft pd-explore-all" onClick={() => { voice.stop(); app.setPlacesNear(spot.id); app.go("places"); }}>
+                  <button type="button" className="btn btn-soft pd-explore-all" onClick={openAlongCourse}>
                     {t("explore_near_all", { name: name.replace(/\s*\(.*\)/, ""), n: nearby.length })}
                   </button>
                 </section>
@@ -217,7 +258,7 @@ export default function PlaceDetail() {
       <div className="pd-cta">
         {prep && !(app.data.destinations || []).includes(spot.id)
           ? <button className="btn btn-cta" disabled>{loc({ ko: "코스 준비 중", en: "Course coming soon" })}</button>
-          : <button className="btn btn-cta" onClick={runHere}>{t("run_to", { name: name.replace(/\s*\(.*\)/, "") })} →</button>}
+          : <button className="btn btn-cta" onClick={runHere}>{courseCount ? t("pd_run_n", { name: short, to: withRo(short), n: courseCount }) : t("run_to", { name: short })} →</button>}
       </div>
 
       {/* 모달 안에서는 잘리니 신고 시트는 폰 화면 위에 띄워요 */}
@@ -226,6 +267,38 @@ export default function PlaceDetail() {
         : <ReportSheet spot={spot} onClose={() => setReport(false)} />)}
     </section>
     </>
+  );
+}
+
+// 이름 + 조사 "로/으로" (받침이 없거나 ㄹ 받침이면 "로")
+function withRo(word) {
+  const c = word.charCodeAt(word.length - 1) - 0xAC00;
+  if (c < 0 || c > 11171) return `${word}로`;
+  const jong = c % 28;
+  return `${word}${jong === 0 || jong === 8 ? "로" : "으로"}`;
+}
+
+// 이야기 카드: 한 장씩 넘겨 봐요 ("이야기 카드 1 / 3", 점, 이전 · 다음)
+function StoryCards({ cards }) {
+  const [i, setI] = useState(0);
+  const n = cards.length;
+  if (!n) return null;
+  const c = cards[Math.min(i, n - 1)];
+  return (
+    <section className="card pd-cards" aria-roledescription="carousel" aria-label={t("pd_card_n", { i: i + 1, n })}>
+      <div className="pd-cards-head">
+        <span>{t("pd_card_n", { i: i + 1, n })}</span>
+        <span className="pd-dots" aria-hidden="true">{cards.map((_, k) => <i key={k} className={k === i ? "on" : ""} />)}</span>
+      </div>
+      <div aria-live="polite">
+        <h3>{loc(c.title)}</h3>
+        <p>{loc(c.body)}</p>
+      </div>
+      <div className="pd-cards-nav">
+        <button type="button" disabled={i === 0} onClick={() => setI(i - 1)}>{t("pd_prev")}</button>
+        <button type="button" disabled={i >= n - 1} onClick={() => setI(i + 1)}>{t("pd_next")}</button>
+      </div>
+    </section>
   );
 }
 

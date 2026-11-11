@@ -49,22 +49,17 @@ export default function Market() {
   const { data } = app;
   const [dest, setDest] = useState(DESTS[0]);
   const [kind, setKind] = useState("all");
-  const [q, setQ] = useState("");
   const here = useKnownPosition();
 
   const stores = useMemo(() => (data.shops || []).filter(isStore), [data.shops]);
-  // 검색어에 맞는 가게 (목적지 탭 숫자도 이걸로 세요)
-  const searched = useMemo(() => {
-    const qq = q.trim().toLowerCase();
-    return stores.filter((s) => !qq || [s.name.ko, s.name.en, s.category, s.address].some((x) => (x || "").toLowerCase().includes(qq)));
-  }, [stores, q]);
+  // 목적지 탭 숫자
   const destCount = useMemo(() => {
     const n = {};
-    searched.forEach((s) => { const d = destOf(s); n[d] = (n[d] || 0) + 1; });
+    stores.forEach((s) => { const d = destOf(s); n[d] = (n[d] || 0) + 1; });
     return n;
-  }, [searched]);
+  }, [stores]);
   // 고른 목적지 안의 가게 → 종류 칩 숫자
-  const inDest = useMemo(() => searched.filter((s) => destOf(s) === dest), [searched, dest]);
+  const inDest = useMemo(() => stores.filter((s) => destOf(s) === dest), [stores, dest]);
   const count = useMemo(() => {
     const n = { all: inDest.length };
     inDest.forEach((s) => { const k = kindOf(s); n[k] = (n[k] || 0) + 1; });
@@ -114,11 +109,6 @@ export default function Market() {
           </button>
           <h1>{loc({ ko: "동네 상권", en: "Local shops" })}</h1>
         </div>
-
-        <label className="search glass pl-search">
-          <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M20 20l-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={loc({ ko: "가게 이름, 메뉴, 주소 검색", en: "Search shops, food, address" })} aria-label={loc({ ko: "가게 검색", en: "Search shops" })} />
-        </label>
 
         <div className="mk-dest-tabs" role="tablist" aria-label={loc({ ko: "어디 근처", en: "Near" })}>
           {[...DESTS, "explore"].map((d) => (
@@ -185,14 +175,10 @@ function ChosenInfo({ onClose }) {
       <section className="ui-optsheet hanji-sheet rise mk-info" role="dialog" aria-modal="true" aria-labelledby="mk-info-title">
         <span className="grip" aria-hidden="true" />
         <h2 id="mk-info-title">{loc({ ko: "이 가게들은 어떻게 골랐나요?", en: "How were these shops chosen?" })}</h2>
-        <p>{loc({
-          ko: "성북런 팀이 러닝 코스 도착지(심우장·정릉·의릉)와 둘러볼 곳 근처를 직접 조사해 고른 동네 가게예요. 사진·분류·주소는 카카오맵 정보를 가져왔어요. 아직 제휴 가게가 아니라 쿠폰은 없어요. (2026년 11월 조사)",
-          en: "The Seongbuk Run team picked these local shops by surveying the area around the course finish points (Simujang, Jeongneung, Uireung) and the places to explore. Photos, categories and addresses come from Kakao Map. They are not partner shops yet, so there are no coupons. (Surveyed November 2026)",
-        })}</p>
-        <h3>{loc({ ko: "이렇게 써요", en: "How to use" })}</h3>
         <ul>
-          <li>{loc({ ko: "가게를 누르면 앱 지도에서 위치를 보여줘요", en: "Tap a shop to see where it is on the app map" })}</li>
-          <li>{loc({ ko: "노란 카카오맵 버튼은 카카오맵에서 가게 정보를 열어요", en: "The yellow Kakao Map button opens the shop in Kakao Map" })}</li>
+          <li>{loc({ ko: "코스 도착지와 둘러볼 곳 근처 가게를 팀이 직접 골랐어요 (2026년 11월)", en: "Our team picked shops near the course finishes and places to explore (Nov 2026)" })}</li>
+          <li>{loc({ ko: "아직 제휴 가게가 아니라 쿠폰은 없어요", en: "Not partner shops yet, so no coupons" })}</li>
+          <li>{loc({ ko: "가게를 누르면 앱 지도, 노란 버튼은 카카오맵이 열려요", en: "Tap a shop for the app map; the yellow button opens Kakao Map" })}</li>
         </ul>
         <button type="button" ref={closeBtn} className="btn btn-cta" onClick={onClose}>{loc({ ko: "닫기", en: "Close" })}</button>
       </section>
