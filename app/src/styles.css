@@ -11,27 +11,10 @@
    (--ink, --vermilion, --ginkgo 같은 이름은 예전 테마에서 쓰던 이름을 그대로 두고 값만 바꿨어요)
    --safe-top / --safe-bottom : 다이내믹 아일랜드·홈 바에 가리지 않게 두는 여백
    ============================================================ */
-/* ---- 글꼴 (전부 public/fonts에서 직접 내보내고, index.html에서 미리 받아요(preload)) ----
+/* ---- 글꼴 ----
+   Pretendard · EF Cucumber의 @font-face는 index.html <head> 안에 있어요 (앱 JS를 기다리지 않고 바로 글꼴을 붙이려고).
    '성북런' 로고는 글꼴 대신 글자 패스 SVG예요 (components/Wordmark.jsx).
    서브셋은 scratch 스크립트(fontTools)로 만들었어요: 앱 글자가 바뀌면 다시 만들어 주세요. */
-/* 얼리폰트 오이샐러드 (안내 제목 · 도장 글자): 앱 소스·데이터에 나오는 851자만 남긴 서브셋 (107KB → 21KB).
-   제목용이라 잠깐 기다렸다가(block) 최종 글씨체로 바로 그려요 — 다른 글꼴로 먼저 보였다가 바뀌지 않게 */
-@font-face {
-  font-family: "EF Cucumber";
-  src: url("/fonts/EF_cucumbersalad-subset.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: block;
-}
-/* Pretendard 가변 글꼴 서브셋: KS X 1001 한글 2350자 + 앱에 나오는 글자 + 라틴·문장부호, 굵기 400~900만 (2.06MB → 364KB).
-   서브셋에 없는 드문 한글(예: 똠·쀍)은 아래 대체 글꼴로 보여요. 본문이라 swap 유지 */
-@font-face {
-  font-family: "Pretendard";
-  src: url("/fonts/PretendardVariable-subset.woff2") format("woff2-variations"), url("/fonts/PretendardVariable-subset.woff2") format("woff2");
-  font-weight: 400 900;
-  font-style: normal;
-  font-display: swap;
-}
 /* Pretendard를 받기 전 잠깐 보이는 대체 글꼴: 한글 글자 폭·줄 높이를 Pretendard에 맞춰서 바뀔 때 화면이 튀지 않게.
    값은 fontTools로 잰 글꼴 수치로 계산했어요 (한글 폭 기준 size-adjust, 줄 높이 ascent .952 / descent .241) */
 @font-face {
@@ -136,7 +119,7 @@ small { font-size: 13.5px; }
 /* ---------- 로딩 ---------- */
 /* 디자인 캔버스 "로딩"(390×844) 값 그대로. 일러스트는 위에서 170/844 지점, 가로 꽉 채워 비율 유지 */
 .screen.loading-screen { background: linear-gradient(180deg, #EEF6E2 0%, #F5F9EE 50%, #FBFAF6 100%); overflow: hidden; } /* .screen 기본 배경보다 앞서게 */
-.loading-screen .hanji-layer { opacity: .32; background-size: 414px auto; background-position: center top; }
+.loading-screen .hanji-layer::before { opacity: .32; background-size: 414px auto; background-position: center top; }
 .ld-art { position: absolute; left: 0; top: calc(170 / 844 * 100%); width: 100%; height: auto; overflow: hidden; }
 .ld-sun { transform-box: fill-box; transform-origin: center; animation: ldSun 4s ease-in-out infinite; }
 .ld-cloud { animation: ldCloud 16s linear infinite; }
@@ -203,8 +186,23 @@ small { font-size: 13.5px; }
 .glass { background: var(--glass-bg); -webkit-backdrop-filter: var(--glass-filter); backdrop-filter: var(--glass-filter); border: var(--glass-border); box-shadow: var(--glass-shadow); }
 .soft { background: var(--soft-bg); box-shadow: var(--soft-shadow); }
 .screen { isolation: isolate; } /* 한지 층(z-index -1)이 화면 바탕 위·내용 아래에 깔리게 */
-.hanji-layer { position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: url("/textures/hanji.png") repeat; background-size: 360px auto; opacity: .38; mix-blend-mode: luminosity; }
+/* 한지 층 = 질감(::before, 38%) + 히끗히끗한 흰 얼룩(::after). 둘을 묶어서 화면 바탕과 luminosity로 섞어요 */
+.hanji-layer { position: absolute; inset: 0; z-index: -1; pointer-events: none; mix-blend-mode: luminosity; }
+.hanji-layer::before { content: ""; position: absolute; inset: 0;
+  background: url("/textures/hanji.png") repeat; background-size: 360px auto; opacity: .38; }
+/* 흰 얼룩: 큰 흰 번짐(그라데이션) 몇 개가 위아래로 흐르고, 잘게 흩어진 흰 섬유 점이 히끗히끗 보여요 */
+.hanji-layer::after { content: ""; position: absolute; inset: 0; opacity: .7;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, .9) 0 .9px, transparent 1.5px) 0 0 / 23px 31px,
+    radial-gradient(circle, rgba(255, 255, 255, .75) 0 1.3px, transparent 2px) 11px 17px / 47px 59px,
+    radial-gradient(ellipse, rgba(255, 255, 255, .6) 0 2.2px, transparent 3.4px) 31px 7px / 89px 113px,
+    radial-gradient(ellipse 58% 24% at 12% 8%, rgba(255, 255, 255, .85), transparent 72%),
+    radial-gradient(ellipse 46% 20% at 90% 26%, rgba(255, 255, 255, .7), transparent 72%),
+    radial-gradient(ellipse 64% 22% at 24% 48%, rgba(255, 255, 255, .65), transparent 72%),
+    radial-gradient(ellipse 50% 20% at 84% 68%, rgba(255, 255, 255, .7), transparent 72%),
+    radial-gradient(ellipse 60% 20% at 18% 92%, rgba(255, 255, 255, .75), transparent 72%),
+    linear-gradient(180deg, rgba(255, 255, 255, .4), rgba(255, 255, 255, 0) 36%, rgba(255, 255, 255, .25) 70%, rgba(255, 255, 255, 0));
+  background-repeat: repeat, repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat; }
 .btn-outline { background: transparent; border: 1.5px solid var(--line); color: var(--text); }
 /* 흰 카드: 연한 그림자 */
 .card { background: #FFFFFF; box-shadow: var(--card-shadow); }

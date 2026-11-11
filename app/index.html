@@ -11,9 +11,38 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="RunTrip" />
     <title>Seongbuk RunTrip</title>
-    <!-- 글꼴 미리 받기: CSS를 읽기 전에 바로 받기 시작해서 첫 화면부터 최종 글씨체로 (styles.css @font-face와 같은 파일) -->
+    <!-- 글꼴: 미리 받기(preload) + @font-face + 바로 붙이기를 여기서 해요. 앱 JS가 다 받아질 때까지 기다리지 않아서
+         첫 화면부터 최종 글씨체예요 (예전엔 JS가 늦게 뜨면 그동안 대체 글꼴로 보였다가 바뀌었어요).
+         대체 글꼴 크기 맞춤(Pretendard Fallback)은 src/styles.css에 있어요 -->
     <link rel="preload" href="/fonts/PretendardVariable-subset.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/EF_cucumbersalad-subset.woff2" as="font" type="font/woff2" crossorigin />
+    <style>
+      /* Pretendard 가변 글꼴 서브셋: KS X 1001 한글 2350자 + 앱에 나오는 글자 + 라틴·문장부호, 굵기 400~900 (2.06MB → 364KB).
+         서브셋에 없는 드문 한글(예: 똠·쀍)은 대체 글꼴로 보여요. 본문이라 swap */
+      @font-face {
+        font-family: "Pretendard";
+        src: url("/fonts/PretendardVariable-subset.woff2") format("woff2-variations"), url("/fonts/PretendardVariable-subset.woff2") format("woff2");
+        font-weight: 400 900;
+        font-style: normal;
+        font-display: swap;
+      }
+      /* 얼리폰트 오이샐러드 (장소 이름 · 안내 제목): 앱 소스·데이터에 나오는 851자 서브셋 (107KB → 21KB).
+         제목용이라 잠깐 기다렸다가(block) 최종 글씨체로 그려요 */
+      @font-face {
+        font-family: "EF Cucumber";
+        src: url("/fonts/EF_cucumbersalad-subset.woff2") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: block;
+      }
+    </style>
+    <script>
+      // 미리 받은 글꼴을 바로 붙여요 (브라우저는 원래 그 글꼴로 쓸 글자가 화면에 나올 때에야 붙여요)
+      if (document.fonts) {
+        document.fonts.load('400 16px "Pretendard"', "가A").catch(function () {});
+        document.fonts.load('400 16px "EF Cucumber"', "성북").catch(function () {});
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
