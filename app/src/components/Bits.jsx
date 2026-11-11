@@ -50,7 +50,7 @@ export function FakeQr({ seed = "x" }) {
 // 하단 메뉴: 장소·이야기(메인) · 지도 · 상권 · 내 기록 (문화 활동은 장소와 이야기 화면의 "이어진 문화 활동"으로 들어가요)
 export const TABS = [
   ["places", "tab_places", <path key="p" d="M4 19.5V6a2 2 0 012-2h11v14H6a2 2 0 00-2 1.5zM4 19.5A2 2 0 006 21h12 M9 8h5" />],
-  ["placesHub", "tab_map", <path key="p" d="M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z" />],
+  ["placesHub", "tab_map", <path key="p" d="M2 11c3.5-.4 6-2.8 7.3-6h5.4c1.3 3.2 3.8 5.6 7.3 6 M5.5 10.6V20h13v-9.4 M3.5 20h17 M10 20v-5.5h4V20" />], // 장소 = 한옥
   ["market", "tab_market", <path key="p" d="M4 9l1.5-5h13L20 9 M4 9h16v11H4z M4 9a2.7 2.7 0 005.3 0 2.7 2.7 0 005.4 0 2.7 2.7 0 005.3 0 M10 20v-5h4v5" />],
   ["stats", "tab_stats", <path key="p" d="M12 21a9 9 0 100-18 9 9 0 000 18z M12 7v5l3 2" />],
 ];

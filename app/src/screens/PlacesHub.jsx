@@ -13,7 +13,7 @@ import { t, loc } from "../lib/i18n.js";
 import { distance } from "../lib/geo.js";
 import { DESTINATIONS } from "../lib/routes.js";
 import { MapView, FitBounds, ExploreLayer, Route, Dot, SpotMarker } from "../components/MapView.jsx";
-import { GroupIcon } from "../components/SpotIcons.jsx";
+import { GroupIcon, spotIconSvg } from "../components/SpotIcons.jsx";
 import { PlaceThumb } from "../components/PlacePhoto.jsx";
 import { Badge, Segment } from "../components/ui.jsx";
 import { MODE_COLOR } from "./Courses.jsx";
@@ -205,12 +205,16 @@ export function PlacesHub() {
 }
 
 // 코스 목적지 핀: 흰 원 + 초록(#2F6512) 테두리 작은 점 + 이름 라벨 (styles.css .ph-dest-pin)
+// 심우장·정릉·의릉: 이야기 탭과 같은 장소 그림 아이콘을 동그란 배지에 담아 다른 아이콘보다 크게
 function DestPin({ p, on, onClick }) {
+  const { data } = useApp();
+  const spot = data.spotById?.[p.id];
   const name = loc(p.name).replace(/\s*\(.*\)/, "");
   return (
     <CustomOverlayMap position={{ lat: p.lat, lng: p.lng }} xAnchor={0.5} yAnchor={0.5} zIndex={on ? 4 : 3} clickable>
-      <div className={`ph-dest-pin ${on ? "on" : ""}`}>
-        <button type="button" onClick={onClick} aria-label={name} aria-pressed={on} />
+      <div className={`ph-dest-pin ph-dest-ic ${on ? "on" : ""}`}>
+        <button type="button" onClick={onClick} aria-label={name} aria-pressed={on}
+          dangerouslySetInnerHTML={{ __html: spotIconSvg(spot || p) }} />
         <span aria-hidden="true">{name}</span>
       </div>
     </CustomOverlayMap>

@@ -2400,3 +2400,10 @@ button.mk2-pin:focus-visible { outline: 2px solid #1F3D14; outline-offset: 2px; 
 .tabbar button.on svg { stroke-width: 2.3; }
 .tabbar button:not(.on):hover { background: rgba(47, 101, 18, .07); }
 @media (prefers-reduced-motion: reduce) { .tabbar button { transition: none; } .tabbar button:active { transform: none; } }
+
+/* 장소 탭 지도: 코스 목적지 = 동그란 흰 배지 안 장소 그림 (일반 아이콘 22px보다 크게) */
+.ph-dest-ic button { width: 42px; height: 42px; display: grid; place-items: center; border: 2.5px solid #2F6512; background: #FFFFFF; box-shadow: 0 3px 8px -2px rgba(20, 31, 14, .4); }
+.ph-dest-ic button svg { width: 32px; height: 32px; }
+.ph-dest-ic.on button { width: 48px; height: 48px; box-shadow: 0 0 0 6px rgba(47, 101, 18, .2), 0 3px 8px -2px rgba(20, 31, 14, .4); }
+.ph-dest-ic span { top: 24px; }
+.ph-dest-ic.on span { top: 27px; }
