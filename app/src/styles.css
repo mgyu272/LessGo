@@ -2073,7 +2073,7 @@ div:has(> .spot-pin) { pointer-events: none; }
 .lens-test-thumb:focus-visible { outline: 2px solid #2F6512; outline-offset: 5px; }
 .lens-photo-wrap { position: relative; }
 .lens-photo-label { position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 999px; background: rgba(255, 255, 255, .94); color: #1F3D14; font-size: 12.5px; font-weight: 800; }
-.st-head h2 { margin: 10px 2px 0; font-size: 17px; font-weight: 800; }
+.st-head h2 { margin: 10px 2px 0; font-size: 21px; font-weight: 800; letter-spacing: -.01em; }
 .st-head p { margin: 4px 2px 0; font-size: 13px; color: var(--muted); word-break: keep-all; }
 .st-ask .st-ask-list { display: flex; flex-direction: column; gap: 8px; }
 .st-ask-place { min-height: 56px; display: flex; align-items: center; gap: 12px; padding: 8px 14px; border: 1px solid var(--border); border-radius: 16px; background: #FFFFFF; font: inherit; color: var(--text); text-align: left; cursor: pointer; }
@@ -2176,6 +2176,8 @@ div:has(> .spot-pin) { pointer-events: none; }
 .st-screen .dc-slide { flex: 0 0 100%; }
 .st-screen .dc-slide.on .pl-card { box-shadow: 0 12px 26px -14px rgba(30, 60, 20, .45); }
 .st-screen .pl-card { border-radius: 22px; border: 1px solid #E2ECD9; box-shadow: 0 3px 8px rgba(30, 60, 20, .08); }
+/* 이야기 탭 흰 카드(렌즈 카드 · 추천 코스 카드)는 살짝 비쳐서 한지 바탕이 은은하게 보여요 */
+.st-screen .st-lens, .st-screen .pl-card { background: rgba(255, 255, 255, .82); }
 .st-screen .pl-card-photo { height: 150px; background: #E6EDDF; }
 .st-screen .pl-course-count { top: 10px; right: 10px; padding: 4px 10px; color: #2E6B1C; font-size: 13.5px; }
 .st-screen .pl-text { padding: 34px 16px 12px; }
