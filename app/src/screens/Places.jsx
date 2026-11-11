@@ -1,6 +1,6 @@
 // ⑦ 이야기 탭 = 로그인 뒤 메인 화면
 // 맨 위 AI 역사 렌즈 카드("사진으로 물어보기" → 장소 고르기 → 그 장소 상세의 AI 역사 렌즈 탭)
-// 아래 이야기 3편: 코스 목적지(심우장·정릉·의릉)마다 도장 + 질문형 제목(spots.json hook) + "이야기 듣기" / "여기로 달리기"
+// 아래 이야기 3편: 코스 목적지(심우장·정릉·의릉) 사진 카드를 옆으로 넘겨 봐요 (도장 + 질문형 제목 spots.json hook + "이야기 듣기" / "여기로 달리기")
 // 둘러볼 곳·카테고리·지도는 장소 탭(PlacesHub.jsx)에 있어요.
 
 import { useEffect, useRef, useState } from "react";
@@ -10,6 +10,7 @@ import { DESTINATIONS } from "../lib/routes.js";
 import { destName } from "../lib/places.js";
 import { Seal, sealText } from "../components/Bits.jsx";
 import { Brand } from "../components/LogoBird.jsx";
+import { PlaceCover } from "../components/PlacePhoto.jsx";
 
 export default function Places() {
   const app = useApp();
@@ -49,17 +50,19 @@ export default function Places() {
           <p>{t("st_stories_sub")}</p>
         </div>
 
-        {stories.map((s, i) => (
-          <article key={s.id} className="card st-card">
-            <div className="st-card-top">
-              <Seal text={sealText(s)} size={54} />
-              <div className="st-card-text">
-                <small>{t("st_story_no", { i: i + 1, name: destName(data, s.id) })}</small>
-                <h3>{loc(s.hook) || loc(s.name)}</h3>
-                {s.hook_meta && <p>{loc(s.hook_meta)}</p>}
-              </div>
+        <DestCarousel key={app.lang} items={stories} label={t("st_stories_n", { n: stories.length })} render={(s, i) => (
+          <article className="pl-card">
+            <div className="pl-card-photo">
+              <PlaceCover place={s} fallback={<PhotoIcon />} />
+              <span className="pl-course-count">{t("courses_n", { n: data.courses.filter((c) => c.properties.dest === s.id).length })}</span>
+              <span className="pl-ic" aria-hidden="true"><Seal text={sealText(s)} size={46} /></span>
             </div>
-            <div className="st-card-btns">
+            <div className="pl-text">
+              <small>{t("st_story_no", { i: i + 1, name: destName(data, s.id) })}</small>
+              <h3>{loc(s.hook) || loc(s.name)}</h3>
+              {s.hook_meta && <p>{loc(s.hook_meta)}</p>}
+            </div>
+            <div className="pl-actions">
               <button type="button" className="st-btn-listen" onClick={() => openPlace(s, "story")}
                 aria-label={t("st_listen_label", { name: destName(data, s.id) })}>
                 <span aria-hidden="true">▶</span>{t("st_listen")}
@@ -68,12 +71,65 @@ export default function Places() {
                 aria-label={t("dest_run_label", { name: loc(s.name) })}>{t("run_here")} →</button>
             </div>
           </article>
-        ))}
+        )} />
       </div>
 
       {ask && <AskSheet stories={stories} onClose={closeAsk} onPick={(s) => openPlace(s, "history_lens")} />}
     </section>
   );
+}
+
+// 코스 목적지 카드: 손으로 쓸어 한 장씩 넘기는 캐러셀 (터치·트랙패드는 브라우저 스크롤, 마우스는 끌기).
+// 옆 카드가 살짝 보이고, 아래 점으로 지금 몇 번째인지 보여줘요
+function DestCarousel({ items, render, label }) {
+  const n = items.length;
+  const [idx, setIdx] = useState(0);
+  const track = useRef(null);
+  const drag = useRef(null);
+  const moved = useRef(false);
+  const step = () => { const el = track.current; if (!el) return 1; const slide = el.querySelector(".dc-slide"); return slide ? slide.offsetWidth + 10 : el.clientWidth; };
+  const go = (k) => { const el = track.current; if (!el) return; const t = Math.max(0, Math.min(n - 1, k)); el.scrollTo({ left: t * step(), behavior: "smooth" }); setIdx(t); };
+  const onScroll = () => { const el = track.current; if (!el || drag.current) return; setIdx(Math.max(0, Math.min(n - 1, Math.round(el.scrollLeft / step())))); };
+  // 마우스로 끌기 (데스크톱 화면에서 쓸어넘기기처럼)
+  const down = (e) => { if (e.pointerType !== "mouse" || n < 2) return; drag.current = { x: e.clientX, left: track.current.scrollLeft, id: e.pointerId }; moved.current = false; };
+  const move = (e) => {
+    const d = drag.current; if (!d) return;
+    const dx = e.clientX - d.x;
+    if (!moved.current && Math.abs(dx) > 6) { moved.current = true; track.current.classList.add("dragging"); track.current.setPointerCapture?.(d.id); }
+    if (moved.current) track.current.scrollLeft = d.left - dx;
+  };
+  const up = (e) => {
+    const d = drag.current; drag.current = null; if (!d) return;
+    track.current.classList.remove("dragging");
+    if (!moved.current) return;
+    const dx = e.clientX - d.x, base = Math.round(d.left / step());
+    go(dx < -40 ? base + 1 : dx > 40 ? base - 1 : base);
+  };
+  const stopClick = (e) => { if (moved.current) { e.stopPropagation(); e.preventDefault(); moved.current = false; } };
+  const key = (e) => { if (e.key === "ArrowRight") go(idx + 1); if (e.key === "ArrowLeft") go(idx - 1); };
+
+  return (
+    <div className="dc" role="region" aria-roledescription="carousel" aria-label={label} tabIndex={0} onKeyDown={key}>
+      <div className="dc-track" ref={track} onScroll={onScroll}
+        onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} onClickCapture={stopClick}>
+        {items.map((it, k) => (
+          <div key={k} className={`dc-slide ${k === idx ? "on" : ""}`} aria-hidden={k !== idx}
+            onClickCapture={k !== idx ? (e) => { e.stopPropagation(); e.preventDefault(); go(k); } : undefined}>
+            {render(it, k)}
+          </div>
+        ))}
+      </div>
+      {n > 1 && (
+        <div className="dc-dots" aria-hidden="true">
+          {items.map((_, k) => <span key={k} className={k === idx ? "on" : ""} />)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PhotoIcon() {
+  return <svg width="38" height="38" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>;
 }
 
 // "어느 장소에서 찍었나요?" 작은 창 (아래에서 올라와요). 바깥 누르기 · 닫기 · Esc로 닫혀요
