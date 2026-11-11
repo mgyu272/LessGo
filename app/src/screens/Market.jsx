@@ -1,6 +1,6 @@
 // ⑧ 상권: 코스 근처 동네 가게(식당 · 카페 · 술집 등) 목록 (shops.json의 카카오맵 조사 자료)
 // 장소와 이야기 화면과 같은 카드 모양. 왼쪽에 카카오맵 대표 사진, 아래로 쭉 스크롤해서 봐요.
-// 목적지(심우장·정릉·의릉)와 둘러볼 곳 근처로 묶어서 보여줘요.
+// 위 탭으로 목적지(심우장·정릉·의릉·둘러볼 곳)를 고르고, 아래 칩으로 가게 종류(식당·카페…)를 골라요.
 // 사진·이름을 누르면 홈 지도에서 그 가게를 핀으로 보여주고, 오른쪽 노란 카카오맵 버튼은 카카오맵 가게 페이지를 열어요.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -31,8 +31,10 @@ const isStore = (s) => s.id.startsWith("kakao-") && !/주차장|단체,협회/.t
 // 분류는 큰 갈래 하나만 보여줘요 ("음식점 > 한식 > 국수" → "한식")
 export const catLabel = (s) => ((s.category || "").split(">")[1] || "").trim().replace(/,/g, "·");
 
-// 코스 목적지 (이 순서로 묶어요)
+// 코스 목적지 (탭 순서)
 const DESTS = ["simujang", "jeongneung", "uiryeong"];
+// 가게가 속한 탭: 코스 목적지 근처가 아니면 "둘러볼 곳"
+const destOf = (s) => (DESTS.includes(s.near) ? s.near : "explore");
 const placeName = (p) => loc(p.name).replace(/\s*\(.*\)/, "");
 // "{이름}에서 도보 N분" (걸음 67m/분, 최소 1분). 좌표가 없으면 "{이름} 근처"
 function walkFrom(name, place, shop) {
@@ -45,34 +47,43 @@ function walkFrom(name, place, shop) {
 export default function Market() {
   const app = useApp();
   const { data } = app;
+  const [dest, setDest] = useState(DESTS[0]);
   const [kind, setKind] = useState("all");
   const [q, setQ] = useState("");
   const here = useKnownPosition();
 
   const stores = useMemo(() => (data.shops || []).filter(isStore), [data.shops]);
-  const count = useMemo(() => {
-    const n = { all: stores.length };
-    stores.forEach((s) => { const k = kindOf(s); n[k] = (n[k] || 0) + 1; });
-    return n;
-  }, [stores]);
-  const list = useMemo(() => {
+  // 검색어에 맞는 가게 (목적지 탭 숫자도 이걸로 세요)
+  const searched = useMemo(() => {
     const qq = q.trim().toLowerCase();
-    return stores.filter((s) => kind === "all" || kindOf(s) === kind)
-      .filter((s) => !qq || [s.name.ko, s.name.en, s.category, s.address].some((x) => (x || "").toLowerCase().includes(qq)));
-  }, [stores, kind, q]);
+    return stores.filter((s) => !qq || [s.name.ko, s.name.en, s.category, s.address].some((x) => (x || "").toLowerCase().includes(qq)));
+  }, [stores, q]);
+  const destCount = useMemo(() => {
+    const n = {};
+    searched.forEach((s) => { const d = destOf(s); n[d] = (n[d] || 0) + 1; });
+    return n;
+  }, [searched]);
+  // 고른 목적지 안의 가게 → 종류 칩 숫자
+  const inDest = useMemo(() => searched.filter((s) => destOf(s) === dest), [searched, dest]);
+  const count = useMemo(() => {
+    const n = { all: inDest.length };
+    inDest.forEach((s) => { const k = kindOf(s); n[k] = (n[k] || 0) + 1; });
+    return n;
+  }, [inDest]);
+  // 고른 종류가 이 목적지에 없으면 전체로 보여줘요
+  const curKind = kind === "all" || count[kind] ? kind : "all";
+  const list = useMemo(() => {
+    const out = inDest.filter((s) => curKind === "all" || kindOf(s) === curKind);
+    const from = data.spotById[dest];
+    return from && from.lat != null ? [...out].sort((a, b) => distance(from, a) - distance(from, b)) : out;
+  }, [inDest, curKind, dest, data]);
 
-  // 목적지별로 묶어요: 심우장 → 정릉 → 의릉 → 둘러볼 곳 (빈 묶음은 숨겨요)
-  const groups = useMemo(() => {
-    const keyOf = (s) => (DESTS.includes(s.near) ? s.near : "explore");
-    return [...DESTS, "explore"].map((key) => {
-      const shops = list.filter((s) => keyOf(s) === key);
-      const name = key === "explore" ? null : destName(data, key);
-      const title = key === "explore"
-        ? loc({ ko: `둘러볼 곳 근처 · ${shops.length}곳`, en: `Near places to explore · ${shops.length}` })
-        : loc({ ko: `${name} 근처 · ${shops.length}곳`, en: `Near ${name} · ${shops.length}` });
-      return { key, title, shops };
-    }).filter((g) => g.shops.length);
-  }, [list, data]);
+  const tabName = (d) => (d === "explore" ? loc({ ko: "둘러볼 곳", en: "Explore" }) : destName(data, d));
+  const countText = list.length
+    ? (dest === "explore"
+      ? loc({ ko: `둘러볼 곳 근처 가게 ${list.length}곳`, en: `${list.length} shops near places to explore` })
+      : loc({ ko: `${tabName(dest)} 근처 가게 ${list.length}곳`, en: `${list.length} shops near ${tabName(dest)}` }))
+    : loc({ ko: "조건에 맞는 가게가 없어요", en: "No shops match" });
 
   // 카드의 거리: 목적지 묶음은 목적지에서, 둘러볼 곳 묶음은 가장 가까운 둘러볼 곳에서 걸어서 몇 분
   const walkLabel = (s, key) => {
@@ -109,49 +120,50 @@ export default function Market() {
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={loc({ ko: "가게 이름, 메뉴, 주소 검색", en: "Search shops, food, address" })} aria-label={loc({ ko: "가게 검색", en: "Search shops" })} />
         </label>
 
-        <div className="pl-topics scroll" role="radiogroup" aria-label={loc({ ko: "가게 종류", en: "Shop type" })}>
+        <div className="mk-dest-tabs" role="tablist" aria-label={loc({ ko: "어디 근처", en: "Near" })}>
+          {[...DESTS, "explore"].map((d) => (
+            <button key={d} type="button" role="tab" aria-selected={dest === d} className={dest === d ? "on" : ""} onClick={() => setDest(d)}>
+              {tabName(d)}<small>{destCount[d] || 0}</small>
+            </button>
+          ))}
+        </div>
+
+        <div className="pl-topics scroll mk-kinds" role="radiogroup" aria-label={loc({ ko: "가게 종류", en: "Shop type" })}>
           {KINDS.filter(([k]) => k === "all" || count[k]).map(([k, label]) => (
-            <button key={k} role="radio" aria-checked={kind === k} className={`pl-topic ${kind === k ? "on" : "soft"}`} onClick={() => setKind(k)}>{loc(label)}</button>
+            <button key={k} role="radio" aria-checked={curKind === k} className={`pl-topic ${curKind === k ? "on" : "soft"}`} onClick={() => setKind(k)}>{loc(label)}</button>
           ))}
         </div>
 
         <div className="mk-count-row">
-          <p className="pl-count">{list.length
-            ? loc({ ko: `코스 근처 가게 ${list.length}곳`, en: `${list.length} shops near the courses` })
-            : loc({ ko: "조건에 맞는 가게가 없어요", en: "No shops match" })}</p>
+          <p className="pl-count">{countText}</p>
           <button type="button" ref={infoBtn} className="mk-info-btn" onClick={() => setInfo(true)} aria-label={loc({ ko: "이 가게들은 어떻게 골랐나요", en: "How these shops were chosen" })}>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v5.5 M12 7.6v.1" /></svg>
           </button>
         </div>
 
-        {groups.map((g) => (
-          <div key={g.key} className="mk-group">
-            <h2 className="mk-group-title">{g.title}</h2>
-            {g.shops.map((s) => {
-              const meta = [catLabel(s), walkLabel(s, g.key), here ? t("from_me", { km: (distance(here, s) / 1000).toFixed(1) }) : null].filter(Boolean).join(" · ");
-              return (
-                <article key={s.id} className="card mk-card">
-                  <button type="button" className="mk-main" onClick={() => showOnMap(s)} aria-label={loc({ ko: `${loc(s.name)} 지도에서 보기`, en: `Show ${loc(s.name)} on the map` })}>
-                    <ShopPhoto shop={s} />
-                    <span className="mk-text">
-                      <b><span className="mk-name">{loc(s.name)}</span><svg className="mk-map-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s7-6 7-11.5a7 7 0 10-14 0C5 15 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.4" /></svg>{s.partner && <Badge>{loc({ ko: "제휴", en: "Partner" })}</Badge>}</b>
-                      <small>{meta}</small>
-                      {s.address && <span className="mk-addr">{s.address}</span>}
-                      <span className="mk-onmap">{loc({ ko: "지도에서 보기 ›", en: "View on map ›" })}</span>
-                    </span>
-                  </button>
-                  {s.kakao_url && (
-                    <a className="mk-kakao" href={s.kakao_url.replace(/^http:/, "https:")} target="_blank" rel="noreferrer"
-                      aria-label={loc({ ko: "카카오맵에서 열기 (새 창)", en: "Open in Kakao Map (new tab)" })}>
-                      <span>{loc({ ko: "카카오맵", en: "Kakao Map" })}</span>
-                      <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 2.5h5.5V8 M9.5 2.5L2.5 9.5" /></svg>
-                    </a>
-                  )}
-                </article>
-              );
-            })}
-          </div>
-        ))}
+        {list.map((s) => {
+          const meta = [catLabel(s), walkLabel(s, dest), here ? t("from_me", { km: (distance(here, s) / 1000).toFixed(1) }) : null].filter(Boolean).join(" · ");
+          return (
+            <article key={s.id} className="card mk-card">
+              <button type="button" className="mk-main" onClick={() => showOnMap(s)} aria-label={loc({ ko: `${loc(s.name)} 지도에서 보기`, en: `Show ${loc(s.name)} on the map` })}>
+                <ShopPhoto shop={s} />
+                <span className="mk-text">
+                  <b><span className="mk-name">{loc(s.name)}</span><svg className="mk-map-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s7-6 7-11.5a7 7 0 10-14 0C5 15 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.4" /></svg>{s.partner && <Badge>{loc({ ko: "제휴", en: "Partner" })}</Badge>}</b>
+                  <small>{meta}</small>
+                  {s.address && <span className="mk-addr">{s.address}</span>}
+                  <span className="mk-onmap">{loc({ ko: "지도에서 보기 ›", en: "View on map ›" })}</span>
+                </span>
+              </button>
+              {s.kakao_url && (
+                <a className="mk-kakao" href={s.kakao_url.replace(/^http:/, "https:")} target="_blank" rel="noreferrer"
+                  aria-label={loc({ ko: "카카오맵에서 열기 (새 창)", en: "Open in Kakao Map (new tab)" })}>
+                  <span>{loc({ ko: "카카오맵", en: "Kakao Map" })}</span>
+                  <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 2.5h5.5V8 M9.5 2.5L2.5 9.5" /></svg>
+                </a>
+              )}
+            </article>
+          );
+        })}
       </div>
       {info && <ChosenInfo onClose={closeInfo} />}
     </section>
