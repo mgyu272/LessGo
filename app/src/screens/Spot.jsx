@@ -25,7 +25,6 @@ export function Spot() {
   // 전체 길이: 브라우저 음성 읽기는 길이를 미리 알려주지 않아서 글자 수로 추정한 값이에요
   // (한국어 초당 6.5자, 영어 초당 2.6단어 · lib/voice.js estimateSeconds). 실제 끝나면 끝까지 채워요.
   const total = voice.estimateSeconds(text, lang);
-  useEffect(() => { voice.prefetchNarration(text, lang); }, [spot.id, lang, text]);
   const [playing, setPlaying] = useState(false);
   const [cur, setCur] = useState(0); // 지금까지 읽은 시간(초)
   const [showScript, setShowScript] = useState(false);

@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { prefetchDestinationNarrations } from "./lib/voice.js";
 // 어떤 화면을 보여줄지 정하는 곳
 // 화면 이름 → 컴포넌트. app.go("run") 처럼 부르면 화면이 바뀌어요.
 
@@ -56,10 +54,7 @@ const WITH_TABS = new Set(["home", "placesHub", "placesCat", "placesCourse", "pl
 const DARK = new Set(["stars", "coupon"]); // 상태 표시줄 글자를 흰색으로 쓰는 어두운 화면
 
 export default function App() {
-  const { screen, data, spot, placeFrom, guide, lang } = useApp();
-  useEffect(() => {
-    if (data?.spotById) prefetchDestinationNarrations(data.spotById, lang);
-  }, [data, lang]);
+  const { screen, data, spot, placeFrom, guide } = useApp();
   if (screen === "loading" || !data) {
     return <PhoneFrame><Loading /></PhoneFrame>;
   }
