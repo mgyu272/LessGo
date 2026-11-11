@@ -1,6 +1,6 @@
 // ⑦ 이야기 탭 = 로그인 뒤 메인 화면
 // 맨 위 AI 역사 렌즈 카드("사진으로 물어보기" → 장소 고르기 → 그 장소 상세의 AI 역사 렌즈 탭)
-// 아래 이야기 3편: 코스 목적지(심우장·정릉·의릉) 사진 카드를 옆으로 넘겨 봐요 (도장 + 질문형 제목 spots.json hook + "이야기 듣기" / "여기로 달리기")
+// 아래 추천 코스 3선: 코스 목적지(심우장·정릉·의릉) 사진 카드를 옆으로 넘겨 봐요 (장소 그림 + 질문형 제목 spots.json hook + "이야기 듣기" / "여기로 달리기")
 // 둘러볼 곳·카테고리·지도는 장소 탭(PlacesHub.jsx)에 있어요.
 
 import { useEffect, useRef, useState } from "react";
@@ -10,6 +10,7 @@ import { DESTINATIONS } from "../lib/routes.js";
 import { destName } from "../lib/places.js";
 import { Seal, sealText } from "../components/Bits.jsx";
 import { Brand } from "../components/LogoBird.jsx";
+import { spotIconSvg } from "../components/SpotIcons.jsx";
 import { PlaceCover } from "../components/PlacePhoto.jsx";
 
 export default function Places() {
@@ -46,16 +47,16 @@ export default function Places() {
         </section>
 
         <div className="st-head">
-          <h2>{t("st_stories_n", { n: stories.length })}</h2>
-          <p>{t("st_stories_sub")}</p>
+          <h2>{t("dest_title")}</h2>
+          <p>{t("dest_description")}</p>
         </div>
 
-        <DestCarousel key={app.lang} items={stories} label={t("st_stories_n", { n: stories.length })} render={(s, i) => (
+        <DestCarousel key={app.lang} items={stories} label={t("dest_title")} render={(s, i) => (
           <article className="pl-card">
             <div className="pl-card-photo">
               <PlaceCover place={s} fallback={<PhotoIcon />} />
               <span className="pl-course-count">{t("courses_n", { n: data.courses.filter((c) => c.properties.dest === s.id).length })}</span>
-              <span className="pl-ic" aria-hidden="true"><Seal text={sealText(s)} size={46} /></span>
+              <span className="pl-ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: spotIconSvg(s) }} />
             </div>
             <div className="pl-text">
               <small>{t("st_story_no", { i: i + 1, name: destName(data, s.id) })}</small>
