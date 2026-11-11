@@ -1,12 +1,10 @@
 // 로딩 화면: 글씨 없이 새 로고만 (디자인 캔버스 "로딩" 값 그대로, 390×844 기준).
 // 새가 왼쪽 아래에서 날아 들어와(1.7초) 위아래로 떠다니고, 날개를 0.9초마다 펄럭여요.
-// 아래에서는 러너 점이 휘어진 점선 길을 달리고, 끝 동그라미에 닿으면 톡 커져요.
 // 앱 첫 데이터(코스·스팟)와 로그인 확인이 끝나면 AppContext가 로그인/홈으로 넘겨요.
 // 움직임 줄이기 설정이면 모든 움직임을 멈춰요 (CSS + SMIL을 그리지 않음).
 
 import { useReducedMotion, BODY_UP, ROUTE, END, FLAP } from "../components/LogoBird.jsx";
 
-const TRACK = "M8 20 C 38 6, 62 28, 92 16 S 148 8, 168 14";
 const BIRD = "#AEDA80";
 
 export default function Loading() {
@@ -51,29 +49,6 @@ export default function Loading() {
         </g>
       </svg>
 
-      <div className="ld-progress" role="progressbar" aria-label="Loading">
-        <svg width="176" height="32" viewBox="0 0 176 32" aria-hidden="true">
-          <defs>
-            <linearGradient id="ld-trail-grad" gradientUnits="userSpaceOnUse" x1="8" y1="0" x2="168" y2="0">
-              <stop offset="0" stopColor="#9CCB6B" stopOpacity="0" />
-              <stop offset=".5" stopColor="#9CCB6B" stopOpacity=".7" />
-              <stop offset="1" stopColor="#5E9634" />
-            </linearGradient>
-          </defs>
-          <path d={TRACK} fill="none" stroke="#D3E6BC" strokeWidth="2" strokeLinecap="round" strokeDasharray="0.1 7" />
-          <path className="ld-trail" pathLength="100" d={TRACK} fill="none" stroke="url(#ld-trail-grad)" strokeWidth="2.5" strokeLinecap="round" />
-          <circle className="ld-goal" cx="168" cy="14" r="4" fill="none" stroke="#9CCB6B" strokeWidth="1.5" />
-          {!reduced && (
-            <g>
-              <circle r="8" fill="#9CCB6B" opacity=".22" />
-              <circle r="3.6" fill="#FFFFFF" stroke="#5E9634" strokeWidth="2" />
-              <animateMotion dur="2.6s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.75;1" calcMode="spline"
-                keySplines=".45 0 .4 1;0 0 1 1" path={TRACK} />
-              <animate attributeName="opacity" dur="2.6s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;.06;.82;1" />
-            </g>
-          )}
-        </svg>
-      </div>
     </section>
   );
 }
