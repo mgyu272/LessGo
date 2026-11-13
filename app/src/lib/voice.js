@@ -87,9 +87,38 @@ function speechParts(text, maxLength = 160) {
   return parts;
 }
 
+
+// Offline historical narration MP3 playback only; navigation remains browser TTS.
+// Missing files fall back to the existing browser speech implementation.
+let fileAudio = null;
+let fileGeneration = 0;
+function fileKey(lang, assetKey) {
+  if (!assetKey || !/^[a-z0-9_-]+$/.test(assetKey)) return null;
+  return `/audio/narration/${assetKey}-${lang}.mp3`;
+}
+function playFile(url, fallback, { onstart, onend, onerror } = {}) {
+  const generation = ++fileGeneration;
+  if (fileAudio) { fileAudio.pause(); fileAudio.removeAttribute("src"); fileAudio = null; }
+  const audio = new Audio(url);
+  fileAudio = audio;
+  const fail = () => {
+    if (generation !== fileGeneration) return;
+    fileAudio = null;
+    fallback();
+  };
+  audio.onplaying = () => { if (generation === fileGeneration) onstart?.(); };
+  audio.onended = () => { if (generation === fileGeneration) { fileAudio = null; onend?.(); } };
+  audio.onerror = fail;
+  try { const result = audio.play(); result?.catch(fail); }
+  catch { fail(); }
+  return true;
+}
+
 // queue: true면 앞의 말이 끝난 뒤 이어서 말해요 (길 안내용)
 // onboundary(charIndex): 단어를 읽기 시작할 때마다 몇 번째 글자인지 알려줘요 (지원하는 브라우저에서만)
-export function speak(text, { lang = "en", queue = true, chunk = false, onstart, onend, onerror, onboundary } = {}) {
+export function speak(text, { lang = "en", queue = true, chunk = false, onstart, onend, onerror, onboundary, assetKey, preferFile = true } = {}) {
+  const url = preferFile ? fileKey(lang, assetKey) : null;
+  if (url) return playFile(url, () => speak(text, { lang, queue, chunk, onstart, onend, onerror, onboundary, preferFile: false }), { onstart, onend, onerror });
   if (!text) { onend?.(); return false; }
   if (!speechSupported()) {
     if (onerror) onerror({ error: "synthesis-unavailable" }); else onend?.();
@@ -138,6 +167,8 @@ export function speak(text, { lang = "en", queue = true, chunk = false, onstart,
 }
 
 export function stop() {
+  fileGeneration++;
+  if (fileAudio) { fileAudio.pause(); fileAudio.removeAttribute("src"); fileAudio = null; }
   activeSessions.forEach((session) => { session.cancelled = true; clearTimeout(session.timer); session.utterances.length = 0; });
   activeSessions.clear();
   synth?.cancel();
